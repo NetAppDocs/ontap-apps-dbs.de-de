@@ -11,7 +11,7 @@ summary: PostgreSQL-Datenbanken auf ONTAP
 [role="lead"]
 PostgreSQL ist ein RDBMS, das auf Client- und Serverarchitektur basiert. Eine PostgreSQL-Instanz wird als Datenbank-Cluster bezeichnet, bei dem es sich um eine Sammlung von Datenbanken und nicht um eine Sammlung von Servern handelt.
 
-image:./media/architecture.png["Fehler: Grafik nicht gefunden"]
+image:architecture.png["Fehler: Grafik nicht gefunden"]
 
 In einer PostgreSQL-Datenbank gibt es drei Hauptelemente: Den Postmaster, das Frontend (Client) und das Backend Der Client sendet Anfragen an den Postmaster mit Informationen wie IP-Protokoll und zu welcher Datenbank eine Verbindung hergestellt werden soll. Der Postmaster authentifiziert die Verbindung und leitet sie zur weiteren Kommunikation an den Back-End-Prozess weiter. Der Back-End-Prozess führt die Abfrage aus und sendet Ergebnisse direkt an das Frontend (Client).
 
