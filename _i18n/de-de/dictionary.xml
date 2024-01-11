@@ -2652,7 +2652,6 @@ Ohne Cluster auf Applikationsebene müssen Applikationen am noch aktiven Standor
   <block id="4adf016da96258b45a1cf762298729b5" category="inline-image-macro">ONTAP Tools VVols Dashboard,400</block>
   <block id="73c1e14ddf3f32984f869ac3f122b2ca" category="paragraph"><block ref="73c1e14ddf3f32984f869ac3f122b2ca" category="inline-image-macro-rx" type="image"></block></block>
   <block id="cd47dd01745339787e4c7300389401f2" category="section-title">Best Practices In Sich Vereint</block>
-  <block id="e359caf0e19df1a0e93e8e30cbef2100" category="paragraph">Dieser Abschnitt erfasst bekannte Best Practices zur Nutzung von VVols mit ONTAP sowie weitere Informationen.</block>
   <block id="9ae938622297e9d4b14dd0006a8f0bf4" category="paragraph">*Grenzen*</block>
   <block id="b4f52a4fd0b07c9d904b95fc98a1cd45" category="inline-link">Konfigurationsmaxima</block>
   <block id="bc8259e306c73b2969e7ac6297000e64" category="paragraph">ONTAP unterstützt im Allgemeinen VVols-Limits, die durch VMware definiert sind (siehe veröffentlicht<block ref="a6efdd9b1a19df6105024b4869e0582b" category="inline-link-rx"></block>). In der folgenden Tabelle sind bestimmte ONTAP-Limits für Größe und Anzahl von VVols zusammengefasst. Prüfen Sie immer das<block ref="bb9c67b5a4c15a85b5e6aa6c9afd0285" category="inline-link-rx"></block> Für aktualisierte Grenzwerte für Anzahl und Größe der LUNs und Dateien.</block>
@@ -2676,9 +2675,7 @@ Ohne Cluster auf Applikationsebene müssen Applikationen am noch aktiven Standor
   <block id="26890bd9dcb27c05f1ab5bcc859501b8" category="cell">12,000 bis ONTAP 9.3; 40,000 mit ONTAP 9.4 und höher</block>
   <block id="0e38f856cb713ce9eea79fa1c6b7dc32" category="list-text">Größenbeschränkung auf Basis von ASA Systemen oder AFF und FAS Systemen mit ONTAP 9.12.1P2 und höher</block>
   <block id="d27c43bb3cdcbfa3852bb91192ffb849" category="list-text">Die Anzahl der SAN-VVols (NVMe-Namespaces oder LUNs) variiert je nach Plattform. Prüfen Sie immer das<block ref="bb9c67b5a4c15a85b5e6aa6c9afd0285" category="inline-link-rx"></block> Für aktualisierte Grenzwerte für Anzahl und Größe der LUNs und Dateien.</block>
-  <block id="304d5a3dcf64bf05141ead00f7ec768a" category="paragraph">*Best Practices*</block>
   <block id="72e0ee397942f7233122887584f94b8b" category="paragraph">Die Verwendung von ONTAP VVols mit vSphere ist einfach und folgt den veröffentlichten vSphere-Methoden (siehe Arbeiten mit virtuellen Volumes unter vSphere-Speicher in der VMware-Dokumentation für Ihre Version von ESXi). Nachfolgend finden Sie einige weitere Vorgehensweisen, die Sie in Verbindung mit ONTAP in Betracht ziehen sollten.</block>
-  <block id="d7c0472e9975808c3f2c3ea3a1cdd812" category="paragraph">Best Practices für die Nutzung von VVols mit ONTAP.</block>
   <block id="83583580d98b69cb8317f9b285f3c8df" category="cell">*Verwenden Sie ONTAP-Tools für VMware vSphere UI-Erweiterungen oder REST-APIs zur Bereitstellung von VVols-Datastores* *und Protokollendpunkten.*</block>
   <block id="9507d4f97aceb8d05fc962dd53f082af" category="cell">VVols Datastores können über die allgemeine vSphere Schnittstelle erstellt werden, aber mithilfe von ONTAP Tools werden automatisch bei Bedarf Protokollendpunkte erstellt und FlexVol Volumes anhand von ONTAP Best Practices und unter Einhaltung der definierten Storage-Funktionsprofile erstellt. Klicken Sie einfach mit der rechten Maustaste auf den Host/Cluster/Datacenter und wählen Sie dann „_ONTAP Tools_“ und „_Provision Datastore_“ aus. Wählen Sie dann im Assistenten einfach die gewünschten VVols Optionen aus.</block>
   <block id="e8d5f9dc0bff953a9e59755813c7e8bf" category="cell">*Speichern Sie die ONTAP Tools Appliance oder vCenter Server Appliance (VCSA) niemals auf einem VVols Datastore, den sie verwalten.*</block>
@@ -2689,36 +2686,13 @@ Ohne Cluster auf Applikationsebene müssen Applikationen am noch aktiven Standor
   <block id="cd7bf0e1e61341c1aa3fa23401af8a27" category="inline-image-macro">Zoning mit einem Initiator durchgeht vier Nodes,400</block>
   <block id="51591d05b7e084ba8e5ae7f63172177e" category="inline-link">_TR-4080 Best Practices for Modern SAN ONTAP 9_</block>
   <block id="c1723e6a0e1d3dd28232b33e0cb6e61d" category="inline-link">_TR-4684 Implementierung und Konfiguration moderner SANs mit NVMe-of_</block>
-  <block id="9d25011ed03b51fddde47a3c3a337cc8" category="cell">Der ONTAP-Tools VASA Provider managt FCP- und iSCSI-Initiatorgruppen sowie NVMe-Subsysteme in ONTAP, die auf erkannten Initiatoren von gemanagten ESXi-Hosts basieren. Es ist jedoch nicht in Fibre-Channel-Switches integriert, um das Zoning zu managen. Bevor eine Bereitstellung stattfinden kann, muss das Zoning nach Best Practices erfolgen. Nachfolgend ein Beispiel für das Einzel-Initiator-Zoning für vier ONTAP-Systeme:
-
-Einzel-Initiator-Zoning:
-
-<block ref="17ccf64e30cb518fd7ca87ce752ad738" category="inline-image-macro-rx" type="image"></block>
-
-Weitere Best Practices finden Sie in folgenden Dokumenten:
-
-<block ref="fc9e4d789d968936f8ff5ae5a99847e0" category="inline-link-rx"></block>
-
-<block ref="d748a2834a7220eef4ec4775a51632f9" category="inline-link-rx"></block></block>
   <block id="9a36c8f0464a7ffce114044f1859c7ff" category="cell">* Planen Sie Ihre Unterstützung FlexVols nach Ihren Bedürfnissen.*</block>
   <block id="03d2e894fa9a05efefa4e8d6b2008a19" category="cell">Es ist durchaus wünschenswert, mehrere Backup-Volumes zum VVols-Datastore hinzuzufügen, um den Workload über das ONTAP-Cluster zu verteilen, verschiedene Richtlinienoptionen zu unterstützen oder die Anzahl der zulässigen LUNs oder Dateien zu erhöhen. Wenn jedoch eine maximale Storage-Effizienz erforderlich ist, platzieren Sie alle Ihre Backup Volumes auf einem einzigen Aggregat. Wenn eine maximale Klon-Performance erforderlich ist, ziehen Sie die Verwendung eines einzelnen FlexVol Volumes in Erwägung und halten Ihre Vorlagen- oder Content Library im selben Volume. Der VASA Provider verlagert viele VVols Storage-Vorgänge auf ONTAP, einschließlich Migration, Klonen und Snapshots. Wenn dies in einem einzelnen FlexVol Volume geschieht, werden platzsparende Klone von Dateien verwendet und stehen so gut wie sofort zur Verfügung. Wenn dies über FlexVol Volumes hinweg durchgeführt wird, sind die Kopien schnell verfügbar und verwenden Inline-Deduplizierung und -Komprimierung. Allerdings kann eine maximale Storage-Effizienz erst dann wiederhergestellt werden, wenn Hintergrundjobs auf Volumes mithilfe von Deduplizierung und Komprimierung im Hintergrund ausgeführt werden. Je nach Quelle und Ziel kann die Effizienz beeinträchtigt werden.</block>
   <block id="80b15469535d95a1690f308427545c7e" category="cell">*Speicherfähigkeitsprofile (SCPs) einfach halten.*</block>
   <block id="33e2905cb722c14575a9bff81ba78b39" category="cell">Vermeiden Sie die Angabe von Funktionen, die nicht erforderlich sind, indem Sie sie auf beliebig festlegen. Dadurch werden Probleme beim Auswählen oder Erstellen von FlexVol-Volumes minimiert. Wenn bei VASA Provider 7.1 und älteren Versionen beispielsweise die Komprimierung mit der SCP-Standardeinstellung „Nein“ beibehalten wird, wird versucht, die Komprimierung selbst auf einem AFF-System zu deaktivieren.</block>
   <block id="5a6d5fdddf6fbd82f1952b532b03c9ef" category="cell">*Verwenden Sie die Standard-SCPs als Beispielvorlagen, um Ihre eigenen zu erstellen.*</block>
-  <block id="9ab96500ef87d6c0457f87322f3b0d05" category="cell">Die im Lieferumfang enthaltenen SCPs sind für die meisten allgemeinen Anwendungen geeignet, aber Ihre Anforderungen können unterschiedlich sein.
-
-*Erwägen Sie die Verwendung von max IOPS zur Steuerung unbekannter VMs oder zum Testen von VMs.*</block>
-  <block id="c0905f7932cce129e5491ca16a6f00a8" category="cell">Erstmals in VASA Provider 7.1 verfügbar, können maximale IOPS verwendet werden, um IOPS bei einem unbekannten Workload auf ein bestimmtes vVol zu beschränken und so Auswirkungen auf andere, kritischere Workloads zu vermeiden. Tabelle 4 enthält weitere Informationen zum Performance-Management.
-
-*Stellen Sie sicher, dass Sie ausreichend Daten-LIFs haben.*</block>
-  <block id="f5a3607cd11e645cf22997a47fc7a5d5" category="cell">Erstellen Sie mindestens zwei LIFs pro Node und HA-Paar. Je nach Workload werden weitere erforderlich.</block>
   <block id="ee3cbda1c3c4a14ae024478c7ada6d11" category="cell">*Befolgen Sie alle Best Practices für Protokolle.*</block>
   <block id="6a2c1ac1da51eca0c1a65afffab8dfab" category="inline-image-macro">Netzwerkkonfiguration mit VVols über NFS v3.500</block>
-  <block id="47d7186fd54c7409af85f706bd49bb21" category="cell">Weitere Best Practice-Leitfäden zu dem von Ihnen gewählten Protokoll finden Sie in den Leitfäden von NetApp und VMware. Im Allgemeinen gibt es keine anderen Änderungen als die bereits erwähnten.
-[[Abbildung_6]]
-Beispiel für eine Netzwerkkonfiguration mit VVols über NFS v3:
-
-<block ref="c80b3cc8b5013bd4039769fb0f783e60" category="inline-image-macro-rx" type="image"></block></block>
   <block id="6cacb3f1edd09835a2ad07d72f488e2a" category="paragraph">Seit über zwei Jahrzehnten ist die NetApp ONTAP Software eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen.</block>
   <block id="918febfed3d070cf1250909e5cdcf31d" category="paragraph">Dieses Dokument behandelt die ONTAP Funktionen für VMware vSphere Virtual Volumes (VVols), einschließlich der neuesten Produktinformationen und Anwendungsfälle sowie Best Practices und andere Informationen, um die Implementierung zu optimieren und Fehler zu reduzieren.</block>
   <block id="c7448b194ba68bddce48f1d11d5d7db7" category="admonition">Diese Dokumentation ersetzt zuvor veröffentlichte technische Berichte _TR-4400: VMware vSphere Virtual Volumes (VVols) durch NetApp ONTAP_</block>
@@ -4062,4 +4036,18 @@ Wird für SOAP-über-https-Verbindungen verwendet</block>
   <block id="62a004b95946bb97541afa471dcca73a" category="sidebar">MySQL</block>
   <block id="7f1a6761f7160e33a32105202e47303b" category="sidebar">Containerisierung</block>
   <block id="bc65796c5a1bad360243a1bbe58272c2" category="sidebar">Allgemeine Storage-Konfiguration</block>
+  <block id="bd57f4f74ca087a92a48b23d45753729" category="paragraph">Der ONTAP-Tools VASA Provider managt FCP- und iSCSI-Initiatorgruppen sowie NVMe-Subsysteme in ONTAP, die auf erkannten Initiatoren von gemanagten ESXi-Hosts basieren. Es ist jedoch nicht in Fibre-Channel-Switches integriert, um das Zoning zu managen. Bevor eine Bereitstellung stattfinden kann, muss das Zoning nach Best Practices erfolgen. Nachfolgend ein Beispiel für das Einzel-Initiator-Zoning für vier ONTAP-Systeme:</block>
+  <block id="6b14e3f4a37881185acf7a766f8f6272" category="paragraph">Einzel-Initiator-Zoning:</block>
+  <block id="17ccf64e30cb518fd7ca87ce752ad738" category="paragraph"><block ref="17ccf64e30cb518fd7ca87ce752ad738" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="58b5cd2a94730c2e044c14891f1e0e87" category="paragraph">Weitere Best Practices finden Sie in folgenden Dokumenten:</block>
+  <block id="fc9e4d789d968936f8ff5ae5a99847e0" category="paragraph"><block ref="fc9e4d789d968936f8ff5ae5a99847e0" category="inline-link-rx"></block></block>
+  <block id="d748a2834a7220eef4ec4775a51632f9" category="paragraph"><block ref="d748a2834a7220eef4ec4775a51632f9" category="inline-link-rx"></block></block>
+  <block id="4047245d73abc6e3ae8bf58ec063e52e" category="paragraph">Die im Lieferumfang enthaltenen SCPs sind für die meisten allgemeinen Anwendungen geeignet, aber Ihre Anforderungen können unterschiedlich sein.</block>
+  <block id="80dad10df0d1a031764e7c648c46aa23" category="paragraph">*Erwägen Sie die Verwendung von max IOPS zur Steuerung unbekannter VMs oder zum Testen von VMs.*</block>
+  <block id="93e4f73afe8b787b33161ec273ca087f" category="paragraph">Erstmals in VASA Provider 7.1 verfügbar, können maximale IOPS verwendet werden, um IOPS bei einem unbekannten Workload auf ein bestimmtes vVol zu beschränken und so Auswirkungen auf andere, kritischere Workloads zu vermeiden. Tabelle 4 enthält weitere Informationen zum Performance-Management.</block>
+  <block id="bdbd10905a1446f944699405bca52654" category="paragraph">*Stellen Sie sicher, dass Sie ausreichend Daten-LIFs haben.*
+Erstellen Sie mindestens zwei LIFs pro Node und HA-Paar. Je nach Workload werden weitere erforderlich.</block>
+  <block id="4e0d7e0587bf99c9b7a64a84fd42f6bd" category="paragraph">Weitere Best Practice-Leitfäden zu dem von Ihnen gewählten Protokoll finden Sie in den Leitfäden von NetApp und VMware. Im Allgemeinen gibt es keine anderen Änderungen als die bereits erwähnten.</block>
+  <block id="97f87e9ab1d660463c63beb8745fd9e5" category="paragraph">*Beispiel einer Netzwerkkonfiguration mit VVols über NFS v3*</block>
+  <block id="c80b3cc8b5013bd4039769fb0f783e60" category="paragraph"><block ref="c80b3cc8b5013bd4039769fb0f783e60" category="inline-image-macro-rx" type="image"></block></block>
 </blocks>
