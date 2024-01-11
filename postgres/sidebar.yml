@@ -1,0 +1,32 @@
+---
+section: postgres
+title: PostgreSQL
+entries:
+- title: Überblick
+  url: "/postgres/overview.html"
+- title: ONTAP-Konfiguration
+  url: "/postgres/ontap.html"
+- title: Datenbankkonfiguration
+  entries:
+  - title: Der Netapp Architektur Sind
+    url: "/postgres/architecture.html"
+  - title: Initialisierung
+    url: "/postgres/initialization.html"
+  - title: Einstellungen
+    url: "/postgres/db-config.html"
+  - title: Tablespaces
+    url: "/postgres/tablespaces.html"
+- title: Storage-Konfiguration
+  entries:
+  - title: Konfiguration des Dateisystems
+    url: "/postgres/filesystems.html"
+  - title: Tiering
+    url: "/postgres/tiering.html"
+- title: Datensicherung
+  entries:
+  - title: Native Datensicherung
+    url: "/postgres/native-dp.html"
+  - title: Snapshot Technologie
+    url: "/postgres/snapshot-dp.html"
+  - title: Datensicherungssoftware
+    url: "/postgres/snapcenter-dp.html"

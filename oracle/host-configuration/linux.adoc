@@ -1,0 +1,162 @@
+---
+sidebar: sidebar 
+permalink: oracle/host-configuration/linux.html 
+keywords: oracle, database, ontap, linux, nfs, xfs, ext4, slot tables 
+summary: Oracle auf ONTAP unter Linux 
+---
+= Linux
+:allow-uri-read: 
+
+
+[role="lead"]
+Konfigurationsthemen für das Linux-Betriebssystem.
+
+
+
+== Slot-Tabellen
+
+Die NFS-Performance unter Linux hängt von einem Parameter namens ab `tcp_max_slot_table_entries`. Siehe link:../../common/storage-configuration/nfs.html["NFS"] Für kritische Informationen.
+
+
+
+== Mount-Optionen für Linux NFS
+
+In der folgenden Tabelle sind die Linux-NFS-Mount-Optionen für eine einzelne Instanz aufgeführt.
+
+|===
+| Dateityp | Mount-Optionen 
+
+
+| AdR-Startseite | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144` 
+
+
+| Kontrolldateien
+Datendateien
+Wiederherstellungsprotokolle | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+nointr` 
+
+
+| ORACLE_HOME | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+nointr` 
+|===
+In der folgenden Tabelle sind die Linux-NFS-Mount-Optionen für RAC aufgeführt.
+
+|===
+| Dateityp | Mount-Optionen 
+
+
+| AdR-Startseite | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+actimeo=0` 
+
+
+| Kontrolldateien
+Datendateien
+Wiederherstellungsprotokolle | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+nointr,actimeo=0` 
+
+
+| CRS/Abstimmung | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+nointr,noac,actimeo=0` 
+
+
+| Dediziert `ORACLE_HOME` | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144` 
+
+
+| Freigegeben `ORACLE_HOME` | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+nointr,actimeo=0` 
+|===
+Der Hauptunterschied zwischen Single-Instance- und RAC-Mount-Optionen ist das Hinzufügen von `actimeo=0` Zu den Mount-Optionen. Durch diese Ergänzung wird das Caching des Host-Betriebssystems deaktiviert, wodurch alle Instanzen im RAC Cluster eine konsistente Ansicht des Status der Daten haben. Obwohl Sie den verwenden `init.ora` Parameter `filesystemio_options=setall` Hat die gleiche Wirkung wie die Deaktivierung des Host-Caching, ist es weiterhin erforderlich, zu verwenden `actimeo=0`.
+
+Der Grund `actimeo=0` Ist für die gemeinsame Nutzung erforderlich `ORACLE_HOME` Die Bereitstellung soll die Konsistenz von Dateien wie den Oracle-Passwortdateien und den SPfiles erleichtern. Wenn jede Instanz in einem RAC-Cluster über einen dedizierten verfügt `ORACLE_HOME`, Dann ist dieser Parameter nicht erforderlich.
+
+Im Allgemeinen sollten nicht-Datenbankdateien mit denselben Optionen gemountet werden, die für Datendateien mit einer einzigen Instanz verwendet werden, obwohl bestimmte Applikationen unterschiedliche Anforderungen haben können. Vermeiden Sie die Montageoptionen `noac` Und `actimeo=0` Wenn möglich, da diese Optionen das Vorauslesen und Puffern auf Dateisystemebene deaktivieren. Dies kann zu schwerwiegenden Leistungsproblemen bei Prozessen wie Extraktion, Übersetzung und Laden führen.
+
+
+
+=== ACCESS und GETATTR
+
+Einige Kunden bemerken, dass ein extrem hohes Maß an anderen IOPS wie ACCESS und GETATTR ihre Workloads dominieren kann. In Extremfällen können Vorgänge wie Lese- und Schreibvorgänge bis zu 10 % des Gesamtbetrags ausmachen. Dies ist ein normales Verhalten bei jeder Datenbank, die die Verwendung einschließt `actimeo=0` Und/oder `noac` Unter Linux, weil diese Optionen dazu führen, dass das Linux-Betriebssystem ständig Datei-Metadaten aus dem Speichersystem neu lädt. Vorgänge wie ACCESS und GETATTR sind Vorgänge mit geringen Auswirkungen, die aus dem ONTAP Cache in einer Datenbankumgebung bedient werden. Sie sollten nicht als echte IOPS-Werte wie Lese- und Schreibvorgänge betrachtet werden, die einen echten Bedarf an Storage-Systemen verursachen. Diese anderen IOPS erzeugen jedoch eine gewisse Last, insbesondere in RAC-Umgebungen. Um diesem Problem zu begegnen, aktivieren Sie DNFS, wodurch der Puffercache des Betriebssystems umgangen wird und unnötige Metadatenvorgänge vermieden werden.
+
+
+
+=== Linux Direct NFS
+
+Eine zusätzliche Mount-Option, genannt `nosharecache`, Ist erforderlich, wenn (a) DNFS aktiviert ist und (b) ein Quell-Volume mehr als einmal auf einem einzelnen Server (c) mit einem verschachtelten NFS-Mount gemountet wird. Diese Konfiguration ist hauptsächlich in Umgebungen zu finden, die SAP-Anwendungen unterstützen. Beispielsweise könnte ein einzelnes Volume auf einem NetApp System über ein Verzeichnis verfügen, das sich in befindet `/vol/oracle/base` Und eine Sekunde bei `/vol/oracle/home`. Wenn `/vol/oracle/base` Ist bei montiert `/oracle` Und `/vol/oracle/home` Ist bei montiert `/oracle/home`Das Ergebnis sind verschachtelte NFS-Mounts, die von der gleichen Quelle stammen.
+
+Das Betriebssystem kann erkennen, dass `/oracle` Und `/oracle/home` Befinden sich auf demselben Volume, bei dem es sich um das gleiche Quelldateisystem handelt. Das Betriebssystem verwendet dann dasselbe Geräte-Handle für den Zugriff auf die Daten. Dadurch wird die Verwendung von OS Caching und bestimmten anderen Vorgängen verbessert, es beeinträchtigt jedoch DNFS. Wenn DNFS auf eine Datei zugreifen muss, z. B. auf `spfile`, Ein `/oracle/home`Es könnte irrtümlich versuchen, den falschen Pfad zu den Daten zu verwenden. Das Ergebnis ist ein I/O-Vorgang, der fehlgeschlagen ist. Fügen Sie in diesen Konfigurationen den hinzu `nosharecache` Mount-Option für jedes NFS-Dateisystem, das ein Quell-FlexVol-Volume mit einem anderen NFS-Dateisystem auf diesem Host gemeinsam nutzt. Dies zwingt das Linux-Betriebssystem, einem unabhängigen Device Handle für dieses Dateisystem zuzuweisen.
+
+
+
+=== Linux Direct NFS und Oracle RAC
+
+Die Verwendung von DNFS bietet besondere Leistungsvorteile für Oracle RAC auf dem Linux-Betriebssystem, da Linux keine Methode zur Erzwang direkter I/O-Vorgänge bietet, die für die Kohärenz über die Knoten mit RAC erforderlich ist. Als Workaround benötigt Linux die Verwendung von `actimeo=0` Mount-Option, die dazu führt, dass Dateidaten sofort aus dem OS-Cache ablaufen. Diese Option zwingt den Linux NFS Client wiederum, Attributdaten ständig neu zu lesen, was die Latenz schädigt und die Belastung des Storage Controllers erhöht.
+
+Durch die Aktivierung von DNFS wird der Host-NFS-Client umgangen und dieser Schaden wird vermieden. Mehrere Kunden haben bei der Aktivierung von DNFS deutliche Performance-Steigerungen bei RAC Clustern und deutliche geringere ONTAP-Lasten (insbesondere im Hinblick auf andere IOPS) gemeldet.
+
+
+
+=== Linux Direct NFS- und oranfstab-Datei
+
+Bei der Verwendung von DNFS unter Linux mit der Multipathing-Option müssen mehrere Subnetze verwendet werden. Auf anderen Betriebssystemen können mehrere DNFS-Kanäle mithilfe des eingerichtet werden `LOCAL` Und `DONTROUTE` Optionen zum Konfigurieren mehrerer DNFS-Kanäle in einem einzigen Subnetz. Dies funktioniert jedoch unter Linux nicht richtig, und es können unerwartete Leistungsprobleme auftreten. Bei Linux muss sich jeder für den DNFS-Verkehr verwendete NIC in einem anderen Subnetz befinden.
+
+
+
+=== I/O-Planer
+
+Der Linux-Kernel ermöglicht eine Steuerung auf niedriger Ebene über die Art und Weise, wie I/O-Vorgänge zum Blockieren von Geräten geplant werden. Die Standardeinstellungen auf verschiedenen Linux-Distribution variieren erheblich. Tests zeigen, dass Deadline in der Regel die besten Ergebnisse bietet, aber gelegentlich NOOP war etwas besser. Der Unterschied in der Performance ist minimal, aber testen Sie beide Optionen, wenn es erforderlich ist, um die maximal mögliche Performance aus einer Datenbankkonfiguration zu extrahieren. CFQ ist in vielen Konfigurationen der Standard und hat bei Datenbank-Workloads erhebliche Performance-Probleme gezeigt.
+
+Anweisungen zur Konfiguration des I/O-Planers finden Sie in der entsprechenden Dokumentation des Linux-Anbieters.
+
+
+
+=== Multipathing
+
+Einige Kunden sind während der Netzwerkunterbrechung auf Abstürze gestoßen, weil der Multipath-Daemon auf ihrem System nicht ausgeführt wurde. Bei aktuellen Versionen von Linux können der Installationsprozess des Betriebssystems und des Multipathing-Daemons diese Betriebssysteme für dieses Problem anfällig machen. Die Pakete sind ordnungsgemäß installiert, aber nach einem Neustart nicht für den automatischen Start konfiguriert.
+
+Die Standardeinstellung für den Multipath-Daemon unter RHEL5.5 kann beispielsweise wie folgt angezeigt werden:
+
+....
+[root@host1 iscsi]# chkconfig --list | grep multipath
+multipathd      0:off   1:off   2:off   3:off   4:off   5:off   6:off
+....
+Dies kann mit den folgenden Befehlen korrigiert werden:
+
+....
+[root@host1 iscsi]# chkconfig multipathd on
+[root@host1 iscsi]# chkconfig --list | grep multipath
+multipathd      0:off   1:off   2:on    3:on    4:on    5:on    6:off
+....
+
+
+== ASM Spiegelung
+
+ASM-Spiegelung erfordert möglicherweise Änderungen an den Linux Multipath-Einstellungen, damit ASM ein Problem erkennen und zu einer alternativen Ausfallgruppe wechseln kann. Die meisten ASM-Konfigurationen auf ONTAP verwenden externe Redundanz. Das bedeutet, dass Datensicherung durch das externe Array bereitgestellt wird und ASM keine Daten spiegelt. Einige Standorte verwenden ASM mit normaler Redundanz, um normalerweise zwei-Wege-Spiegelung über verschiedene Standorte hinweg bereitzustellen.
+
+Die Linux-Einstellungen, die im angezeigt werden link:https://docs.netapp.com/us-en/ontap-sanhost/hu_fcp_scsi_index.html["NetApp Host Utilities-Dokumentation"] Schließen Sie Multipath-Parameter ein, die zu unbestimmter I/O-Warteschlange führen Dies bedeutet, dass ein I/O auf einem LUN-Gerät ohne aktive Pfade so lange wartet, wie es für den I/O-Abschluss erforderlich ist. Dies ist in der Regel wünschenswert, da Linux-Hosts so lange warten, bis die Änderungen des SAN-Pfads abgeschlossen sind, FC-Switches neu gestartet werden oder ein Storage-System einen Failover abschließt.
+
+Dieses unbegrenzte Warteschlangenverhalten verursacht ein Problem mit der ASM-Spiegelung, da ASM einen I/O-Fehler empfangen muss, damit er I/O auf einer alternativen LUN erneut versuchen kann.
+
+Legen Sie die folgenden Parameter in Linux fest `multipath.conf` Datei für ASM-LUNs, die mit ASM-Spiegelung verwendet werden:
+
+....
+polling_interval 5
+no_path_retry 24
+....
+Mit diesen Einstellungen wird ein Timeout von 120 Sekunden für ASM-Geräte erstellt. Das Timeout wird als berechnet `polling_interval` * `no_path_retry` Sekunden lang. Der genaue Wert muss unter Umständen angepasst werden, aber ein Timeout von 120 Sekunden sollte für die meisten Anwendungen ausreichen. Insbesondere sollten in 120 Sekunden eine Controller-Übernahme oder -Rückgabe möglich sein, ohne dass ein I/O-Fehler auftritt, der dazu führen würde, dass die Fehlergruppe offline geschaltet wird.
+
+A niedriger `no_path_retry` Value kann die für ASM erforderliche Zeit zum Wechsel zu einer alternativen Ausfallgruppe verkürzen. Dies erhöht jedoch auch das Risiko eines unerwünschten Failovers während Wartungsaktivitäten wie beispielsweise einem Controller-Takeover. Das Risiko kann durch eine sorgfältige Überwachung des ASM-Spiegelungsstatus verringert werden. Wenn ein unerwünschtes Failover auftritt, können die Spiegelungen schnell neu synchronisiert werden, wenn die Resynchronisierung relativ schnell durchgeführt wird. Weitere Informationen finden Sie in der Oracle-Dokumentation zu ASM Fast Mirror Resync für die verwendete Version der Oracle-Software.
+
+
+
+== Mount-Optionen für Linux xfs, ext3 und ext4
+
+
+TIP: *NetApp empfiehlt* die Verwendung der Standard-Mount-Optionen.

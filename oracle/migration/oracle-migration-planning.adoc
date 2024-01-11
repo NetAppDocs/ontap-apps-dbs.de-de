@@ -1,0 +1,82 @@
+---
+sidebar: sidebar 
+permalink: oracle/migration/oracle-migration-planning.html 
+keywords: migration, oracle 
+summary: Planung der Oracle-Migration 
+---
+= Iracle-Migrationsplanung
+:allow-uri-read: 
+
+
+[role="lead"]
+Die Oracle-Datenmigration kann auf einer der drei Ebenen erfolgen: Der Datenbank, dem Host oder dem Storage Array.
+
+Die Unterschiede liegen darin, welche Komponente der Gesamtlösung für das Verschieben von Daten verantwortlich ist: Die Datenbank, das Host-Betriebssystem oder das Speichersystem.
+
+Die Abbildung unten zeigt ein Beispiel für die Migrationsebenen und den Datenfluss. Bei einer Migration auf Datenbankebene werden die Daten vom ursprünglichen Storage-System über die Host- und Datenbankschichten in die neue Umgebung verschoben. Die Migration auf Host-Ebene ist ähnlich, aber die Daten durchlaufen nicht die Applikationsebene und werden stattdessen mithilfe von Host-Prozessen an den neuen Speicherort geschrieben. Und schließlich ist bei der Migration auf Storage-Ebene ein Array wie ein NetApp FAS System für die Datenverschiebung verantwortlich.
+
+image:levels.png["Fehler: Fehlendes Grafikbild"]
+
+Eine Migration auf Datenbankebene bezieht sich im Allgemeinen auf die Verwendung von Oracle-Protokollversand über eine Standby-Datenbank, um eine Migration auf der Oracle-Ebene durchzuführen. Migrationen auf Host-Ebene werden mithilfe der nativen Funktionen der Konfiguration des Host-Betriebssystems durchgeführt. Diese Konfiguration umfasst Dateikopiervorgänge mit Befehlen wie CP, tar und Oracle Recovery Manager (RMAN) oder mit einem Logical Volume Manager (LVM) zur Verlagerung der zugrunde liegenden Bytes eines Dateisystems. Oracle Automatic Storage Management (ASM) wird als Funktion auf Hostebene kategorisiert, da sie unter der Ebene der Datenbankanwendung ausgeführt wird. ASM tritt an die Stelle des üblichen Logical Volume Managers auf einem Host. Und schließlich können Daten auf Storage-Array-Ebene migriert werden, d. h. unter der Ebene des Betriebssystems.
+
+
+
+== Überlegungen zur Planung
+
+Die beste Option für die Migration hängt von einer Kombination verschiedener Faktoren ab: Vom Umfang der zu migrierenden Umgebung, der Notwendigkeit, Ausfallzeiten zu vermeiden, und dem für die Migration erforderlichen Gesamtaufwand. Große Datenbanken erfordern offensichtlich mehr Zeit und Aufwand für die Migration, aber die Komplexität einer solchen Migration ist minimal. Kleine Datenbanken können schnell migriert werden. Wenn jedoch Tausende migriert werden müssen, kann das Ausmaß des Aufwands zu Komplikationen führen. Und je größer die Datenbank ist, desto wahrscheinlicher ist sie, dass sie geschäftskritisch ist. Dies führt dazu, dass Ausfallzeiten minimiert werden müssen, während gleichzeitig ein Back-Out-Pfad beibehalten wird.
+
+Im Folgenden werden einige Überlegungen zur Planung einer Migrationsstrategie erörtert.
+
+
+
+== Datengröße
+
+Die Größe der zu migrierenden Datenbanken wirkt sich natürlich auf die Migrationsplanung aus. Die Größe wirkt sich jedoch nicht unbedingt auf die Umstellungszeit aus. Wenn große Datenmengen migriert werden müssen, kommt es in erster Linie auf die Bandbreite an. Kopiervorgänge werden in der Regel mit effizienten sequenziellen I/O-Vorgängen ausgeführt Gehen Sie bei Kopiervorgängen von einer Auslastung der verfügbaren Netzwerkbandbreite von 50 % aus. Ein 8-GB-FC-Port kann theoretisch etwa 800 Mbit/s übertragen. Bei einer Auslastung von 50 % kann eine Datenbank mit einer Geschwindigkeit von etwa 400 Mbps kopiert werden. Somit kann eine 10-TB-Datenbank innerhalb von etwa sieben Stunden kopiert werden.
+
+Eine Migration über größere Entfernungen erfordert in der Regel einen kreativen Ansatz, wie der Protokollversand-Prozess in erläutert link:oracle-datafile-move.html["Online-Datendatei verschieben"]. IP-Netzwerke über große Entfernungen verfügen selten überall in der Nähe von LAN- oder SAN-Geschwindigkeiten über eine entsprechende Bandbreite. In einem Fall unterstützte NetApp die Fernmigration einer 220 TB großen Datenbank mit sehr hohen Archiv- Log-Generierungsraten. Der gewählte Ansatz für die Datenübertragung war der tägliche Versand von Bändern, da diese Methode die maximal mögliche Bandbreite bot.
+
+
+
+== Anzahl der Datenbanken
+
+In vielen Fällen liegt das Problem beim Verschieben großer Datenmengen nicht in der Datengröße, sondern in der Komplexität der Konfiguration, die die Datenbank unterstützt. Wenn man einfach nur weiß, dass 50 TB Datenbanken migriert werden müssen, reicht das nicht aus. Dabei kann es sich um eine einzelne 50 TB große geschäftskritische Datenbank, eine Sammlung von 4, 000 älteren Datenbanken oder eine Kombination aus Produktions- und nicht produktiven Daten handeln. In manchen Fällen besteht ein Großteil der Daten aus Klonen einer Quelldatenbank. Diese Klone müssen überhaupt nicht migriert werden, da sie einfach wiederhergestellt werden können. Dies gilt insbesondere dann, wenn die neue Architektur die Nutzung von NetApp FlexClone Volumes ermöglicht.
+
+Für die Migrationsplanung müssen Sie verstehen, wie viele Datenbanken im Umfang enthalten sind und wie sie priorisiert werden müssen. Mit zunehmender Anzahl an Datenbanken ist die bevorzugte Migrationsoption in der Regel im Stack immer geringer. So kann zum Beispiel das Kopieren einer einzelnen Datenbank mit RMAN problemlos und bei einem kurzen Ausfall durchgeführt werden. Dies ist die Replizierung auf Host-Ebene.
+
+Wenn es 50 Datenbanken gibt, kann es einfacher sein, die Einrichtung einer neuen Dateisystemstruktur zu vermeiden, um eine RMAN-Kopie zu erhalten und stattdessen die Daten an die Stelle zu verschieben. Dies kann durch hostbasierte LVM-Migration erfolgen, um Daten von alten LUNs auf neue LUNs zu verschieben. Dadurch wird die Verantwortung vom Datenbankadministratorteam (DBA) an das Betriebssystemteam übertragen und die Daten werden in Bezug auf die Datenbank transparent migriert. Die Dateisystemkonfiguration ist unverändert.
+
+Wenn schließlich 500 Datenbanken von 200 Servern migriert werden müssen, können speicherbasierte Optionen wie die ONTAP Funktion zum Importieren fremder LUNs (Foreign LUN Import, FLI) verwendet werden, um eine direkte Migration der LUNs durchzuführen.
+
+
+
+== Anforderungen neu architekturgerecht
+
+In der Regel muss das Layout einer Datenbankdatei verändert werden, um die Funktionen des neuen Storage Array nutzen zu können. Dies ist jedoch nicht immer der Fall. Die Funktionen der EF-Series All-Flash-Arrays richten sich beispielsweise primär an SAN-Performance und SAN-Zuverlässigkeit. In den meisten Fällen können Datenbanken auf ein EF-Series Array migriert werden, ohne dass dabei besondere Überlegungen zum Datenlayout angestellt werden müssen. Die einzigen Anforderungen sind hohe IOPS, niedrige Latenz und robuste Zuverlässigkeit. Wenngleich es Best Practices für Faktoren wie RAID-Konfiguration oder Dynamic Disk Pools gibt, sind für EF-Series Projekte kaum nennenswerte Änderungen an der gesamten Storage-Architektur erforderlich, um diese Funktionen nutzen zu können.
+
+Im Gegensatz dazu erfordert die Migration zu ONTAP in der Regel eine stärkere Berücksichtigung des Datenbanklayouts, um sicherzustellen, dass die endgültige Konfiguration den größtmöglichen Nutzen erzielt. ONTAP bietet für eine Datenbankumgebung bereits viele Funktionen ohne besondere Architekturanstrengungen. Am wichtigsten ist jedoch die Möglichkeit einer unterbrechungsfreien Migration auf neue Hardware, wenn die aktuelle Hardware das Ende ihres Lebenszyklus erreicht. Generell gilt: Eine Migration zu ONTAP ist die letzte Migration, die Sie durchführen müssen. Nachfolgende Hardware Upgrades werden durchgeführt und die Daten werden unterbrechungsfrei auf neue Medien migriert.
+
+Bei einigen Planungen sind noch mehr Vorteile verfügbar. Die wichtigsten Überlegungen beziehen sich auf die Verwendung von Snapshots. Snapshots bilden die Grundlage für nahezu sofortige Backups, Restores und Klonvorgänge. Ein Beispiel für die Leistung von Snapshots ist der größte bekannte Einsatz bei einer einzigen Datenbank mit 996 TB, die auf ca. 250 LUNs auf 6 Controllern ausgeführt wird. Diese Datenbank kann innerhalb von 2 Minuten gesichert, innerhalb von 2 Minuten wiederhergestellt und innerhalb von 15 Minuten geklont werden. Zu den weiteren Vorteilen zählen die Möglichkeit, Daten im Cluster als Reaktion auf Workload-Änderungen zu verschieben, sowie die Anwendung von Quality-of-Service-Kontrollen (QoS), um in einer Umgebung mit mehreren Datenbanken eine gute und konsistente Performance zu erreichen.
+
+Technologien wie QoS-Steuerung, Datenverlagerung, Snapshots und Klonen arbeiten in nahezu jeder Konfiguration. Allerdings ist einige Überlegungen im Allgemeinen erforderlich, um die Vorteile zu maximieren. In einigen Fällen können Änderungen am Design von Datenbank-Storage-Layouts erforderlich sein, um die Investitionen in das neue Speicher-Array zu maximieren. Solche Designänderungen können sich auf die Migrationsstrategie auswirken, da Host- oder Storage-basierte Migrationen das ursprüngliche Datenlayout replizieren. Weitere Schritte sind möglicherweise erforderlich, um die Migration abzuschließen und ein für ONTAP optimiertes Daten-Layout zu liefern. Die in dargestellten Verfahren link:oracle-migration-procedures-overview.html["Oracle-Migrationsverfahren – Überblick"] Und später zeigen einige der Methoden, um nicht nur eine Datenbank zu migrieren, sondern sie mit minimalem Aufwand in das optimale finale Layout zu migrieren.
+
+
+
+== Umstellungszeit
+
+Der maximal zulässige Service-Ausfall während der Umstellung sollte ermittelt werden. Es ist ein häufiger Fehler anzunehmen, dass der gesamte Migrationsprozess zu Störungen führt. Viele Aufgaben können vor Beginn von Serviceunterbrechungen durchgeführt werden. Viele Optionen ermöglichen den Abschluss der Migration ohne Unterbrechungen oder Ausfälle. Auch wenn Unterbrechungen unvermeidbar sind, müssen Sie dennoch den maximal zulässigen Serviceausfall definieren, da die Dauer der Umstellungszeit von Prozedur zu Prozedur variiert.
+
+Das Kopieren einer 10-TB-Datenbank dauert beispielsweise in der Regel ungefähr sieben Stunden. Wenn das Unternehmen einen Ausfall von sieben Stunden zulassen muss, ist Dateikopien eine einfache und sichere Möglichkeit für die Migration. Wenn fünf Stunden nicht akzeptabel sind, lässt sich ein einfacher Protokollversand-Prozess wie (siehe) link:oracle-log-shipping["Oracle-Protokollversand"]) Kann mit minimalem Aufwand eingerichtet werden, um die Umstellungszeit auf etwa 15 Minuten zu reduzieren. Während dieser Zeit kann ein Datenbankadministrator den Prozess abschließen. Wenn 15 Minuten nicht akzeptabel sind, kann der endgültige Umstellungsprozess durch Skripting automatisiert werden, um die Umstellungszeit auf wenige Minuten zu verkürzen. Sie können eine Migration jederzeit beschleunigen, doch dies kostet Zeit und Aufwand. Die Umstellungszeitziele sollten darauf basieren, was für das Unternehmen akzeptabel ist.
+
+
+
+== Rückweg
+
+Keine Migration ist völlig risikolos. Auch wenn die Technik einwandfrei funktioniert, besteht immer die Möglichkeit eines Anwenderfehlers. Das mit einem ausgewählten Migrationspfad verbundene Risiko muss neben den Folgen einer fehlgeschlagenen Migration berücksichtigt werden. Die transparente Online-Storage-Migrationsfunktion von Oracle ASM ist beispielsweise eines der wichtigsten Merkmale, und diese Methode ist eine der zuverlässigsten. Mit dieser Methode werden die Daten jedoch irreversibel kopiert. In dem sehr unwahrscheinlichen Fall, dass ein Problem mit ASM auftritt, gibt es keinen einfachen Rückweg. Die einzige Option besteht darin, entweder die ursprüngliche Umgebung wiederherzustellen oder die Migration mit ASM zurück zu den ursprünglichen LUNs rückgängig zu machen. Das Risiko kann durch ein Backup vom Typ Snapshot auf dem ursprünglichen Storage-System minimiert, aber nicht sogar ganz beseitigt werden, vorausgesetzt, das System ist in der Lage, einen solchen Vorgang auszuführen.
+
+
+
+== Probe
+
+Einige Migrationsverfahren müssen vor der Ausführung vollständig überprüft werden. Eine Migration und eine Generalprobe des Umstellungsprozesses ist eine häufige Anfrage bei geschäftskritischen Datenbanken, bei denen die Migration erfolgreich sein und die Downtime minimiert werden muss. Zudem gehören auch die Anwenderakzeptanztests häufig zu den Aufgaben nach der Migration, und das gesamte System kann erst nach Abschluss der Tests in die Produktionsumgebung zurückgeführt werden.
+
+Wenn es Bedarf an Proben gibt, können verschiedene ONTAP Funktionen den Prozess wesentlich vereinfachen. Snapshots können insbesondere eine Testumgebung zurücksetzen und schnell mehrere platzsparende Kopien einer Datenbankumgebung erstellen.

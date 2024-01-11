@@ -1,0 +1,28 @@
+---
+sidebar: sidebar 
+permalink: mysql/file-descriptors.html 
+keywords: MySQL,MariaDB,TR-4722 
+summary: MySQL auf ONTAP 
+---
+= Dateideskriptoren
+:allow-uri-read: 
+
+
+[role="lead"]
+Für die Ausführung benötigt der MySQL Server Dateideskriptoren.
+
+Sie werden verwendet, um neue Verbindungen zu öffnen, Tabellen im Cache zu speichern, temporäre Tabellen zum Beheben komplizierter Abfragen zu erstellen und auf persistente zuzugreifen. Wenn mysqld nicht in der Lage ist, neue Dateien zu öffnen, wenn nötig, kann es nicht mehr richtig funktionieren. Ein häufiges Symptom dieses Problems ist Fehler 24, „zu viele geöffnete Dateien“. Die Anzahl der Dateideskriptoren, die mysqld gleichzeitig öffnen kann, wird durch das definiert `open_files_limit` In der Konfigurationsdatei festgelegte Option (`/etc/my.cnf`). Aber `open_files_limit` Hängt auch von den Grenzen des Betriebssystems ab. Diese Abhängigkeit macht die Einstellung der Variable komplizierter.
+
+MySQL kann seine Einstellung nicht festlegen `open_files_limit` Option höher als unter angegeben `ulimit 'open files'`. Daher müssen Sie diese Grenzwerte explizit auf Betriebssystemebene festlegen, damit MySQL Dateien nach Bedarf öffnen kann. Es gibt zwei Möglichkeiten, die Dateibegrenzung in Linux zu überprüfen:
+
+* Der `ulimit` Befehl schnell gibt Ihnen eine detaillierte Beschreibung der Parameter, die erlaubt oder gesperrt werden. Die durch die Ausführung dieses Befehls vorgenommenen Änderungen sind nicht dauerhaft und werden nach einem Neustart des Systems gelöscht.
+* Änderungen an `/etc/security/limit.conf` Die Datei ist dauerhaft und wird durch einen Systemneustart nicht beeinträchtigt.
+
+
+Stellen Sie sicher, dass Sie sowohl die harten als auch die weichen Grenzwerte für Benutzer mysql ändern. Die folgenden Auszüge stammen aus der Konfiguration:
+
+....
+mysql hard nofile 65535
+mysql soft nofile 65353
+....
+Aktualisieren Sie gleichzeitig dieselbe Konfiguration in `my.cnf` Um die offenen Dateigrenzen vollständig zu verwenden.

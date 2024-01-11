@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: vmware/vsphere/overview.html 
+keywords: introduction, unified storage, virtual volumes, storage efficiency, hybrid cloud 
+summary: Seit fast zwei Jahrzehnten ist die NetApp ONTAP Software eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen. Dieses Dokument bietet eine Einführung in die ONTAP Lösung für vSphere sowie in die neuesten Produktinformationen und Best Practices zur Optimierung der Implementierung, Risikominderung und Vereinfachung des Managements. 
+---
+= VMware vSphere mit ONTAP –
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Seit fast zwei Jahrzehnten ist die NetApp ONTAP Software eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen. Dieses Dokument bietet eine Einführung in die ONTAP Lösung für vSphere sowie in die neuesten Produktinformationen und Best Practices zur Optimierung der Implementierung, Risikominderung und Vereinfachung des Managements.
+
+
+NOTE: Diese Dokumentation ersetzt zuvor veröffentlichte technische Berichte _TR-4597: VMware vSphere for ONTAP_
+
+Andere Dokumente wie Leitfäden und Kompatibilitätslisten werden durch Best Practices ergänzt. Sie werden basierend auf Labortests und umfassenden praktischen Erfahrungen der NetApp Ingenieure und Kunden entwickelt. Es handelt sich hierbei unter Umständen nicht nur um die einzigen unterstützten Praktiken, die in jeder Umgebung funktionieren. Im Allgemeinen sind sie aber die einfachsten Lösungen, die die Anforderungen der meisten Kunden erfüllen.
+
+Der Schwerpunkt dieses Dokuments liegt auf den Funktionen der neuesten Versionen von ONTAP (9.x), die unter vSphere 7.0 oder höher ausgeführt werden. Siehe https://imt.netapp.com/matrix/#search["NetApp Interoperabilitäts-Matrix-Tool"^] Und https://www.vmware.com/resources/compatibility/search.php?deviceCategory=san["VMware Compatibility Guide"^] Finden Sie Details zu bestimmten Versionen.
+
+
+
+== Warum ONTAP für vSphere?
+
+Zehntausende Kunden haben sich für ONTAP als Storage-Lösung für vSphere entschieden. Dafür gibt es viele Gründe, beispielsweise ein Unified-Storage-System, das sowohl SAN- als auch NAS-Protokolle unterstützt, robuste Datensicherungsfunktionen mittels platzsparender Snapshots und eine Fülle von Tools, die Sie beim Management von Applikationsdaten unterstützen. Wenn Sie ein Storage-System getrennt vom Hypervisor verwenden, können Sie viele Funktionen verlagern und Ihre Investitionen in vSphere Host-Systeme optimal nutzen. Hierdurch wird sichergestellt, dass Ihre Host-Ressourcen schwerpunktmäßig für Applikations-Workloads verwendet werden. Darüber hinaus werden zufällige Auswirkungen auf die Performance von Applikationen aufgrund des Storage-Betriebs vermieden.
+
+Die Kombination von ONTAP und vSphere ermöglicht Kosteneinsparungen für Host-Hardware und VMware Software. Schützen Sie Ihre Daten außerdem zu geringeren Kosten mit konstant hoher Performance. Da virtualisierte Workloads mobil sind, können Sie mit Storage vMotion verschiedene Ansätze nutzen, um VMs auf VMFS-, NFS- oder VVols-Datastores zu verschieben. Und das alles auf ein und demselben Storage-System.
+
+Im Folgenden sind wichtige Faktoren aufgeführt, die heutzutage von Kunden wertvoll sind:
+
+* *Unified Storage.* Systeme mit ONTAP Software sind auf mehrere signifikante Arten vereinheitlicht. Dieser Ansatz bezog sich ursprünglich auf NAS- und SAN-Protokolle. ONTAP ist dabei weiterhin eine der führenden Plattformen für SAN und bietet in Bezug auf NAS die ursprünglichen Stärken. Bei vSphere könnte dieser Ansatz auch für ein einheitliches System für Virtual Desktop Infrastructure (VDI) in Kombination mit einer virtuellen Serverinfrastruktur (VSI) stehen. Systeme mit ONTAP Software sind bei VSI in der Regel kostengünstiger als herkömmliche Enterprise-Arrays, bieten zugleich aber fortschrittliche Storage-Effizienzfunktionen, mit denen Sie im selben System auch VDI gerecht werden können. ONTAP vereint außerdem eine Reihe von Storage-Medien – von SSDs bis SATA – und kann diese problemlos in die Cloud erweitern. Auf diese Weise müssen Sie nicht ein Flash-Array für Performance-Zwecke, ein SATA-Array für Archive und separate Systeme für die Cloud erwerben. Sie alle sind in ONTAP integriert.
+* *Auf virtuellen Volumes und richtlinienbasiertem Storage-Management.* NetApp war bereits früh als Designpartner von VMware an der Entwicklung von vSphere Virtual Volumes (VVols) beteiligt und stellte architekturspezifischen Input und frühzeitig Unterstützung für VVols und VMware vSphere APIs for Storage Awareness (VASA) bereit. Durch diesen Ansatz wurde nicht nur das granulare VM-Storage-Management in VMFS integriert, sondern auch die Automatisierung der Storage-Bereitstellung durch richtlinienbasiertes Management unterstützt. Storage-Architekten können mit diesem Ansatz Storage-Pools mit unterschiedlichen Funktionen entwerfen, die von VM-Administratoren einfach genutzt werden können. ONTAP ist einer der führenden Anbieter von vVol Storage-Lösungen in der Storage-Branche, da es Hunderttausende VVols in einem einzigen Cluster unterstützt. Anbieter von Enterprise-Arrays und kleineren Flash-Arrays hingegen unterstützen gerade einmal mehrere Tausend VVols pro Array. Zudem bringt NetApp mit neuen Funktionen bei der Unterstützung von VVols 3.0 die Weiterentwicklung des granularen VM-Managements voran.
+* *Storage-Effizienz.* Obwohl NetApp als erster Anbieter Deduplizierung für Produktions-Workloads bereitgestellt hat, war diese Innovation weder die erste noch die letzte in diesem Bereich. Es begann mit Snapshots, einem platzsparenden Datensicherungsmechanismus ohne Auswirkungen auf die Performance, sowie mit FlexClone Technologie, bei der sofort Lese-/Schreibkopien von VMs für die Produktion und die Nutzung von Backups erstellt werden können. Danach stellte NetApp Inline-Funktionen bereit, darunter Deduplizierung, Komprimierung und Zero-Block-Deduplizierung, mit denen sich der Storage kostspieliger SSDs maximal ausschöpfen lässt. Zuletzt wurde ONTAP um die Möglichkeit erweitert, kleinere I/O-Vorgänge und Dateien durch Data-Compaction in einen Festplattenblock zu packen. Dank der Kombination dieser Funktionen verzeichnen Kunden Einsparungen im Verhältnis von bis zu 5:1 für VSI und von bis zu 30:1 für VDI.
+* *Hybrid Cloud.* ob in der Private Cloud vor Ort, in einer Public-Cloud-Infrastruktur oder in einer Hybrid Cloud, die das Beste der beiden Lösungen vereint – ONTAP Lösungen helfen Ihnen, Ihre Data Fabric zur Optimierung und zum Optimieren des Datenmanagements aufzubauen. Den Anfang machen hochperformante All-Flash-Systeme, die dann für die Datensicherung und das Cloud-Computing mit Festplatten- oder Cloud-Storage-Systemen gekoppelt werden. Zur Kostenoptimierung und Vermeidung einer Anbieterbindung stehen hierbei Azure, AWS, IBM oder Google Clouds zur Auswahl. Bei Bedarf kann die erweiterte Unterstützung für OpenStack und Containertechnologien genutzt werden. NetApp bietet darüber hinaus Cloud-basiertes Tiering und Archivierungstools (SnapMirror Cloud, Cloud Backup Service und Cloud Sync) sowie Storage-Systeme (FabricPool) für ONTAP, um die Betriebskosten zu senken und die große Reichweite der Cloud auszuschöpfen.
+* * Und mehr.* Nutzen Sie die extreme Performance von NetApp AFF A-Series Arrays, um Ihre virtualisierte Infrastruktur zu beschleunigen und gleichzeitig die Kosten im Griff zu haben. Mit horizontal skalierbaren ONTAP Clustern profitieren Sie bei der Wartung, bei Upgrades und selbst beim kompletten Ersatz Ihres Storage-Systems von einem durchgängig unterbrechungsfreien Betrieb. Daten im Ruhezustand werden mit NetApp Verschlüsselungsfunktionen ohne zusätzliche Kosten geschützt. Durch fein abgestimmte Quality-of-Service- Funktionen stellen Sie sicher, dass die Performance den geschäftlichen Service-Levels entspricht. Sie alle sind Bestandteil des umfangreichen Funktionsbereichs, das in ONTAP, der branchenführenden Software für das Enterprise-Datenmanagement, enthalten ist.
+

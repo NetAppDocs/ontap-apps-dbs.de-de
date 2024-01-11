@@ -1,0 +1,30 @@
+---
+sidebar: sidebar 
+permalink: oracle/dr/oracle-dr-overview.html 
+keywords: metrocluster, syncmirror, oracle 
+summary: Oracle Disaster Recovery mit ONTAP 
+---
+= Disaster Recovery mit ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Disaster Recovery bezieht sich auf die Wiederherstellung von Datenservices nach einem schwerwiegenden Ereignis, beispielsweise durch einen Brand, der ein Storage-System oder sogar einen kompletten Standort zerstört.
+
+
+NOTE: Diese Dokumentation ersetzt zuvor veröffentlichte technische Berichte _TR-4591: Oracle Data Protection_ und _TR-4592: Oracle on MetroCluster._
+
+Disaster Recovery kann durch eine einfache Datenreplizierung mit SnapMirror durchgeführt werden, wobei viele Kunden gespiegelte Replikate natürlich so oft wie stündlich aktualisieren.
+
+Bei den meisten Kunden benötigt DR mehr als nur einen Remote-Kopiervorgang, sondern muss in der Lage sein, diese Daten schnell zu nutzen. NetApp bietet zwei Technologien zur Erfüllung dieser Anforderungen: MetroCluster und SnapMirror Business Continuity (SM-BC).
+
+MetroCluster bezieht sich auf ONTAP in einer Hardwarekonfiguration mit synchron gespiegelten Storage auf niedriger Ebene und zahlreichen zusätzlichen Funktionen. Integrierte Lösungen wie MetroCluster vereinfachen die heutigen komplizierten, horizontal skalierbaren Datenbanken, Applikationen und Virtualisierungsinfrastrukturen. Sie ersetzt mehrere externe Datensicherungsprodukte und -Strategien durch ein einfaches, zentrales Storage-Array. Sie bietet außerdem integriertes Backup, Recovery, Disaster Recovery und Hochverfügbarkeit (HA) in einem einzigen geclusterten Storage-System.
+
+SnapMirror Business Continuity (SM-BC) basiert auf SnapMirror Synchronous. Mit MetroCluster ist jeder ONTAP Controller für die Replizierung seiner Laufwerksdaten an einen Remote-Standort verantwortlich. Mit SM-BC haben Sie im Grunde zwei verschiedene ONTAP-Systeme, die unabhängige Kopien Ihrer LUN-Daten führen, aber zusammenarbeiten, um eine einzige Instanz dieser LUN zu präsentieren. Auf Host-Ebene handelt es sich um eine einzelne LUN-Einheit.
+
+Obwohl SM-BC und MetroCluster intern sehr unterschiedlich arbeiten, ist das Ergebnis für einen Host sehr ähnlich. Der Hauptunterschied ist die Granularität. Wenn Sie nur ausgewählte Workloads für die synchrone Replizierung benötigen, ist SM-BC die bessere Option. Wenn ganze Umgebungen oder sogar Datacenter repliziert werden müssen, ist MetroCluster die bessere Option. Darüber hinaus ist SM-BC derzeit nur SAN, während MetroCluster Multi-Protokoll-Unterstützung einschließlich SAN, NFS und SMB bietet.

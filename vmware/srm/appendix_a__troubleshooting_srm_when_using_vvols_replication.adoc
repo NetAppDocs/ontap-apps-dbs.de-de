@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: vmware/srm/appendix_a__troubleshooting_srm_when_using_vvols_replication.html 
+keywords: vmware, site, recovery manager, vsrm, hybrid, cloud, srm, vvols, replication 
+summary: Der Workflow in SRM unterscheidet sich deutlich, wenn VVols Replizierung mit dem verwendet wird, was mit SRA und herkömmlichen Datastores verwendet wird. 
+---
+= Fehlerbehebung bei SRM bei Nutzung der VVols-Replizierung
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Der Workflow in SRM unterscheidet sich deutlich, wenn VVols Replizierung mit dem verwendet wird, was mit SRA und herkömmlichen Datastores verwendet wird. Zum Beispiel gibt es kein Konzept für Array-Manager. So, `discoverarrays` Und `discoverdevices` Befehle werden nie gesehen.
+
+Bei der Fehlerbehebung sind die neuen Workflows zu verstehen, die im Folgenden aufgeführt sind:
+
+. QueryReplicationPeer: Ermittelt die Replikationsvereinbarungen zwischen zwei Fehlerdomänen.
+. QueryFaultDomain: Ermittelt die Fehlerdomäne-Hierarchie.
+. QueryReplicationGroup: Ermittelt die in den Quell- oder Zieldomänen vorhandenen Replikationsgruppen.
+. SyncReplicationGroup: Synchronisiert die Daten zwischen Quelle und Ziel.
+. QueryPointInTimeReplica: Ermittelt die Point-in-Time-Replikate auf einem Ziel.
+. TestFailoverReplicationGroupStart: Startet Test Failover.
+. TestFailoverReplicationGroupStop: Beendet das Test-Failover.
+. PromoteReplicationGroup: Fördert eine Gruppe, die sich derzeit in der Produktion befindet.
+. PreparreFailoverReplicationGroup: Bereitet sich auf eine Notfallwiederherstellung vor.
+. Failover ReplicationGroup: Durchführung einer Disaster Recovery
+. ReverseReplicateGroup: Initiiert Reverse-Replikation.
+. QueryMatchingContainer: Sucht Container (zusammen mit Hosts oder Replikationsgruppen), die eine Bereitstellungsanfrage mit einer bestimmten Richtlinie erfüllen können.
+. QueryResourceMetadaten: Ermittelt die Metadaten aller Ressourcen des VASA Providers, kann die Ressourcenauslastung als Antwort auf die queryMatchingContainer-Funktion zurückgegeben werden.
+
+
+Der häufigste Fehler bei der Konfiguration der VVols-Replizierung ist das Erkennen der SnapMirror Beziehungen. Dies geschieht, weil die Volumes und SnapMirror Beziehungen außerhalb der ONTAP Tools-Ansicht erstellt werden. Daher empfiehlt es sich, immer sicherzustellen, dass die SnapMirror Beziehung vollständig initialisiert ist und dass Sie an beiden Standorten eine erneute Bestandsaufnahme in ONTAP Tools ausführen, bevor Sie versuchen, einen replizierten VVols Datastore zu erstellen.

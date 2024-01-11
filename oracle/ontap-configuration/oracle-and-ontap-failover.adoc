@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: oracle/ontap-configuration/oracle-and-ontap-failover.html 
+keywords: failover, switchover 
+summary: Kenntnisse über Storage-Takeover- und Switchover-Funktionen sind erforderlich, damit Oracle Datenbankvorgänge nicht durch diese Vorgänge unterbrochen werden. Darüber hinaus können die Argumente für Takeover- und Switchover-Vorgänge die Datenintegrität beeinträchtigen, wenn sie falsch verwendet werden. 
+---
+= Failover/Switchover für Oracle und ONTAP-Controller
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Kenntnisse über Storage-Takeover- und Switchover-Funktionen sind erforderlich, damit Oracle Datenbankvorgänge nicht durch diese Vorgänge unterbrochen werden. Darüber hinaus können die Argumente für Takeover- und Switchover-Vorgänge die Datenintegrität beeinträchtigen, wenn sie falsch verwendet werden.
+
+* Unter normalen Bedingungen werden eingehende Schreibvorgänge an einen bestimmten Controller synchron mit seinem Partner gespiegelt. In einer NetApp MetroCluster-Umgebung werden Schreibvorgänge auch auf einem Remote Controller gespiegelt. Bis ein Schreibvorgang auf nicht-flüchtigen Medien an allen Standorten gespeichert wird, wird er für die Host-Applikation nicht bestätigt.
+* Das Medium, auf dem die Schreibdaten gespeichert sind, wird als nichtflüchtiger Speicher oder NVMEM bezeichnet. Gelegentlich wird dieser Speicher auch als NVRAM (Nonvolatile Random Access Memory) bezeichnet. Er kann als Schreib-Cache verwendet werden, obwohl er als Journal fungiert. Im normalen Betrieb werden die Daten von NVMEM nicht gelesen, sondern nur zum Schutz der Daten bei einem Software- oder Hardwareausfall verwendet. Wenn die Daten auf die Laufwerke geschrieben werden, werden die Daten vom RAM im System und nicht von NVMEM übertragen.
+* Während eines Übernahmevorgangs übernimmt ein Node in einem Hochverfügbarkeitspaar (HA) den Betrieb seines Partners. Eine Umschaltung ist im Wesentlichen dieselbe, gilt aber für MetroCluster Konfigurationen, bei denen ein Remote Node die Funktionen eines lokalen Node übernimmt.
+
+
+Bei routinemäßigen Wartungsvorgängen sollte ein Storage-Takeover- oder Switchover-Vorgang transparent sein. Anders als bei Änderungen der Netzwerkpfade besteht hier eine potenzielle kurze Betriebsunterbrechung. Networking kann jedoch kompliziert sein und es sind leicht Fehler zu machen. NetApp empfiehlt daher dringend, Takeover- und Switchover-Vorgänge sorgfältig zu testen, bevor das Storage-System in Betrieb geht. Nur so können Sie sicherstellen, dass alle Netzwerkpfade korrekt konfiguriert sind. Prüfen Sie in einer SAN-Umgebung die Ausgabe des Befehls sorgfältig `sanlun lun show -p` Um sicherzustellen, dass alle erwarteten primären und sekundären Pfade verfügbar sind.
+
+Bei erzwungener Übernahme oder Umschaltung ist Vorsicht zu beachten. Eine Änderung der Storage-Konfiguration mit diesen Optionen erzwingen, bedeutet, dass der Status des Controllers, dem die Laufwerke gehören, nicht berücksichtigt wird und der alternative Node gewaltsam die Kontrolle über die Laufwerke übernimmt. Ein falscher erzwingen eines Takeover kann zu Datenverlust oder Datenkorruption führen. Das liegt daran, dass durch eine erzwungene Übernahme oder Umschaltung die Inhalte von NVMEM verworfen werden. Nach Abschluss der Übernahme oder Umschaltung bedeutet der Verlust dieser Daten, dass die auf den Laufwerken gespeicherten Daten aus Sicht der Datenbank möglicherweise wieder in einen etwas älteren Zustand zurückgesetzt werden.
+
+Eine erzwungene Übernahme mit einem normalen HA-Paar sollte selten erforderlich sein. In fast allen Ausfallszenarien schaltet ein Node ab und informiert den Partner, sodass eine automatische Ausfallsicherung stattfindet. Es gibt einige Edge-Fälle, beispielsweise einen Rolling Failure, bei dem die Verbindung zwischen den Nodes unterbrochen wird und dann ein Controller verloren geht. Dadurch ist eine erzwungene Übernahme erforderlich. In einer solchen Situation geht die Spiegelung zwischen Nodes vor dem Controller-Ausfall verloren. Das bedeutet, dass der verbleibende Controller nicht mehr über eine Kopie der laufenden Schreibvorgänge verfügt. Das Takeover muss anschließend forciert werden, d. h., dass Daten potenziell verloren gehen.
+
+Dieselbe Logik gilt auch für eine MetroCluster-Umschaltung. Unter normalen Bedingungen ist eine Umschaltung nahezu transparent. Bei einem Ausfall kann es jedoch zu einem Verlust der Verbindung zwischen dem noch intakten Standort und dem Notfallstandort kommen. Aus Sicht des verbleibenden Standorts könnte das Problem lediglich eine Unterbrechung der Verbindung zwischen den Standorten sein, wobei der ursprüngliche Standort möglicherweise noch die Daten verarbeitet. Wenn ein Node den Status des primären Controllers nicht überprüfen kann, ist nur eine erzwungene Umschaltung möglich.
+
+[TIP]
+====
+*NetApp empfiehlt* die folgenden Vorsichtsmaßnahmen zu ergreifen:
+
+* Seien Sie vorsichtig, damit Sie nicht versehentlich eine Übernahme oder Umschaltung erzwingen. Normalerweise sollte das Erzwingen nicht erforderlich sein, und das Erzwingen der Änderung kann zu Datenverlust führen.
+* Wenn eine erzwungene Übernahme oder Umschaltung erforderlich ist, stellen Sie sicher, dass die Applikationen heruntergefahren, alle Filesysteme getrennt und die Volume-Gruppen des Logical Volume Manager (LVM) unterschiedlich sind. ASM-Diskgroups müssen abgehängt werden.
+* Sollte eine erzwungene MetroCluster-Umschaltung stattfinden, sollte der ausgefallene Node von allen verbleibenden Storage-Ressourcen abgetrennt werden. Weitere Informationen zur entsprechenden Version von ONTAP finden Sie im MetroCluster-Management- und Disaster-Recovery-Leitfaden.
+
+
+====
+
+
+== MetroCluster und mehrere Aggregate
+
+MetroCluster ist eine Technologie für die synchrone Replizierung, die bei einer Unterbrechung der Verbindung zum asynchronen Modus wechselt. Dies ist die häufigste Anforderung von Kunden, da durch die garantierte synchrone Replizierung eine Unterbrechung der Standortkonnektivität zu einem vollständigen Stillstand der Datenbank-I/O führt und die Datenbank außer Betrieb genommen wird.
+
+Mit MetroCluster synchronisieren sie Aggregate nach der Wiederherstellung der Konnektivität schnell neu. Im Gegensatz zu anderen Storage-Technologien sollte bei MetroCluster nach einem Standortausfall nie eine vollständige Respiegelung erforderlich sein. Es müssen nur Delta-Änderungen versendet werden.
+
+Bei Datensätzen, die sich über Aggregate verteilen, besteht das geringe Risiko, dass bei einem rollierenden Disaster-Szenario zusätzliche Schritte zur Daten-Recovery erforderlich wären. Insbesondere, wenn (a) die Verbindung zwischen den Standorten unterbrochen wird, (b) die Konnektivität wiederhergestellt wird, (c) die Aggregate einen Zustand erreichen, in dem einige synchronisiert werden und andere nicht, und dann (d) der primäre Standort verloren geht, ist das Ergebnis ein noch existender Standort, an dem die Aggregate nicht miteinander synchronisiert werden. In diesem Fall werden Teile des Datensatzes miteinander synchronisiert. Ohne Recovery können Applikationen, Datenbanken oder Datastores nicht mehr angezeigt werden. Wenn ein Datensatz über mehrere Aggregate verteilt ist, empfiehlt NetApp dringend, Snapshot-basierte Backups mit einem der vielen verfügbaren Tools einzusetzen, um in diesem ungewöhnlichen Szenario eine schnelle Wiederherstellbarkeit zu überprüfen.

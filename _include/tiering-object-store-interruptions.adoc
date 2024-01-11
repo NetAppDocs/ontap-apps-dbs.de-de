@@ -1,0 +1,11 @@
+= 
+:allow-uri-read: 
+
+
+Tiering ein Datensatz mit FabricPool ergibt eine Abhängigkeit zwischen dem primären Storage Array und der Objektspeicher-Ebene. Es gibt zahlreiche Objektspeicher-Optionen, die eine unterschiedliche Verfügbarkeit bieten. Es ist wichtig, die Auswirkungen eines möglichen Verbindungsverlusts zwischen dem primären Storage-Array und dem Objekt-Storage-Tier zu verstehen.
+
+Wenn ein an ONTAP ausgehändigt I/O Daten aus der Kapazitäts-Tier benötigt und ONTAP die Kapazitäts-Tier nicht erreichen kann, um Blöcke abzurufen, wird schließlich ein Ausfall des I/O-Systems erreicht. Die Auswirkung dieses Timeouts hängt vom verwendeten Protokoll ab. In einer NFS-Umgebung antwortet ONTAP je nach Protokoll entweder mit einer EJUKEBOX- oder EDELAY-Antwort. Einige ältere Betriebssysteme interpretieren dies möglicherweise als Fehler, aber aktuelle Betriebssysteme und aktuelle Patch-Level des Oracle Direct NFS-Clients behandeln dies als Retrievable-Fehler und warten weiterhin auf den Abschluss des I/O.
+
+Ein kürzeres Timeout gilt für SAN-Umgebungen. Wenn ein Block in der Objektspeicherumgebung erforderlich ist und zwei Minuten lang nicht erreichbar bleibt, wird ein Lesefehler an den Host zurückgegeben. Das ONTAP Volume und die LUNs bleiben online, das Host-Betriebssystem kennzeichnet das Filesystem jedoch möglicherweise als fehlerhaft.
+
+Konnektivitätsprobleme bei Objekt-Storage `snapshot-only` Die Richtlinie ist weniger bedenklich, da nur Backup-Daten als Tiering übertragen werden. Kommunikationsprobleme würden die Datenwiederherstellung verlangsamen, würden jedoch die aktive Nutzung der Daten nicht beeinträchtigen. Der `auto` Und `all` Mithilfe von Richtlinien wird das Tiering „kalter“ Daten von der aktiven LUN ermöglicht. Ein Fehler beim Abrufen von Objektspeicher-Daten kann sich somit auf die Datenbankverfügbarkeit auswirken. Eine SAN-Implementierung mit diesen Richtlinien sollte nur mit Objektspeicher der Enterprise-Klasse und Netzwerkverbindungen genutzt werden, die auf Hochverfügbarkeit ausgelegt sind. NetApp StorageGRID ist die überlegene Option.

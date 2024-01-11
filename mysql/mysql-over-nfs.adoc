@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: mysql/mysql-over-nfs.html 
+keywords: MySQL,MariaDB,NFS 
+summary: MySQL auf ONTAP 
+---
+= MySQL über NFS
+:allow-uri-read: 
+
+
+[role="lead"]
+Die MySQL-Dokumentation empfiehlt, NFSv4 für NAS-Bereitstellungen zu verwenden.
+
+
+
+== ONTAP NFS-Übertragungsgrößen
+
+Standardmäßig beschränkt ONTAP die NFS-I/O-Größe auf 64K. Zufällige IO mit einer MySQL-Datenbank verwendet eine viel kleinere Blockgröße, die weit unter dem 64K Maximum liegt. I/O mit großen Blöcken wird in der Regel parallelisiert, sodass die 64K-Maximalgröße ebenfalls keine Einschränkung darstellt.
+
+Es gibt einige Workloads, bei denen das 64K-Maximum eine Einschränkung darstellt. Insbesondere Vorgänge mit einem Thread, wie z. B. Backup-Vorgänge mit vollständiger Tabelle, werden schneller und effizienter ausgeführt, wenn die Datenbank weniger, aber größere I/O-Vorgänge ausführen kann. Die optimale I/O-Handhabungsgröße für ONTAP mit Datenbank-Workloads beträgt 256.000. Die unten aufgeführten NFS-Mount-Optionen für spezifische Betriebssysteme wurden entsprechend von 64K auf 256K aktualisiert.
+
+Die maximale Übertragungsgröße für eine bestimmte ONTAP SVM kann wie folgt geändert werden:
+
+[listing]
+----
+Cluster01::> set advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by NetApp personnel.
+
+Do you want to continue? {y|n}: y
+
+Cluster01::*> nfs server modify -vserver vserver1 -tcp-max-xfer-size 262144
+----
+
+CAUTION: Verringern Sie niemals die maximal zulässige Übertragungsgröße auf ONTAP unter den Wert rsize/wsize der aktuell gemounteten NFS-Dateisysteme. Dies kann bei einigen Betriebssystemen zu Hängebleiben oder sogar Datenbeschädigungen führen. Wenn beispielsweise NFS-Clients derzeit auf 65536 rsize/wsize gesetzt sind, dann könnte die maximale Übertragungsgröße für ONTAP ohne Auswirkung auf die Clients selbst begrenzt werden, zwischen 65536 und 1048576 angepasst werden. Wenn Sie die maximale Übertragungsgröße unter 65536 verringern, können die Verfügbarkeit oder die Daten beeinträchtigt werden.
+
+[TIP]
+====
+*NetApp empfiehlt*
+
+Einstellen der folgenden Einstellung für NFSv4 fstab (/etc/fstab):
+
+`nfs4 rw, hard,nointr,bg,vers=4,proto=tcp,noatime,rsize=262144,wsize=262144`
+
+====
+
+NOTE: Ein häufiges Problem mit NFSv3 waren die gesperrten InnoDB-Protokolldateien nach einem Stromausfall. Durch die Verwendung von Zeit oder das Wechseln von Protokolldateien wurde dieses Problem behoben. NFSv4 verfügt jedoch über Sperrvorgänge und verfolgt die offenen Dateien und Delegationen.

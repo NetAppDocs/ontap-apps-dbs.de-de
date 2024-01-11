@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: oracle/ontap-configuration/raid-oracle.html 
+keywords: oracle,raid,mirroring 
+summary: RAID und Oracle Datenbanken 
+---
+= Oracle RAID-Anforderungen
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+RAID bezieht sich auf den Einsatz von Redundanz, um Daten vor dem Verlust eines Laufwerks zu schützen.
+
+Gelegentlich stellen sich Fragen zu RAID-Levels bei der Konfiguration von NetApp-Speicher, der für Oracle-Datenbanken und andere Enterprise-Applikationen verwendet wird. Viele, von Oracle bewährte Verfahren zur Storage Array-Konfiguration enthalten Warnungen über die Verwendung von RAID-Spiegelung und/oder Vermeidung bestimmter Arten von RAID. Obwohl in ihnen gültige Punkte aufgeführt sind, gelten diese Quellen nicht für RAID 4 und die in ONTAP verwendeten NetApp RAID DP und RAID-TEC Technologien.
+
+RAID 4, RAID 5, RAID 6, RAID DP und RAID-TEC nutzen Parität, um sicherzustellen, dass es bei einem Laufwerksausfall zu keinem Datenverlust kommt. Diese RAID-Optionen bieten im Vergleich zur Spiegelung eine viel bessere Speichernutzung, aber die meisten RAID-Implementierungen haben einen Nachteil, der Schreibvorgänge beeinträchtigt. Für den Abschluss eines Schreibvorgangs in anderen RAID-Implementierungen sind möglicherweise mehrere Laufwerkszugriffe erforderlich, um die Paritätsdaten neu zu generieren. Dies ist ein Prozess, der allgemein als RAID-Abzug bezeichnet wird.
+
+Bei ONTAP fallen jedoch keine RAID-Einbußen an. Dies liegt an der Integration von NetApp WAFL (Write Anywhere File Layout) mit der RAID-Schicht. Schreibvorgänge werden im RAM zusammengeführt und als vollständiger RAID-Stripe einschließlich der Paritätsgenerierung vorbereitet. ONTAP muss für einen Schreibvorgang keinen Lesevorgang durchführen. Das bedeutet, dass ONTAP und WAFL die RAID-Einbußen vermeiden. Die Performance für latenzkritische Vorgänge, wie die Protokollierung von Wiederherstellungen, wird ohne Behinderung durchgeführt und zufällige Schreibvorgänge von Datendateien verursachen keine RAID-Beeinträchtigungen, da die Parität neu generiert werden muss.
+
+In Bezug auf statistische Zuverlässigkeit bietet selbst RAID DP besseren Schutz als RAID Mirroring. Das Hauptproblem besteht in der Nachfrage nach Laufwerken während einer RAID-Wiederherstellung. Bei einem gespiegelten RAID-Satz ist das Risiko eines Datenverlusts aufgrund eines Laufwerksausfalls bei der Wiederherstellung an seinen Partner im RAID-Satz deutlich größer als das Risiko eines dreifachen Laufwerksausfalls in einem RAID DP-Satz.

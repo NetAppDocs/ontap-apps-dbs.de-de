@@ -1,0 +1,1526 @@
+---
+sidebar: sidebar 
+permalink: oracle/migration/oracle-host-data-copy.html 
+keywords: migration, oracle, data copy, lvm, rebalance, asm 
+summary: Oracle-Migration mit dem Host-seitigen Storage Stack 
+---
+= Oracle Host-Datenkopie
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Wie bei der Migration auf Datenbankebene bietet auch die Migration auf Hostebene einen vom Storage-Anbieter unabhängigen Ansatz.
+
+Mit anderen Worten, manchmal "einfach die Dateien kopieren" ist die beste Option.
+
+Obwohl dieser Low-Tech-Ansatz zu einfach erscheint, bietet er doch erhebliche Vorteile, da keine spezielle Software erforderlich ist und die Originaldaten während des Prozesses sicher unberührt bleiben. Die primäre Einschränkung besteht darin, dass eine Datenmigration auf Dateikopien einen unterbrechungsfreien Prozess darstellt, da die Datenbank vor Beginn des Kopiervorgangs heruntergefahren werden muss. Es gibt keine gute Möglichkeit, Änderungen innerhalb einer Datei zu synchronisieren, so dass die Dateien vollständig stillgelegt werden müssen, bevor das Kopieren beginnt.
+
+Wenn das für einen Kopiervorgang erforderliche Herunterfahren nicht wünschenswert ist, ist die nächstbeste Host-basierte Option die Nutzung eines Logical Volume Managers (LVM). Es gibt viele LVM-Optionen, einschließlich Oracle ASM, alle mit ähnlichen Funktionen, aber auch mit einigen Einschränkungen, die berücksichtigt werden müssen. In den meisten Fällen lässt sich die Migration ohne Ausfallzeit und Unterbrechung durchführen.
+
+
+
+== Dateisystem wird kopiert
+
+Der Nutzen einer einfachen Kopieroperation sollte nicht unterschätzt werden. Dieser Vorgang erfordert während des Kopierprozesses Ausfallzeiten, ist jedoch äußerst zuverlässig und erfordert keine besondere Expertise in Bezug auf Betriebssysteme, Datenbanken oder Speichersysteme. Darüber hinaus ist es sehr sicher, weil es die ursprünglichen Daten nicht beeinträchtigt. In der Regel ändert ein Systemadministrator die Quelldateisysteme, die schreibgeschützt gemountet werden, und startet dann einen Server neu, um zu gewährleisten, dass die aktuellen Daten nicht beschädigt werden können. Der Kopiervorgang kann mithilfe eines Skripts durchgeführt werden, um sicherzustellen, dass er so schnell wie möglich ohne das Risiko eines Benutzerfehlers ausgeführt wird. Da der I/O-Typ eine einfache, sequenzielle Datenübertragung ist, ist er eine äußerst effiziente Bandbreitennutzung.
+
+Das folgende Beispiel zeigt eine Möglichkeit für eine sichere und schnelle Migration.
+
+
+
+=== Umgebung
+
+Die zu migrierende Umgebung ist wie folgt:
+
+* Aktuelle Dateisysteme
++
+....
+ontap-nfs1:/host1_oradata       52428800  16196928  36231872  31% /oradata
+ontap-nfs1:/host1_logs          49807360    548032  49259328   2% /logs
+....
+* Neue Filesysteme
++
+....
+ontap-nfs1:/host1_logs_new      49807360       128  49807232   1% /new/logs
+ontap-nfs1:/host1_oradata_new   49807360       128  49807232   1% /new/oradata
+....
+
+
+
+
+==== Überblick
+
+Die Datenbank kann von einem Datenbankadministrator migriert werden, indem er die Datenbank herunterfährt und die Dateien kopiert. Der Prozess kann jedoch problemlos Skripte erstellen, wenn viele Datenbanken migriert werden müssen oder die Ausfallzeit minimiert werden muss. Die Verwendung von Skripten verringert zudem das Risiko von Benutzerfehlern.
+
+Die Beispielskripte automatisieren die folgenden Vorgänge:
+
+* Die Datenbank wird heruntergefahren
+* Konvertieren der vorhandenen Dateisysteme in einen schreibgeschützten Zustand
+* Kopieren aller Daten von der Quelle auf Zieldateisysteme, wobei alle Dateiberechtigungen erhalten bleiben
+* Heben Sie das Mounten der alten und neuen Dateisysteme auf
+* Erneutes Mounten der neuen Dateisysteme in denselben Pfaden wie die vorherigen Dateisysteme
+
+
+
+
+=== Verfahren
+
+. Fahren Sie die Datenbank herunter.
++
+....
+[root@host1 current]# ./dbshut.pl NTAP
+ORACLE_SID = [oracle] ? The Oracle base has been set to /orabin
+SQL*Plus: Release 12.1.0.2.0 Production on Thu Dec 3 15:58:48 2015
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+Connected to:
+Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options
+SQL> Database closed.
+Database dismounted.
+ORACLE instance shut down.
+SQL> Disconnected from Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options
+NTAP shut down
+....
+. Konvertieren Sie die Dateisysteme in schreibgeschützt. Dies ist mit einem Skript schneller möglich, wie in dargestellt link:oracle-migration-sample-scripts.html#convert-file-system-to-read-only["Dateisystem in schreibgeschützt konvertieren"].
++
+....
+[root@host1 current]# ./mk.fs.readonly.pl /oradata
+/oradata unmounted
+/oradata mounted read-only
+[root@host1 current]# ./mk.fs.readonly.pl /logs
+/logs unmounted
+/logs mounted read-only
+....
+. Vergewissern Sie sich, dass die Dateisysteme jetzt schreibgeschützt sind.
++
+....
+ontap-nfs1:/host1_oradata on /oradata type nfs (ro,bg,vers=3,rsize=65536,wsize=65536,addr=172.20.101.10)
+ontap-nfs1:/host1_logs on /logs type nfs (ro,bg,vers=3,rsize=65536,wsize=65536,addr=172.20.101.10)
+....
+. Synchronisieren Sie Dateisysteminhalte mit dem `rsync` Befehl.
++
+....
+[root@host1 current]# rsync -rlpogt --stats --progress --exclude=.snapshot /oradata/ /new/oradata/
+sending incremental file list
+./
+NTAP/
+NTAP/IOPS.dbf
+ 10737426432 100%  153.50MB/s    0:01:06 (xfer#1, to-check=10/13)
+NTAP/iops.dbf.zip
+    22823573 100%   12.09MB/s    0:00:01 (xfer#2, to-check=9/13)
+...
+NTAP/undotbs02.dbf
+  1073750016 100%  131.60MB/s    0:00:07 (xfer#10, to-check=1/13)
+NTAP/users01.dbf
+     5251072 100%    3.95MB/s    0:00:01 (xfer#11, to-check=0/13)
+Number of files: 13
+Number of files transferred: 11
+Total file size: 18570092218 bytes
+Total transferred file size: 18570092218 bytes
+Literal data: 18570092218 bytes
+Matched data: 0 bytes
+File list size: 277
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 18572359828
+Total bytes received: 228
+sent 18572359828 bytes  received 228 bytes  162204017.96 bytes/sec
+total size is 18570092218  speedup is 1.00
+[root@host1 current]# rsync -rlpogt --stats --progress --exclude=.snapshot /logs/ /new/logs/
+sending incremental file list
+./
+NTAP/
+NTAP/1_22_897068759.dbf
+    45523968 100%   95.98MB/s    0:00:00 (xfer#1, to-check=15/18)
+NTAP/1_23_897068759.dbf
+    40601088 100%   49.45MB/s    0:00:00 (xfer#2, to-check=14/18)
+...
+NTAP/redo/redo02.log
+    52429312 100%   44.68MB/s    0:00:01 (xfer#12, to-check=1/18)
+NTAP/redo/redo03.log
+    52429312 100%   68.03MB/s    0:00:00 (xfer#13, to-check=0/18)
+Number of files: 18
+Number of files transferred: 13
+Total file size: 527032832 bytes
+Total transferred file size: 527032832 bytes
+Literal data: 527032832 bytes
+Matched data: 0 bytes
+File list size: 413
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 527098156
+Total bytes received: 278
+sent 527098156 bytes  received 278 bytes  95836078.91 bytes/sec
+total size is 527032832  speedup is 1.00
+....
+. Heben Sie die Bereitstellung der alten Dateisysteme auf, und verschieben Sie die kopierten Daten. Dies ist mit einem Skript schneller möglich, wie in dargestellt link:oracle-migration-sample-scripts.html#replace-file-system["Ersetzen Sie Das Dateisystem"].
++
+....
+[root@host1 current]# ./swap.fs.pl /logs,/new/logs
+/new/logs unmounted
+/logs unmounted
+Updated /logs mounted
+[root@host1 current]# ./swap.fs.pl /oradata,/new/oradata
+/new/oradata unmounted
+/oradata unmounted
+Updated /oradata mounted
+....
+. Vergewissern Sie sich, dass die neuen Dateisysteme in der Position sind.
++
+....
+ontap-nfs1:/host1_logs_new on /logs type nfs (rw,bg,vers=3,rsize=65536,wsize=65536,addr=172.20.101.10)
+ontap-nfs1:/host1_oradata_new on /oradata type nfs (rw,bg,vers=3,rsize=65536,wsize=65536,addr=172.20.101.10)
+....
+. Starten Sie die Datenbank.
++
+....
+[root@host1 current]# ./dbstart.pl NTAP
+ORACLE_SID = [oracle] ? The Oracle base has been set to /orabin
+SQL*Plus: Release 12.1.0.2.0 Production on Thu Dec 3 16:10:07 2015
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+Connected to an idle instance.
+SQL> ORACLE instance started.
+Total System Global Area  805306368 bytes
+Fixed Size                  2929552 bytes
+Variable Size             390073456 bytes
+Database Buffers          406847488 bytes
+Redo Buffers                5455872 bytes
+Database mounted.
+Database opened.
+SQL> Disconnected from Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options
+NTAP started
+....
+
+
+
+
+=== Vollständig automatisierte Umstellung
+
+Dieses Beispielskript akzeptiert Argumente der Datenbank-SID gefolgt von gemeinsam getrennten Paaren von Dateisystemen. Für das oben abgebildete Beispiel wird der Befehl wie folgt ausgegeben:
+
+....
+[root@host1 current]# ./migrate.oracle.fs.pl NTAP /logs,/new/logs /oradata,/new/oradata
+....
+Wenn das Beispielskript ausgeführt wird, wird die folgende Sequenz ausgeführt. Er wird beendet, wenn in einem beliebigen Schritt ein Fehler auftritt:
+
+. Fahren Sie die Datenbank herunter.
+. Konvertieren Sie die aktuellen Dateisysteme in den schreibgeschützten Status.
+. Verwenden Sie jedes durch Kommas getrennte Paar von Dateisystemargumenten, und synchronisieren Sie das erste Dateisystem mit dem zweiten.
+. Entfernen Sie die früheren Dateisysteme.
+. Aktualisieren Sie die `/etc/fstab` Datei wie folgt:
++
+.. Erstellen Sie ein Backup bei `/etc/fstab.bak`.
+.. Kommentieren Sie die vorherigen Einträge für die vorherigen und neuen Dateisysteme.
+.. Erstellen Sie einen neuen Eintrag für das neue Dateisystem, das den alten Bereitstellungspunkt verwendet.
+
+
+. Mounten Sie die Dateisysteme.
+. Starten Sie die Datenbank.
+
+
+Der folgende Text enthält ein Ausführungsbeispiel für dieses Skript:
+
+....
+[root@host1 current]# ./migrate.oracle.fs.pl NTAP /logs,/new/logs /oradata,/new/oradata
+ORACLE_SID = [oracle] ? The Oracle base has been set to /orabin
+SQL*Plus: Release 12.1.0.2.0 Production on Thu Dec 3 17:05:50 2015
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+Connected to:
+Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options
+SQL> Database closed.
+Database dismounted.
+ORACLE instance shut down.
+SQL> Disconnected from Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options
+NTAP shut down
+sending incremental file list
+./
+NTAP/
+NTAP/1_22_897068759.dbf
+    45523968 100%  185.40MB/s    0:00:00 (xfer#1, to-check=15/18)
+NTAP/1_23_897068759.dbf
+    40601088 100%   81.34MB/s    0:00:00 (xfer#2, to-check=14/18)
+...
+NTAP/redo/redo02.log
+    52429312 100%   70.42MB/s    0:00:00 (xfer#12, to-check=1/18)
+NTAP/redo/redo03.log
+    52429312 100%   47.08MB/s    0:00:01 (xfer#13, to-check=0/18)
+Number of files: 18
+Number of files transferred: 13
+Total file size: 527032832 bytes
+Total transferred file size: 527032832 bytes
+Literal data: 527032832 bytes
+Matched data: 0 bytes
+File list size: 413
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 527098156
+Total bytes received: 278
+sent 527098156 bytes  received 278 bytes  150599552.57 bytes/sec
+total size is 527032832  speedup is 1.00
+Succesfully replicated filesystem /logs to /new/logs
+sending incremental file list
+./
+NTAP/
+NTAP/IOPS.dbf
+ 10737426432 100%  176.55MB/s    0:00:58 (xfer#1, to-check=10/13)
+NTAP/iops.dbf.zip
+    22823573 100%    9.48MB/s    0:00:02 (xfer#2, to-check=9/13)
+... NTAP/undotbs01.dbf
+   309338112 100%   70.76MB/s    0:00:04 (xfer#9, to-check=2/13)
+NTAP/undotbs02.dbf
+  1073750016 100%  187.65MB/s    0:00:05 (xfer#10, to-check=1/13)
+NTAP/users01.dbf
+     5251072 100%    5.09MB/s    0:00:00 (xfer#11, to-check=0/13)
+Number of files: 13
+Number of files transferred: 11
+Total file size: 18570092218 bytes
+Total transferred file size: 18570092218 bytes
+Literal data: 18570092218 bytes
+Matched data: 0 bytes
+File list size: 277
+File list generation time: 0.001 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 18572359828
+Total bytes received: 228
+sent 18572359828 bytes  received 228 bytes  177725933.55 bytes/sec
+total size is 18570092218  speedup is 1.00
+Succesfully replicated filesystem /oradata to /new/oradata
+swap 0 /logs /new/logs
+/new/logs unmounted
+/logs unmounted
+Mounted updated /logs
+Swapped filesystem /logs for /new/logs
+swap 1 /oradata /new/oradata
+/new/oradata unmounted
+/oradata unmounted
+Mounted updated /oradata
+Swapped filesystem /oradata for /new/oradata
+ORACLE_SID = [oracle] ? The Oracle base has been set to /orabin
+SQL*Plus: Release 12.1.0.2.0 Production on Thu Dec 3 17:08:59 2015
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+Connected to an idle instance.
+SQL> ORACLE instance started.
+Total System Global Area  805306368 bytes
+Fixed Size                  2929552 bytes
+Variable Size             390073456 bytes
+Database Buffers          406847488 bytes
+Redo Buffers                5455872 bytes
+Database mounted.
+Database opened.
+SQL> Disconnected from Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, OLAP, Advanced Analytics and Real Application Testing options
+NTAP started
+[root@host1 current]#
+....
+
+
+== Oracle ASM SPFile- und Passthwd-Migration
+
+Eine Schwierigkeit beim Abschluss der ASM-Migration sind die ASM-spezifische SPFile- und die Passwort-Datei. Standardmäßig werden diese kritischen Metadatendateien auf der ersten definierten ASM-Laufwerksgruppe erstellt. Wenn eine bestimmte ASM-Datenträgergruppe evakuiert und entfernt werden muss, müssen die SPFile- und Passwortdatei, die diese ASM-Instanz regelt, verschoben werden.
+
+Ein weiterer Anwendungsfall, in dem diese Dateien eventuell verschoben werden müssen, ist die Implementierung von Datenbankmanagement-Software wie beispielsweise SnapManager für Oracle oder dem SnapCenter Oracle Plug-in. Eine der Funktionen dieser Produkte besteht darin, eine Datenbank schnell wiederherzustellen, indem der Zustand der ASM-LUNs, die die Datendateien hosten, zurückgesetzt wird. Um dies zu tun, muss die ASM-Laufwerksgruppe offline geschaltet werden, bevor eine Wiederherstellung durchgeführt werden kann. Dies ist kein Problem, solange die Datendateien einer Datenbank in einer dedizierten ASM-Datenträgergruppe isoliert sind.
+
+Wenn diese Datenträgergruppe auch die ASM-Datei spfile/passwd enthält, kann die Datenträgergruppe nur offline geschaltet werden, wenn die gesamte ASM-Instanz heruntergefahren wird. Dies ist ein disruptiver Prozess, was bedeutet, dass die Datei spfile/passwd verschoben werden muss.
+
+
+
+=== Umgebung
+
+. Datenbank-SID = TOAST
+. Aktuelle Datendateien auf `+DATA`
+. Aktuelle Logfiles und Controlfiles auf `+LOGS`
+. Neue ASM-Laufwerksgruppen als eingerichtet `+NEWDATA` Und `+NEWLOGS`
+
+
+
+
+=== Speicherorte für ASM-SPfile/passwd-Dateien
+
+Die Verlagerung dieser Dateien kann ohne Unterbrechungen erfolgen. Aus Sicherheitsgründen empfiehlt NetApp jedoch, die Datenbankumgebung herunterzufahren, damit Sie sicher sein können, dass die Dateien verschoben wurden und die Konfiguration ordnungsgemäß aktualisiert wird. Dieses Verfahren muss wiederholt werden, wenn mehrere ASM-Instanzen auf einem Server vorhanden sind.
+
+
+
+==== Ermitteln Sie ASM-Instanzen
+
+Ermitteln Sie die ASM-Instanzen anhand der in aufgezeichneten Daten `oratab` Datei: Die ASM-Instanzen werden durch ein +-Symbol gekennzeichnet.
+
+....
+-bash-4.1$ cat /etc/oratab | grep '^+'
++ASM:/orabin/grid:N             # line added by Agent
+....
+Auf diesem Server befindet sich eine ASM-Instanz namens +ASM.
+
+
+
+==== Stellen Sie sicher, dass alle Datenbanken heruntergefahren werden
+
+Der einzige sichtbare smon-Prozess sollte der sman für die verwendete ASM-Instanz sein. Ein weiterer smon-Prozess zeigt an, dass eine Datenbank noch läuft.
+
+....
+-bash-4.1$ ps -ef | grep smon
+oracle     857     1  0 18:26 ?        00:00:00 asm_smon_+ASM
+....
+Der einzige smon-Prozess ist die ASM-Instanz selbst. Das bedeutet, dass keine anderen Datenbanken ausgeführt werden und ohne das Risiko einer Störung der Datenbankvorgänge sicher fortgesetzt werden kann.
+
+
+
+==== Suchen Sie Dateien
+
+Ermitteln Sie den aktuellen Speicherort der ASM-Datei und der Passwortdatei mithilfe des `spget` Und `pwget` Befehle.
+
+....
+bash-4.1$ asmcmd
+ASMCMD> spget
++DATA/spfile.ora
+....
+....
+ASMCMD> pwget --asm
++DATA/orapwasm
+....
+Beide Dateien befinden sich an der Basis des `+DATA` Festplattengruppe.
+
+
+
+=== Dateien kopieren
+
+Kopieren Sie die Dateien mit dem in die neue ASM-Datenträgergruppe `spcopy` Und `pwcopy` Befehle. Wenn die neue Laufwerksgruppe vor kurzem erstellt wurde und derzeit leer ist, muss sie möglicherweise zuerst gemountet werden.
+
+....
+ASMCMD> mount NEWDATA
+....
+....
+ASMCMD> spcopy +DATA/spfile.ora +NEWDATA/spfile.ora
+copying +DATA/spfile.ora -> +NEWDATA/spfilea.ora
+....
+....
+ASMCMD> pwcopy +DATA/orapwasm +NEWDATA/orapwasm
+copying +DATA/orapwasm -> +NEWDATA/orapwasm
+....
+Die Dateien wurden nun von kopiert `+DATA` Bis `+NEWDATA`.
+
+
+
+==== ASM-Instanz aktualisieren
+
+Die ASM-Instanz muss jetzt aktualisiert werden, um die Standortänderung widerzuspiegeln. Der `spset` Und `pwset` Befehle aktualisieren die zum Starten der ASM-Datenträgergruppe erforderlichen ASM-Metadaten.
+
+....
+ASMCMD> spset +NEWDATA/spfile.ora
+ASMCMD> pwset --asm +NEWDATA/orapwasm
+....
+
+
+==== Aktivieren Sie ASM mit aktualisierten Dateien
+
+Zu diesem Zeitpunkt verwendet die ASM-Instanz weiterhin die früheren Speicherorte dieser Dateien. Die Instanz muss neu gestartet werden, um ein erneutes Lesen der Dateien von ihren neuen Speicherorten zu erzwingen und Sperren für die vorherigen Dateien freizugeben.
+
+....
+-bash-4.1$ sqlplus / as sysasm
+SQL> shutdown immediate;
+ASM diskgroups volume disabled
+ASM diskgroups dismounted
+ASM instance shutdown
+....
+....
+SQL> startup
+ASM instance started
+Total System Global Area 1140850688 bytes
+Fixed Size                  2933400 bytes
+Variable Size            1112751464 bytes
+ASM Cache                  25165824 bytes
+ORA-15032: not all alterations performed
+ORA-15017: diskgroup "NEWDATA" cannot be mounted
+ORA-15013: diskgroup "NEWDATA" is already mounted
+....
+
+
+==== Entfernen Sie alte spfile- und Passwortdateien
+
+Wenn der Vorgang erfolgreich durchgeführt wurde, sind die vorherigen Dateien nicht mehr gesperrt und können jetzt entfernt werden.
+
+....
+-bash-4.1$ asmcmd
+ASMCMD> rm +DATA/spfile.ora
+ASMCMD> rm +DATA/orapwasm
+....
+
+
+== Kopie von Oracle ASM zu ASM
+
+Oracle ASM ist im Grunde ein schlankes kombiniertes Volume-Manager- und Dateisystem. Da das Dateisystem nicht sofort sichtbar ist, muss RMAN für Kopiervorgänge verwendet werden. Ein auf Kopien basierender Migrationsprozess ist zwar sicher und einfach, kann jedoch mit Unterbrechungen verbunden sein. Die Unterbrechung kann minimiert, aber nicht vollständig beseitigt werden.
+
+Wenn Sie eine unterbrechungsfreie Migration einer ASM-basierten Datenbank wünschen, empfiehlt es sich, die ASM-Fähigkeit zu nutzen, um ASM-Extents auf neue LUNs auszugleichen, während die alten LUNs gelöscht werden. Dies ist im Allgemeinen sicher und unterbrechungsfrei, bietet aber keinen Ausweg. Wenn Funktions- oder Leistungsprobleme auftreten, besteht die einzige Möglichkeit darin, die Daten zurück zur Quelle zu migrieren.
+
+Dieses Risiko kann vermieden werden, indem die Datenbank an den neuen Speicherort kopiert wird, anstatt Daten zu verschieben, sodass die Originaldaten nicht geändert werden. Die Datenbank kann vor der Inbetriebnahme vollständig an ihrem neuen Standort getestet werden, und die ursprüngliche Datenbank steht als Fallback-Option zur Verfügung, wenn Probleme gefunden werden.
+
+Dieses Verfahren ist eine von vielen Optionen, die RMAN einbeziehen. Er ermöglicht einen zweistufigen Prozess, bei dem das erste Backup erstellt und später durch die Protokollwiedergabe synchronisiert wird. Dieser Prozess sollte die Downtime minimieren, da die Datenbank betriebsbereit bleibt und während der ersten Basiskopie Daten bereitgestellt werden können.
+
+
+
+=== Datenbank kopieren
+
+Oracle RMAN erstellt eine vollständige Kopie der Quelldatenbank der Ebene 0, die sich derzeit in der ASM-Datenträgergruppe befindet `+DATA` An den neuen Standort am `+NEWDATA`.
+
+....
+-bash-4.1$ rman target /
+Recovery Manager: Release 12.1.0.2.0 - Production on Sun Dec 6 17:40:03 2015
+Copyright (c) 1982, 2014, Oracle and/or its affiliates.  All rights reserved.
+connected to target database: TOAST (DBID=2084313411)
+RMAN> backup as copy incremental level 0 database format '+NEWDATA' tag 'ONTAP_MIGRATION';
+Starting backup at 06-DEC-15
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=302 device type=DISK
+channel ORA_DISK_1: starting datafile copy
+input datafile file number=00001 name=+DATA/TOAST/DATAFILE/system.262.897683141
+...
+input datafile file number=00004 name=+DATA/TOAST/DATAFILE/users.264.897683151
+output file name=+NEWDATA/TOAST/DATAFILE/users.258.897759623 tag=ONTAP_MIGRATION RECID=5 STAMP=897759622
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:01
+channel ORA_DISK_1: starting incremental level 0 datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+including current SPFILE in backup set
+channel ORA_DISK_1: starting piece 1 at 06-DEC-15
+channel ORA_DISK_1: finished piece 1 at 06-DEC-15
+piece handle=+NEWDATA/TOAST/BACKUPSET/2015_12_06/nnsnn0_ontap_migration_0.262.897759623 tag=ONTAP_MIGRATION comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:01
+Finished backup at 06-DEC-15
+....
+
+
+=== Schalter für Archivprotokoll erzwingen
+
+Sie müssen einen Schalter für das Archivprotokoll erzwingen, um sicherzustellen, dass die Archivprotokolle alle Daten enthalten, die erforderlich sind, um die Kopie vollständig konsistent zu machen. Ohne diesen Befehl können Schlüsseldaten in den Wiederherstellungsprotokollen weiterhin vorhanden sein.
+
+....
+RMAN> sql 'alter system archive log current';
+sql statement: alter system archive log current
+....
+
+
+=== Quelldatenbank herunterfahren
+
+Die Unterbrechung beginnt in diesem Schritt, weil die Datenbank heruntergefahren und in einen schreibgeschützten Modus mit eingeschränktem Zugriff versetzt wird. Um die Quelldatenbank herunterzufahren, führen Sie die folgenden Befehle aus:
+
+....
+RMAN> shutdown immediate;
+using target database control file instead of recovery catalog
+database closed
+database dismounted
+Oracle instance shut down
+RMAN> startup mount;
+connected to target database (not started)
+Oracle instance started
+database mounted
+Total System Global Area     805306368 bytes
+Fixed Size                     2929552 bytes
+Variable Size                390073456 bytes
+Database Buffers             406847488 bytes
+Redo Buffers                   5455872 bytes
+....
+
+
+=== Backup von Controlfile
+
+Sie müssen die controlfile sichern, falls Sie die Migration abbrechen und zum ursprünglichen Speicherort zurückkehren müssen. Eine Kopie der Backup-Steuerdatei ist nicht 100% erforderlich, aber es macht den Prozess des Rücksetzens der Datenbank-Speicherorte zurück an den ursprünglichen Speicherort einfacher.
+
+....
+RMAN> backup as copy current controlfile format '/tmp/TOAST.ctrl';
+Starting backup at 06-DEC-15
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=358 device type=DISK
+channel ORA_DISK_1: starting datafile copy
+copying current control file
+output file name=/tmp/TOAST.ctrl tag=TAG20151206T174753 RECID=6 STAMP=897760073
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:01
+Finished backup at 06-DEC-15
+....
+
+
+=== Parameteraktualisierungen
+
+Der aktuelle spfile enthält Verweise auf die Steuerdateien an ihren aktuellen Speicherorten innerhalb der alten ASM-Datenträgergruppe. Es muss bearbeitet werden, was leicht durch das Bearbeiten einer Zwischenversion von pfile erfolgt.
+
+....
+RMAN> create pfile='/tmp/pfile' from spfile;
+Statement processed
+....
+
+
+==== Aktualisieren Sie pfile
+
+Aktualisieren Sie alle Parameter, die sich auf alte ASM-Datenträgergruppen beziehen, um die neuen Namen der ASM-Datenträgergruppen wiederzugeben. Speichern Sie dann die aktualisierte Datei pfile. Stellen Sie sicher, dass die `db_create` Parameter sind vorhanden.
+
+Im folgenden Beispiel werden die Verweise auf angezeigt `+DATA` Die in geändert wurden `+NEWDATA` Sind gelb markiert. Zwei wichtige Parameter sind die `db_create` Parameter, die neue Dateien am richtigen Speicherort erstellen.
+
+....
+*.compatible='12.1.0.2.0'
+*.control_files='+NEWLOGS/TOAST/CONTROLFILE/current.258.897683139'
+*.db_block_size=8192
+*. db_create_file_dest='+NEWDATA'
+*. db_create_online_log_dest_1='+NEWLOGS'
+*.db_domain=''
+*.db_name='TOAST'
+*.diagnostic_dest='/orabin'
+*.dispatchers='(PROTOCOL=TCP) (SERVICE=TOASTXDB)'
+*.log_archive_dest_1='LOCATION=+NEWLOGS'
+*.log_archive_format='%t_%s_%r.dbf'
+....
+
+
+==== Init.ora-Datei aktualisieren
+
+Die meisten ASM-basierten Datenbanken verwenden einen `init.ora` Datei befindet sich im `$ORACLE_HOME/dbs` Verzeichnis, das einen Punkt auf das Spfile auf der ASM-Datenträgergruppe darstellt. Diese Datei muss an einen Speicherort auf der neuen ASM-Datenträgergruppe umgeleitet werden.
+
+....
+-bash-4.1$ cd $ORACLE_HOME/dbs
+-bash-4.1$ cat initTOAST.ora
+SPFILE='+DATA/TOAST/spfileTOAST.ora'
+....
+Ändern Sie diese Datei wie folgt:
+
+....
+SPFILE=+NEWLOGS/TOAST/spfileTOAST.ora
+....
+
+
+==== Wiederherstellung der Parameterdatei
+
+Der spfile kann nun mit den Daten in der bearbeiteten pfile gefüllt werden.
+
+....
+RMAN> create spfile from pfile='/tmp/pfile';
+Statement processed
+....
+
+
+==== Starten Sie die Datenbank, um neue spfile zu verwenden
+
+Starten Sie die Datenbank, um sicherzustellen, dass sie jetzt den neu erstellten spfile verwendet und dass alle weiteren Änderungen an den Systemparametern korrekt aufgezeichnet werden.
+
+....
+RMAN> startup nomount;
+connected to target database (not started)
+Oracle instance started
+Total System Global Area     805306368 bytes
+Fixed Size                     2929552 bytes
+Variable Size                373296240 bytes
+Database Buffers             423624704 bytes
+Redo Buffers                   5455872 bytes
+....
+
+
+=== Kontrolldatei wiederherstellen
+
+Die von RMAN erstellte Backup-Controldatei kann auch direkt an dem im neuen spfile angegebenen Speicherort wiederhergestellt werden.
+
+....
+RMAN> restore controlfile from '+DATA/TOAST/CONTROLFILE/current.258.897683139';
+Starting restore at 06-DEC-15
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=417 device type=DISK
+channel ORA_DISK_1: copied control file copy
+output file name=+NEWLOGS/TOAST/CONTROLFILE/current.273.897761061
+Finished restore at 06-DEC-15
+....
+Mounten Sie die Datenbank und überprüfen Sie die Verwendung der neuen Steuerdatei.
+
+....
+RMAN> alter database mount;
+using target database control file instead of recovery catalog
+Statement processed
+....
+....
+SQL> show parameter control_files;
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+control_files                        string      +NEWLOGS/TOAST/CONTROLFILE/cur
+                                                 rent.273.897761061
+....
+
+
+=== Protokollwiedergabe
+
+Die Datenbank verwendet derzeit die Datendateien am alten Speicherort. Bevor die Kopie verwendet werden kann, müssen sie synchronisiert werden. Die Zeit während des ersten Kopiervorgangs ist verstrichen, und die Änderungen wurden hauptsächlich in den Archivprotokollen protokolliert. Diese Änderungen werden wie folgt repliziert:
+
+. Führen Sie ein inkrementelles RMAN-Backup durch, das die Archivprotokolle enthält.
++
+....
+RMAN> backup incremental level 1 format '+NEWLOGS' for recover of copy with tag 'ONTAP_MIGRATION' database;
+Starting backup at 06-DEC-15
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=62 device type=DISK
+channel ORA_DISK_1: starting incremental level 1 datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00001 name=+DATA/TOAST/DATAFILE/system.262.897683141
+input datafile file number=00002 name=+DATA/TOAST/DATAFILE/sysaux.260.897683143
+input datafile file number=00003 name=+DATA/TOAST/DATAFILE/undotbs1.257.897683145
+input datafile file number=00004 name=+DATA/TOAST/DATAFILE/users.264.897683151
+channel ORA_DISK_1: starting piece 1 at 06-DEC-15
+channel ORA_DISK_1: finished piece 1 at 06-DEC-15
+piece handle=+NEWLOGS/TOAST/BACKUPSET/2015_12_06/nnndn1_ontap_migration_0.268.897762693 tag=ONTAP_MIGRATION comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:01
+channel ORA_DISK_1: starting incremental level 1 datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+including current control file in backup set
+including current SPFILE in backup set
+channel ORA_DISK_1: starting piece 1 at 06-DEC-15
+channel ORA_DISK_1: finished piece 1 at 06-DEC-15
+piece handle=+NEWLOGS/TOAST/BACKUPSET/2015_12_06/ncsnn1_ontap_migration_0.267.897762697 tag=ONTAP_MIGRATION comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:01
+Finished backup at 06-DEC-15
+....
+. Wiederholen Sie das Protokoll.
++
+....
+RMAN> recover copy of database with tag 'ONTAP_MIGRATION';
+Starting recover at 06-DEC-15
+using channel ORA_DISK_1
+channel ORA_DISK_1: starting incremental datafile backup set restore
+channel ORA_DISK_1: specifying datafile copies to recover
+recovering datafile copy file number=00001 name=+NEWDATA/TOAST/DATAFILE/system.259.897759609
+recovering datafile copy file number=00002 name=+NEWDATA/TOAST/DATAFILE/sysaux.263.897759615
+recovering datafile copy file number=00003 name=+NEWDATA/TOAST/DATAFILE/undotbs1.264.897759619
+recovering datafile copy file number=00004 name=+NEWDATA/TOAST/DATAFILE/users.258.897759623
+channel ORA_DISK_1: reading from backup piece +NEWLOGS/TOAST/BACKUPSET/2015_12_06/nnndn1_ontap_migration_0.268.897762693
+channel ORA_DISK_1: piece handle=+NEWLOGS/TOAST/BACKUPSET/2015_12_06/nnndn1_ontap_migration_0.268.897762693 tag=ONTAP_MIGRATION
+channel ORA_DISK_1: restored backup piece 1
+channel ORA_DISK_1: restore complete, elapsed time: 00:00:01
+Finished recover at 06-DEC-15
+....
+
+
+
+
+=== Aktivierung
+
+Die wiederhergestellte Steuerdatei verweist weiterhin auf die Datendateien am ursprünglichen Speicherort und enthält auch die Pfadinformationen für die kopierten Datendateien.
+
+. Um die aktiven Datendateien zu ändern, führen Sie den aus `switch database to copy` Befehl.
++
+....
+RMAN> switch database to copy;
+datafile 1 switched to datafile copy "+NEWDATA/TOAST/DATAFILE/system.259.897759609"
+datafile 2 switched to datafile copy "+NEWDATA/TOAST/DATAFILE/sysaux.263.897759615"
+datafile 3 switched to datafile copy "+NEWDATA/TOAST/DATAFILE/undotbs1.264.897759619"
+datafile 4 switched to datafile copy "+NEWDATA/TOAST/DATAFILE/users.258.897759623"
+....
++
+Die aktiven Datendateien sind nun die kopierten Datendateien, aber es können immer noch Änderungen in den letzten Redo-Protokollen enthalten sein.
+
+. Um alle verbleibenden Protokolle wiederzugeben, führen Sie den aus `recover database` Befehl. Wenn die Meldung angezeigt wird `media recovery complete` Wird angezeigt, der Prozess war erfolgreich.
++
+....
+RMAN> recover database;
+Starting recover at 06-DEC-15
+using channel ORA_DISK_1
+starting media recovery
+media recovery complete, elapsed time: 00:00:01
+Finished recover at 06-DEC-15
+....
++
+Bei diesem Vorgang wurde nur der Speicherort der normalen Datendateien geändert. Die temporären Datendateien müssen umbenannt werden, müssen aber nicht kopiert werden, da sie nur temporär sind. Die Datenbank ist derzeit nicht verfügbar, sodass es keine aktiven Daten in den temporären Datendateien gibt.
+
+. Um die temporären Datendateien zu verschieben, geben Sie zuerst ihren Speicherort an.
++
+....
+RMAN> select file#||' '||name from v$tempfile;
+FILE#||''||NAME
+--------------------------------------------------------------------------------
+1 +DATA/TOAST/TEMPFILE/temp.263.897683145
+....
+. Verschieben Sie temporäre Datendateien mithilfe eines RMAN-Befehls, der den neuen Namen für jede Datendatei festlegt. Bei Oracle Managed Files (OMF) ist der vollständige Name nicht erforderlich; die ASM-Datenträgergruppe reicht aus. Wenn die Datenbank geöffnet wird, verknüpft OMF mit dem entsprechenden Speicherort in der ASM-Datenträgergruppe. Um Dateien zu verschieben, führen Sie die folgenden Befehle aus:
++
+....
+run {
+set newname for tempfile 1 to '+NEWDATA';
+switch tempfile all;
+}
+....
++
+....
+RMAN> run {
+2> set newname for tempfile 1 to '+NEWDATA';
+3> switch tempfile all;
+4> }
+executing command: SET NEWNAME
+renamed tempfile 1 to +NEWDATA in control file
+....
+
+
+
+
+=== Migration des Wiederherstellungsprotokolls
+
+Der Migrationsprozess ist fast abgeschlossen, aber die Wiederherstellungsprotokolle befinden sich immer noch in der ursprünglichen ASM-Laufwerksgruppe. Wiederherstellungsprotokolle können nicht direkt verschoben werden. Stattdessen wird ein neuer Satz von Wiederherstellungsprotokollen erstellt und der Konfiguration hinzugefügt, gefolgt von einem Drop der alten Protokolle.
+
+. Ermitteln Sie die Anzahl der Redo-Log-Gruppen und deren jeweilige Gruppennummern.
++
+....
+RMAN> select group#||' '||member from v$logfile;
+GROUP#||''||MEMBER
+--------------------------------------------------------------------------------
+1 +DATA/TOAST/ONLINELOG/group_1.261.897683139
+2 +DATA/TOAST/ONLINELOG/group_2.259.897683139
+3 +DATA/TOAST/ONLINELOG/group_3.256.897683139
+....
+. Geben Sie die Größe der Wiederherstellungsprotokolle ein.
++
+....
+RMAN> select group#||' '||bytes from v$log;
+GROUP#||''||BYTES
+--------------------------------------------------------------------------------
+1 52428800
+2 52428800
+3 52428800
+....
+. Erstellen Sie für jedes Redo-Protokoll eine neue Gruppe mit einer passenden Konfiguration. Wenn Sie OMF nicht verwenden, müssen Sie den vollständigen Pfad angeben. Dies ist auch ein Beispiel, das den verwendet `db_create_online_log` Parameter. Wie bereits gezeigt, wurde dieser Parameter auf +NEWLOGS gesetzt. Mit dieser Konfiguration können Sie die folgenden Befehle verwenden, um neue Online-Protokolle zu erstellen, ohne einen Dateispeicherort oder sogar eine bestimmte ASM-Datenträgergruppe angeben zu müssen.
++
+....
+RMAN> alter database add logfile size 52428800;
+Statement processed
+RMAN> alter database add logfile size 52428800;
+Statement processed
+RMAN> alter database add logfile size 52428800;
+Statement processed
+....
+. Öffnen Sie die Datenbank.
++
+....
+SQL> alter database open;
+Database altered.
+....
+. Die alten Protokolle ablegen.
++
+....
+RMAN> alter database drop logfile group 1;
+Statement processed
+....
+. Wenn ein Fehler auftritt, der verhindert, dass Sie ein aktives Protokoll ablegen, erzwingen Sie einen Wechsel zum nächsten Protokoll, um die Sperre freizugeben und einen globalen Kontrollpunkt zu erzwingen. Ein Beispiel ist unten dargestellt. Der Versuch, die Logfile-Gruppe 3, die sich am alten Speicherort befand, zu löschen, wurde abgelehnt, da noch aktive Daten in dieser Logdatei vorhanden waren. Eine Protokollarchivierung nach einem Kontrollpunkt ermöglicht das Löschen der Protokolldatei.
++
+....
+RMAN> alter database drop logfile group 3;
+RMAN-00571: ===========================================================
+RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+RMAN-00571: ===========================================================
+RMAN-03002: failure of sql statement command at 12/08/2015 20:23:51
+ORA-01623: log 3 is current log for instance TOAST (thread 4) - cannot drop
+ORA-00312: online log 3 thread 1: '+LOGS/TOAST/ONLINELOG/group_3.259.897563549'
+RMAN> alter system switch logfile;
+Statement processed
+RMAN> alter system checkpoint;
+Statement processed
+RMAN> alter database drop logfile group 3;
+Statement processed
+....
+. Überprüfen Sie die Umgebung, um sicherzustellen, dass alle standortbasierten Parameter aktualisiert werden.
++
+....
+SQL> select name from v$datafile;
+SQL> select member from v$logfile;
+SQL> select name from v$tempfile;
+SQL> show parameter spfile;
+SQL> select name, value from v$parameter where value is not null;
+....
+. Im folgenden Skript wird erläutert, wie dieser Prozess vereinfacht werden kann:
++
+....
+[root@host1 current]# ./checkdbdata.pl TOAST
+TOAST datafiles:
++NEWDATA/TOAST/DATAFILE/system.259.897759609
++NEWDATA/TOAST/DATAFILE/sysaux.263.897759615
++NEWDATA/TOAST/DATAFILE/undotbs1.264.897759619
++NEWDATA/TOAST/DATAFILE/users.258.897759623
+TOAST redo logs:
++NEWLOGS/TOAST/ONLINELOG/group_4.266.897763123
++NEWLOGS/TOAST/ONLINELOG/group_5.265.897763125
++NEWLOGS/TOAST/ONLINELOG/group_6.264.897763125
+TOAST temp datafiles:
++NEWDATA/TOAST/TEMPFILE/temp.260.897763165
+TOAST spfile
+spfile                               string      +NEWDATA/spfiletoast.ora
+TOAST key parameters
+control_files +NEWLOGS/TOAST/CONTROLFILE/current.273.897761061
+log_archive_dest_1 LOCATION=+NEWLOGS
+db_create_file_dest +NEWDATA
+db_create_online_log_dest_1 +NEWLOGS
+....
+. Wenn die ASM-Datenträgergruppen vollständig evakuiert wurden, können sie jetzt mit abgehängt werden `asmcmd`. In vielen Fällen sind jedoch die Dateien, die zu anderen Datenbanken oder der ASM-Datei spfile/passwd gehören, noch vorhanden.
++
+....
+-bash-4.1$ . oraenv
+ORACLE_SID = [TOAST] ? +ASM
+The Oracle base remains unchanged with value /orabin
+-bash-4.1$ asmcmd
+ASMCMD> umount DATA
+ASMCMD>
+....
+
+
+
+
+== Kopie von Oracle ASM auf das Dateisystem
+
+Das Verfahren zum Kopieren von Oracle ASM in ein Dateisystem ähnelt dem Verfahren zum Kopieren von ASM zu ASM mit ähnlichen Vorteilen und Einschränkungen. Der Hauptunterschied ist die Syntax der verschiedenen Befehle und Konfigurationsparameter bei der Verwendung eines sichtbaren Dateisystems im Gegensatz zu einer ASM-Datenträgergruppe.
+
+
+
+=== Datenbank kopieren
+
+Oracle RMAN wird verwendet, um eine (vollständige) Kopie der Quelldatenbank zu erstellen, die sich derzeit in der ASM-Datenträgergruppe befindet `+DATA` An den neuen Standort am `/oradata`.
+
+....
+RMAN> backup as copy incremental level 0 database format '/oradata/TOAST/%U' tag 'ONTAP_MIGRATION';
+Starting backup at 13-MAY-16
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=377 device type=DISK
+channel ORA_DISK_1: starting datafile copy
+input datafile file number=00001 name=+ASM0/TOAST/system01.dbf
+output file name=/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSTEM_FNO-1_01r5fhjg tag=ONTAP_MIGRATION RECID=1 STAMP=911722099
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:07
+channel ORA_DISK_1: starting datafile copy
+input datafile file number=00002 name=+ASM0/TOAST/sysaux01.dbf
+output file name=/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSAUX_FNO-2_02r5fhjo tag=ONTAP_MIGRATION RECID=2 STAMP=911722106
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:07
+channel ORA_DISK_1: starting datafile copy
+input datafile file number=00003 name=+ASM0/TOAST/undotbs101.dbf
+output file name=/oradata/TOAST/data_D-TOAST_I-2098173325_TS-UNDOTBS1_FNO-3_03r5fhjt tag=ONTAP_MIGRATION RECID=3 STAMP=911722113
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:07
+channel ORA_DISK_1: starting datafile copy
+copying current control file
+output file name=/oradata/TOAST/cf_D-TOAST_id-2098173325_04r5fhk5 tag=ONTAP_MIGRATION RECID=4 STAMP=911722118
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:01
+channel ORA_DISK_1: starting datafile copy
+input datafile file number=00004 name=+ASM0/TOAST/users01.dbf
+output file name=/oradata/TOAST/data_D-TOAST_I-2098173325_TS-USERS_FNO-4_05r5fhk6 tag=ONTAP_MIGRATION RECID=5 STAMP=911722118
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:01
+channel ORA_DISK_1: starting incremental level 0 datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+including current SPFILE in backup set
+channel ORA_DISK_1: starting piece 1 at 13-MAY-16
+channel ORA_DISK_1: finished piece 1 at 13-MAY-16
+piece handle=/oradata/TOAST/06r5fhk7_1_1 tag=ONTAP_MIGRATION comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:01
+Finished backup at 13-MAY-16
+....
+
+
+=== Schalter für Archivprotokoll erzwingen
+
+Der Wechsel des Archivprotokolls muss erzwungen werden, um sicherzustellen, dass die Archivprotokolle alle erforderlichen Daten enthalten, damit die Kopie vollständig konsistent ist. Ohne diesen Befehl können Schlüsseldaten in den Wiederherstellungsprotokollen weiterhin vorhanden sein. Um einen Archivprotokollschalter zu erzwingen, führen Sie den folgenden Befehl aus:
+
+....
+RMAN> sql 'alter system archive log current';
+sql statement: alter system archive log current
+....
+
+
+=== Quelldatenbank herunterfahren
+
+Die Unterbrechung beginnt in diesem Schritt, weil die Datenbank heruntergefahren und in einen schreibgeschützten Modus mit eingeschränktem Zugriff versetzt wird. Um die Quelldatenbank herunterzufahren, führen Sie die folgenden Befehle aus:
+
+....
+RMAN> shutdown immediate;
+using target database control file instead of recovery catalog
+database closed
+database dismounted
+Oracle instance shut down
+RMAN> startup mount;
+connected to target database (not started)
+Oracle instance started
+database mounted
+Total System Global Area     805306368 bytes
+Fixed Size                  2929552 bytes
+Variable Size             331353200 bytes
+Database Buffers          465567744 bytes
+Redo Buffers                5455872 bytes
+....
+
+
+=== Backup von Controlfile
+
+Sichern Sie controlfiles, falls Sie die Migration abbrechen und zum ursprünglichen Speicherort zurückkehren müssen. Eine Kopie der Backup-Steuerdatei ist nicht 100% erforderlich, aber es macht den Prozess des Rücksetzens der Datenbank-Speicherorte zurück an den ursprünglichen Speicherort einfacher.
+
+....
+RMAN> backup as copy current controlfile format '/tmp/TOAST.ctrl';
+Starting backup at 08-DEC-15
+using channel ORA_DISK_1
+channel ORA_DISK_1: starting datafile copy
+copying current control file
+output file name=/tmp/TOAST.ctrl tag=TAG20151208T194540 RECID=30 STAMP=897939940
+channel ORA_DISK_1: datafile copy complete, elapsed time: 00:00:01
+Finished backup at 08-DEC-15
+....
+
+
+=== Parameteraktualisierungen
+
+....
+RMAN> create pfile='/tmp/pfile' from spfile;
+Statement processed
+....
+
+
+==== Aktualisieren Sie pfile
+
+Alle Parameter, die sich auf alte ASM-Datenträgergruppen beziehen, sollten aktualisiert und in einigen Fällen gelöscht werden, wenn sie nicht mehr relevant sind. Aktualisieren Sie sie, um die neuen Dateisystempfade wiederzugeben, und speichern Sie die aktualisierte Datei pfile. Stellen Sie sicher, dass der vollständige Zielpfad aufgeführt ist. Um diese Parameter zu aktualisieren, führen Sie die folgenden Befehle aus:
+
+....
+*.audit_file_dest='/orabin/admin/TOAST/adump'
+*.audit_trail='db'
+*.compatible='12.1.0.2.0'
+*.control_files='/logs/TOAST/arch/control01.ctl','/logs/TOAST/redo/control02.ctl'
+*.db_block_size=8192
+*.db_domain=''
+*.db_name='TOAST'
+*.diagnostic_dest='/orabin'
+*.dispatchers='(PROTOCOL=TCP) (SERVICE=TOASTXDB)'
+*.log_archive_dest_1='LOCATION=/logs/TOAST/arch'
+*.log_archive_format='%t_%s_%r.dbf'
+*.open_cursors=300
+*.pga_aggregate_target=256m
+*.processes=300
+*.remote_login_passwordfile='EXCLUSIVE'
+*.sga_target=768m
+*.undo_tablespace='UNDOTBS1'
+....
+
+
+==== Deaktivieren Sie die ursprüngliche init.ora-Datei
+
+Diese Datei befindet sich im `$ORACLE_HOME/dbs` Verzeichnis und befindet sich in der Regel in einem pfile, das als Zeiger auf den spfile auf der ASM-Datenträgergruppe dient. Um sicherzustellen, dass der ursprüngliche Spfile nicht mehr verwendet wird, benennen Sie ihn um. Löschen Sie sie jedoch nicht, da diese Datei erforderlich ist, wenn die Migration abgebrochen werden muss.
+
+....
+[oracle@jfsc1 ~]$ cd $ORACLE_HOME/dbs
+[oracle@jfsc1 dbs]$ cat initTOAST.ora
+SPFILE='+ASM0/TOAST/spfileTOAST.ora'
+[oracle@jfsc1 dbs]$ mv initTOAST.ora initTOAST.ora.prev
+[oracle@jfsc1 dbs]$
+....
+
+
+==== Wiederherstellung der Parameterdatei
+
+Dies ist der letzte Schritt bei der Verlagerung von Spfile. Der ursprüngliche spfile wird nicht mehr verwendet und die Datenbank wird derzeit mit der Zwischendatei gestartet (aber nicht gemountet). Der Inhalt dieser Datei kann wie folgt an den neuen Speicherort spfile geschrieben werden:
+
+....
+RMAN> create spfile from pfile='/tmp/pfile';
+Statement processed
+....
+
+
+==== Starten Sie die Datenbank, um neue spfile zu verwenden
+
+Sie müssen die Datenbank starten, um die Sperren der Zwischendatei freizugeben und die Datenbank nur mit der neuen Datei spfile zu starten. Das Starten der Datenbank beweist auch, dass der neue spfile-Speicherort korrekt ist und seine Daten gültig sind.
+
+....
+RMAN> shutdown immediate;
+Oracle instance shut down
+RMAN> startup nomount;
+connected to target database (not started)
+Oracle instance started
+Total System Global Area     805306368 bytes
+Fixed Size                     2929552 bytes
+Variable Size                331353200 bytes
+Database Buffers             465567744 bytes
+Redo Buffers                   5455872 bytes
+....
+
+
+=== Kontrolldatei wiederherstellen
+
+Auf dem Pfad wurde eine Sicherungscontroldatei erstellt `/tmp/TOAST.ctrl` Früher im Verfahren. Der neue spfile definiert die Speicherorte der controlfile als /`logfs/TOAST/ctrl/ctrlfile1.ctrl` Und `/logfs/TOAST/redo/ctrlfile2.ctrl`. Diese Dateien sind jedoch noch nicht vorhanden.
+
+. Mit diesem Befehl werden die controlfile-Daten auf den im spfile definierten Pfaden wiederhergestellt.
++
+....
+RMAN> restore controlfile from '/tmp/TOAST.ctrl';
+Starting restore at 13-MAY-16
+using channel ORA_DISK_1
+channel ORA_DISK_1: copied control file copy
+output file name=/logs/TOAST/arch/control01.ctl
+output file name=/logs/TOAST/redo/control02.ctl
+Finished restore at 13-MAY-16
+....
+. Geben Sie den Mount-Befehl ein, damit die Steuerdateien korrekt erkannt werden und gültige Daten enthalten.
++
+....
+RMAN> alter database mount;
+Statement processed
+released channel: ORA_DISK_1
+....
++
+Um den zu validieren `control_files` Parameter, führen Sie den folgenden Befehl aus:
+
++
+....
+SQL> show parameter control_files;
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+control_files                        string      /logs/TOAST/arch/control01.ctl
+                                                 , /logs/TOAST/redo/control02.c
+                                                 tl
+....
+
+
+
+
+=== Protokollwiedergabe
+
+Die Datenbank verwendet derzeit die Datendateien am alten Speicherort. Bevor die Kopie verwendet werden kann, müssen die Datendateien synchronisiert werden. Die Zeit während des ersten Kopiervorgangs ist verstrichen, und Änderungen wurden hauptsächlich in den Archivprotokollen protokolliert. Diese Änderungen werden in den folgenden beiden Schritten repliziert.
+
+. Führen Sie ein inkrementelles RMAN-Backup durch, das die Archivprotokolle enthält.
++
+....
+RMAN>  backup incremental level 1 format '/logs/TOAST/arch/%U' for recover of copy with tag 'ONTAP_MIGRATION' database;
+Starting backup at 13-MAY-16
+using target database control file instead of recovery catalog
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: SID=124 device type=DISK
+channel ORA_DISK_1: starting incremental level 1 datafile backup set
+channel ORA_DISK_1: specifying datafile(s) in backup set
+input datafile file number=00001 name=+ASM0/TOAST/system01.dbf
+input datafile file number=00002 name=+ASM0/TOAST/sysaux01.dbf
+input datafile file number=00003 name=+ASM0/TOAST/undotbs101.dbf
+input datafile file number=00004 name=+ASM0/TOAST/users01.dbf
+channel ORA_DISK_1: starting piece 1 at 13-MAY-16
+channel ORA_DISK_1: finished piece 1 at 13-MAY-16
+piece handle=/logs/TOAST/arch/09r5fj8i_1_1 tag=ONTAP_MIGRATION comment=NONE
+channel ORA_DISK_1: backup set complete, elapsed time: 00:00:01
+Finished backup at 13-MAY-16
+RMAN-06497: WARNING: control file is not current, control file AUTOBACKUP skipped
+....
+. Wiederholen Sie die Protokolle.
++
+....
+RMAN> recover copy of database with tag 'ONTAP_MIGRATION';
+Starting recover at 13-MAY-16
+using channel ORA_DISK_1
+channel ORA_DISK_1: starting incremental datafile backup set restore
+channel ORA_DISK_1: specifying datafile copies to recover
+recovering datafile copy file number=00001 name=/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSTEM_FNO-1_01r5fhjg
+recovering datafile copy file number=00002 name=/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSAUX_FNO-2_02r5fhjo
+recovering datafile copy file number=00003 name=/oradata/TOAST/data_D-TOAST_I-2098173325_TS-UNDOTBS1_FNO-3_03r5fhjt
+recovering datafile copy file number=00004 name=/oradata/TOAST/data_D-TOAST_I-2098173325_TS-USERS_FNO-4_05r5fhk6
+channel ORA_DISK_1: reading from backup piece /logs/TOAST/arch/09r5fj8i_1_1
+channel ORA_DISK_1: piece handle=/logs/TOAST/arch/09r5fj8i_1_1 tag=ONTAP_MIGRATION
+channel ORA_DISK_1: restored backup piece 1
+channel ORA_DISK_1: restore complete, elapsed time: 00:00:01
+Finished recover at 13-MAY-16
+RMAN-06497: WARNING: control file is not current, control file AUTOBACKUP skipped
+....
+
+
+
+
+=== Aktivierung
+
+Die wiederhergestellte Steuerdatei verweist weiterhin auf die Datendateien am ursprünglichen Speicherort und enthält auch die Pfadinformationen für die kopierten Datendateien.
+
+. Um die aktiven Datendateien zu ändern, führen Sie den aus `switch database to copy` Befehl:
++
+....
+RMAN> switch database to copy;
+datafile 1 switched to datafile copy "/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSTEM_FNO-1_01r5fhjg"
+datafile 2 switched to datafile copy "/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSAUX_FNO-2_02r5fhjo"
+datafile 3 switched to datafile copy "/oradata/TOAST/data_D-TOAST_I-2098173325_TS-UNDOTBS1_FNO-3_03r5fhjt"
+datafile 4 switched to datafile copy "/oradata/TOAST/data_D-TOAST_I-2098173325_TS-USERS_FNO-4_05r5fhk6"
+....
+. Obwohl die Datendateien vollständig konsistent sein sollten, ist ein letzter Schritt erforderlich, um die verbleibenden Änderungen, die in den Online-Wiederherstellungsprotokollen aufgezeichnet werden, wiederzugeben. Verwenden Sie die `recover database` Befehl, um diese Änderungen erneut einzuspielen und die Kopie 100 % mit dem Original zu identisch zu machen. Die Kopie ist jedoch noch nicht geöffnet.
++
+....
+RMAN> recover database;
+Starting recover at 13-MAY-16
+using channel ORA_DISK_1
+starting media recovery
+archived log for thread 1 with sequence 28 is already on disk as file +ASM0/TOAST/redo01.log
+archived log file name=+ASM0/TOAST/redo01.log thread=1 sequence=28
+media recovery complete, elapsed time: 00:00:00
+Finished recover at 13-MAY-16
+....
+
+
+
+
+==== Temporäre Datendateien Verschieben
+
+. Ermitteln Sie den Speicherort der temporären Datendateien, die noch auf der ursprünglichen Laufwerksgruppe verwendet werden.
++
+....
+RMAN> select file#||' '||name from v$tempfile;
+FILE#||''||NAME
+--------------------------------------------------------------------------------
+1 +ASM0/TOAST/temp01.dbf
+....
+. Um die Datendateien zu verschieben, führen Sie die folgenden Befehle aus. Wenn es viele Tempfiles gibt, verwenden Sie einen Texteditor, um den RMAN-Befehl zu erstellen, und schneiden Sie ihn dann aus und fügen Sie ihn ein.
++
+....
+RMAN> run {
+2> set newname for tempfile 1 to '/oradata/TOAST/temp01.dbf';
+3> switch tempfile all;
+4> }
+executing command: SET NEWNAME
+renamed tempfile 1 to /oradata/TOAST/temp01.dbf in control file
+....
+
+
+
+
+=== Migration des Wiederherstellungsprotokolls
+
+Der Migrationsprozess ist fast abgeschlossen, aber die Wiederherstellungsprotokolle befinden sich immer noch in der ursprünglichen ASM-Laufwerksgruppe. Wiederherstellungsprotokolle können nicht direkt verschoben werden. Stattdessen wird ein neuer Satz von Wiederherstellungsprotokollen erstellt und der Konfiguration hinzugefügt, gefolgt von einem Drop der alten Protokolle.
+
+. Ermitteln Sie die Anzahl der Redo-Log-Gruppen und deren jeweilige Gruppennummern.
++
+....
+RMAN> select group#||' '||member from v$logfile;
+GROUP#||''||MEMBER
+--------------------------------------------------------------------------------
+1 +ASM0/TOAST/redo01.log
+2 +ASM0/TOAST/redo02.log
+3 +ASM0/TOAST/redo03.log
+....
+. Geben Sie die Größe der Wiederherstellungsprotokolle ein.
++
+....
+RMAN> select group#||' '||bytes from v$log;
+GROUP#||''||BYTES
+--------------------------------------------------------------------------------
+1 52428800
+2 52428800
+3 52428800
+....
+. Erstellen Sie für jedes Wiederherstellungsprotokoll eine neue Gruppe, indem Sie die gleiche Größe wie die aktuelle Wiederherstellungsprotokollgruppe verwenden, die den neuen Speicherort des Dateisystems verwendet.
++
+....
+RMAN> alter database add logfile '/logs/TOAST/redo/log00.rdo' size 52428800;
+Statement processed
+RMAN> alter database add logfile '/logs/TOAST/redo/log01.rdo' size 52428800;
+Statement processed
+RMAN> alter database add logfile '/logs/TOAST/redo/log02.rdo' size 52428800;
+Statement processed
+....
+. Entfernen Sie die alten Logfile-Gruppen, die sich noch im vorherigen Speicher befinden.
++
+....
+RMAN> alter database drop logfile group 4;
+Statement processed
+RMAN> alter database drop logfile group 5;
+Statement processed
+RMAN> alter database drop logfile group 6;
+Statement processed
+....
+. Wenn ein Fehler auftritt, der das Löschen eines aktiven Protokolls blockiert, erzwingen Sie einen Switch zum nächsten Protokoll, um die Sperre freizugeben und einen globalen Kontrollpunkt zu erzwingen. Ein Beispiel ist unten dargestellt. Der Versuch, die Logfile-Gruppe 3, die sich am alten Speicherort befand, zu löschen, wurde abgelehnt, da noch aktive Daten in dieser Logdatei vorhanden waren. Eine Protokollarchivierung, gefolgt von einem Kontrollpunkt, ermöglicht das Löschen von Logdateien.
++
+....
+RMAN> alter database drop logfile group 4;
+RMAN-00571: ===========================================================
+RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+RMAN-00571: ===========================================================
+RMAN-03002: failure of sql statement command at 12/08/2015 20:23:51
+ORA-01623: log 4 is current log for instance TOAST (thread 4) - cannot drop
+ORA-00312: online log 4 thread 1: '+NEWLOGS/TOAST/ONLINELOG/group_4.266.897763123'
+RMAN> alter system switch logfile;
+Statement processed
+RMAN> alter system checkpoint;
+Statement processed
+RMAN> alter database drop logfile group 4;
+Statement processed
+....
+. Überprüfen Sie die Umgebung, um sicherzustellen, dass alle standortbasierten Parameter aktualisiert werden.
++
+....
+SQL> select name from v$datafile;
+SQL> select member from v$logfile;
+SQL> select name from v$tempfile;
+SQL> show parameter spfile;
+SQL> select name, value from v$parameter where value is not null;
+....
+. Das folgende Skript zeigt, wie Sie diesen Prozess vereinfachen können.
++
+....
+[root@jfsc1 current]# ./checkdbdata.pl TOAST
+TOAST datafiles:
+/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSTEM_FNO-1_01r5fhjg
+/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSAUX_FNO-2_02r5fhjo
+/oradata/TOAST/data_D-TOAST_I-2098173325_TS-UNDOTBS1_FNO-3_03r5fhjt
+/oradata/TOAST/data_D-TOAST_I-2098173325_TS-USERS_FNO-4_05r5fhk6
+TOAST redo logs:
+/logs/TOAST/redo/log00.rdo
+/logs/TOAST/redo/log01.rdo
+/logs/TOAST/redo/log02.rdo
+TOAST temp datafiles:
+/oradata/TOAST/temp01.dbf
+TOAST spfile
+spfile                               string      /orabin/product/12.1.0/dbhome_
+                                                 1/dbs/spfileTOAST.ora
+TOAST key parameters
+control_files /logs/TOAST/arch/control01.ctl, /logs/TOAST/redo/control02.ctl
+log_archive_dest_1 LOCATION=/logs/TOAST/arch
+....
+. Wenn die ASM-Datenträgergruppen vollständig evakuiert wurden, können sie jetzt mit abgehängt werden `asmcmd`. In vielen Fällen können Dateien, die zu anderen Datenbanken oder der ASM-Datei spfile/passwd gehören, weiterhin vorhanden sein.
++
+....
+-bash-4.1$ . oraenv
+ORACLE_SID = [TOAST] ? +ASM
+The Oracle base remains unchanged with value /orabin
+-bash-4.1$ asmcmd
+ASMCMD> umount DATA
+ASMCMD>
+....
+
+
+
+
+=== Bereinigung der Datendatei
+
+Der Migrationsprozess kann je nach Verwendung von Oracle RMAN zu Datendateien mit langer oder kryptischer Syntax führen. Im hier gezeigten Beispiel wurde das Backup mit dem Dateiformat von durchgeführt `/oradata/TOAST/%U`. `%U` Gibt an, dass RMAN für jede Datendatei einen eindeutigen Standardnamen erstellen sollte. Das Ergebnis ist ähnlich wie im folgenden Text dargestellt. Die traditionellen Namen der Datendateien sind in die Namen eingebettet. Dies kann mithilfe des in dargestellten skriptgesteuerten Ansatzes bereinigt werden link:oracle-migration-sample-scripts.html#asm-migration-cleanup["Bereinigung der ASM-Migration"].
+
+....
+[root@jfsc1 current]# ./fixuniquenames.pl TOAST
+#sqlplus Commands
+shutdown immediate;
+startup mount;
+host mv /oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSTEM_FNO-1_01r5fhjg /oradata/TOAST/system.dbf
+host mv /oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSAUX_FNO-2_02r5fhjo /oradata/TOAST/sysaux.dbf
+host mv /oradata/TOAST/data_D-TOAST_I-2098173325_TS-UNDOTBS1_FNO-3_03r5fhjt /oradata/TOAST/undotbs1.dbf
+host mv /oradata/TOAST/data_D-TOAST_I-2098173325_TS-USERS_FNO-4_05r5fhk6 /oradata/TOAST/users.dbf
+alter database rename file '/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSTEM_FNO-1_01r5fhjg' to '/oradata/TOAST/system.dbf';
+alter database rename file '/oradata/TOAST/data_D-TOAST_I-2098173325_TS-SYSAUX_FNO-2_02r5fhjo' to '/oradata/TOAST/sysaux.dbf';
+alter database rename file '/oradata/TOAST/data_D-TOAST_I-2098173325_TS-UNDOTBS1_FNO-3_03r5fhjt' to '/oradata/TOAST/undotbs1.dbf';
+alter database rename file '/oradata/TOAST/data_D-TOAST_I-2098173325_TS-USERS_FNO-4_05r5fhk6' to '/oradata/TOAST/users.dbf';
+alter database open;
+....
+
+
+== Oracle ASM-Ausgleich
+
+Wie bereits erläutert, kann eine Oracle ASM-Festplattengruppe mithilfe des Ausgleichs transparent auf ein neues Storage-System migriert werden. Zusammenfassend ist zu sagen, dass beim Ausbalancieren der vorhandenen LUN-Gruppe LUNs gleicher Größe hinzugefügt werden müssen, gefolgt von einem Drop-Vorgang der vorherigen LUN. Oracle ASM verlagert die zugrunde liegenden Daten automatisch in einem optimalen Layout auf neuen Speicher und gibt dann die alten LUNs nach Abschluss frei.
+
+Der Migrationsprozess nutzt effiziente sequenzielle I/O-Vorgänge und führt im Allgemeinen keine Performance-Unterbrechung durch. Bei Bedarf kann die Migrationsrate jedoch gedrosselt werden.
+
+
+
+=== Identifizieren Sie die zu migrierenden Daten
+
+....
+SQL> select name||' '||group_number||' '||total_mb||' '||path||' '||header_status from v$asm_disk;
+NEWDATA_0003 1 10240 /dev/mapper/3600a098038303537762b47594c315864 MEMBER
+NEWDATA_0002 1 10240 /dev/mapper/3600a098038303537762b47594c315863 MEMBER
+NEWDATA_0000 1 10240 /dev/mapper/3600a098038303537762b47594c315861 MEMBER
+NEWDATA_0001 1 10240 /dev/mapper/3600a098038303537762b47594c315862 MEMBER
+SQL> select group_number||' '||name from v$asm_diskgroup;
+1 NEWDATA
+....
+
+
+=== Erstellen neuer LUNs
+
+Erstellen Sie neue LUNs gleicher Größe und legen Sie die Mitgliedschaft für Benutzer und Gruppen nach Bedarf fest. Die LUNs sollten als angezeigt werden `CANDIDATE` Festplatten.
+
+....
+SQL> select name||' '||group_number||' '||total_mb||' '||path||' '||header_status from v$asm_disk;
+ 0 0 /dev/mapper/3600a098038303537762b47594c31586b CANDIDATE
+ 0 0 /dev/mapper/3600a098038303537762b47594c315869 CANDIDATE
+ 0 0 /dev/mapper/3600a098038303537762b47594c315858 CANDIDATE
+ 0 0 /dev/mapper/3600a098038303537762b47594c31586a CANDIDATE
+NEWDATA_0003 1 10240 /dev/mapper/3600a098038303537762b47594c315864 MEMBER
+NEWDATA_0002 1 10240 /dev/mapper/3600a098038303537762b47594c315863 MEMBER
+NEWDATA_0000 1 10240 /dev/mapper/3600a098038303537762b47594c315861 MEMBER
+NEWDATA_0001 1 10240 /dev/mapper/3600a098038303537762b47594c315862 MEMBER
+....
+
+
+=== Neue LUNS hinzufügen
+
+Während die Add- und Drop-Vorgänge zusammen ausgeführt werden können, ist es in der Regel einfacher, neue LUNs in zwei Schritten hinzuzufügen. Fügen Sie zunächst die neuen LUNs der Festplattengruppe hinzu. Dieser Schritt führt dazu, dass die Hälfte der Extents von den aktuellen ASM-LUNs auf die neuen LUNs migriert wird.
+
+Die Ausgleichskraft gibt die Rate an, mit der Daten übertragen werden. Je höher die Zahl, desto höher ist die Parallelität der Datenübertragung. Die Migration erfolgt mit effizienten sequenziellen I/O-Vorgängen, die wahrscheinlich keine Performance-Probleme verursachen. Auf Wunsch kann die Ausgleichskraft einer laufenden Migration jedoch mit dem angepasst werden `alter diskgroup [name] rebalance power [level]` Befehl. Für typische Migrationen wird der Wert 5 verwendet.
+
+....
+SQL> alter diskgroup NEWDATA add disk '/dev/mapper/3600a098038303537762b47594c31586b' rebalance power 5;
+Diskgroup altered.
+SQL> alter diskgroup NEWDATA add disk '/dev/mapper/3600a098038303537762b47594c315869' rebalance power 5;
+Diskgroup altered.
+SQL> alter diskgroup NEWDATA add disk '/dev/mapper/3600a098038303537762b47594c315858' rebalance power 5;
+Diskgroup altered.
+SQL> alter diskgroup NEWDATA add disk '/dev/mapper/3600a098038303537762b47594c31586a' rebalance power 5;
+Diskgroup altered.
+....
+
+
+=== Überwachen Sie den Betrieb
+
+Ein Ausgleichsoperation kann auf verschiedene Weise überwacht und verwaltet werden. Für dieses Beispiel haben wir den folgenden Befehl verwendet.
+
+....
+SQL> select group_number,operation,state from v$asm_operation;
+GROUP_NUMBER OPERA STAT
+------------ ----- ----
+           1 REBAL RUN
+           1 REBAL WAIT
+....
+Nach Abschluss der Migration werden keine Vorgänge zur Ausbalancierung gemeldet.
+
+....
+SQL> select group_number,operation,state from v$asm_operation;
+no rows selected
+....
+
+
+=== Alte LUNs ablegen
+
+Die Migration ist nun zur Hälfte abgeschlossen. Einige grundlegende Performance-Tests stellen sicher, dass die Umgebung sich in einem ordnungsgemäßen Zustand befindet. Nach Bestätigung können die verbleibenden Daten durch Löschen der alten LUNs verschoben werden. Beachten Sie, dass dies nicht zur sofortigen Freigabe der LUNs führt. Der Drop-Vorgang signalisiert Oracle ASM, die Extents zuerst zu verschieben und dann die LUN freizugeben.
+
+....
+sqlplus / as sysasm
+SQL> alter diskgroup NEWDATA drop disk NEWDATA_0000 rebalance power 5;
+Diskgroup altered.
+SQL> alter diskgroup NEWDATA drop disk NEWDATA_0001 rebalance power 5;
+Diskgroup altered.
+SQL> alter diskgroup newdata drop disk NEWDATA_0002 rebalance power 5;
+Diskgroup altered.
+SQL> alter diskgroup newdata drop disk NEWDATA_0003 rebalance power 5;
+Diskgroup altered.
+....
+
+
+=== Überwachen Sie den Betrieb
+
+Der Ausgleichsoperation kann auf verschiedene Weise überwacht und verwaltet werden. Für dieses Beispiel haben wir den folgenden Befehl verwendet:
+
+....
+SQL> select group_number,operation,state from v$asm_operation;
+GROUP_NUMBER OPERA STAT
+------------ ----- ----
+           1 REBAL RUN
+           1 REBAL WAIT
+....
+Nach Abschluss der Migration werden keine Vorgänge zur Ausbalancierung gemeldet.
+
+....
+SQL> select group_number,operation,state from v$asm_operation;
+no rows selected
+....
+
+
+=== Entfernen Sie alte LUNs
+
+Bevor Sie die alten LUNs aus der Laufwerksgruppe entfernen, sollten Sie den Header-Status einer letzten Prüfung entnehmen. Nachdem eine LUN aus ASM freigegeben wurde, wird kein Name mehr aufgeführt, und der Kopfzeilenstatus wird als aufgeführt `FORMER`. Dies bedeutet, dass diese LUNs sicher aus dem System entfernt werden können.
+
+....
+SQL> select name||' '||group_number||' '||total_mb||' '||path||' '||header_status from v$asm_disk;
+NAME||''||GROUP_NUMBER||''||TOTAL_MB||''||PATH||''||HEADER_STATUS
+--------------------------------------------------------------------------------
+ 0 0 /dev/mapper/3600a098038303537762b47594c315863 FORMER
+ 0 0 /dev/mapper/3600a098038303537762b47594c315864 FORMER
+ 0 0 /dev/mapper/3600a098038303537762b47594c315861 FORMER
+ 0 0 /dev/mapper/3600a098038303537762b47594c315862 FORMER
+NEWDATA_0005 1 10240 /dev/mapper/3600a098038303537762b47594c315869 MEMBER
+NEWDATA_0007 1 10240 /dev/mapper/3600a098038303537762b47594c31586a MEMBER
+NEWDATA_0004 1 10240 /dev/mapper/3600a098038303537762b47594c31586b MEMBER
+NEWDATA_0006 1 10240 /dev/mapper/3600a098038303537762b47594c315858 MEMBER
+8 rows selected.
+....
+
+
+== LVM-Migration
+
+Das hier vorgestellte Verfahren zeigt die Prinzipien einer LVM-basierten Migration einer Volume-Gruppe namens `datavg`. Die Beispiele stammen aus Linux LVM, die Prinzipien gelten jedoch gleichermaßen für AIX, HP-UX und VxVM. Die genauen Befehle können variieren.
+
+. Identifizieren Sie die LUNs, die sich derzeit im befinden `datavg` Volume-Gruppe.
++
+....
+[root@host1 ~]# pvdisplay -C | grep datavg
+  /dev/mapper/3600a098038303537762b47594c31582f datavg lvm2 a--  10.00g 10.00g
+  /dev/mapper/3600a098038303537762b47594c31585a datavg lvm2 a--  10.00g 10.00g
+  /dev/mapper/3600a098038303537762b47594c315859 datavg lvm2 a--  10.00g 10.00g
+  /dev/mapper/3600a098038303537762b47594c31586c datavg lvm2 a--  10.00g 10.00g
+....
+. Erstellen Sie neue LUNs mit derselben oder einer etwas größeren physischen Größe und definieren Sie sie als physische Volumes.
++
+....
+[root@host1 ~]# pvcreate /dev/mapper/3600a098038303537762b47594c315864
+  Physical volume "/dev/mapper/3600a098038303537762b47594c315864" successfully created
+[root@host1 ~]# pvcreate /dev/mapper/3600a098038303537762b47594c315863
+  Physical volume "/dev/mapper/3600a098038303537762b47594c315863" successfully created
+[root@host1 ~]# pvcreate /dev/mapper/3600a098038303537762b47594c315862
+  Physical volume "/dev/mapper/3600a098038303537762b47594c315862" successfully created
+[root@host1 ~]# pvcreate /dev/mapper/3600a098038303537762b47594c315861
+  Physical volume "/dev/mapper/3600a098038303537762b47594c315861" successfully created
+....
+. Fügen Sie die neuen Volumes zur Volume-Gruppe hinzu.
++
+....
+[root@host1 tmp]# vgextend datavg /dev/mapper/3600a098038303537762b47594c315864
+  Volume group "datavg" successfully extended
+[root@host1 tmp]# vgextend datavg /dev/mapper/3600a098038303537762b47594c315863
+  Volume group "datavg" successfully extended
+[root@host1 tmp]# vgextend datavg /dev/mapper/3600a098038303537762b47594c315862
+  Volume group "datavg" successfully extended
+[root@host1 tmp]# vgextend datavg /dev/mapper/3600a098038303537762b47594c315861
+  Volume group "datavg" successfully extended
+....
+. Stellen Sie das aus `pvmove` Befehl, um die Extents jeder aktuellen LUN in die neue LUN zu verschieben. Der `- i [seconds]` Argument überwacht den Fortschritt des Vorgangs.
++
+....
+[root@host1 tmp]# pvmove -i 10 /dev/mapper/3600a098038303537762b47594c31582f /dev/mapper/3600a098038303537762b47594c315864
+  /dev/mapper/3600a098038303537762b47594c31582f: Moved: 0.0%
+  /dev/mapper/3600a098038303537762b47594c31582f: Moved: 14.2%
+  /dev/mapper/3600a098038303537762b47594c31582f: Moved: 28.4%
+  /dev/mapper/3600a098038303537762b47594c31582f: Moved: 42.5%
+  /dev/mapper/3600a098038303537762b47594c31582f: Moved: 57.1%
+  /dev/mapper/3600a098038303537762b47594c31582f: Moved: 72.3%
+  /dev/mapper/3600a098038303537762b47594c31582f: Moved: 87.3%
+  /dev/mapper/3600a098038303537762b47594c31582f: Moved: 100.0%
+[root@host1 tmp]# pvmove -i 10 /dev/mapper/3600a098038303537762b47594c31585a /dev/mapper/3600a098038303537762b47594c315863
+  /dev/mapper/3600a098038303537762b47594c31585a: Moved: 0.0%
+  /dev/mapper/3600a098038303537762b47594c31585a: Moved: 14.9%
+  /dev/mapper/3600a098038303537762b47594c31585a: Moved: 29.9%
+  /dev/mapper/3600a098038303537762b47594c31585a: Moved: 44.8%
+  /dev/mapper/3600a098038303537762b47594c31585a: Moved: 60.1%
+  /dev/mapper/3600a098038303537762b47594c31585a: Moved: 75.8%
+  /dev/mapper/3600a098038303537762b47594c31585a: Moved: 90.9%
+  /dev/mapper/3600a098038303537762b47594c31585a: Moved: 100.0%
+[root@host1 tmp]# pvmove -i 10 /dev/mapper/3600a098038303537762b47594c315859 /dev/mapper/3600a098038303537762b47594c315862
+  /dev/mapper/3600a098038303537762b47594c315859: Moved: 0.0%
+  /dev/mapper/3600a098038303537762b47594c315859: Moved: 14.8%
+  /dev/mapper/3600a098038303537762b47594c315859: Moved: 29.8%
+  /dev/mapper/3600a098038303537762b47594c315859: Moved: 45.5%
+  /dev/mapper/3600a098038303537762b47594c315859: Moved: 61.1%
+  /dev/mapper/3600a098038303537762b47594c315859: Moved: 76.6%
+  /dev/mapper/3600a098038303537762b47594c315859: Moved: 91.7%
+  /dev/mapper/3600a098038303537762b47594c315859: Moved: 100.0%
+[root@host1 tmp]# pvmove -i 10 /dev/mapper/3600a098038303537762b47594c31586c /dev/mapper/3600a098038303537762b47594c315861
+  /dev/mapper/3600a098038303537762b47594c31586c: Moved: 0.0%
+  /dev/mapper/3600a098038303537762b47594c31586c: Moved: 15.0%
+  /dev/mapper/3600a098038303537762b47594c31586c: Moved: 30.4%
+  /dev/mapper/3600a098038303537762b47594c31586c: Moved: 46.0%
+  /dev/mapper/3600a098038303537762b47594c31586c: Moved: 61.4%
+  /dev/mapper/3600a098038303537762b47594c31586c: Moved: 77.2%
+  /dev/mapper/3600a098038303537762b47594c31586c: Moved: 92.3%
+  /dev/mapper/3600a098038303537762b47594c31586c: Moved: 100.0%
+....
+. Wenn dieser Vorgang abgeschlossen ist, löschen Sie die alten LUNs aus der Volume-Gruppe mithilfe von `vgreduce` Befehl. Wenn die LUN erfolgreich war, kann sie jetzt sicher aus dem System entfernt werden.
++
+....
+[root@host1 tmp]# vgreduce datavg /dev/mapper/3600a098038303537762b47594c31582f
+Removed "/dev/mapper/3600a098038303537762b47594c31582f" from volume group "datavg"
+[root@host1 tmp]# vgreduce datavg /dev/mapper/3600a098038303537762b47594c31585a
+  Removed "/dev/mapper/3600a098038303537762b47594c31585a" from volume group "datavg"
+[root@host1 tmp]# vgreduce datavg /dev/mapper/3600a098038303537762b47594c315859
+  Removed "/dev/mapper/3600a098038303537762b47594c315859" from volume group "datavg"
+[root@host1 tmp]# vgreduce datavg /dev/mapper/3600a098038303537762b47594c31586c
+  Removed "/dev/mapper/3600a098038303537762b47594c31586c" from volume group "datavg"
+....
+

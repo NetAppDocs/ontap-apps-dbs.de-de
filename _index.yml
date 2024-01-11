@@ -1,0 +1,49 @@
+---
+indexpage:
+  lead: ONTAP ist die Grundlage für Datenmanagement und Datensicherung für zahlreiche
+    Enterprise-Applikationen und Datenbanktechnologien. Auf den folgenden Seiten finden
+    Sie Anleitungen zu Best Practices und Implementierungsverfahren für ONTAP- und
+    Enterprise-Applikationen und -Infrastrukturen.
+  tiles:
+  - title: Microsoft SQL Server
+    links:
+    - title: Microsoft SQL Server auf ONTAP
+      url: "/mssql/overview.html"
+    - title: Überlegungen zum Microsoft SQL Server-Storage
+      url: "/mssql/Storage-considerations.html"
+    - title: Microsoft SQL Server Datensicherung
+      url: "/mssql/Data-protection.html"
+    - title: Disaster Recovery für Microsoft SQL Server
+      url: "/mssql/SQL-disaster-recovery.html"
+  - title: Open-Source-Datenbanken
+    links:
+    - title: MariaDB und MySQL auf ONTAP
+      url: "/mysql/overview.html"
+    - title: PostgreSQL auf ONTAP
+      url: "/postgres/overview.html"
+  - title: Oracle Datenbank
+    links:
+    - title: Oracle auf ONTAP
+      url: "/oracle/overview.html"
+    - title: Oracle Datensicherung
+      url: "/oracle/dp/oracle-data-protection-introduction.html"
+    - title: Disaster Recovery mit Oracle
+      url: "/oracle/dr/oracle-dr-overview.html"
+    - title: Oracle-Migration
+      url: "/oracle/migration/oracle-migration-overview.html"
+  - title: SAP HANA
+    links:
+    - title: SAP Lösungen
+      url: https://docs.netapp.com/us-en/netapp-solutions-sap/index.html
+    - title: SAP HANA mit AFF und FC.
+      url: https://docs.netapp.com/us-en/netapp-solutions-sap/bp/saphana_aff_fc_introduction.html
+    - title: SAP HANA mit AFF und NFS
+      url: https://docs.netapp.com/us-en/netapp-solutions-sap/bp/saphana_aff_nfs_introduction.html
+  - title: VMware
+    links:
+    - title: VMware vSphere mit ONTAP –
+      url: "/vmware/vsphere/overview.html"
+    - title: Virtual Volumes (VVols) mit ONTAP
+      url: "/vmware/vvols/overview.html"
+    - title: VMware Site Recovery Manager mit ONTAP
+      url: "/vmware/srm/overview.html"

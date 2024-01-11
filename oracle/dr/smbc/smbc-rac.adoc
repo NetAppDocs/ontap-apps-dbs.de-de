@@ -1,0 +1,16 @@
+---
+sidebar: sidebar 
+permalink: oracle/dr/smbc/smbc-rac.html 
+keywords: oracle, smbc, sm-bc, RAC 
+summary: Oracle RAC auf ONTAP mit SM-BC 
+---
+= Oracle RAC mit SM-BC
+:allow-uri-read: 
+
+
+[role="lead"]
+SM-BC bietet granulare Kontrolle über die Datensatzreplikation für Zwecke wie Lastausgleich oder individuelles Applikations-Failover. Die Gesamtarchitektur sieht aus wie ein erweiterter RAC-Cluster, einige Datenbanken sind jedoch bestimmten Standorten zugewiesen und die Gesamtlast ist verteilt.
+
+Sie könnten beispielsweise einen Oracle RAC-Cluster erstellen, der sechs einzelne Datenbanken hostet. Der Storage für drei der Datenbanken würde hauptsächlich auf Standort A und der Storage für die anderen drei Datenbanken auf Standort B gehostet werden Diese Konfiguration sorgt durch die Minimierung des standortübergreifenden Datenverkehrs für eine bestmögliche Performance. Außerdem sollten Applikationen so konfiguriert werden, dass sie die im Storage-System lokalen Datenbankinstanzen mit aktiven Pfaden verwenden. Dies minimiert den RAC Interconnect-Datenverkehr. Schließlich stellt dieses Gesamtdesign sicher, dass alle Rechenressourcen gleichmäßig genutzt werden. Bei sich ändernden Workloads können Datenbanken selektiv standortübergreifend und hin- und herausgefallen sein, um ein gleichmäßiges Laden zu gewährleisten.
+
+Abgesehen von der Granularität sind die grundlegenden Prinzipien und Optionen für Oracle RAC unter Verwendung von SM-BC identisch link:../metrocluster/mcc-rac.html["Oracle RAC auf MetroCluster"]

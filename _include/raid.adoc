@@ -1,0 +1,9 @@
+= 
+:allow-uri-read: 
+
+
+RAID 4, RAID 5, RAID 6, RAID DP und RAID-TEC nutzen Parität, um sicherzustellen, dass es bei einem Laufwerksausfall zu keinem Datenverlust kommt. Diese RAID-Optionen bieten im Vergleich zur Spiegelung eine viel bessere Speichernutzung, aber die meisten RAID-Implementierungen haben einen Nachteil, der Schreibvorgänge beeinträchtigt. Für den Abschluss eines Schreibvorgangs in anderen RAID-Implementierungen sind möglicherweise mehrere Laufwerkszugriffe erforderlich, um die Paritätsdaten neu zu generieren. Dies ist ein Prozess, der allgemein als RAID-Abzug bezeichnet wird.
+
+Bei ONTAP fallen jedoch keine RAID-Einbußen an. Dies liegt an der Integration von NetApp WAFL (Write Anywhere File Layout) mit der RAID-Schicht. Schreibvorgänge werden im RAM zusammengeführt und als vollständiger RAID-Stripe einschließlich der Paritätsgenerierung vorbereitet. ONTAP muss für einen Schreibvorgang keinen Lesevorgang durchführen. Das bedeutet, dass ONTAP und WAFL die RAID-Einbußen vermeiden. Die Performance für latenzkritische Vorgänge, wie die Protokollierung von Wiederherstellungen, wird ohne Behinderung durchgeführt und zufällige Schreibvorgänge von Datendateien verursachen keine RAID-Beeinträchtigungen, da die Parität neu generiert werden muss.
+
+In Bezug auf statistische Zuverlässigkeit bietet selbst RAID DP besseren Schutz als RAID Mirroring. Das Hauptproblem besteht in der Nachfrage nach Laufwerken während einer RAID-Wiederherstellung. Bei einem gespiegelten RAID-Satz ist das Risiko eines Datenverlusts aufgrund eines Laufwerksausfalls bei der Wiederherstellung an seinen Partner im RAID-Satz deutlich größer als das Risiko eines dreifachen Laufwerksausfalls in einem RAID DP-Satz.

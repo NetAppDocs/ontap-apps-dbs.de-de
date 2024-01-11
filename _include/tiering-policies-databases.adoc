@@ -1,0 +1,37 @@
+= Nur Snapshot
+:allow-uri-read: 
+
+
+
+
+== Nur Snapshot
+
+Der `snapshot-only` `tiering-policy` Gilt nur für Blöcke, die nicht mit dem aktiven Dateisystem gemeinsam genutzt werden. Im Wesentlichen führt dies zum Tiering von Datenbank-Backups. Blöcke eignen sich als Tiering-Kandidaten, nachdem ein Snapshot erstellt wurde und der Block dann überschrieben wird. Das Ergebnis ist ein Block, der nur innerhalb des Snapshots vorhanden ist. Die Verzögerung vor einem `snapshot-only` Der Block wird als cool betrachtet und wird vom gesteuert `tiering-minimum-cooling-days` Einstellung für die Lautstärke. Der Bereich ab ONTAP 9.8 liegt zwischen 2 und 183 Tagen.
+
+Viele Datensätze verfügen über niedrige Änderungsraten, wodurch diese Richtlinien nur minimal eingespart werden. Eine typische Datenbank mit ONTAP hat beispielsweise eine Änderungsrate von weniger als 5 % pro Woche. Protokolle für Datenbankarchive können umfangreichen Speicherplatz belegen, existieren jedoch normalerweise weiterhin im aktiven File-System und sind daher nicht für Tiering im Rahmen dieser Richtlinie geeignet.
+
+
+
+== Automatisch
+
+Der `auto` die Tiering-Richtlinie erweitert das Tiering sowohl auf Snapshot-spezifische Blöcke als auch auf Blöcke innerhalb des aktiven File-Systems. Die Verzögerung, bevor ein Block als cool betrachtet wird, wird vom gesteuert `tiering-minimum-cooling-days` Einstellung für die Lautstärke. Der Bereich ab ONTAP 9.8 liegt zwischen 2 und 183 Tagen.
+
+Dieser Ansatz ermöglicht Tiering-Optionen, die mit dem nicht verfügbar sind `snapshot-only` Richtlinie: Eine Datensicherungsrichtlinie kann beispielsweise die Aufbewahrung bestimmter Protokolldateien von 90 Tagen erfordern. Wenn Sie einen Abkühlzeitraum von 3 Tagen festlegen, werden Protokolldateien, die älter als 3 Tage sind, aus der Performance-Schicht verschoben. Dadurch wird ein erheblicher Teil des Speicherplatzes auf dem Performance-Tier freigesetzt, und Sie können die Daten der gesamten 90 Tage anzeigen und managen.
+
+
+
+== Keine
+
+Der `none` die tiering-Richtlinie verhindert, dass zusätzliche Blöcke von der Storage-Ebene aus verschoben werden, doch alle Daten, die sich noch in der Kapazitäts-Tier befinden, bleiben bis sie gelesen werden. Wenn der Block dann gelesen wird, wird er zurückgezogen und auf die Performance-Tier platziert.
+
+Der Hauptgrund für die Verwendung des `none` mittels tiering-Richtlinie soll verhindert werden, dass Blöcke in Tiers verschoben werden, es könnte sich jedoch nützlich sein, die Richtlinien im Laufe der Zeit zu ändern. Nehmen wir beispielsweise an, dass ein bestimmter Datensatz häufig auf die Kapazitätsebene gestaffelt ist, doch entsteht ein unerwarteter Bedarf an vollständigen Performance-Funktionen. Die Richtlinie kann geändert werden, um ein zusätzliches Tiering zu vermeiden und sicherzustellen, dass alle Blöcke, die bei einer Zunahme der I/O-Vorgänge zurückgelesen werden, weiterhin in der Performance-Tier verbleiben.
+
+
+
+== Alle
+
+Der `all` Die tiering-Richtlinie ersetzt die `backup` Richtlinie ab ONTAP 9.6. Der `backup` Richtlinie gilt nur für Datensicherungs-Volumes, d. h. ein Ziel für SnapMirror oder NetApp SnapVault. Der `all` Richtlinienfunktionen identisch, aber nicht beschränkt auf Datensicherungs-Volumes
+
+Mit dieser Richtlinie gelten Blöcke sofort als „cool“ und können sofort auf die Kapazitätsebene verschoben werden.
+
+Diese Richtlinie eignet sich besonders für langfristige Backups. Es kann auch als eine Form von Hierarchical Storage Management (HSM) verwendet werden. In der Vergangenheit wurde HSM häufig verwendet, um die Datenblöcke einer Datei auf Band zu verschieben, während die Datei selbst im Dateisystem sichtbar gehalten wurde. Ein FabricPool Volume mit dem `all` Richtlinien ermöglichen das Speichern von Dateien in einem sichtbaren und leicht zu verwaltenden System, wobei jedoch so gut wie kein Speicherplatz auf der lokalen Storage Tier belegt wird.

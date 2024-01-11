@@ -1,0 +1,39 @@
+= Pfadzugriff
+:allow-uri-read: 
+
+
+Bei SnapMirror Business Continuity (SM-BC) handelt es sich im Grunde um eine erweiterte SnapMirror Funktion für SAN, mit der Hosts sowohl von dem System, das die LUN hostet, als auch von dem System, das dessen Replikat hostet, auf eine LUN zugreifen können.
+
+SM-BC und SnapMirror Sync (SM-S) nutzen eine Replizierungs-Engine, SM-BC enthält jedoch zusätzliche Funktionen wie transparentes Applikations-Failover und Failback für Enterprise-Applikationen.
+
+In der Praxis funktioniert es ähnlich wie eine granulare Version von MetroCluster, indem es eine selektive und granulare synchrone RPO=0-Replizierung für individuelle Workloads ermöglicht. Das Verhalten der Pfade auf niedriger Ebene unterscheidet sich sehr von MetroCluster, aber das Endergebnis aus der Sicht des Hosts ist ähnlich.
+
+
+
+== Pfadzugriff
+
+SM-BC macht Speichergeräte für Host-Betriebssysteme sowohl von den primären als auch von den Remote-Speicher-Arrays sichtbar. Pfade werden über das Asymmetric Logical Unit Access (ALUA)-Protokoll verwaltet. Hierbei handelt es sich um ein branchenübliches Protokoll zur Identifizierung optimierter Pfade zwischen einem Storage-System und einem Host.
+
+Der Gerätepfad, der den kürzesten Zugriff auf E/A hat, wird als aktiv/optimiert betrachtet, und der Rest der Pfade gilt als aktiv/nicht optimiert.
+
+Die SM-BC-Beziehung besteht zwischen einem SVMs-Paar, das sich auf verschiedenen Clustern befindet. Beide SVMs können Daten bereitstellen. ALUA verwendet jedoch bevorzugt die SVM, die derzeit Eigentümer der Laufwerke ist, auf denen sich die LUNs befinden. IO an die Remote-SVM wird über den SM-BC-Interconnect als Proxy verwendet.
+
+image:smbc-failover-1.png["Fehler: Fehlendes Grafikbild"]
+
+
+
+== Synchrone Replizierung
+
+Im normalen Betrieb ist die Remote-Kopie jederzeit ein synchrones RPO=0-Replikat, mit einer Ausnahme. Wenn Daten nicht repliziert werden können, gibt SM-BC die Notwendigkeit frei, Daten zu replizieren und die Bereitstellung von E/A-Vorgängen fortzusetzen. Diese Option wird von Kunden bevorzugt, die den Verlust des Replikationslinks in einem Notfall erwägen oder die nicht möchten, dass der Geschäftsbetrieb unterbrochen wird, wenn Daten nicht repliziert werden können.
+
+
+
+== Storage-Hardware
+
+Im Gegensatz zu anderen Disaster Recovery-Lösungen für Storage bietet SM-BC asymmetrische Plattformflexibilität. Die Hardware an den einzelnen Standorten muss nicht identisch sein. Mit dieser Funktion können Sie die Größe der Hardware anpassen, die zur Unterstützung von SM-BC verwendet wird. Das Remote-Storage-System kann identisch mit dem primären Standort sein, wenn es einen vollständigen Produktions-Workload unterstützen muss. Wenn jedoch ein Ausfall zu einer Verringerung der I/O führt, könnte ein kleineres System am Remote-Standort kostengünstiger sein.
+
+
+
+== ONTAP Mediator
+
+Der ONTAP Mediator ist eine Softwareanwendung, die vom NetApp Support heruntergeladen wird. Der Mediator automatisiert Failover-Vorgänge für das Storage-Cluster am primären und Remote-Standort. Es kann auf einer kleinen Virtual Machine (VM) implementiert werden, die entweder vor Ort oder in der Cloud gehostet wird. Nach der Konfiguration fungiert er als dritter Standort, um Failover-Szenarien für beide Standorte zu überwachen.

@@ -1,0 +1,23 @@
+= SSD-Aggregate, einschließlich AFF Systeme
+:allow-uri-read: 
+
+
+Der freie Speicherplatz wird definiert als jeder Speicherplatz, der nicht für tatsächliche Daten verwendet wird. Er umfasst nicht zugewiesenen Speicherplatz im Aggregat selbst und ungenutzten Speicherplatz innerhalb der einzelnen Volumes. Thin Provisioning ist ebenfalls zu berücksichtigen. Ein Volume kann beispielsweise eine LUN mit 1 TB enthalten, von der nur 50 % von echten Daten genutzt werden. In einer Thin Provisioning Umgebung wird hierdurch scheinbar 500 GB Speicherplatz belegt. In einer vollständig bereitgestellten Umgebung scheint jedoch die volle Kapazität von 1 TB genutzt zu sein. Der nicht zugewiesene Speicherplatz von 500 GB ist ausgeblendet. Dieser Platz wird von tatsächlichen Daten nicht genutzt und sollte daher bei der Berechnung des gesamten freien Speicherplatzes berücksichtigt werden.
+
+NetApp Empfehlungen für Storage-Systeme, die für Enterprise-Applikationen verwendet werden, sind wie folgt:
+
+
+
+== SSD-Aggregate, einschließlich AFF Systeme
+
+
+TIP: *NetApp empfiehlt* mindestens 10% freien Platz. Dazu gehört der gesamte ungenutzte Speicherplatz, einschließlich freiem Speicherplatz innerhalb des Aggregats oder eines Volumes und sämtlicher freier Speicherplatz, der aufgrund der vollständigen Bereitstellung zugewiesen wird, aber nicht von tatsächlichen Daten genutzt wird. Logischer Speicherplatz ist dabei unwichtig. Die Frage lautet, wie viel tatsächlich freier physischer Speicherplatz für Daten zur Verfügung steht.
+
+Die Empfehlung von 10 % freiem Platz ist sehr konservativ. SSD-Aggregate können Workloads mit noch höherer Auslastung ohne Auswirkungen auf die Performance unterstützen. Wenn die Auslastung des Aggregats jedoch nicht sorgfältig überwacht wird, steigt auch das Risiko, dass der Speicherplatz nicht ausgelastet wird. Darüber hinaus kann es bei der Ausführung eines Systems mit einer Kapazität von 99 % nicht zu einer Performance-Beeinträchtigung kommen, doch wäre damit wahrscheinlich ein Management-Aufwand verbunden, um zu verhindern, dass das System während der Bestellung zusätzlicher Hardware vollständig gefüllt wird. Zudem kann es einige Zeit dauern, bis zusätzliche Laufwerke beschaffen und installiert sind.
+
+
+
+== HDD-Aggregate, einschließlich Flash Pool Aggregaten
+
+
+TIP: *NetApp empfiehlt* mindestens 15% freien Speicherplatz, wenn rotierende Laufwerke verwendet werden. Dazu gehört der gesamte ungenutzte Speicherplatz, einschließlich freiem Speicherplatz innerhalb des Aggregats oder eines Volumes und sämtlicher freier Speicherplatz, der aufgrund der vollständigen Bereitstellung zugewiesen wird, aber nicht von tatsächlichen Daten genutzt wird. Die Leistung wird bei 10 % der Redefreiheit beeinträchtigt.

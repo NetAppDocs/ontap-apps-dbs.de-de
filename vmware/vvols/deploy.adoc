@@ -1,0 +1,166 @@
+---
+sidebar: sidebar 
+permalink: vmware/vvols/deploy.html 
+keywords: tr-4400, vvols, ontap, virtual volumes, deploy 
+summary:  
+---
+= Implementierung von VVols Storage
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Zum Erstellen von VVols Storage für Ihre VMs sind verschiedene Schritte erforderlich.
+
+Die ersten beiden Schritte sind für eine bestehende vSphere-Umgebung, die ONTAP für herkömmliche Datastores verwendet, möglicherweise nicht erforderlich. Möglicherweise verwenden Sie bereits ONTAP Tools für das Management, die Automatisierung und die Berichterstellung mit Ihrem VMFS- oder herkömmlichen NFS-basierten Storage. Diese Schritte werden im folgenden Abschnitt näher erläutert.
+
+. Storage Virtual Machine (SVM) und deren Protokollkonfiguration erstellen. Sie wählen zwischen NVMe/FC, NFSv3, NFSv4.1, iSCSI, FCP oder eine Kombination dieser Optionen. Sie können entweder die Assistenten von ONTAP System Manager oder die Cluster Shell-Befehlszeile verwenden.
++
+** Mindestens eine LIF pro Node für jede Switch-/Fabric-Verbindung. Als Best Practice sollten Sie mindestens zwei pro Node für FCP-, iSCSI- oder NVMe-basierte Protokolle erstellen.
+** Derzeit können Volumes erstellt werden, doch es ist einfacher, sie vom Assistenten „_Provisioning Datastore_“ erstellen zu lassen. Die einzige Ausnahme von dieser Regel ist, wenn Sie eine VVols Replizierung mit VMware Site Recovery Manager verwenden möchten. Die Einrichtung solcher FlexVol Volumes mit bestehenden SnapMirror Beziehungen ist einfacher. Beachten Sie, dass QoS auf keinen Volumes für VVols aktiviert wird, da diese über SPBM und ONTAP Tools gemanagt werden sollen.
+
+
+. Implementieren Sie ONTAP Tools für VMware vSphere mit der von der NetApp Support-Website heruntergeladenen OVA.
+. Konfigurieren Sie ONTAP Tools für Ihre Umgebung.
++
+** Fügen Sie den ONTAP-Cluster zu den ONTAP-Tools unter _Storage Systems_ hinzu
++
+*** ONTAP Tools und SRA unterstützen zwar Anmeldedaten auf Cluster- und SVM-Ebene, doch unterstützt der VASA Provider nur Zugangsdaten auf Cluster-Ebene für Storage-Systeme. Dies liegt daran, dass viele der für VVols verwendeten APIs nur auf Cluster-Ebene verfügbar sind. Wenn Sie daher VVols verwenden möchten, müssen Sie die ONTAP-Cluster mit den Anmeldedaten für den Cluster-Umfang hinzufügen.
+
+
+** Wenn sich Ihre ONTAP-Daten-LIFs in unterschiedlichen Subnetzen von Ihren VMkernel-Adaptern befinden, müssen Sie die VMkernel-Adapter-Subnetze zur Liste der ausgewählten Subnetze im Einstellungsmenü der ONTAP-Tools hinzufügen. Standardmäßig sichern ONTAP Tools Ihren Storage-Datenverkehr nur durch lokalen Subnetzzugriff.
+** Die ONTAP Tools enthalten mehrere vordefinierte Richtlinien, die verwendet werden können oder sehen <<Verwalten von VMs mithilfe von Richtlinien>> Anleitung zum Erstellen von SCPs.
+
+
+. Verwenden Sie das Menü „_ONTAP Tools_“ in vCenter, um den Assistenten „_Provisioning Datastore_“ zu starten.
+. Geben Sie einen aussagekräftigen Namen ein, und wählen Sie das gewünschte Protokoll aus. Sie können auch eine Beschreibung des Datastore angeben.
+. Wählen Sie einen oder mehrere SCPs aus, die vom VVols-Datastore unterstützt werden sollen. Dadurch werden alle ONTAP-Systeme herausgefiltert, die nicht mit dem Profil übereinstimmen. Wählen Sie in der Ergebnisliste den gewünschten Cluster und die gewünschte SVM aus.
+. Verwenden Sie den Assistenten, um neue FlexVol-Volumes für jeden der angegebenen SCPs zu erstellen, oder verwenden Sie vorhandene Volumes, indem Sie das entsprechende Optionsfeld auswählen.
+. Erstellen Sie VM-Richtlinien für jedes SCP, das im Datastore verwendet wird, über das Menü „_Policies and Profiles_“ in der vCenter UI.
+. Wählen Sie den Storage-Regelsatz „NetApp.Clustered.Data.ONTAP.VP.vvol“ aus. Der Storage-Regelsatz „NetApp.Clustered.Data.ONTAP.VP.VASA10“ gilt für die SPBM-Unterstützung bei Datastores ohne VVols
+. Beim Erstellen einer VM-Speicherrichtlinie geben Sie das Storage Capability Profile nach Namen an. Sie können in diesem Schritt auch die SnapMirror Richtlinienabstimmung über die Registerkarte „Replication“ und über die Registerkarte „Tags“ konfigurieren. Beachten Sie, dass Tags bereits erstellt werden müssen, um ausgewählt werden zu können.
+. Erstellen Sie Ihre VMs, indem Sie unter Select Storage die VM Storage Policy und kompatiblen Datenspeicher auswählen.
+
+
+
+
+== Migration von VMs von herkömmlichen Datastores auf VVols
+
+Die Migration von VMs von herkömmlichen Datastores in einen VVols Datastore ist nicht komplizierter als das Verschieben von VMs zwischen herkömmlichen Datastores. Wählen Sie einfach die VM(s) aus, dann Migrate aus der Liste der Aktionen und dann einen Migrationstyp von _change Storage only_ aus. Migrationsvorgänge werden für SAN VMFS zu VVols Migrationen mit vSphere 6.0 und höher verlagert, jedoch nicht von NAS VMDKs zu VVols.
+
+
+
+== Verwalten von VMs mithilfe von Richtlinien
+
+Um die Storage-Bereitstellung mit richtlinienbasiertem Management zu automatisieren, müssen wir
+
+* Definieren Sie mit Storage Capability Profiles (SCPs) die Funktionen des Speichers (ONTAP-Knoten und FlexVol-Volume).
+* Erstellen Sie VM-Storage-Richtlinien, die den definierten SCPs zugeordnet sind.
+
+
+NetApp hat die Funktionen und die Zuordnung ab VASA Provider 7.2 vereinfacht, wobei die Verbesserungen in späteren Versionen fortgeführt werden. Dieser Abschnitt konzentriert sich auf diesen neuen Ansatz. Frühere Versionen unterstützten eine größere Anzahl von Funktionen und erlaubten die individuelle Zuordnung zu Storage-Richtlinien, allerdings wird dieser Ansatz nicht mehr unterstützt.
+
+
+
+=== Funktionen des Storage-Funktionsprofils nach ONTAP-Tools
+
+|===
+| *SCP-Fähigkeit* | *Fähigkeitswerte* | *Release-Unterstützung* | *Hinweise* 
+
+
+| *Komprimierung* | Ja, Nein, Alle | Alle | Obligatorisch für AFF ab 7.2. 
+
+
+| *Deduplizierung* | Ja, Nein, Alle | Alle | M andatory für AFF in 7.2 und später. 
+
+
+| *Verschlüsselung* | Ja, Nein, Alle | 7.2 und höher | Wählt/erstellt ein verschlüsseltes FlexVol-Volume. ONTAP-Lizenz erforderlich. 
+
+
+| *Maximale IOPS* | <number> | 7.1 und später, aber Unterschiede | Aufgeführt unter QoS Policy Group für 7.2 und höher. Siehe <<Performance Management mit ONTAP Tools 9.10 und höher>> Finden Sie weitere Informationen. 
+
+
+| * Persönlichkeit* | A FF, FAS | 7.2 und höher | FAS beinhaltet auch andere nicht-All Flash FAS Systeme wie beispielsweise ONTAP Select. AFF umfasst ASA. 
+
+
+| *Protokoll* | NFS, NFS 4.1, iSCSI, FCP, NVMe/FC, Alle | 7.1 und früher, 9.10 und höher | 7.2-9.8 ist effektiv "jede". Ebenfalls ab 9.10, wo NFS 4.1 und NVMe/FC in die ursprüngliche Liste aufgenommen wurden. 
+
+
+| *Speicherplatzreserve (Thin Provisioning)* | Dünn, Dick, (Beliebig) | Alle, aber Unterschiede | 7.1 und früher als Thin Provisioning bezeichnet, wodurch auch beliebige Werte zulässig sind. Genannt Space Reserve in 7.2. Alle Releases sind standardmäßig Thin. 
+
+
+| *Tiering-Richtlinie* | Beliebig, Keine, Snapshot, Automatisch | 7.2 und höher | Verwendet für FabricPool - erfordert AFF oder ASA mit ONTAP 9.4 oder höher. Nur Snapshot ist empfohlen, wenn eine lokale S3 Lösung wie NetApp StorageGRID nicht verwendet wird. 
+|===
+
+
+==== Erstellen Von Storage-Funktionsprofilen
+
+NetApp VASA Provider verfügt über mehrere vordefinierte SCPs. Neue SCPs können manuell über die vCenter UI oder über die Automatisierung mit REST-APIs erstellt werden. Durch das Angeben von Funktionen in einem neuen Profil, das Klonen eines vorhandenen Profils oder das automatische Generieren von Profilen aus bestehenden herkömmlichen Datastores. Dies erfolgt über die Menüs unter ONTAP Tools. Verwenden Sie _Storage Capability Profiles_, um ein Profil zu erstellen oder zu klonen, und _Storage Mapping_, um ein Profil automatisch zu generieren.
+
+
+
+===== Storage-Funktionen für ONTAP Tools 9.10 und höher
+
+image:vvols-image9.png["„Storage-Funktionen für ONTAP Tools 9.10 und höher“.300"]
+
+image:vvols-image12.png["„Storage-Funktionen für ONTAP Tools 9.10 und höher“.300"]
+
+image:vvols-image11.png["„Storage-Funktionen für ONTAP Tools 9.10 und höher“.300"]
+
+image:vvols-image10.png["„Storage-Funktionen für ONTAP Tools 9.10 und höher“.300"]
+
+image:vvols-image14.png["„Storage-Funktionen für ONTAP Tools 9.10 und höher“.300"]
+
+image:vvols-image13.png["„Storage-Funktionen für ONTAP Tools 9.10 und höher“.300"]
+
+*Erstellen von VVols Datastores*
+Nachdem die erforderlichen SCPs erstellt wurden, können sie auch zur Erstellung des VVols-Datastores (und optional auch FlexVol Volumes für den Datastore) verwendet werden. Klicken Sie mit der rechten Maustaste auf den Host, das Cluster oder das Datacenter, auf dem Sie den VVols-Datastore erstellen möchten, und wählen Sie dann _ONTAP Tools_ > _Provisioning Datastore_ aus. Wählen Sie einen oder mehrere SCPs aus, die vom Datastore unterstützt werden sollen, und wählen Sie dann aus vorhandenen FlexVol Volumes aus bzw. stellen Sie neue FlexVol Volumes für den Datastore bereit. Geben Sie schließlich das Standard-SCP für den Datastore an, das für VMs verwendet wird, für die kein durch die Richtlinie angegebenes SCP angegeben ist, sowie für Swap-VVols (diese erfordern keinen hochperformanten Storage).
+
+
+
+=== Erstellen von VM-Storage-Richtlinien
+
+VM-Storage-Richtlinien managen in vSphere optionale Funktionen wie Storage I/O Control oder vSphere Encryption. Sie werden auch zusammen mit VVols verwendet, um spezifische Storage-Funktionen auf die VM anzuwenden. Verwenden Sie den Storage-Typ „NetApp.Clustered.Data.ONTAP.VP.vvol“ und die Regel „ProfileName“, um mithilfe der Richtlinie ein bestimmtes SCP auf VMs anzuwenden. Ein Beispiel hierfür mit den ONTAP Tools VASA Provider finden Sie unter Link:ontap.HTML#Best Practices[Beispiel für eine Netzwerkkonfiguration mit VVols über NFS v3]. Regeln für Storage „NetApp.Clustered.Data.ONTAP.VP.VASA10“ sollen mit Datastores ohne VVols verwendet werden.
+
+Frühere Versionen sind ähnlich, aber wie in erwähnt <<Funktionen des Storage-Funktionsprofils nach ONTAP-Tools>>, Ihre Optionen variieren.
+
+Sobald die Storage-Richtlinie erstellt wurde, kann sie verwendet werden, wenn neue VMs bereitgestellt werden, wie in dargestellt link:overview.html#deploy-vm-using-storage-policy["Bereitstellung der VM mithilfe der Storage-Richtlinie"]. Richtlinien zur Nutzung von Performance-Management-Funktionen mit VASA Provider 7.2 finden Sie in <<Performance Management mit ONTAP Tools 9.10 und höher>>.
+
+
+
+==== Erstellen der Richtlinie für den VM-Storage mit ONTAP Tools VASA Provider 9.10
+
+image:vvols-image15.png["„Erstellung der VM Storage-Richtlinien mit ONTAP Tools VASA Provider 9.10„.300"]
+
+
+
+==== Performance Management mit ONTAP Tools 9.10 und höher
+
+* ONTAP Tools 9.10 verwendet einen eigenen Algorithmus für optimierte Platzierung, um ein neues vVol im besten FlexVol Volume in einem VVols Datastore zu platzieren. Die Platzierung basiert auf dem angegebenen SCP und übereinstimmenden FlexVol-Volumes. Dadurch wird sichergestellt, dass der Datastore und der zugrunde liegende Storage die angegebenen Performance-Anforderungen erfüllen können.
+* Wenn sich Funktionen für die Performance wie Min. Und Max. Ändern, muss die spezifische Konfiguration entsprechend verändert werden.
++
+** *Min und Max IOPS* können in einem SCP angegeben und in einer VM Policy verwendet werden.
++
+*** Wenn Sie die IOPS im SCP ändern, wird die QoS auf den VVols erst geändert, wenn die VM-Richtlinie bearbeitet und dann auf die VMs angewendet wird, die sie verwenden (siehe <<Storage-Funktionen für ONTAP Tools 9.10 und höher>>). Oder erstellen Sie ein neues SCP mit den gewünschten IOPS und ändern Sie die Richtlinie, um es zu verwenden (und erneut auf VMs anzuwenden). Im Allgemeinen wird empfohlen, einfach separate SCPs und VM-Storage-Richtlinien für verschiedene Service-Ebenen zu definieren und einfach die VM-Storage-Richtlinie für die VM zu ändern.
+*** AFF- und FAS-Persönlichkeiten haben unterschiedliche IOPS-Einstellungen. Sowohl Min. Als auch Max. Sind auf AFF verfügbar. Nicht-All Flash FAS Systeme können jedoch nur die IOPS-Maximaleinstellungen verwenden.
+
+
+
+
+* In einigen Fällen muss ein vVol nach einer Richtlinienänderung (entweder manuell oder automatisch durch VASA Provider und ONTAP) migriert werden:
++
+** Einige Änderungen erfordern keine Migration (wie beispielsweise eine Änderung der maximalen IOPS, die sofort auf die VM angewendet werden kann, wie oben beschrieben).
+** Wenn die Richtlinienänderung nicht vom aktuellen FlexVol Volume unterstützt werden kann, in dem das vVol gespeichert ist (beispielsweise unterstützt die Plattform die angeforderte Verschlüsselungs- oder Tiering-Richtlinie nicht), müssen Sie die VM manuell in vCenter migrieren.
+
+
+* ONTAP-Tools erstellen individuelle QoS-Richtlinien ohne gemeinsame Nutzung mit derzeit unterstützten Versionen von ONTAP. Daher erhält jede einzelne VMDK eine eigene IOPS-Zuweisung.
+
+
+
+
+===== Erneutes Anwenden der VM-Speicherrichtlinie
+
+image:vvols-image16.png["„VM-Speicherrichtlinie neu anwendet.300"]

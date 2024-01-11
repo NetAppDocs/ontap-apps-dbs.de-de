@@ -1,0 +1,21 @@
+---
+sidebar: sidebar 
+permalink: mssql/shared-vs-dedicated.html 
+keywords: MS-SQL,mssql,SQL Server 
+summary: Microsoft SQL Server auf ONTAP 
+---
+= Gemeinsame Instanz von Microsoft SQL Server und dedizierte Instanzen
+:allow-uri-read: 
+
+
+[role="lead"]
+Wenn eine Anwendung über viele Schemas und gespeicherte Prozeduren verfügt, kann dies möglicherweise andere Apps beeinträchtigen, die eine SQL Server-Instanz gemeinsam nutzen.
+
+Instanzressourcen können möglicherweise geteilt oder gesperrt werden, was wiederum zu Performance-Problemen bei anderen Anwendungen führt, bei denen Datenbanken auf der gemeinsam genutzten SQL Server-Instanz gehostet werden.
+
+Die Fehlerbehebung bei Performance-Problemen kann kompliziert sein, da Sie herausfinden müssen, welche Instanz die eigentliche Ursache ist. Diese Frage wird gegen die Kosten von Betriebssystemlizenzen und SQL Server-Lizenzen abgewogen. Wenn die Applikations-Performance oberste Priorität hat, ist eine dedizierte Instanz sehr empfehlenswert.
+
+Microsoft lizenziert SQL Server pro Kern auf Serverebene und nicht pro Instanz. Aus diesem Grund sind Datenbankadministratoren versucht, so viele SQL Server-Instanzen zu installieren, wie der Server verarbeiten kann, um Lizenzierungskosten zu sparen, was später zu größeren Performanceproblemen führen kann.
+
+
+TIP: *NetApp empfiehlt*, wenn möglich dedizierte SQL Server-Instanzen zu wählen, um optimale Leistung zu erzielen.

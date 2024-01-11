@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: oracle/ontap-configuration/oracle-thin-provisioning.html 
+keywords: thin provisioning, oracle 
+summary: Oracle und ONTAP Thin Provisioning 
+---
+= Thin Provisioning mit Oracle
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Thin Provisioning für eine Oracle-Datenbank erfordert eine sorgfältige Planung, da im Ergebnis mehr Speicherplatz auf einem Storage-System konfiguriert wird, als unbedingt physisch verfügbar ist. Dieser Aufwand lohnt sich wirklich, denn bei korrekter Umsetzung ergeben sich erhebliche Kosteneinsparungen und Verbesserungen beim Management.
+
+Thin Provisioning ist in vielerlei Form verfügbar und integraler Bestandteil zahlreicher Funktionen von ONTAP für Enterprise-Applikationsumgebungen. Aus diesem Grund steht Thin Provisioning auch eng mit Effizienztechnologien im Zusammenhang: Mithilfe von Effizienzfunktionen können mehr logische Daten gespeichert werden, als dies technisch auf dem Storage-System möglich ist.
+
+Fast jede Verwendung von Snapshots beinhaltet Thin Provisioning. Zum Beispiel umfasst eine typische 10-TB-Datenbank auf NetApp Storage etwa 30 Tage Snapshots. Diese Anordnung führt dazu, dass ca. 10 TB Daten im aktiven File-System sichtbar sind und 300 TB für Snapshots dediziert. Die insgesamt 310 TB Storage-Kapazität befindet sich in der Regel auf einem Speicherplatz von 12 TB bis 15 TB. Die aktive Datenbank benötigt 10 TB Storage. Die verbleibenden 300 TB an Daten benötigen nur 2 TB bis 5 TB Speicherplatz, da nur die Änderungen an den Originaldaten gespeichert werden.
+
+Das Klonen ist ebenfalls ein Beispiel für Thin Provisioning. Ein großer NetApp Kunde hat 40 Klone einer 80-TB-Datenbank für die Entwicklung erstellt. Wenn alle 40 Entwickler, die diese Klone verwenden, jeden Block in jeder Datendatei übergeschrieben haben, wäre mehr als 3,2 PB Storage erforderlich. In der Praxis sind Umsätze gering und der kollektive Platzbedarf liegt bei näher bei 40 TB, da nur Änderungen auf den Laufwerken gespeichert werden.
+
+
+
+== Speicherplatzmanagement
+
+Bei Thin Provisioning in einer Applikationsumgebung ist Vorsicht geboten, da sich die Datenänderungsraten unerwartet erhöhen können. Beispielsweise kann der Speicherplatzverbrauch aufgrund von Snapshots schnell ansteigen, wenn Datenbanktabellen neu indiziert werden, oder es werden umfangreiche Patches für VMware Gäste angewendet. Ein falsch platziertes Backup kann in sehr kurzer Zeit große Datenmengen schreiben. Schließlich kann es schwierig sein, einige Anwendungen wiederherzustellen, wenn ein Dateisystem unerwartet über den freien Speicherplatz verfügt.
+
+Glücklicherweise können diese Risiken mit einer sorgfältigen Konfiguration von behoben werden `volume-autogrow` Und `snapshot-autodelete` Richtlinien. Mit diesen Optionen kann ein Benutzer Richtlinien erstellen, die automatisch den von Snapshots belegten Speicherplatz freigeben oder ein Volume erweitern, um zusätzliche Daten aufzunehmen. Es stehen zahlreiche Optionen zur Verfügung, und die Anforderungen variieren je nach Kunde.
+
+Siehe link:https://docs.netapp.com/us-en/ontap/volumes/index.html["Dokumentation des Managements von logischem Storage"] Für eine vollständige Diskussion dieser Funktionen.
+
+
+
+== LUN Thin Provisioning
+
+Die Effizienz des Thin Provisioning von aktiven LUNs in einer Filesystem-Umgebung kann nach und nach verloren gehen, wenn Daten gelöscht werden. Sofern die gelöschten Daten entweder mit Nullen überschrieben werden oder der Speicherplatz mit TRIM/UNMAP-Rückgewinnung freigegeben wird, belegen die „gelöschten“ Daten immer mehr nicht zugewiesene Leerzeichen im Dateisystem. Darüber hinaus kommt Thin Provisioning für aktive LUNs in vielen Datenbankumgebungen nur eingeschränkt zum Einsatz, da Datendateien zum Zeitpunkt der Erstellung auf ihre volle Größe initialisiert werden.
+
+Eine sorgfältige Planung der LVM-Konfiguration kann die Effizienz steigern und den Bedarf an Storage-Bereitstellung und LUN-Anpassung minimieren. Wenn eine LVM wie Veritas VxVM oder Oracle ASM verwendet wird, werden die zugrunde liegenden LUNs in Extents unterteilt, die nur bei Bedarf verwendet werden. Wenn beispielsweise ein Datensatz bei einer Größe von 2 TB beginnt, jedoch im Laufe der Zeit bis auf 10 TB anwachsen könnte, könnte dieser Datensatz auf 10 TB an LUNs platziert werden, die über Thin Provisioning in einer LVM-Festplattengruppe organisiert sind. Zum Zeitpunkt der Erstellung würden nur 2 TB Speicherplatz belegt und zusätzlichen Speicherplatz beanspruchen, wenn Extents zugewiesen werden, um dem Datenwachstum gerecht zu werden. Dieser Prozess ist sicher, solange der Speicherplatz überwacht wird.
+
+
+
+== Fraktionale Reservierungen
+
+Die fraktionale Reserve bezieht sich auf das Verhalten einer LUN in einem Volume in Bezug auf die Platzeffizienz. Wenn die Option `fractional-reserve` Ist auf 100 % festgelegt, können alle Daten im Volume mit jedem Datenmuster 100 % Umsatz verzeichnen, ohne Speicherplatz auf dem Volume zu belegen.
+
+Betrachten Sie beispielsweise eine Datenbank auf einer einzigen 250 GB LUN und einem Volume mit 1 TB. Wenn ein Snapshot erstellt wird, würde sofort eine zusätzliche 250GB an Speicherplatz auf dem Volume reserviert werden, um zu garantieren, dass auf dem Volume aus irgendeinem Grund nicht mehr genügend Speicherplatz verfügbar ist. Die Verwendung von fraktionalen Reserven ist im Allgemeinen aufwändig, da es äußerst unwahrscheinlich ist, dass jedes Byte im Datenbank-Volume überschrieben werden müsste. Es gibt keinen Grund, Platz für ein Ereignis zu reservieren, das nie passiert. Wenn ein Kunde jedoch den Speicherplatzverbrauch in einem Storage-System nicht überwachen kann und sicher sein muss, dass der Platz nie knapp wird, wären für die Nutzung von Snapshots 100 % fraktionale Reservierungen erforderlich.
+
+
+
+== Komprimierung und Deduplizierung
+
+Komprimierung und Deduplizierung sind beide Formen von Thin Provisioning. Beispielsweise kann ein 50 TB Platzbedarf für Daten auf 30 TB komprimiert werden, was zu Einsparungen von 20 TB führt. Um die Komprimierung nutzen zu können, müssen einige dieser 20 TB für andere Daten verwendet werden. Alternativ muss das Storage-System mit weniger als 50 TB erworben werden. Das Ergebnis sind Speicherung von mehr Daten als technisch auf dem Speichersystem verfügbar ist. Aus Sicht der Daten gibt es 50 TB an Daten, obwohl diese auf den Laufwerken nur 30 TB belegen.
+
+Es besteht immer die Möglichkeit, dass sich die Komprimierbarkeit eines Datensatzes ändert. Dies würde zu einem erhöhten Verbrauch an echtem Speicherplatz führen. Dieser Anstieg des Verbrauchs bedeutet, dass die Komprimierung wie bei anderen Thin Provisioning-Methoden zur Überwachung und Nutzung gemanagt werden muss `volume-autogrow` Und `snapshot-autodelete`.
+
+Die Komprimierung und Deduplizierung werden im Abschnitt Link:efficiency.html ausführlicher behandelt
+
+
+
+=== Komprimierung und fraktionale Reservierungen
+
+Komprimierung ist eine Form von Thin Provisioning. Fraktionale Reservierungen beeinflussen die Komprimierung. Ein wichtiger Hinweis: Vor der Snapshot-Erstellung wird Speicherplatz reserviert. Normalerweise ist eine fraktionale Reserve nur wichtig, wenn ein Snapshot vorhanden ist. Wenn es keinen Snapshot gibt, ist die fraktionale Reserve nicht wichtig. Dies ist bei der Komprimierung nicht der Fall. Wenn eine LUN auf einem Volume mit Komprimierung erstellt wird, behält ONTAP den Speicherplatz bei, um einen Snapshot aufzunehmen. Dieses Verhalten kann während der Konfiguration verwirrend sein, aber es wird erwartet.
+
+Als Beispiel betrachten Sie ein 10GB Volume mit einer 5GB LUN, die bis auf 2,5 GB ohne Snapshots komprimiert wurde. Betrachten wir die beiden folgenden Szenarien:
+
+* Die fraktionale Reserve = 100 ergibt eine Auslastung von 7,5 GB
+* Die fraktionale Reserve = 0 ergibt eine Auslastung von 2,5 GB
+
+
+Das erste Szenario umfasst 2,5 GB Speicherplatzverbrauch für aktuelle Daten und 5 GB Speicherplatz, um 100 % des Umsatzes der Quelle in Erwartung der Snapshot-Nutzung zu berücksichtigen. Das zweite Szenario reserviert keinen zusätzlichen Speicherplatz.
+
+Obwohl diese Situation verwirrend erscheinen mag, ist es unwahrscheinlich, dass sie in der Praxis angetroffen wird. Komprimierung impliziert Thin Provisioning, und Thin Provisioning in einer LUN-Umgebung erfordert nur fraktionale Reservierungen. Es ist immer möglich, dass komprimierte Daten durch eine nicht komprimierbare Funktion überschrieben werden. Aus diesem Grund muss ein Volume für die Komprimierung bereitgestellt werden, um mögliche Einsparungen zu erzielen.
+
+[TIP]
+====
+*NetApp empfiehlt* die folgenden Reservekonfigurationen:
+
+* Einstellen `fractional-reserve` Auf 0, wenn die grundlegende Kapazitätsüberwachung zusammen mit eingerichtet ist `volume-autogrow` Und `snapshot-autodelete`.
+* Einstellen `fractional-reserve` Zu 100, wenn es keine Überwachungsfähigkeit gibt oder wenn es unmöglich ist, unter keinen Umständen Raum abzulassen.
+
+
+====

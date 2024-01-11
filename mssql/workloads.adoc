@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: mssql/workloads.html 
+keywords: MS-SQL,mssql,SQL Server 
+summary: Microsoft SQL Server auf ONTAP 
+---
+= Microsoft SQL Server-Workloads
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Die SQL Server Datenbankplattform kann zahlreiche Applikationen unterstützen.
+
+Vor der Bereitstellung von SQL Server müssen Sie die Anforderungen an die Datenbank-Workloads der Anwendungen kennen, die von Ihren SQL Server-Instanzen unterstützt werden. Jede Applikation hat unterschiedliche Anforderungen an Kapazität, Performance und Verfügbarkeit. Daher sollte jede Datenbank für eine optimale Unterstützung dieser Anforderungen entworfen werden. Viele Unternehmen klassifizieren Datenbanken in mehrere Management-Tiers unter Verwendung von Anwendungsanforderungen zur Definition von SLAs. SQL Server-Workloads können wie folgt beschrieben werden:
+
+* OLTP-Datenbanken sind oft auch die kritischsten Datenbanken eines Unternehmens. Diese Datenbanken stehen in der Regel kundenorientierten Applikationen gegenüber und werden als unverzichtbar für die Kernprozesse des Unternehmens angesehen. Für geschäftskritische OLTP-Datenbanken und die von ihnen unterstützten Applikationen gibt es oft SLAs, die ein hohes Maß an Performance erfordern und mit hohen Anforderungen an Performance-Verschlechterung und Verfügbarkeit verbunden sind. Sie können auch Kandidaten für „Always On“-Failover-Cluster oder „Always On“-Verfügbarkeitsgruppen sein. Der I/O-Mix dieser Datenbanktypen ist in der Regel durch 75 bis 90 % zufällige Lesevorgänge und 25 bis 10 % Schreibzugriffe gekennzeichnet.
+* Datenbanken des Decision Support System (DSS) können auch als Data Warehouses bezeichnet werden. Diese Datenbanken sind in vielen Unternehmen, die auf Analysen für ihr Geschäft vertrauen, geschäftskritisch. Diese Datenbanken sind sensibel für die CPU-Auslastung und Lesevorgänge von der Festplatte, wenn Abfragen ausgeführt werden. In vielen Unternehmen sind DSS-Datenbanken zum Monats-, Quartals- und Jahresende am wichtigsten Dieser Workload verfügt in der Regel über eine I/O-Kombination mit 100 % Lesevorgängen.
+
+
+
+
+== Benchmarking
+
+Der Transaction Process Council (TPC) ist ein gemeinnütziges Unternehmen, das gegründet wurde, um Transaktionsverarbeitung und Datenbank-Benchmarks zu definieren und objektive, überprüfbare TPC-Leistungsdaten an die Branche weiterzugeben. TPC Tests simulieren komplette Computing-Umgebungen, in denen eine Benutzerpopulation Transaktionen anhand von Datenbanken ausführt.
+
+[cols="1,1,1"]
+|===
+
+
+| Workload-Typ | Szenario | Lese-/Schreibverhältnis (Prozentsätze) 
+
+
+| OLTP | TPC-C | ~75/25 
+
+
+| OLTP | TPC-E | ~90/10 
+
+
+| DSS | TPC-H | ~100/0 
+|===
+Obwohl verschiedene Optionen zur Workload-Generierung verfügbar sind, konzentrieren wir uns in der Regel auf die Messung der Performance von SQL Server Datenbanken bei der Verarbeitung transaktionaler Workloads. Wir verwenden die TPC-E Tools von Microsoft oder TPC-H mit HammerDB (link:http://www.hammerdb.com/document.html["HammerDB.com"]^). Die detaillierten Anweisungen zur Verwendung dieser spezifischen Benchmarks liegen außerhalb des Rahmens dieses Dokuments.

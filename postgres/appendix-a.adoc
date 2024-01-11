@@ -1,0 +1,23 @@
+---
+sidebar: sidebar 
+permalink: postgres/appendix-a.html 
+keywords: PostgreSQL,database,postgres 
+summary: PostgreSQL-Datenbanken auf ONTAP 
+---
+= Anhang A: Host-Konfiguration
+:allow-uri-read: 
+
+
+[role="lead"]
+Inhalt des Anhangs:
+
+* Überprüfen Sie, ob FC-Hostbusadapter (HBAs) im ESX-Host mit aktualisierten Treibern, Firmware und der korrekten BIOS-Version ausgeführt werden.
+* Installieren Sie NetApp Host Utilities auf dem Host, um direkte und indirekte Pfade für eine bestimmte LUN anzuzeigen. Das Kit enthält auch erweiterte Informationen zu den LUN-SVM-Informationen.
+* Verwenden Sie immer ein Rescan-SCSI-Bus-Skript auf dem Host, um:
+* Neue LUNs finden
+* Verwerfen Sie veraltete LUNs
+* Aktualisieren Sie neue Pfade zu LUNs
+* Um bei Pfadausfall mehrere Routen zum Speicher einzurichten, installieren und konfigurieren Sie Multipathing-Software auf dem Host-Betriebssystem.
+* Wenn Sie keine Multipathing-Software verwenden, sollten Sie jede LUN auf einen einzelnen Pfad beschränken.
+* Der Linux-Kernel ermöglicht eine Low-Level-Kontrolle über die Planung von E/A-Vorgängen, um Geräte zu blockieren. Die Standardwerte in Linux-Versionen können erheblich variieren. Im Allgemeinen zeigen NetApp Kunden und interne Tests bessere Ergebnisse mit NoOps-Scheduler für Datenbanken. Sie sollten Benchmarking durchführen, um festzustellen, welche I/O-Planer für Ihren Anwendungsfall optimal sind.
+

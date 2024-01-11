@@ -1,0 +1,9 @@
+= 
+:allow-uri-read: 
+
+
+Auf einem ONTAP-System wird der Storage in 4-KB-Einheiten organisiert. Ein Datenbank- oder Filesystem-8-KB-Block sollte exakt zwei 4-KB-Blöcken zugeordnet werden. Wenn ein Fehler in der LUN-Konfiguration die Ausrichtung um 1 KB in beide Richtungen verschiebt, wäre jeder 8-KB-Block auf drei verschiedenen 4-KB-Storage-Blöcken vorhanden anstatt auf zwei. Diese Anordnung würde zu einer erhöhten Latenz führen und dazu führen, dass zusätzliche I/O-Vorgänge innerhalb des Speichersystems ausgeführt werden.
+
+Die Ausrichtung wirkt sich auch auf LVM-Architekturen aus. Wenn ein physisches Volume innerhalb einer logischen Volume-Gruppe auf dem gesamten Laufwerk definiert wird (es werden keine Partitionen erstellt), wird der erste 4-KB-Block auf der LUN auf den ersten 4-KB-Block im Storage-System ausgerichtet. Dies ist eine korrekte Ausrichtung. Probleme ergeben sich bei Partitionen, da sie den Startort verschieben, an dem das Betriebssystem die LUN verwendet. Solange der Offset in ganzen 4-KB-Einheiten verschoben wird, ist die LUN ausgerichtet.
+
+Erstellen Sie in Linux-Umgebungen logische Volume-Gruppen auf dem gesamten Laufwerkgerät. Wenn eine Partition erforderlich ist, überprüfen Sie die Ausrichtung, indem Sie ausführen `fdisk –u` Es wird überprüft, ob die Starts jeder Partition ein Vielfaches von acht sind. Dies bedeutet, dass die Partition bei einem Vielfachen von acht 512-Byte-Sektoren beginnt, was 4 KB ist.

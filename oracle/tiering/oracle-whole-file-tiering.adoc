@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: oracle/tiering/oracle-whole-file-tiering.html 
+keywords: tiering, fabricpool 
+summary: Oracle Full Tile Tiering 
+---
+= Vollständiges File Tiering für Oracle
+:allow-uri-read: 
+
+
+[role="lead"]
+FabricPool Tiering wird zwar auf Block-Ebene ausgeführt, kann jedoch in einigen Fällen für Tiering auf Dateiebene verwendet werden.
+
+Viele Applikationsdatensätze sind nach Datum geordnet. Solche Daten sind im Allgemeinen immer seltener zugänglich, wenn sie älter werden. Beispielsweise verfügt eine Bank möglicherweise über ein Repository mit PDF-Dateien, die fünf Jahre Kundenabrechnungen enthalten, aber nur die letzten Monate sind aktiv. FabricPool kann verwendet werden, um ältere Datendateien in die Kapazitäts-Tier zu verschieben. Eine Abkühlzeit von 14 Tagen würde dafür sorgen, dass die letzten 14 Tage der PDF-Dateien auf der Performance-Ebene verbleiben. Darüber hinaus würden Dateien, die mindestens alle 14 Tage gelesen werden, „heiß“ bleiben und daher auf der Performance-Ebene verbleiben.
+
+
+
+== Richtlinien
+
+Um einen dateibasierten Tiering-Ansatz zu implementieren, müssen Sie über Dateien verfügen, die geschrieben und nicht nachträglich geändert werden. Der `tiering-minimum-cooling-days` Richtlinien sollten so hoch eingestellt werden, dass Dateien, die Sie möglicherweise benötigen, auf der Performance-Tier verbleiben. Ein Datensatz, für den die letzten 60 Tage Daten mit optimaler Performance benötigt werden, erfordert beispielsweise die Einstellung `tiering-minimum-cooling-days` Bis 60. Ähnliche Ergebnisse lassen sich auch anhand der Dateizugriffsmuster erzielen. Wenn beispielsweise die Daten der letzten 90 Tage benötigt werden und die Applikation auf diese 90-Tage-Zeitspanne zugreift, verbleiben die Daten in der Performance-Tier. Durch Einstellen der `tiering-minimum-cooling-days` Zeitraum bis 2, erhalten Sie prompt Tiering, nachdem die Daten weniger aktiv werden.
+
+Der `auto` Eine Richtlinie ist für das Tiering dieser Blöcke erforderlich, da nur die `auto` Die Richtlinie wirkt sich auf Blöcke aus, die sich im aktiven Filesystem befinden.
+
+
+NOTE: Jeder Zugriff auf Daten setzt die Heatmap-Daten zurück. Virus-Scan, Indizierung und sogar Backup-Aktivitäten, die die Quelldateien lesen, verhindern Tiering, da dies erforderlich ist `tiering-minimum-cooling-days` Schwellenwert wird nie erreicht.

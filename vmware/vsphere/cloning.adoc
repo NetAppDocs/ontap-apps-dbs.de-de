@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: vmware/vsphere/cloning.html 
+keywords: Data protection, Space reclamation, VM and datastore cloning, Storage efficiency, thin provisioning, QoS, SIOC, Storage Distributed Resource Scheduler, DRS, Active IQ Unified Manager, Encryption 
+summary: Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrere Jobs angewendet werden können. In diesen Richtlinien können ein Zeitplan, die Aufbewahrung, die Replizierung und andere Funktionen definiert werden. Damit ist es weiterhin möglich, optional VM-konsistente Snapshots auszuwählen und dadurch die Fähigkeit des Hypervisors auszuschöpfen, das I/O vor dem Erstellen eines VMware Snapshots stillzulegen. 
+---
+= Klonen von VMs und Datastores
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Durch das Klonen eines Storage-Objekts können Sie schnell Kopien für andere Zwecke erstellen, beispielsweise zum Provisionieren weiterer VMs, für Backup- und Recovery-Vorgänge usw.
+
+In vSphere können Sie VMs, virtuelle Festplatten, vVol oder Datastores klonen. Nach dem Klonen kann das betreffende Objekt weiter angepasst werden. Dies geschieht häufig durch einen automatisierten Prozess. VSphere unterstützt sowohl vollständige Klone als auch Linked Clones, bei denen Änderungen separat vom ursprünglichen Objekt verfolgt werden.
+
+Linked Clones eignen sich sehr gut, um Speicherplatz zu sparen, aber sie erhöhen die Menge der I/O-Vorgänge, die vSphere für die VM verarbeitet. Dies wirkt sich auf die Performance der betreffenden VM und vielleicht auch des gesamten Hosts aus. Aus diesem Grund nutzen NetApp Kunden häufig Klone, die auf Storage-Systemen basieren, um das Beste aus beiden Welten zu erhalten: Effiziente Storage-Nutzung und höhere Performance.
+
+In der folgenden Abbildung ist das Klonen von ONTAP dargestellt.
+
+image:vsphere_ontap_image5.png["Fehler: Fehlendes Grafikbild"]
+
+Das Klonen kann – in der Regel auf VM-, vVol oder Datastore-Ebene – durch mehrere Verfahren auf Systeme mit ONTAP Software verlagert werden. Hierzu zählen:
+
+* VVols, die den NetApp vSphere APIs for Storage Awareness (VASA) Provider verwenden.  ONTAP Klone unterstützen von vCenter gemanagte vVol Snapshots, die platzsparend sind und bei der Erstellung und Löschung eine minimale I/O-Auswirkung haben.  VMs können auch mit vCenter geklont werden. Sie werden dann auch zu ONTAP verlagert, sei es innerhalb eines einzelnen Datastores/Volumes oder zwischen Datastores/Volumes.
+* VSphere Klone und Migration mit vSphere APIs – Array Integration (VAAI). VM-Klonvorgänge können in SAN- und NAS-Umgebungen zu ONTAP verlagert werden (NetApp stellt ein ESXi Plug-in zur Aktivierung von VAAI für NFS bereit).  VSphere verlagert den Betrieb nur auf „kalte“ (ausgeschalteten) VMs in einem NAS-Datastore, während Vorgänge auf heißen VMs (Klonen und Storage vMotion) ebenfalls für SAN verlagert werden. ONTAP nutzt je nach Quelle, Ziel und installierten Produktlizenzen den effizientesten Ansatz. Diese Funktion wird auch von VMware Horizon View unterstützt.
+* SRA (wird mit VMware Site Recovery Manager verwendet). Hier werden Klone zum unterbrechungsfreien Testen der Recovery des DR-Replikats herangezogen.
+* Backup und Recovery mit NetApp Tools wie SnapCenter. Mit VM-Klonen werden Backup-Vorgänge sichergestellt. Darüber hinaus können VM-Backups gemountet werden, so dass einzelne Dateien kopiert / zurückgesichert werden können.
+
+
+Verlagerte ONTAP Klone können durch VMware, NetApp und Drittanbietertools aufgerufen werden. Zu ONTAP verlagerte Klone haben mehrere Vorteile. Sie sind in den meisten Fällen platzsparend, da sie nur für Änderungen am Objekt Storage benötigen. Es entstehen keine zusätzlichen Performance-Einbußen, wenn sie gelesen und geschrieben werden, und in einigen Fällen wird die Performance durch die Freigabe von Blöcken in High-Speed-Caches erhöht. Zudem verlagern sie CPU-Zyklen und Netzwerk-I/O-Vorgänge vom ESXi Server. Die Verlagerung von Kopien in einen herkömmlichen Datastore, bei dem ein FlexVol Volume verwendet wird, kann mit einer Lizenzierung von FlexClone schnell und effizient sein. Kopien zwischen FlexVol Volumes sind jedoch unter Umständen langsamer. Wenn Sie VM-Vorlagen als Klonquelle bereithalten, sollten Sie sie in Betracht ziehen, sie im Datastore-Volume zu platzieren (Ordner oder Inhaltsbibliotheken zur Organisation dieser Klone einsetzen), um schnelle, platzsparende Klone zu erstellen.
+
+Zum Klonen eines Datastores können Sie ein Volume oder eine LUN auch direkt in ONTAP klonen. Mithilfe der FlexClone Technologie kann bei NFS-Datastores ein gesamtes Volume geklont und der Klon anschließend aus ONTAP exportiert und von ESXi als weiterer Datastore gemountet werden. Bei VMFS Datastores kann in ONTAP eine LUN innerhalb eines Volumes oder das gesamte Volume (einschließlich einer oder mehrerer darin enthaltener LUNs) geklont werden. Eine LUN, die ein VMFS enthält, muss einer ESXi Initiatorgruppe zugeordnet und dann von ESXi neu signiert werden, damit sie gemountet und als regulärer Datastore verwendet werden kann. Ein geklontes VMFS kann für einige temporäre Anwendungsfällte ohne erneute Signatur gemountet werden. Nachdem ein Datastore geklont wurde, können die darin enthaltenen VMs registriert, neu konfiguriert und angepasst werden, als wären sie einzeln geklonte VMs.
+
+In einigen Fällen kann das Klonen durch zusätzliche lizenzierte Funktionen wie SnapRestore für Backups oder FlexClone optimiert werden. Diese Lizenzen sind oft in Lizenz-Bundles ohne zusätzliche Kosten enthalten. Für vVol Klonvorgänge und zur Unterstützung gemanagter Snapshots eines vVol (die vom Hypervisor zu ONTAP verlagert werden) ist eine FlexClone Lizenz erforderlich. Durch eine FlexClone Lizenz können auch bestimmte VAAI basierte Klone optimiert werden, wenn sie in einem Datastore/Volume verwendet werden. Dabei werden sofortige platzsparende Kopien anstelle von Blockkopien erstellt.  Sie wird zudem von SRA beim Testen der Recovery eines DR-Replikats sowie von SnapCenter für Klonvorgänge und zum Durchsuchen von Backup-Kopien zum Wiederherstellen einzelner Dateien genutzt.

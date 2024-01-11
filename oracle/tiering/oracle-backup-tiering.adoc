@@ -1,0 +1,27 @@
+---
+sidebar: sidebar 
+permalink: oracle/tiering/oracle-backup-tiering.html 
+keywords: tiering, fabricpool 
+summary: Backup-Tiering für Oracle 
+---
+= Backup-Tiering für Oracle
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Zu den herkömmlichen Applikations-Backups gehören Produkte wie der Oracle Recovery Manager, die dateibasierte Backups außerhalb des Standorts der Originaldatenbank erstellen.
+
+ `tiering-minimum-cooling-days` policy of a few days preserves the most recent backups, and therefore the backups most likely to be required for an urgent recovery situation, on the performance tier. The data blocks of the older files are then moved to the capacity tier.
+Der `auto` Die Richtlinie ist die am besten geeignete Richtlinie für Backup-Daten. Dadurch wird ein sofortiges Tiering sichergestellt, wenn der Kühlschwellenwert erreicht wurde, unabhängig davon, ob die Dateien gelöscht wurden oder weiterhin im primären Dateisystem vorhanden sind. Das Speichern aller potenziell erforderlichen Dateien an einem zentralen Speicherort im aktiven Dateisystem vereinfacht ebenfalls das Management. Es gibt keinen Grund, Snapshots zu durchsuchen, um eine Datei zu finden, die wiederhergestellt werden muss.
+
+Der `snapshot-only` Richtlinien können zwar funktionieren, sie gelten jedoch nur für Blöcke, die sich nicht mehr im aktiven File-System befinden. Daher müssen Dateien auf einer NFS- oder SMB-Freigabe vor dem Daten-Tiering zuerst gelöscht werden.
+
+Diese Richtlinie wäre bei einer LUN-Konfiguration sogar noch weniger effizient, da beim Löschen einer Datei aus einer LUN nur Dateiverweise aus den Metadaten des Filesystems entfernt werden. Die tatsächlichen Blöcke auf den LUNs bleiben vorhanden, bis sie überschrieben werden. Dies kann zu einer sehr langen Verzögerung zwischen dem Löschen einer Datei und dem Überschreiben der Blöcke führen und zu Tiering-Kandidaten werden. Der Wechsel des bietet einige Vorteile `snapshot-only` Blöcke auf die Kapazitäts-Tier, aber insgesamt funktioniert das FabricPool Management von Backup-Daten am besten mit der `auto` Richtlinie:
+
+
+NOTE: Mit diesem Ansatz können Benutzer den für Backups erforderlichen Speicherplatz effizienter managen. FabricPool selbst ist jedoch keine Backup-Technologie. Das Tiering von Backup-Dateien in Objektspeicher vereinfacht das Management, da die Dateien noch auf dem ursprünglichen Storage-System sichtbar sind, die Datenblöcke im Zielspeicherort jedoch vom ursprünglichen Storage-System abhängig sind. Wenn das Quell-Volume verloren geht, sind die Objektspeicher-Daten nicht mehr nutzbar.

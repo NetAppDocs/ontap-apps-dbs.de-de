@@ -1,0 +1,103 @@
+---
+sidebar: sidebar 
+permalink: oracle/dp/planning.html 
+keywords: data protection, DR, snapshots, CG 
+summary: ONTAP Datensicherungsstrategien 
+---
+= Planung der Datensicherheit
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Die richtige Datensicherungsarchitektur hängt von den geschäftlichen Anforderungen für die Datenaufbewahrung, Recovery-Fähigkeit und Ausfalltoleranz bei verschiedenen Ereignissen ab.
+
+Betrachten Sie beispielsweise die Anzahl der im Umfang enthaltenen Applikationen, Datenbanken und wichtigen Datensätze. Die Entwicklung einer Backup-Strategie für einen einzelnen Datensatz gewährleistet, dass die Compliance mit typischen SLAs relativ unkompliziert ist, da nicht viele Objekte zu managen sind. Je mehr Datensätze es gibt, desto komplizierter wird das Monitoring und Administratoren müssen sich zunehmend mit dem Vermeiden von Backup-Fehlern befassen. Wenn eine Umgebung also die Skalierung von Cloud- und Service-Provider-Umgebungen erreicht, braucht es einen ganz anderen Ansatz.
+
+Die Datensatzgröße wirkt sich auch auf die Strategie aus. Es gibt beispielsweise viele Optionen für Backup und Recovery mit einer Datenbank mit 100 GB, da die Datenmenge so klein ist. Das einfache Kopieren der Daten von Backup-Medien mit herkömmlichen Tools bietet normalerweise eine ausreichende RTO für die Recovery. Eine 100-TB-Datenbank benötigt normalerweise eine komplett andere Strategie, es sei denn, das RTO erlaubt einen mehrtägigen Ausfall. In diesem Fall könnte ein herkömmliches Backup und Recovery auf Basis von Kopien akzeptabel sein.
+
+Schließlich gibt es Faktoren, die nicht dem Backup- und Recovery-Prozess selbst unterliegen. Gibt es zum Beispiel Datenbanken, die kritische Produktionsaktivitäten unterstützen, was das Recovery zu einem seltenen Ereignis macht, das nur von erfahrenen DBAs durchgeführt wird? Sind Datenbanken alternativ Teil einer großen Entwicklungsumgebung, in der häufig ein Recovery erfolgt und von einem IT-Team mit Generalisten gemanagt wird?
+
+
+
+== Ist ein Snapshot eine Sicherung?
+
+Ein häufig vorgebrachter Einwand gegen die Verwendung von Snapshots als Datensicherungsstrategie ist die Tatsache, dass sich die „echten“ Daten und die Snapshot-Daten auf denselben Laufwerken befinden. Der Verlust dieser Laufwerke würde sowohl zum Verlust der Primärdaten als auch des Backups führen.
+
+Das ist ein berechtigte Anliegen. Lokale Snapshots werden für tägliche Backup- und Recovery-Anforderungen verwendet, in dieser Hinsicht ist der Snapshot ein Backup. Beinahe 99 % aller Recovery-Szenarien in NetApp Umgebungen basieren auf Snapshots, um selbst die anspruchsvollsten RTO-Anforderungen zu erfüllen.
+
+Lokale Snapshots sollten jedoch nie die einzige Backup-Strategie sein. Aus diesem Grund bietet NetApp Technologien wie SnapMirror Replizierung, mit denen Snapshots schnell und effizient auf einen unabhängigen Laufwerkssatz repliziert werden können. In einer richtig konzipierten Lösung mit Snapshots und Snapshot-Replikation kann die Verwendung von Tapes auf ein vierteljährliches Archiv minimiert oder ganz eliminiert werden.
+
+
+
+== Backups von Konsistenzgruppen
+
+Bei einem Konsistenzgruppenbackup wird der Status eines Datensatzes (oder mehrerer Datensätze) zu einem einzelnen atomischen Zeitpunkt erfasst. Als Datenbankbeispiel umfasst dies alle Datenbankkomponenten, z. B. Datendateien, Protokolldateien und andere Dateien, die direkt mit der Datenbank verknüpft sind. Dies funktioniert mit fast allen relationalen Datenbankprodukten, einschließlich Oracle RDBMS, Microsoft SQL Server, SAP HANA, PostgreSQL, MySQL und MariaDB. Der Schutz einer VMware-Konfiguration mit einer Consistency Group-Sicherung wäre ähnlich - Erfassung aller Datenspeicher und potenziell der ESX-Boot-LUNs in einem einzigen atomaren Point-in-Time.
+
+Die Erstellung eines solchen Snapshots einer Konsistenzgruppe simuliert im Wesentlichen einen Absturz. Aus diesem Grund werden solche Backups häufig als Crash-konsistente Backups bezeichnet. Es gibt manchmal Bedenken bei der Unterstützung für Recovery-Szenarien, aber es ist wichtig zu verstehen, dass in der Regel kein Recovery-Verfahren erforderlich ist. Wenn die Anwendung nach dem Wiederherstellen einer Consistency Group-Sicherung gestartet wird, führt sie die üblichen Protokollwiederherstellungsprozesse, Wiederholungen von Dateisystemjournalen und andere Aufgaben aus, um alle I/O-Vorgänge, die am Zeitpunkt des Backups im laufenden Vorgang waren, wiederzugeben. Die Anwendung startet dann wie gewohnt.
+
+Somit können grundsätzlich alle Applikationen geschützt werden, die einem Stromausfall oder Serverabsturz ohne Datenbeschädigung standhalten. Dass dies funktioniert, zeigt sich auch an der großen Zahl an Applikationen, die mit synchronen und asynchronen Spiegelungsprodukten vieler verschiedener Anbieter geschützt sind. Wenn plötzlich am primären Standort ein Notfall eintritt, enthält der Replikatstandort zum Zeitpunkt des Ausfalls ein konsistentes Abbild der ursprünglichen Umgebung. Auch hier ist kein besonderes Recovery-Verfahren erforderlich.
+
+Der RPO für diesen Ansatz ist in der Regel auf den Punkt des Backups begrenzt. Im Allgemeinen beträgt der RPO-Mindestwert für Snapshots mit einem einzigen Volume eine Stunde. Zum Beispiel sind 48 stündliche Schnappschüsse plus weitere 30 Tage nächtlicher Schnappschüsse vernünftig und würden nicht die Aufbewahrung einer übermäßigen Anzahl von Snapshots erfordern. Ein RPO von unter einer Stunde ist schwieriger zu erreichen. Es wird nicht empfohlen, ohne zuvor die NetApp Professional Services einzuarbeiten, um sich mit den Anforderungen in Bezug auf Umgebung, Skalierung und Datensicherung vertraut zu machen.
+
+Die RTO kann in der Regel in Sekunden gemessen werden. Eine Anwendung wird heruntergefahren, die Volumes wiederhergestellt und die Anwendung neu gestartet.
+
+Am einfachsten legen Sie alle Dateien oder LUNs in einer einzelnen Volume-Konsistenzgruppe ab, wodurch die Erstellung von Snapshots direkt in ONTAP geplant werden kann. Wenn ein Datensatz über mehrere Volumes erstrecken muss, ist ein KonsistenzgruppenSnapshot (cg-Snapshot) erforderlich. Dies kann mit System Manager oder RESTful API-Aufrufen konfiguriert werden. Außerdem ist SnapCenter in der Lage, einen einfachen KonsistenzgruppenSnapshot auf einer definierten Liste von Volumes zu erstellen.
+
+
+
+== Architektur für Replizierung und Disaster Recovery
+
+In diesem Abschnitt geht es um die Remote-Datensicherung, bei der Daten zum sicheren externen Storage und zur Disaster Recovery an einen Remote-Standort repliziert werden. Beachten Sie, dass diese Tabellen keine Datensicherung für die synchrone Spiegelung berücksichtigen. Informationen zu dieser Anforderung finden Sie in der NetApp MetroCluster-Dokumentation einschließlich link:../metrocluster/overview.html["MetroCluster"] Und link:../smbc/overview.html["SnapMirror Business Continuity"]
+
+Das DR RPO wird durch die verfügbare Netzwerkbandbreite und die Gesamtgröße der zu sichernden Daten begrenzt. Nach der Erstellung des ersten Basistransfers basieren die Updates nur auf den geänderten Daten. Dies ist in der Regel ein geringer Prozentsatz des gesamten Datacenter-Platzbedarfs, obwohl es Ausnahmen gibt.
+
+Beispielsweise weist eine 10-TB-Datenbank mit einer wöchentlichen Änderungsrate von 10 % im Schnitt eine Gesamtänderung von 6 GB pro Stunde auf. Mit 10 GB Konnektivität benötigt diese Datenbank etwa sechs Minuten für die Übertragung. Die Änderungsrate unterliegt Schwankungen der Änderungsrate der Datenbank, sollte jedoch insgesamt ein Update-Intervall von 15 Minuten und somit ein RPO von 15 Minuten erreichbar sein. Wenn es 100 solche Datenbanken gibt, dann sind 600 Minuten erforderlich, um die Daten zu übertragen. Daher ist ein RPO von einer Stunde nicht möglich. Ebenso kann ein Replikat einer einzelnen Datenbank mit einer Größe von 100 TB mit einer wöchentlichen Änderungsrate von 10 % nicht innerhalb einer Stunde zuverlässig aktualisiert werden.
+
+Zusätzliche Faktoren können sich auf die Replikation auswirken, wie etwa der Overhead für die Replikation und Einschränkungen bei der Anzahl gleichzeitiger Replikationsvorgänge. Die Gesamtplanung einer Replikationsstrategie für ein einzelnes Volume kann jedoch auf der verfügbaren Bandbreite basieren, und ein Replikations-RPO von einer Stunde ist im Allgemeinen erreichbar. Ein RPO von unter einer Stunde ist schwieriger zu erreichen und sollte erst nach Rücksprache mit den NetApp Professional Services durchgeführt werden. In einigen Fällen sind 15 Minuten mit einer sehr guten Site-to-Site-Netzwerkverbindung möglich. Wenn jedoch insgesamt ein RPO von unter einer Stunde erforderlich ist, liefert die Architektur für die Wiedergabe mehrerer Volumes bessere Ergebnisse.
+
+Das RTO mit Konsistenzgruppenreplikation in einem Disaster Recovery-Szenario ist ausgezeichnet, das aus Storage-Sicht in Sekunden gemessen wird. Der übersichtlichste Ansatz besteht darin, die Spiegelung zu zerbrechen und die Datenbank zu starten. Der Start der Datenbank dauert in der Regel ca. 10 Sekunden, aber sehr große Datenbanken mit vielen protokollierten Transaktionen können einige Minuten dauern.
+
+Der wichtigere Faktor bei der Bestimmung der RTO ist nicht das Speichersystem, sondern die Anwendung und das Host-Betriebssystem, auf dem es ausgeführt wird. Die replizierten Daten können beispielsweise in ein oder zwei Sekunden verfügbar gemacht werden, aber dies stellt nur die Daten dar. Es muss auch ein korrekt konfiguriertes Betriebssystem mit Anwendungsbinärdateien vorhanden sein, um die Daten verwenden zu können.
+
+In einigen Fällen haben Kunden Disaster-Recovery-Instanzen schon vor der Zeit vorbereitet, da der Speicher auf Betriebssystemen vorerkannt wurde. In diesen Fällen erfordert die Aktivierung des Disaster-Recovery-Szenarios nicht mehr als das Brechen einer Spiegelung und das Starten der Anwendung. In anderen Fällen können das Betriebssystem und die zugehörigen Applikationen neben der Datenbank als ESX Virtual Machine Disk (VMDK) gespiegelt werden. In diesen Fällen hängt der RPO davon ab, wie viel ein Kunde in die Automatisierung investiert hat, um die VMDK schnell zu booten und damit die Applikationen zu starten.
+
+Die Aufbewahrungszeit wird zum Teil durch das Snapshot Limit gesteuert. Volumes in ONTAP haben beispielsweise eine Grenze von 1024 Snapshots. In einigen Fällen haben Kunden die Replikation multipliziert, um das Limit zu erhöhen. Wenn zum Beispiel 2000 Tage Backups erforderlich sind, kann eine Quelle auf zwei Volumes repliziert werden, wobei Aktualisierungen an alternativen Tagen stattfinden. Dies erfordert eine Erhöhung des anfänglichen Platzbedarfs, stellt aber dennoch einen wesentlich effizienteren Ansatz dar als ein herkömmliches Backup-System, bei dem mehrere vollständige Backups durchgeführt werden müssen.
+
+
+
+=== Konsistenzgruppe in einem einzelnen Volume
+
+Am einfachsten werden alle Dateien oder LUNs in einer einzigen Volume-Konsistenzgruppe abgelegt, wodurch SnapMirror und SnapVault Updates direkt im Storage-System geplant werden können. Es ist keine externe Software erforderlich.
+
+
+
+=== Konsistenzgruppe mit mehreren Volumes
+
+Wenn eine Datenbank über mehrere Volumes hinweg erstellt werden muss, ist ein KonsistenzgruppenSnapshot (cg-Snapshot) erforderlich. Wie oben erwähnt, kann dies mit System Manager- oder RESTful-API-Aufrufen konfiguriert werden. Außerdem kann SnapCenter einen einfachen KonsistenzgruppenSnapshot auf einer definierten Liste von Volumes erstellen.
+
+Des Weiteren sollte die Verwendung von konsistenten Snapshots mit mehreren Volumes für Disaster Recovery zusätzlich berücksichtigt werden. Bei der Aktualisierung mehrerer Volumes kann es zu einer Katastrophe kommen, während noch ein Transfer durchgeführt wird. Das Ergebnis wäre ein Satz von Volumes, die nicht konsistent sind. In diesem Fall müssen einige Volumes in einen früheren Snapshot-Zustand zurückgesetzt werden, um ein Datenbank-Image zu liefern, das ausfallkonsistent und einsatzbereit ist.
+
+
+
+== Disaster Recovery: Aktivierung
+
+
+
+=== NFS
+
+Der Prozess zur Aktivierung der Disaster Recovery-Kopie hängt vom Speichertyp ab. Mit NFS können die Dateisysteme auf dem Disaster Recovery-Server vorgemountet werden. Sie befinden sich im schreibgeschützten Zustand und werden Lese- und Schreibzugriff, wenn die Spiegelung beschädigt ist. Dadurch verkürzen sich die RPO-Werte, und der gesamte Disaster Recovery-Prozess ist zuverlässiger, da weniger Teile gemanagt werden müssen.
+
+
+
+=== San
+
+Die Aktivierung von SAN-Konfigurationen im Falle einer Disaster Recovery wird komplizierter. Die einfachste Option besteht im Allgemeinen darin, die Spiegelungen vorübergehend zu unterbrechen und die SAN-Ressourcen zu mounten, einschließlich Schritte wie das Erkennen der LVM-Konfiguration (einschließlich anwendungsspezifischer Funktionen wie Oracle Automatic Storage Management [ASM]) und das Hinzufügen von Einträgen zu /etc/fstab.
+
+Dies führt dazu, dass die LUN-Gerätepfade, Namen von Volume-Gruppen und andere Gerätepfade dem Zielserver bekannt werden. Diese Ressourcen können dann heruntergefahren und anschließend die Spiegelungen wiederhergestellt werden. Als Folge dessen befindet sich ein Server, durch den die Applikation schnell online geschaltet werden kann. Die einzelnen Schritte zur Aktivierung von Volume-Gruppen, zum Mounten von Dateisystemen oder zum Starten von Datenbanken und Anwendungen lassen sich einfach automatisieren.
+
+Es ist unbedingt zu beachten, dass die Disaster-Recovery-Umgebung auf dem neuesten Stand ist. Beispielsweise werden neue LUNs wahrscheinlich dem Quellserver hinzugefügt. Das bedeutet, dass die neuen LUNs auf dem Ziel vorab erkannt werden müssen, damit der Disaster-Recovery-Plan wie erwartet funktioniert.

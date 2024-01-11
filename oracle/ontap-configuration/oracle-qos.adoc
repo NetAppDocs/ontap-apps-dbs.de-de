@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: oracle/ontap-configuration/oracle-qos.html 
+keywords: qos, bandwidth, minimum, guaranteed 
+summary: Oracle Performance-Management mit QoS 
+---
+= Quality of Service mit Oracle-Datenbanken
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Für die sichere und effiziente Verwaltung mehrerer Oracle Datenbanken ist eine effektive QoS-Strategie erforderlich. Der Grund dafür sind die stetig wachsenden Performance-Möglichkeiten eines modernen Storage-Systems.
+
+Insbesondere die zunehmende Verbreitung von All-Flash-Storage ermöglicht die Konsolidierung von Workloads. Storage-Arrays mit rotierenden Medien unterstützten in der Regel nur eine begrenzte Anzahl I/O-intensiver Workloads, da die IOPS-Funktionen einer älteren Rotationslaufwerkstechnologie begrenzt sind. Ein oder zwei hochaktive Datenbanken würden die zugrunde liegenden Laufwerke lange sättigen, bevor die Storage-Controller ihre Grenzen erreichten. Das hat sich geändert. Die Performance-Fähigkeit einer relativ kleinen Anzahl von SSD-Laufwerken kann sogar die leistungsstärksten Storage-Controller auslasten. So können Sie alle Funktionen der Controller nutzen, ohne die Gefahr eines plötzlichen Performance-Einbruchs aufgrund von Latenzspitzen der rotierenden Medien befürchten zu müssen.
+
+Ein einfaches HA-AFF A800 System mit zwei Nodes kann bis zu eine Million zufällige IOPS verarbeiten, bevor die Latenz auf über eine Millisekunde steigt. Für sehr wenige einzelne Workloads wird erwartet, dass sie ein solches Niveau erreichen. Die vollständige Nutzung dieses AFF A800 System-Arrays beinhaltet das Hosting mehrerer Workloads. Für eine sichere Durchführung sind QoS-Kontrollen erforderlich, um die Vorhersehbarkeit zu gewährleisten.
+
+ONTAP bietet zwei Arten von Quality of Service (QoS): IOPS und Bandbreite. QoS-Steuerungen können auf SVMs, Volumes, LUNs und Dateien angewendet werden.
+
+
+
+== IOPS QoS
+
+Eine Steuerung der IOPS-QoS basiert offensichtlich auf dem IOPS-Wert einer bestimmten Ressource. Es gibt jedoch eine Reihe von Aspekten der IOPS-QoS, die möglicherweise nicht intuitiv sind. Einige Kunden waren anfangs verwirrt über den scheinbaren Anstieg der Latenz, wenn ein IOPS-Schwellenwert erreicht wurde. Die steigende Latenz ist das natürliche Ergebnis der IOPS-Begrenzung. Logischerweise funktioniert es ähnlich wie ein Token-System. Wenn beispielsweise ein bestimmtes Volume mit Datendateien über ein Limit von 10.000 IOPS verfügt, muss jede eintreffende I/O zuerst ein Token erhalten, um die Verarbeitung fortzusetzen. Solange in einer bestimmten Sekunde nicht mehr als 10.000 Token verbraucht wurden, sind keine Verzögerungen vorhanden. Wenn I/O-Vorgänge auf den Erhalt ihres Tokens warten müssen, wird diese Wartezeit als zusätzliche Latenz angezeigt. Je schwieriger eine Workload das QoS-Limit erreicht, desto länger muss jede I/O in der Warteschlange warten, bis sie verarbeitet wird. Dies scheint für den Benutzer eine höhere Latenz zu sein.
+
+
+NOTE: Gehen Sie vorsichtig vor, wenn Sie QoS-Kontrollen auf Datenbanktransaktions-/Wiederherstellungsprotokolldaten anwenden. Die Performance-Anforderungen der Wiederherstellungsprotokollierung sind in der Regel viel, viel niedriger als Datendateien, jedoch erfolgt die Aktivität des Wiederherstellungsprotokolls sprunghafter. Die I/O-Vorgänge erfolgen in kurzen Impulsen, und ein QoS-Limit, das für die durchschnittlichen Wiederherstellungs-I/O-Level angemessen erscheint, kann für die tatsächlichen Anforderungen zu niedrig sein. Das Ergebnis können schwerwiegende Performance-Einschränkungen sein, wenn die QoS sich mit jedem Burst des Wiederherstellungsprotokolls befasst. Die Wiederherstellungs- und Archivprotokollierung sollte im Allgemeinen nicht durch QoS beschränkt sein.
+
+
+
+== Bandbreiten QoS
+
+Nicht alle I/O-Größen sind gleich. Beispielsweise führt eine Datenbank möglicherweise eine große Anzahl kleiner Blocklesevorgänge durch, wodurch der IOPS-Schwellenwert erreicht wird. Datenbanken führen aber möglicherweise auch einen vollständigen Tabellenscan durch, der aus einer sehr kleinen Anzahl an großen Blocklesevorgängen bestehen würde, die eine sehr große Menge an Bandbreite verbrauchen, aber relativ wenig IOPS.
+
+Ebenso könnte eine VMware Umgebung eine sehr hohe Anzahl zufälliger IOPS während des Startvorgangs verursachen, würde jedoch während eines externen Backups weniger, aber größere I/O-Vorgänge ausführen.
+
+Manchmal erfordert ein effektives Performance-Management entweder Einschränkungen für die IOPS-Leistung oder die Bandbreite oder sogar beides.
+
+
+
+== Minimum/garantierte QoS
+
+Viele Kunden wünschen sich eine Lösung mit garantierter QoS, was schwieriger zu erreichen ist, als sie möglicherweise verschwenderisch erscheint. Wenn Sie beispielsweise 10 Datenbanken mit einer Garantie von 10.000 IOPS platzieren, müssen Sie ein System für ein Szenario dimensionieren, in dem alle 10 Datenbanken gleichzeitig mit 10.000 IOPS, also insgesamt 100.000, laufen.
+
+Eine minimale QoS-Steuerung soll am besten zum Schutz kritischer Workloads eingesetzt werden. Ein Beispiel wäre ein ONTAP Controller mit maximal 500.000 IOPS und einer Kombination aus Produktions- und Entwicklungs-Workloads. Sie sollten maximale QoS-Richtlinien auf Entwicklungs-Workloads anwenden, um zu verhindern, dass eine gegebene Datenbank den Controller für sich einmonopolisiert. Sie würden dann minimale QoS-Richtlinien auf Produktions-Workloads anwenden, um sicherzustellen, dass immer die erforderlichen IOPS bei Bedarf zur Verfügung stehen.
+
+
+
+== Anpassungsfähige QoS
+
+Adaptive QoS bezeichnet die ONTAP-Funktion, bei der die QoS-Begrenzung auf der Kapazität des Storage-Objekts basiert. Sie wird selten bei Datenbanken eingesetzt, da zwischen der Größe einer Datenbank und ihren Performance-Anforderungen in der Regel keine Verknüpfung besteht. Große Datenbanken können nahezu inert sein, während kleinere Datenbanken die IOPS-intensivsten sein können.
+
+Adaptive QoS kann bei Virtualisierungs-Datastores sehr hilfreich sein, da die IOPS-Anforderungen solcher Datensätze in der Regel mit der Gesamtgröße der Datenbank korrelieren. Ein neuerer Datenspeicher mit 1 TB VMDK-Dateien benötigt wahrscheinlich etwa die Hälfte der Performance als 2-TB-Datenspeicher. Durch anpassungsfähige QoS können Sie die QoS-Limits automatisch vergrößern, wenn der Datastore mit Daten gefüllt wird.

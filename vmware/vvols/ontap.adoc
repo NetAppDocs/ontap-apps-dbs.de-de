@@ -1,0 +1,214 @@
+---
+sidebar: sidebar 
+permalink: vmware/vvols/ontap.html 
+keywords: tr-4400, vvols, ontap 
+summary: Dieses Dokument beschreibt die Produktsicherheit für ONTAP Tools für VMware vSphere. 
+---
+= Verwendung von VVols mit ONTAP
+:allow-uri-read: 
+
+
+[role="lead"]
+Für die Verwendung von VVols mit ONTAP muss die VASA Provider Software als Bestandteil der virtuellen ONTAP Tools für die VMware vSphere Appliance integriert sein.
+
+Zu den ONTAP-Tools gehören außerdem vCenter-UI-Erweiterungen, REST-API-Server, Storage Replication Adapter für VMware Site Recovery Manager, Monitoring- und Host-Konfigurationstools sowie eine Reihe von Berichten, mit denen Sie Ihre VMware-Umgebung besser managen können.
+
+
+
+== Produkte und Dokumentation
+
+Mit der ONTAP FlexClone Lizenz (in ONTAP One enthalten) und der ONTAP Tools Appliance sind nur die zusätzlichen Produkte erforderlich, um VVols in Verbindung mit NetApp ONTAP zu verwenden. Die neuesten Versionen der ONTAP Tools werden als einzige vereinheitlichte Appliance bereitgestellt und auf ESXi ausgeführt. Sie bieten die Funktionen von ehemals drei verschiedenen Appliances und Servern. Bei VVols ist es wichtig, die vCenter UI-Erweiterungen der ONTAP Tools oder REST-APIs als allgemeine Managementtools und Benutzeroberflächen für ONTAP Funktionen mit vSphere zusammen mit dem VASA Provider, der bestimmte VVols Funktionen bereitstellt, zu verwenden. Die SRA Komponente ist für herkömmliche Datastores enthalten, doch VMware Site Recovery Manager verwendet keine SRA für VVols. Stattdessen werden neue Services in SRM 8.3 und höher implementiert, bei denen der VASA-Provider für die VVols-Replizierung genutzt wird.
+
+
+
+=== ONTAP nutzt die VASA Provider Architektur unter Verwendung von iSCSI oder FCP
+
+image:vvols-image5.png["ONTAP Tools VASA Provider Architektur,240"]
+
+
+
+=== Produktinstallation
+
+Bei Neuinstallationen implementieren Sie die virtuelle Appliance in Ihrer vSphere Umgebung. Aktuelle Versionen der ONTAP Tools werden sich automatisch bei Ihrem vCenter registrieren und VASA Provider standardmäßig aktivieren. Zusätzlich zu den ESXi-Host- und vCenter-Server-Informationen benötigen Sie auch die IP-Adresskonfigurationsdetails für die Appliance. Wie bereits erwähnt, muss für VASA Provider die Lizenz ONTAP FlexClone bereits auf allen ONTAP Clustern installiert sein, die Sie für VVols verwenden möchten. Die Appliance verfügt über einen integrierten Watchdog, um die Verfügbarkeit zu gewährleisten. Als Best Practice sollte sie mit VMware High Availability und optional mit Fault Tolerance-Funktionen konfiguriert werden. Weitere Informationen finden Sie in Abschnitt 4.1. Installieren oder verschieben Sie die ONTAP Tools Appliance oder vCenter Server Appliance (VCSA) nicht auf VVols Storage, da dies verhindern kann, dass die Appliances neu gestartet werden.
+
+In-Place-Upgrades von ONTAP Tools werden über die ISO-Datei für Upgrades unterstützt, die auf der NetApp Support Website (NSS) zum Download zur Verfügung steht. Befolgen Sie die Anweisungen des Bereitstellungs- und Setup-Handbuchs, um die Appliance zu aktualisieren.
+
+Informationen zur Dimensionierung Ihrer virtuellen Appliance und zum Verständnis der Konfigurationsbeschränkungen finden Sie in diesem Knowledge Base-Artikel: https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/VSC_and_VASA_Provider/OTV%3A_Sizing_Guide_for_ONTAP_tools_for_VMware_vSphere["Leitfaden zur Dimensionierung für ONTAP Tools für VMware vSphere"^]
+
+
+
+=== Produktdokumentation
+
+Die folgende Dokumentation ist verfügbar, um Sie bei der Implementierung von ONTAP Tools zu unterstützen.
+
+https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["Für die vollständige Dokumentation Repository, besuchen Sie diesen Link zu docs.netapp.com"^]
+
+
+
+==== Los geht's
+
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/release_notes.html["Versionshinweise"^]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/concepts/concept_virtual_storage_console_overview.html["Erfahren Sie mehr über ONTAP Tools für VMware vSphere"^]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/qsg.html["ONTAP-Tools Schnellstartanleitung"^]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/deploy/task_deploy_ontap_tools.html["Implementierung von ONTAP Tools"^]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/deploy/task_upgrade_to_the_9_8_ontap_tools_for_vmware_vsphere.html["Upgrade von ONTAP-Tools"^]
+
+
+
+
+==== Verwenden Sie ONTAP-Tools
+
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/configure/task_provision_datastores.html["Bereitstellung herkömmlicher Datastores"^]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/configure/task_provision_vvols_datastores.html["Bereitstellung von VVols Datastores"^]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/concepts/concept_vcenter_server_role_based_access_control_features_in_vsc_for_vmware_vsphere.html["Konfigurieren Sie die rollenbasierte Zugriffssteuerung"^]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/manage/task_configure_vasa_provider_to_use_ssh_for_remote_diag_access.html["Konfigurieren Sie die Remote-Diagnose"^]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/concepts/concept_configure_high_availability_for_ontap_tools_for_vmware_vsphere.html["Konfigurieren Sie Hochverfügbarkeit"^]
+
+
+
+
+==== Sicherung und Management von Datenspeichern
+
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/protect/task_enable_storage_replication_adapter.html["Sicherung herkömmlicher Datastores"^] Mit SRM
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/protect/concept_configure_replication_for_vvols_datastore.html["Sicherung von auf VVols basierenden Virtual Machines"^] Mit SRM
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/manage/task_monitor_datastores_using_the_traditional_dashboard.html["Überwachen Sie herkömmliche Datenspeicher und Virtual Machines"^]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/manage/task_monitor_vvols_datastores_and_virtual_machines_using_vvols_dashboard.html["Überwachen Sie VVols Datastores und Virtual Machines"^]
+
+
+Zusätzlich zur Produktdokumentation gibt es möglicherweise Artikel aus der Support Knowledgebase, die hilfreich sein könnten.
+
+* https://kb.netapp.com/app/answers/answer_view/a_id/1031261["Durchführen einer Disaster Recovery für VASA Provider"^]
+
+
+
+
+=== VASA Provider Dashboard
+
+Vasa Provider umfasst ein Dashboard mit Performance- und Kapazitätsinformationen für einzelne VVols VMs. Diese Informationen stammen direkt von ONTAP für die vVol Dateien und LUNs, einschließlich Latenz, IOPS, Durchsatz und Uptime für die Top 5 VMs sowie Latenz und IOPS für die Top 5 Datastores. Bei Verwendung von ONTAP 9.7 oder höher ist sie standardmäßig aktiviert. Es kann bis zu 30 Minuten dauern, bis die ersten Daten abgerufen und im Dashboard angezeigt werden.
+
+
+
+==== ONTAP Tools VVols Dashboard
+
+image:vvols-image6.png["ONTAP Tools VVols Dashboard,400"]
+
+
+
+== Best Practices In Sich Vereint
+
+Dieser Abschnitt erfasst bekannte Best Practices zur Nutzung von VVols mit ONTAP sowie weitere Informationen.
+
+*Grenzen*
+
+ONTAP unterstützt im Allgemeinen VVols-Limits, die durch VMware definiert sind (siehe veröffentlicht https://configmax.esp.vmware.com/guest?vmwareproduct=vSphere&release=vSphere%207.0&categories=8-0["Konfigurationsmaxima"^]). In der folgenden Tabelle sind bestimmte ONTAP-Limits für Größe und Anzahl von VVols zusammengefasst. Prüfen Sie immer das https://hwu.netapp.com/["NetApp Hardware Universe"^] Für aktualisierte Grenzwerte für Anzahl und Größe der LUNs und Dateien.
+
+*ONTAP VVols Grenzen*
+
+|===
+| Kapazität/Funktion | SAN (SCSI oder NVMe-of) | NFS 
+
+
+| Maximale VVols-Größe | 62 tib* | 62 tib* 
+
+
+| Maximale Anzahl VVols pro FlexVol Volume | 1024 | 2 Milliarden 
+
+
+| Maximale Anzahl VVols pro ONTAP Node | Bis zu 12,288** | 50 Milliarden 
+
+
+| Maximale Anzahl VVols pro ONTAP-Paar | Bis zu 24,576** | 50 Milliarden 
+
+
+| Maximale Anzahl von VVols pro ONTAP Cluster | Bis zu 98,304** | Keine spezifische Cluster-Beschränkung 
+
+
+| Maximale QoS-Objekte (gemeinsam genutzte Richtliniengruppe und individuelle VVols Service-Level) | 12,000 bis ONTAP 9.3; 40,000 mit ONTAP 9.4 und höher |  
+|===
+* Größenbeschränkung auf Basis von ASA Systemen oder AFF und FAS Systemen mit ONTAP 9.12.1P2 und höher
++
+** Die Anzahl der SAN-VVols (NVMe-Namespaces oder LUNs) variiert je nach Plattform. Prüfen Sie immer das https://hwu.netapp.com/["NetApp Hardware Universe"^] Für aktualisierte Grenzwerte für Anzahl und Größe der LUNs und Dateien.
+
+
+
+
+*Best Practices*
+
+Die Verwendung von ONTAP VVols mit vSphere ist einfach und folgt den veröffentlichten vSphere-Methoden (siehe Arbeiten mit virtuellen Volumes unter vSphere-Speicher in der VMware-Dokumentation für Ihre Version von ESXi). Nachfolgend finden Sie einige weitere Vorgehensweisen, die Sie in Verbindung mit ONTAP in Betracht ziehen sollten.
+
+Best Practices für die Nutzung von VVols mit ONTAP.
+
+|===
+
+
+| *Verwenden Sie ONTAP-Tools für VMware vSphere UI-Erweiterungen oder REST-APIs zur Bereitstellung von VVols-Datastores* *und Protokollendpunkten.* 
+
+
+| VVols Datastores können über die allgemeine vSphere Schnittstelle erstellt werden, aber mithilfe von ONTAP Tools werden automatisch bei Bedarf Protokollendpunkte erstellt und FlexVol Volumes anhand von ONTAP Best Practices und unter Einhaltung der definierten Storage-Funktionsprofile erstellt. Klicken Sie einfach mit der rechten Maustaste auf den Host/Cluster/Datacenter und wählen Sie dann „_ONTAP Tools_“ und „_Provision Datastore_“ aus. Wählen Sie dann im Assistenten einfach die gewünschten VVols Optionen aus. 
+
+
+| *Speichern Sie die ONTAP Tools Appliance oder vCenter Server Appliance (VCSA) niemals auf einem VVols Datastore, den sie verwalten.* 
+
+
+| Dies kann zu einer „Hühnchen- und Eiersituation“ führen, wenn Sie die Appliances neu starten müssen, da sie nicht in der Lage sind, während sie neu starten ihre eigenen VVols abzuheben. Sie können sie auf einem VVols Datastore speichern, der von verschiedenen ONTAP Tools und einer vCenter Implementierung gemanagt wird. 
+
+
+| *Vermeiden Sie VVols-Vorgänge über verschiedene ONTAP-Versionen hinweg.* 
+
+
+| Unterstützte Storage-Funktionen wie QoS, Personality und mehr haben sich in verschiedenen Versionen des VASA Providers verändert, einige sind von der ONTAP Version abhängig. Die Verwendung verschiedener Versionen in einem ONTAP-Cluster oder das Verschieben von VVols zwischen Clustern mit unterschiedlichen Versionen können zu unerwartetem Verhalten oder Compliance-Alarmen führen. 
+
+
+| *Zonen Sie Ihre Fibre Channel Fabric vor der Verwendung von NVMe/FC oder FCP für VVols.* 
+
+
+| Der ONTAP-Tools VASA Provider managt FCP- und iSCSI-Initiatorgruppen sowie NVMe-Subsysteme in ONTAP, die auf erkannten Initiatoren von gemanagten ESXi-Hosts basieren. Es ist jedoch nicht in Fibre-Channel-Switches integriert, um das Zoning zu managen. Bevor eine Bereitstellung stattfinden kann, muss das Zoning nach Best Practices erfolgen. Nachfolgend ein Beispiel für das Einzel-Initiator-Zoning für vier ONTAP-Systeme:
+
+Einzel-Initiator-Zoning:
+
+image:vvols-image7.gif["Zoning mit einem Initiator durchgeht vier Nodes,400"]
+
+Weitere Best Practices finden Sie in folgenden Dokumenten:
+
+https://www.netapp.com/media/10680-tr4080.pdf["_TR-4080 Best Practices for Modern SAN ONTAP 9_"^]
+
+https://www.netapp.com/pdf.html?item=/media/10681-tr4684.pdf["_TR-4684 Implementierung und Konfiguration moderner SANs mit NVMe-of_"^] 
+
+
+| * Planen Sie Ihre Unterstützung FlexVols nach Ihren Bedürfnissen.* 
+
+
+| Es ist durchaus wünschenswert, mehrere Backup-Volumes zum VVols-Datastore hinzuzufügen, um den Workload über das ONTAP-Cluster zu verteilen, verschiedene Richtlinienoptionen zu unterstützen oder die Anzahl der zulässigen LUNs oder Dateien zu erhöhen. Wenn jedoch eine maximale Storage-Effizienz erforderlich ist, platzieren Sie alle Ihre Backup Volumes auf einem einzigen Aggregat. Wenn eine maximale Klon-Performance erforderlich ist, ziehen Sie die Verwendung eines einzelnen FlexVol Volumes in Erwägung und halten Ihre Vorlagen- oder Content Library im selben Volume. Der VASA Provider verlagert viele VVols Storage-Vorgänge auf ONTAP, einschließlich Migration, Klonen und Snapshots. Wenn dies in einem einzelnen FlexVol Volume geschieht, werden platzsparende Klone von Dateien verwendet und stehen so gut wie sofort zur Verfügung. Wenn dies über FlexVol Volumes hinweg durchgeführt wird, sind die Kopien schnell verfügbar und verwenden Inline-Deduplizierung und -Komprimierung. Allerdings kann eine maximale Storage-Effizienz erst dann wiederhergestellt werden, wenn Hintergrundjobs auf Volumes mithilfe von Deduplizierung und Komprimierung im Hintergrund ausgeführt werden. Je nach Quelle und Ziel kann die Effizienz beeinträchtigt werden. 
+
+
+| *Speicherfähigkeitsprofile (SCPs) einfach halten.* 
+
+
+| Vermeiden Sie die Angabe von Funktionen, die nicht erforderlich sind, indem Sie sie auf beliebig festlegen. Dadurch werden Probleme beim Auswählen oder Erstellen von FlexVol-Volumes minimiert. Wenn bei VASA Provider 7.1 und älteren Versionen beispielsweise die Komprimierung mit der SCP-Standardeinstellung „Nein“ beibehalten wird, wird versucht, die Komprimierung selbst auf einem AFF-System zu deaktivieren. 
+
+
+| *Verwenden Sie die Standard-SCPs als Beispielvorlagen, um Ihre eigenen zu erstellen.* 
+
+
+| Die im Lieferumfang enthaltenen SCPs sind für die meisten allgemeinen Anwendungen geeignet, aber Ihre Anforderungen können unterschiedlich sein.
+
+*Erwägen Sie die Verwendung von max IOPS zur Steuerung unbekannter VMs oder zum Testen von VMs.* 
+
+
+| Erstmals in VASA Provider 7.1 verfügbar, können maximale IOPS verwendet werden, um IOPS bei einem unbekannten Workload auf ein bestimmtes vVol zu beschränken und so Auswirkungen auf andere, kritischere Workloads zu vermeiden. Tabelle 4 enthält weitere Informationen zum Performance-Management.
+
+*Stellen Sie sicher, dass Sie ausreichend Daten-LIFs haben.* 
+
+
+| Erstellen Sie mindestens zwei LIFs pro Node und HA-Paar. Je nach Workload werden weitere erforderlich. 
+
+
+| *Befolgen Sie alle Best Practices für Protokolle.* 
+
+
+| Weitere Best Practice-Leitfäden zu dem von Ihnen gewählten Protokoll finden Sie in den Leitfäden von NetApp und VMware. Im Allgemeinen gibt es keine anderen Änderungen als die bereits erwähnten.
+[[Abbildung_6]]
+Beispiel für eine Netzwerkkonfiguration mit VVols über NFS v3:
+
+image:vvols-image18.png["Netzwerkkonfiguration mit VVols über NFS v3.500"] 
+|===

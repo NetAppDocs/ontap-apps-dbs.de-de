@@ -1,0 +1,23 @@
+---
+sidebar: sidebar 
+permalink: mssql/data-security.html 
+keywords: MS-SQL,mssql,SQL Server, securing database, security 
+summary: Microsoft SQL Server auf ONTAP 
+---
+= Datenbanksicherheit
+:allow-uri-read: 
+
+
+[role="lead"]
+Die Sicherung der Datenbank hat immer Priorität, und DBA und Organisation erzwingen Absicherungsprüfpunkte, um nur Benutzern den Zugriff auf Server und Datenbank zu erlauben. Vom regelmäßigen Patching des Servers über die Konfiguration der Firewall bis hin zum Entfernen von generischem Gast- oder öffentlichem Zugriff und der Gewährung minimaler Berechtigungen für eingeschränkte Benutzer zur Ausführung von Anwendungen oder zum Ausführen von Ad-hoc-Berichtsabfragen gehören alle zum Schutz des Unternehmens-Ecosystems.
+
+In immer größeren Fällen von Ransomware oder internen Bedrohungen müssen Geschäftsdaten und Backups geschützt werden und müssen nach böswilligen Angriffen eine schnelle Wiederherstellung in konsistenter Reihenfolge ermöglichen. Angreifer können immer noch Wege finden, Daten zu entführen.
+ONTAP bietet eine Vielzahl an Funktionen zur Sicherung von Daten auf NAS und SAN.
+
+ONTAP ermöglicht die Sicherung flexibler Volumes auf einem SnapLock Enterprise oder einem SnapLock Compliance Volume, indem eine SnapMirror Beziehung zwischen FlexVol Volume als Quelle und SnapLock Volume als Ziel erstellt wird.Snapshot Kopien, die auf einem sekundären Storage gesichert werden, werden mithilfe der SnapLock Technologie vor Änderungen oder Löschungen geschützt, bevor das Aufbewahrungsdatum erreicht wird.Dies ist basiert Sie gilt für die SnapMirror Richtlinie, die mit einer Beziehung verknüpft ist, bei der die Anzahl der Snapshot Kopien für ein bestimmtes snapmirror-Label definiert ist, das auf dem SnapLock Ziel-Volume aufbewahrt wird. die Wiederherstellung eines Snapshots mit LUN-Daten kann auf einem nicht-SnapLock Volume über den Wiederherstellungsvorgang von snapmirror durchgeführt werden. In ONTAP 9.13.1 kann eine FlexClone Kopie erstellt werden, indem der SnapLock-Typ als nicht-snaplock angegeben wird. Weitere Informationen zu SnapLock finden Sie unter link:https://docs.netapp.com/us-en/ontap/snaplock/["Hier"].
+
+image:./media/snap_snaplock.png["Fehler: Fehlendes Grafikbild"]
+
+Manipulationssichere Snapshot Kopien oder Sperrung der Snapshot-Kopie: Snapshot-Kopie ist schnelle Möglichkeit, Datenbank zu schützen und wiederherzustellen. Ein Angreifer kann Snapshot-Kopien löschen. Dies könnte die letzte Option zum Wiederherstellen einer Datenbank im Fall von Datenbeschädigungen sein. Durch die Aktivierung manipulationssicherer Snapshot Kopien wird die Snapshot Kopie auf dem primären oder sekundären ONTAP System gesperrt, um zu verhindern, dass Administratoren oder nicht vertrauenswürdige Administratoren Snapshots für einen bestimmten Zeitraum löschen. Die manipulationssichere Snapshot Kopie ist ab ONTAP 9.12.1 verfügbar und erfordert die SnapLock Lizenz und die Initialisierung der Compliance-Uhr.
+
+ONTAP verfügt über eine Funktion zur Verifizierung durch mehrere Administratoren. Dies bedeutet, dass kein einzelner Administrator über die vollständige Berechtigung verfügt, Snapshot Kopien zu löschen oder Volumes zu ändern. Dies bietet zusätzliche Sicherheit, um zu vermeiden, dass Volumes oder Snapshot Kopien von nicht vertrauenswürdigen Administratoren erneut manipuliert werden.

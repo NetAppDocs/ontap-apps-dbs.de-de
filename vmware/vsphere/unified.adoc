@@ -1,0 +1,27 @@
+---
+sidebar: sidebar 
+permalink: vmware/vsphere/unified.html 
+keywords: introduction, unified storage, virtual volumes, storage efficiency, hybrid cloud 
+summary: Seit fast zwei Jahrzehnten ist die NetApp ONTAP Software eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen. Dieses Dokument bietet eine Einführung in die ONTAP Lösung für vSphere sowie in die neuesten Produktinformationen und Best Practices zur Optimierung der Implementierung, Risikominderung und Vereinfachung des Managements. 
+---
+= Unified Storage
+:allow-uri-read: 
+
+
+
+
+== Unified Storage
+
+[role="lead"]
+Systeme mit ONTAP Software sind auf mehrere signifikante Arten vereinheitlicht.
+
+Dieser Ansatz bezog sich ursprünglich auf die Unterstützung von NAS- und SAN-Protokollen auf einem Storage-System. ONTAP ist dabei weiterhin eine der führenden Plattformen für SAN und bietet in Bezug auf NAS die ursprünglichen Stärken.
+
+Eine Storage Virtual Machine (SVM) ist logisch aufgebaut, um Client-Zugriff auf Systeme zu ermöglichen, auf denen die ONTAP Software ausgeführt wird. SVMs können Daten gleichzeitig über mehrere Datenzugriffsprotokolle über logische Schnittstellen (Logical Interfaces, LIFs) bereitstellen. SVMs ermöglichen den Datenzugriff auf Dateiebene über NAS-Protokolle wie CIFS und NFS sowie den Datenzugriff auf Blockebene über SAN-Protokolle wie iSCSI, FC/FCoE und NVMe. SVMs können Daten sowohl für SAN- als auch für NAS-Clients unabhängig gleichzeitig bereitstellen.
+
+image:vsphere_admin_unified_storage.png["Unified Storage"]
+
+Bei vSphere könnte dieser Ansatz auch für ein einheitliches System für Virtual Desktop Infrastructure (VDI) in Kombination mit einer virtuellen Serverinfrastruktur (VSI) stehen. Systeme mit ONTAP Software sind bei VSI in der Regel kostengünstiger als herkömmliche Enterprise-Arrays, bieten zugleich aber fortschrittliche Storage-Effizienzfunktionen, mit denen Sie im selben System auch VDI gerecht werden können. ONTAP vereint außerdem eine Reihe von Storage-Medien – von SSDs bis SATA – und kann diese problemlos in die Cloud erweitern. Auf diese Weise müssen Sie nicht ein Flash-Array für Performance-Zwecke, ein SATA-Array für Archive und separate Systeme für die Cloud erwerben. Sie alle sind in ONTAP integriert.
+
+
+NOTE: Weitere Informationen zu SVMs, Unified Storage und Client-Zugriff finden Sie unter https://docs.netapp.com/ontap-9/index.jsp?lang=en["Storage-Virtualisierung"^] Im Dokumentationszentrum ONTAP 9.

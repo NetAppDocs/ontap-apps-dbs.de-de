@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: vmware/vsphere/dp.html 
+keywords: Data protection, Space reclamation, VM and datastore cloning, Storage efficiency, thin provisioning, QoS, SIOC, Storage Distributed Resource Scheduler, DRS, Active IQ Unified Manager, Encryption 
+summary: Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrere Jobs angewendet werden können. In diesen Richtlinien können ein Zeitplan, die Aufbewahrung, die Replizierung und andere Funktionen definiert werden. Damit ist es weiterhin möglich, optional VM-konsistente Snapshots auszuwählen und dadurch die Fähigkeit des Hypervisors auszuschöpfen, das I/O vor dem Erstellen eines VMware Snapshots stillzulegen. 
+---
+= Datensicherung
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Zu den größten Stärken von ONTAP für vSphere zählt, dass Sie Ihre VMs sichern und schnell wiederherstellen können und dass Sie diese Funktion mit dem SnapCenter Plug-in für VMware vSphere einfach in vCenter managen können.
+
+Mit Snapshots können Sie ohne Auswirkungen auf die Performance schnell Kopien Ihrer VMs oder Datastores erstellen und diese dann zur längerfristigen externen Datensicherung mit SnapMirror an ein sekundäres System senden. Durch diesen Ansatz werden der Storage-Platzbedarf und die Netzwerkbandbreite minimiert, da nur geänderte Informationen gespeichert werden.
+
+Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrere Jobs angewendet werden können. In diesen Richtlinien können ein Zeitplan, die Aufbewahrung, die Replizierung und andere Funktionen definiert werden. Damit ist es weiterhin möglich, optional VM-konsistente Snapshots auszuwählen und dadurch die Fähigkeit des Hypervisors auszuschöpfen, das I/O vor dem Erstellen eines VMware Snapshots stillzulegen. Aufgrund der Performance-Auswirkungen von VMware Snapshots werden diese jedoch im Allgemeinen nicht empfohlen, es sei denn, Sie müssen das Gast-Betriebssystem stilllegen. Verwenden Sie stattdessen Snapshots für die allgemeine Sicherung und Applikationstools wie SnapCenter Plug-ins, um transaktionsorientierte Daten – beispielsweise SQL Server oder Oracle Daten – zu sichern. Diese Snapshots unterscheiden sich von den VMware (Konsistenz-)Snapshots und sind für längerfristigen Schutz geeignet.  VMware Snapshots sind nur http://pubs.vmware.com/vsphere-65/index.jsp?topic=%2Fcom.vmware.vsphere.vm_admin.doc%2FGUID-53F65726-A23B-4CF0-A7D5-48E584B88613.html["Empfehlenswert"^] Für den kurzfristigen Einsatz aufgrund von Performance und anderen Auswirkungen.
+
+Diese Plug-ins bieten erweiterte Funktionen zur Sicherung von Datenbanken in physischen und virtuellen Umgebungen. Bei vSphere können Sie sie zur Sicherung von SQL Server oder Oracle Datenbanken heranziehen, in denen die Daten in RDM-LUNs, direkt mit dem Gastbetriebssystem verbundenen iSCSI-LUNs oder VMDK-Dateien in VMFS oder NFS-Datastores gespeichert werden. Mit den Plug-ins können unterschiedliche Typen von Datenbank-Backups angegeben, Online- oder Offline-Backups unterstützt und neben Protokolldateien auch Datenbankdateien gesichert werden. Zusätzlich zum Backup und Recovery unterstützen die Plug-ins auch das Klonen von Datenbanken zu Entwicklungs- oder Testzwecken.
+
+Die folgende Abbildung zeigt ein Beispiel für die Implementierung von SnapCenter.
+
+image:vsphere_ontap_image4.png["Fehler: Fehlendes Grafikbild"]
+
+Falls Sie erweiterte Disaster-Recovery-Funktionen nutzen möchten, sollten Sie in Betracht ziehen, NetApp SRA für ONTAP mit VMware Site Recovery Manager zu kombinieren. Dadurch wird die Replizierung von Datastores an einen DR-Standort unterstützt. Darüber hinaus werden unterbrechungsfreie Tests in der DR-Umgebung ermöglicht, indem die replizierten Datastores geklont werden. Das Recovery nach einem Ausfall und die erneute Sicherung der Produktion nach Behebung des Ausfalls wurden durch die in SRA integrierte Automatisierung ebenfalls vereinfacht.
+
+Um ein Höchstmaß an Hochverfügbarkeit zu gewährleisten, ziehen Sie eine VMware vSphere Metro Storage Cluster (vMSC) Konfiguration mit NetApp MetroCluster in Erwägung. VMSC ist eine von VMware zertifizierte Lösung mit einer Kombination aus synchroner Replizierung und Array-basiertem Clustering. Sie bietet dieselben Vorteile wie ein Hochverfügbarkeits-Cluster, ist aber zum Schutz vor Standortausfällen auf separate Standorte verteilt. NetApp MetroCluster bietet kostengünstige Konfigurationen für die synchrone Replizierung mit transparentem Recovery nach dem Ausfall einer einzelnen Storage-Komponente sowie Recovery mit nur einem Befehl im Falle eines Standortausfalls. VMSC wird in ausführlicher beschrieben http://www.netapp.com/us/media/tr-4128.pdf["TR-4128"^].

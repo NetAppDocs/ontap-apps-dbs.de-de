@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: oracle/tiering/oracle-snapshot-tiering.html 
+keywords: tiering, fabricpool 
+summary: Oracle Snapshot Tiering 
+---
+= Oracle Snapshot Tiering
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+Die erste Version von FabricPool war auf den Backup-Anwendungsfall ausgerichtet. Als einzige Art von Blöcken, die Tiering ermöglichen konnten, handelte es sich um Blöcke, die nicht mehr mit Daten im aktiven File-System verknüpft waren. Daher können nur die Snapshot Datenblöcke auf diese Kapazitäts-Tier verschoben werden. Dies bleibt eine der sichersten Tiering-Optionen, wenn Sie sicherstellen müssen, dass die Performance nie beeinträchtigt wird.
+
+
+
+== Richtlinien: Lokale Snapshots
+
+Es gibt zwei Optionen für das Tiering inaktiver Snapshot-Blöcke auf die Kapazitäts-Tier. Zunächst einmal die `snapshot-only` Die Richtlinie zielt nur auf die Snapshot-Blöcke ab. Obwohl der `auto` Die Richtlinie umfasst die `snapshot-only` Blöcke, sondern auch Tiering Blöcke aus dem aktiven File-System. Dies ist möglicherweise nicht wünschenswert.
+
+Der `tiering-minimum-cooling-days` Der Wert sollte auf einen Zeitraum festgelegt werden, in dem Daten, die während einer Wiederherstellung erforderlich sein könnten, auf der Performance-Tier zur Verfügung stehen. So enthalten die meisten Wiederherstellungsszenarien einer kritischen Produktionsdatenbank zu einem bestimmten Zeitpunkt in den letzten Tagen einen Wiederherstellungspunkt. Einstellung A `tiering-minimum-cooling-days` Mit dem Wert 3 würde sichergestellt, dass bei einer Wiederherstellung der Datei eine Datei entsteht, die sofort die maximale Performance liefert. Alle Blöcke in den aktiven Dateien befinden sich immer noch auf schnellem Storage, ohne dass eine Wiederherstellung aus dem Kapazitäts-Tier erforderlich ist.
+
+
+
+== Richtlinien – replizierte Snapshots
+
+Ein Snapshot, der mit SnapMirror oder SnapVault repliziert wird, der nur für die Wiederherstellung verwendet wird, sollte im Allgemeinen die FabricPool verwenden `all` Richtlinie: Bei dieser Richtlinie werden Metadaten repliziert. Alle Datenblöcke werden jedoch sofort an die Kapazitäts-Tier gesendet, was maximale Performance liefert. Die meisten Recovery-Prozesse arbeiten mit sequenziellem I/O, was von vornherein effizient ist. Die Recovery-Zeit vom Zielort des Objektspeichers ist zu bewerten, in einer gut durchdachten Architektur muss dieser Recovery-Prozess jedoch nicht wesentlich langsamer sein als die Wiederherstellung von lokalen Daten.
+
+Wenn die replizierten Daten auch für das Klonen verwendet werden sollen, wird der verwendet `auto` Die Politik ist angemessener, mit einem `tiering-minimum-cooling-days` Wert, der Daten umfasst, von denen erwartet wird, dass sie regelmäßig in einer Klonumgebung verwendet werden. Der aktive Arbeitsdatensatz einer Datenbank kann beispielsweise Daten enthalten, die in den letzten drei Tagen gelesen oder geschrieben wurden, aber es können auch weitere Verlaufsdaten von 6 Monaten enthalten sein. Wenn ja, dann die `auto` Durch eine Richtlinie am Ziel von SnapMirror wird das Arbeitsdatensatz auf der Performance-Ebene verfügbar.
