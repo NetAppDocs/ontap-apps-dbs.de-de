@@ -10,11 +10,14 @@ summary: Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrer
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
+:firstname: [.lead]
+:author: [.lead]
+:authorinitials: [
+:authors: [.lead]
+:revnumber: 
+:revdate: and it is easy to manage this ability inside vCenter with the SnapCenter Plug-In for VMware vSphere.
 
-
-[role="lead"]
-Zu den größten Stärken von ONTAP für vSphere zählt, dass Sie Ihre VMs sichern und schnell wiederherstellen können und dass Sie diese Funktion mit dem SnapCenter Plug-in für VMware vSphere einfach in vCenter managen können.
 
 Mit Snapshots können Sie ohne Auswirkungen auf die Performance schnell Kopien Ihrer VMs oder Datastores erstellen und diese dann zur längerfristigen externen Datensicherung mit SnapMirror an ein sekundäres System senden. Durch diesen Ansatz werden der Storage-Platzbedarf und die Netzwerkbandbreite minimiert, da nur geänderte Informationen gespeichert werden.
 

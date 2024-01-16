@@ -10,7 +10,7 @@ summary: Seit dem Übergang von der älteren virtuellen Appliance bieten ONTAP T
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

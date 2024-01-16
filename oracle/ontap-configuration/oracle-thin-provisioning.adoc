@@ -10,7 +10,7 @@ summary: Oracle und ONTAP Thin Provisioning
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

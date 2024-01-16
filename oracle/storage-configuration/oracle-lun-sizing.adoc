@@ -10,7 +10,7 @@ summary: Richtlinien zur Größenanpassung von Oracle Datenbanken und zur LUN-An
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

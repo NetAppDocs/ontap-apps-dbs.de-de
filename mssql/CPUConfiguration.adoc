@@ -6,12 +6,11 @@ summary: Microsoft SQL Server auf ONTAP
 ---
 = CPU-Konfiguration
 :allow-uri-read: 
-:firstname: [.lead]
-:author: [.lead]
-:authorinitials: [
-:authors: [.lead]
-:revdate: Modifying server and database settings can help achieve better and more efficient database performance.
+:imagesdir: ../media/
 
+
+[role="lead"]
+Durch die Änderung der Server- und Datenbankeinstellungen kann eine bessere und effizientere Datenbankleistung erreicht werden.
 
 
 
@@ -29,7 +28,7 @@ Bei der Lizenzierung von SQL Server gibt es zwei wichtige Denkschulen. Die erste
 
 === Protokolleinträge geben an, wie viele Kerne nach dem Start von SQL Server verwendet werden.
 
-image:./media/hyperthreading.png["Fehler: Fehlendes Grafikbild"]
+image:mssql-hyperthreading.png["Fehler: Fehlendes Grafikbild"]
 
 Um alle CPUs zu verwenden, sollten Sie daher die Prozessorkern-Lizenz verwenden. Weitere Informationen zur SQL Server-Lizenzierung finden Sie unter link:https://www.microsoft.com/en-us/sql-server/sql-server-2022-comparison["SQL Server 2022: Ihre moderne Datenplattform"^].
 
@@ -72,7 +71,7 @@ Der Standardwert ist 0, wodurch SQL Server die Anzahl der Worker-Threads beim St
 
 Wann sollten Sie SQL Server so konfigurieren, dass mehr Worker-Threads verwendet werden? Wenn die durchschnittliche Länge der Arbeitswarteschlange für jeden Scheduler über 1 liegt, können Sie vom Hinzufügen weiterer Threads zum System profitieren, jedoch nur, wenn die Last nicht CPU-gebunden ist oder andere schwere Wartezeiten auftritt. Wenn einer dieser Vorgänge stattfindet, sind weitere Threads nicht hilfreich, da sie schließlich auf andere Systemengpässe warten müssen. Weitere Informationen zu max. Worker-Threads finden Sie unter link:https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/configure-the-max-worker-threads-server-configuration-option?view=sql-server-ver16&redirectedfrom=MSDN["Konfigurieren Sie die Option Max Worker Threads Server Configuration"^].
 
-image:./media/max-worker-threads.png["Fehler: Fehlendes Grafikbild"]
+image:mssql-max-worker-threads.png["Fehler: Fehlendes Grafikbild"]
 
 
 

@@ -10,7 +10,7 @@ summary: Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrer
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

@@ -6,6 +6,7 @@ summary: Microsoft SQL Server auf ONTAP
 ---
 = Microsoft SQL Server Datenbankdateien und Dateigruppen
 :allow-uri-read: 
+:imagesdir: ../media/
 
 
 [role="lead"]
@@ -19,7 +20,7 @@ Jede Datenbank verfügt über eine primäre Datendatei, die standardmäßig übe
 
 Alle Datenbankdateien werden in Dateigruppen gruppiert. Eine Dateigruppe ist die logische Einheit, die die Datenbankverwaltung vereinfacht. Sie ermöglichen die Trennung zwischen einer logischen Objektplatzierung und physischen Datenbankdateien. Wenn Sie die Tabellen für Datenbankobjekte erstellen, geben Sie an, in welcher Dateigruppe sie platziert werden sollen, ohne sich um die zugrunde liegende Datendateikonfiguration zu sorgen.
 
-image:./media/filegroups.png["Fehler: Fehlendes Grafikbild"]
+image:mssql-filegroups.png["Fehler: Fehlendes Grafikbild"]
 
 Die Fähigkeit, mehrere Datendateien innerhalb der Dateigruppe zu speichern, ermöglicht es Ihnen, die Last auf verschiedene Speichergeräte zu verteilen, wodurch die I/O-Performance des Systems verbessert wird. Der Kontrast für die Transaktionsprotokollanmeldung profitiert nicht von den mehreren Dateien, da SQL Server in sequenzieller Weise in das Transaktionsprotokoll schreibt.
 
@@ -41,7 +42,7 @@ Mit der sofortigen Dateiinitialisierung ist ein kleines Sicherheitsrisiko verbun
 
 Sie können die sofortige Dateiinitialisierung aktivieren, indem Sie dem SQL Server-Startkonto die Berechtigung SA_MANAGE_VOLUME_NAME, auch bekannt als „Perform Volume Maintenance Task“, hinzufügen. Sie können dies unter der Anwendung zur Verwaltung lokaler Sicherheitsrichtlinien (secpol.msc) tun, wie in der folgenden Abbildung dargestellt. Öffnen Sie die Eigenschaften für die Berechtigung zum Ausführen von Volume-Wartungsaufgaben und fügen Sie das SQL Server-Startkonto zur Liste der Benutzer dort hinzu.
 
-image:./media/security-policy.png["Fehler: Fehlendes Grafikbild"]
+image:mssql-security-policy.png["Fehler: Fehlendes Grafikbild"]
 
 Um zu überprüfen, ob die Berechtigung aktiviert ist, können Sie den Code aus dem folgenden Beispiel verwenden. Dieser Code setzt zwei Trace-Flags, die SQL Server zwingen, zusätzliche Informationen in das Fehlerprotokoll zu schreiben, eine kleine Datenbank zu erstellen und den Inhalt des Protokolls zu lesen.
 
@@ -68,10 +69,10 @@ GO
 ....
 Wenn die sofortige Dateiinitialisierung nicht aktiviert ist, zeigt das SQL Server-Fehlerprotokoll an, dass SQL Server die mdf-Datendatei zusätzlich zum Nullsetzen der ldf-Protokolldatei auf Null setzt, wie im folgenden Beispiel gezeigt. Wenn die sofortige Dateiinitialisierung aktiviert ist, wird nur das Nullsetzen der Protokolldatei angezeigt.
 
-image:./media/zeroing.png["Fehler: Fehlendes Grafikbild"]
+image:mssql-zeroing.png["Fehler: Fehlendes Grafikbild"]
 
 Die Wartungsaufgabe zum Ausführen von Volumes wird in SQL Server 2016 vereinfacht und später während des Installationsprozesses als Option bereitgestellt. In dieser Abbildung wird die Option angezeigt, dem SQL Server-Datenbank-Engine-Service die Berechtigung zum Ausführen der Volume-Wartungsaufgabe zu gewähren.
 
-image:./media/maintenance.png["Fehler: Fehlendes Grafikbild"]
+image:mssql-maintenance.png["Fehler: Fehlendes Grafikbild"]
 
 Eine weitere wichtige Datenbankoption, die die Größe der Datenbankdateien steuert, ist Autoshrink. Wenn diese Option aktiviert ist, verkleinert SQL Server die Datenbankdateien regelmäßig, reduziert deren Größe und gibt Speicherplatz für das Betriebssystem frei. Dieser Vorgang ist ressourcenintensiv und nur selten sinnvoll, da die Datenbankdateien nach einiger Zeit wieder wachsen, wenn neue Daten in das System gelangen. Autoshrink darf in der Datenbank niemals aktiviert werden.

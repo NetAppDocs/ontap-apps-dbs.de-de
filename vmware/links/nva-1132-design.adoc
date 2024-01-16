@@ -10,14 +10,13 @@ summary: Das VMware Endbenutzer-Computing mit NetApp HCI ist eine validierte Bes
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
-:firstname: d
-:authorinitials: d
-:author: d
-:authors: d
-:revdate: [.lead]
+:imagesdir: ../../media/d
+:firstname: [.lead]
+:author: [.lead]
+:authorinitials: [
+:authors: [.lead]
+:revnumber: 
+:revdate: best-practice data center architecture for deploying virtual desktop workloads at an enterprise scale. This document describes the architectural design and best practices for deploying the solution at production scale in a reliable and risk-free manner.
 
-
-Das VMware Endbenutzer-Computing mit NetApp HCI ist eine validierte Best-Practice Datacenter-Architektur zur Implementierung virtueller Desktop Workloads im Enterprise-Maßstab. Dieses Dokument beschreibt das Architekturdesign und Best Practices für eine zuverlässige und risikofreie Implementierung der Lösung im Produktionsskala.
 
 link:https://www.netapp.com/pdf.html?item=/media/7121-nva1132designpdf.pdf["NVA-1132-DESIGN: VMware Endbenutzer-Computing mit NetApp HCI"^]

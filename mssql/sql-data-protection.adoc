@@ -1,17 +1,18 @@
 ---
 sidebar: sidebar 
-permalink: mssql/Data-protection.html 
+permalink: mssql/sql-data-protection.html 
 keywords: MS-SQL,mssql,SQL Server, SnapCenter, data protection 
 summary: Microsoft SQL Server Datensicherung mit ONTAP 
 ---
 = Microsoft SQL Server Datensicherung mit ONTAP
 :allow-uri-read: 
+:imagesdir: ../media/
 
 
 [role="lead"]
 Die Sicherung von Datenbanken ist für jedes Unternehmen von großer Bedeutung. Da die Datenmenge und Anzahl der Datenbanken zugenommen haben, ist die Einhaltung der Recovery Time Objective (RTO) und der Recovery Point Objective (RPO) von großer Bedeutung.
 
-Der wichtigste Faktor bei Datenbank-Backups ist die Nutzung der NetApp Snapshot Technologie. Die Planung der Datensicherung mit ONTAP wird erörtert link:../common/dp/overview.html["Hier"]. Ein applikationskonsistentes Backup und Datenbank-Layout sind weitere wichtige Kriterien für die Einhaltung von RTO und RPO, die von NetApp SnapCenter orchestriert werden können.
+Der wichtigste Faktor bei Datenbank-Backups ist die Nutzung der NetApp Snapshot Technologie. Ein applikationskonsistentes Backup und Datenbank-Layout sind weitere wichtige Kriterien für die Einhaltung von RTO und RPO, die von NetApp SnapCenter orchestriert werden können.
 
 
 

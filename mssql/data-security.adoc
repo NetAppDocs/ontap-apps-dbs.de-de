@@ -6,6 +6,7 @@ summary: Microsoft SQL Server auf ONTAP
 ---
 = Datenbanksicherheit
 :allow-uri-read: 
+:imagesdir: ../media/
 
 
 [role="lead"]
@@ -16,7 +17,7 @@ ONTAP bietet eine Vielzahl an Funktionen zur Sicherung von Daten auf NAS und SAN
 
 ONTAP ermöglicht die Sicherung flexibler Volumes auf einem SnapLock Enterprise oder einem SnapLock Compliance Volume, indem eine SnapMirror Beziehung zwischen FlexVol Volume als Quelle und SnapLock Volume als Ziel erstellt wird.Snapshot Kopien, die auf einem sekundären Storage gesichert werden, werden mithilfe der SnapLock Technologie vor Änderungen oder Löschungen geschützt, bevor das Aufbewahrungsdatum erreicht wird.Dies ist basiert Sie gilt für die SnapMirror Richtlinie, die mit einer Beziehung verknüpft ist, bei der die Anzahl der Snapshot Kopien für ein bestimmtes snapmirror-Label definiert ist, das auf dem SnapLock Ziel-Volume aufbewahrt wird. die Wiederherstellung eines Snapshots mit LUN-Daten kann auf einem nicht-SnapLock Volume über den Wiederherstellungsvorgang von snapmirror durchgeführt werden. In ONTAP 9.13.1 kann eine FlexClone Kopie erstellt werden, indem der SnapLock-Typ als nicht-snaplock angegeben wird. Weitere Informationen zu SnapLock finden Sie unter link:https://docs.netapp.com/us-en/ontap/snaplock/["Hier"].
 
-image:./media/snap_snaplock.png["Fehler: Fehlendes Grafikbild"]
+image:mssql-snap_snaplock.png["Fehler: Fehlendes Grafikbild"]
 
 Manipulationssichere Snapshot Kopien oder Sperrung der Snapshot-Kopie: Snapshot-Kopie ist schnelle Möglichkeit, Datenbank zu schützen und wiederherzustellen. Ein Angreifer kann Snapshot-Kopien löschen. Dies könnte die letzte Option zum Wiederherstellen einer Datenbank im Fall von Datenbeschädigungen sein. Durch die Aktivierung manipulationssicherer Snapshot Kopien wird die Snapshot Kopie auf dem primären oder sekundären ONTAP System gesperrt, um zu verhindern, dass Administratoren oder nicht vertrauenswürdige Administratoren Snapshots für einen bestimmten Zeitraum löschen. Die manipulationssichere Snapshot Kopie ist ab ONTAP 9.12.1 verfügbar und erfordert die SnapLock Lizenz und die Initialisierung der Compliance-Uhr.
 

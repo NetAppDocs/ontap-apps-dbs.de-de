@@ -10,7 +10,7 @@ summary: Der Workflow in SRM unterscheidet sich deutlich, wenn VVols Replizierun
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

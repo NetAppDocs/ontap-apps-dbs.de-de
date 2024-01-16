@@ -10,7 +10,7 @@ summary: Auf dieser Seite werden die Best Practices zur Implementierung einer Ne
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
 
 
 

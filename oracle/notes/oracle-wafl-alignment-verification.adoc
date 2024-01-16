@@ -10,7 +10,7 @@ summary: WAFL-Ausrichtung für Oracle Datenbanken
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

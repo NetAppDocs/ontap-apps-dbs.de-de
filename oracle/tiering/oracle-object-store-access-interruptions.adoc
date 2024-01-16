@@ -10,7 +10,7 @@ summary: Datenbankzugriff bei Unterbrechungen des Zugriffs auf Objektspeicher
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

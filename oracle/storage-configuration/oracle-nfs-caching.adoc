@@ -10,7 +10,7 @@ summary: NFS Attribute Caching-Datenbanken
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

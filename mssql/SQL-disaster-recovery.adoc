@@ -6,12 +6,11 @@ summary: Microsoft SQL Server auf ONTAP
 ---
 = Disaster Recovery für Microsoft SQL Server
 :allow-uri-read: 
+:imagesdir: ../media/
 
 
 [role="lead"]
 NetApp bietet verschiedene Ansätze zur Verbesserung der Datenverfügbarkeit bei Hardware-, Software- oder Standortausfällen.
-
-NetApp bietet Technologien wie MetroCluster, SnapMirror Business Continuity (SM-BC) , SnapMirror. Sie finden eine Beschreibung dieser Funktionen link:../common/overview-dr.html["Hier"].
 
 
 

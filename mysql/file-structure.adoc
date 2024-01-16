@@ -11,7 +11,7 @@ summary: MySQL-Dateistruktur
 [role="lead"]
 InnoDB fungiert als mittlere Schicht zwischen Speicher und MySQL-Server, es speichert die Daten auf den Laufwerken.
 
-image:./media/file-structure1.png["Fehler: Grafikbild nicht gefunden"]
+image:mysql-file-structure1.png["Fehler: Grafikbild nicht gefunden"]
 
 MySQL I/O wird in zwei Typen unterteilt:
 
@@ -19,7 +19,7 @@ MySQL I/O wird in zwei Typen unterteilt:
 * Sequenzielle Datei-I/O
 
 
-image:./media/file-structure2.png["Fehler: Grafikbild nicht gefunden"]
+image:mysql-file-structure2.png["Fehler: Grafikbild nicht gefunden"]
 
 Datendateien werden zufällig gelesen und überschrieben, was zu einem hohen IOPS-Wert führt. Daher wird SSD-Speicher empfohlen.
 

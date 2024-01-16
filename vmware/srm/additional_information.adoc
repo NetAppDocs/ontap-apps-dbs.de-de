@@ -10,7 +10,7 @@ summary: Sehen Sie sich die folgenden Dokumente und/oder Websites an, um mehr ü
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

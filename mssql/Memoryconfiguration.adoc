@@ -10,6 +10,7 @@ summary: Microsoft SQL Server auf ONTAP
 :author: [.lead]
 :authorinitials: [
 :authors: [.lead]
+:imagesdir: ../media/
 
 
 
@@ -27,7 +28,7 @@ Auf einem SQL Server-Cluster mit mehreren SQL Server-Instanzen könnte jede Inst
 
 TIP: *NetApp empfiehlt*, mindestens 4 GB bis 6 GB RAM für das Betriebssystem zu belassen, um Leistungsprobleme zu vermeiden.
 
-image:./media/max-server-memory.png["Fehler: Fehlendes Grafikbild"]
+image:mssql-max-server-memory.png["Fehler: Fehlendes Grafikbild"]
 
 
 
@@ -74,7 +75,7 @@ Wenn eine Abfrage ausgeführt wird, versucht SQL Server, die optimale Speicherme
 
 Standardmäßig weist die Einstellung Min. Arbeitsspeicher pro Abfrage > oder = bis 1024 KB für jede auszulaufende Abfrage zu. Es empfiehlt sich, diese Einstellung auf den Standardwert 0 zu belassen, damit SQL Server die für Indexerstellung zugewiesene Speichermenge dynamisch verwalten kann. Wenn SQL Server jedoch über mehr RAM verfügt, als für eine effiziente Ausführung erforderlich ist, kann die Leistung einiger Abfragen erhöht werden, wenn Sie diese Einstellung erhöhen. Solange also auf dem Server, der nicht von SQL Server verwendet wird, Speicher verfügbar ist, können andere Anwendungen oder das Betriebssystem diese Einstellung erhöhen, was die gesamte SQL Server-Leistung verbessern kann. Wenn kein freier Speicher verfügbar ist, kann eine Erhöhung dieser Einstellung die Gesamtleistung beeinträchtigen.
 
-image:./media/min-memory-per-query.png["Fehler: Fehlendes Grafikbild"]
+image:mssql-min-memory-per-query.png["Fehler: Fehlendes Grafikbild"]
 
 
 

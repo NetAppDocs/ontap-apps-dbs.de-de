@@ -10,12 +10,13 @@ summary: Auf dieser Seite werden die Best Practices zur Implementierung einer Ne
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
+:firstname: [.lead]
+:author: [.lead]
+:authorinitials: [
+:authors: [.lead]
+:revdate: == vSphere datastore and protocol features
 
-
-
-
-== VSphere Datastore- und Protokollfunktionen
 
 Sieben Protokolle können für die Anbindung von VMware vSphere ESXi Hosts an ONTAP Systeme für Datastores genutzt werden:
 

@@ -10,12 +10,13 @@ summary: Seit seiner Einführung ins moderne Datacenter im Jahr 2002 ist NetApp 
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
+:firstname: [.lead]
+:author: [.lead]
+:authorinitials: [
+:authors: [.lead]
+:revdate: == ONTAP for vSphere
 
-
-
-
-== ONTAP für vSphere
 
 
 NOTE: Diese Dokumentation ersetzt den zuvor veröffentlichten technischen Bericht _TR-4900: VMware Site Recovery Manager mit ONTAP_

@@ -10,7 +10,7 @@ summary: Oracle und veraltete NFSv3-Sperren
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

@@ -10,7 +10,7 @@ summary: Die schnelle Wiederherstellung von Oracle Datenbanken in ONTAP anhand e
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

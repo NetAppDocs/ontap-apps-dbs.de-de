@@ -10,7 +10,7 @@ summary: Kenntnisse über Storage-Takeover- und Switchover-Funktionen sind erfor
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

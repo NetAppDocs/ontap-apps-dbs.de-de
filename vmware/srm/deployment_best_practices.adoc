@@ -10,7 +10,7 @@ summary: 'Mit ONTAP sorgt das Konzept der Storage Virtual Machine (SVM) für ein
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
 
 
 

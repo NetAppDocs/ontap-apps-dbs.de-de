@@ -10,7 +10,7 @@ summary: Dieses Dokument beschreibt die Produktsicherheit für ONTAP Tools für 
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
 
 
 

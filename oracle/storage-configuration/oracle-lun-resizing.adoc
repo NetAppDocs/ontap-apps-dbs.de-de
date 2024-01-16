@@ -10,7 +10,7 @@ summary: LUN- und LVM-Größe mit Oracle-Datenbanken
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

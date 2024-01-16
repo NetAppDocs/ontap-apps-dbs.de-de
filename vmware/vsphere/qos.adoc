@@ -10,11 +10,14 @@ summary: Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrer
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
+:firstname: [.lead]
+:author: [.lead]
+:authorinitials: [
+:authors: [.lead]
+:revnumber: 
+:revdate: or entire SVMs.
 
-
-[role="lead"]
-Systeme mit ONTAP Software nutzen die ONTAP Storage-QoS-Funktion, um den Durchsatz in Megabit pro Sekunde und/oder die Anzahl der I/O-Vorgänge pro Sekunde (IOPS) für unterschiedliche Storage-Objekte wie Dateien, LUNs, Volumes oder ganze SVMs zu beschränken.
 
 Durchsatzbegrenzungen sind bei der Steuerung unbekannter Workloads oder von Test-Workloads vor der Implementierung nützlich, wenn sichergestellt werden soll, dass sie sich nicht auf andere Workloads auswirken. Sie können auch zur Beschränkung eines als problematisch identifizierten Workloads eingesetzt werden. Minimale Service-Level auf Basis der IOPS werden ebenfalls unterstützt, um SAN-Objekten in ONTAP 9.2 und NAS-Objekten in ONTAP 9.3 eine konsistente Performance bereitzustellen.
 

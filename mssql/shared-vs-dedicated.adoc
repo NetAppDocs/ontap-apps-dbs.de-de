@@ -6,6 +6,7 @@ summary: Microsoft SQL Server auf ONTAP
 ---
 = Gemeinsame Instanz von Microsoft SQL Server und dedizierte Instanzen
 :allow-uri-read: 
+:imagesdir: ../media/
 
 
 [role="lead"]

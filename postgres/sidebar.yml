@@ -4,8 +4,6 @@ title: PostgreSQL
 entries:
 - title: Überblick
   url: "/postgres/overview.html"
-- title: ONTAP-Konfiguration
-  url: "/postgres/ontap.html"
 - title: Datenbankkonfiguration
   entries:
   - title: Der Netapp Architektur Sind

@@ -23,6 +23,8 @@ Angenommen, die Datendateien sind in dedizierten Volumes eingekapselt. Die näch
 
 Das einfachste Layout ist in der folgenden Abbildung dargestellt.
 
+image:2-volume.png["Fehler: Fehlendes Grafikbild"]
+
 Dies ist der häufigste Ansatz. Aus der Perspektive eines DBAs mag es ungewöhnlich erscheinen, alle Kopien der Wiederherstellungs- und Archivprotokolle auf demselben Volume zu vermengen. Allerdings bietet Trennung keinen besonderen Schutz, wenn die Dateien und LUNs sich alle noch auf derselben zugrunde liegenden Laufwerkgruppe befinden.
 
 
@@ -30,6 +32,8 @@ Dies ist der häufigste Ansatz. Aus der Perspektive eines DBAs mag es ungewöhnl
 == Layout mit drei Volumes
 
 Gelegentlich ist eine Trennung von Wiederherstellungsprotokollen erforderlich, da Bedenken hinsichtlich der Datensicherung bestehen oder Redo-Log-I/O über Controller verteilt werden müssen. In diesem Fall wird das in der Abbildung unten abgebildete Layout mit drei Volumes für die Replikation verwendet, während gleichzeitig die Notwendigkeit einer unvollständigen Wiederherstellung vermieden oder auf Backup-Controller-Dateien angewiesen ist.
+
+image:3-volume.png["Fehler: Fehlendes Grafikbild"]
 
 Dies ermöglicht das Striping der Redo-Protokolle und Steuerdateien über unabhängige Sätze von Spindeln und Controllern auf der Quelle. Die Archivprotokolle und ein Satz von Steuerdateien und Wiederherstellungsprotokollen können jedoch weiterhin in einem synchronisierten Zustand mit den Archivprotokollen repliziert werden.
 

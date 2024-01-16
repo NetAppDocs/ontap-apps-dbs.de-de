@@ -10,7 +10,7 @@ summary: LUN-Ausrichtung mit Oracle Datenbanken
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]
@@ -22,7 +22,7 @@ Die Ausrichtung wirkt sich auch auf LVM-Architekturen aus. Wenn ein physisches V
 
 Erstellen Sie in Linux-Umgebungen logische Volume-Gruppen auf dem gesamten Laufwerkgerät. Wenn eine Partition erforderlich ist, überprüfen Sie die Ausrichtung, indem Sie ausführen `fdisk –u` Es wird überprüft, ob die Starts jeder Partition ein Vielfaches von acht sind. Dies bedeutet, dass die Partition bei einem Vielfachen von acht 512-Byte-Sektoren beginnt, was 4 KB ist.
 
-Weitere Informationen finden Sie auch in der Diskussion zur Blockausrichtung der Komprimierung im Abschnitt link:/oracle/ontap-configuration/oracle-efficiency.html["Effizienz"]. Jedes Layout, das an 8-KB-Komprimierungsblockgrenzen ausgerichtet ist, ist auch an 4-KB-Grenzen ausgerichtet.
+Weitere Informationen finden Sie auch in der Diskussion zur Blockausrichtung der Komprimierung im Abschnitt link:../ontap-configuration/oracle-efficiency.html["Effizienz"]. Jedes Layout, das an 8-KB-Komprimierungsblockgrenzen ausgerichtet ist, ist auch an 4-KB-Grenzen ausgerichtet.
 
 
 

@@ -10,7 +10,7 @@ summary: Oracle-Migration mit dem Host-seitigen Storage Stack
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

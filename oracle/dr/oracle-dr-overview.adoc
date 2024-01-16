@@ -10,7 +10,7 @@ summary: Oracle Disaster Recovery mit ONTAP
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../../media/
 
 
 [role="lead"]

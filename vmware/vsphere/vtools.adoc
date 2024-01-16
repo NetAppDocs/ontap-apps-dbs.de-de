@@ -10,7 +10,7 @@ summary: 'ONTAP unterstützt alle maßgeblichen Storage-Protokolle für die Virt
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ../../media/
 
 
 [role="lead"]
