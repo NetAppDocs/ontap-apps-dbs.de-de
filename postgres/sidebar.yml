@@ -18,8 +18,10 @@ entries:
 - title: Storage-Konfiguration
   pdf-filename: Storage-Konfiguration für PostgreSQL
   entries:
-  - title: Konfiguration des Dateisystems
-    url: "/postgres/postgres-filesystems.html"
+  - title: NFS
+    url: "/postgres/postgres-nfs-filesystems.html"
+  - title: San
+    url: "/postgres/postgres-san-filesystems.html"
 - title: Datensicherung
   pdf-filename: Datensicherung für PostgreSQL
   entries:
