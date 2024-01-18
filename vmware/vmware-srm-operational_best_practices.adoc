@@ -1,0 +1,152 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-srm-operational_best_practices.html 
+keywords: vmware, site, recovery manager, vsrm, datastores, protocols, spbm, vvols, protection, replication, volumes, array, groups, failover test, reportect, failback 
+summary: Wenn möglich, verwenden Sie immer ONTAP Tools, um Datenspeicher und Volumes bereitzustellen. Damit stellen wir sicher, dass Volumes, Verbindungspfade, LUNs, Initiatorgruppen, Exportrichtlinien Und andere Einstellungen sind kompatibel konfiguriert. 
+---
+= Best Practices für betriebliche Prozesse
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:firstname: [.lead]
+:author: [.lead]
+:authorinitials: [
+:authors: [.lead]
+:revdate: == Datastores and protocols
+
+
+Wenn möglich, verwenden Sie immer ONTAP Tools, um Datenspeicher und Volumes bereitzustellen. Damit stellen wir sicher, dass Volumes, Verbindungspfade, LUNs, Initiatorgruppen, Exportrichtlinien Und andere Einstellungen sind kompatibel konfiguriert.
+
+SRM unterstützt iSCSI, Fibre Channel und NFS Version 3 mit ONTAP 9 bei Nutzung der Array-basierten Replizierung über SRA. SRM unterstützt nicht die Array-basierte Replizierung für NFS Version 4.1 mit herkömmlichen oder VVols-Datastores.
+
+Zur Bestätigung der Konnektivität überprüfen Sie immer, ob Sie einen neuen Testdatenspeicher am DR-Standort vom Ziel-ONTAP-Cluster aus mounten und wieder mounten können. Testen Sie jedes Protokoll, das Sie für die Datastore-Konnektivität verwenden möchten. Eine Best Practice besteht darin, mit ONTAP-Tools Ihren Testdatenspeicher zu erstellen, da dies die gesamte Datastore-Automatisierung gemäß den Anweisungen von SRM erfolgt.
+
+SAN-Protokolle sollten für jeden Standort homogen sein. Sie können NFS und SAN mixen, aber die SAN-Protokolle sollten nicht innerhalb eines Standorts gemischt werden. Beispielsweise können Sie FCP in Seite A und iSCSI in Standort B verwenden Sie sollten FCP und iSCSI nicht an Standort A verwenden Der Grund hierfür: Der SRA erstellt nicht gemischte Initiatorgruppen am Recovery-Standort, und SRM filtert nicht die Initiatorliste, die den SRA gegeben wurde.
+
+Frühere Anleitungen sollten LIF zu Datenlokalität erstellen. Das heißt, mounten Sie immer einen Datenspeicher mit einer LIF auf dem Node, der physisch Eigentümer des Volume ist. In modernen Versionen von ONTAP 9 ist das nicht mehr erforderlich. Sofern möglich und im Rahmen der Zugangsdaten für den Cluster-Umfang festgelegt werden, wählen die ONTAP Tools nach wie vor den Lastausgleich zwischen lokalen LIFs für die Daten aus. Eine Hochverfügbarkeit oder Performance ist jedoch nicht erforderlich.
+
+NetApp ONTAP 9 kann so konfiguriert werden, dass Snapshots automatisch entfernt werden, um die Uptime aufrechtzuerhalten, falls ein Speicherplatz nicht ausreicht, wenn Autosize nicht in der Lage ist, eine ausreichende Notfallkapazität zur Verfügung zu stellen. In der Standardeinstellung für diese Funktion werden die von SnapMirror erstellten Snapshots nicht automatisch gelöscht. Wenn SnapMirror Snapshots gelöscht werden, kann NetApp SRA die Replizierung für das betroffene Volume nicht rückgängig machen und erneut synchronisieren. Um zu verhindern, dass ONTAP SnapMirror Snapshots löscht, konfigurieren Sie die Funktion für automatisches Löschen von Snapshots für den Versuch.
+
+....
+snap autodelete modify -volume -commitment try
+....
+Die automatische Volume-Größe sollte auf festgelegt werden `grow` Für Volumes mit SAN-Datastores und `grow_shrink` Für NFS-Datastores. Weitere Informationen zu link:https://docs.netapp.com/us-en/ontap/flexgroup/configure-automatic-grow-shrink-task.html["Automatisches Vergrößern oder Verkleinern von Volumes"^].
+
+
+
+== Storage Policy Based Management (SPBM) und VVols
+
+Ab SRM 8.3 wird der Schutz von VMs mit VVols Datastores unterstützt. SnapMirror Zeitpläne werden über den VASA Provider VM-Storage-Richtlinien ausgesetzt, wenn die VVols Replizierung im Einstellungsmenü der ONTAP Tools aktiviert ist, wie in den folgenden Screenshots dargestellt.
+
+Im folgenden Beispiel wird die Unterstützung der VVols Replizierung gezeigt.
+
+image:vsrm-ontap9_image2.png["Fehler: Fehlendes Grafikbild"]
+
+Der folgende Screenshot zeigt ein Beispiel zu SnapMirror Zeitplänen, die im Assistenten zur Erstellung von VM-Storage-Richtlinien angezeigt werden.
+
+image:vsrm-ontap9_image3.png["Fehler: Fehlendes Grafikbild"]
+
+Der ONTAP VASA Provider unterstützt den Failover auf unterschiedlichen Storage. So kann beispielsweise ein Failover des Systems von ONTAP Select an einem Edge-Standort auf ein AFF System im Core-Datacenter durchgeführt werden. Unabhängig von Ähnlichkeit zum Storage müssen Sie für VM Storage-Richtlinien immer Storage-Richtlinien-Zuordnungen und Reverse-Mappings konfigurieren, damit die Services am Recovery-Standort die Erwartungen und Anforderungen erfüllen. Der folgende Screenshot zeigt ein Beispiel für eine Richtlinienzuordnung.
+
+image:vsrm-ontap9_image4.png["Fehler: Fehlendes Grafikbild"]
+
+
+
+== Erstellung replizierter Volumes für VVols-Datastores
+
+Im Gegensatz zu älteren VVols-Datastores müssen replizierte VVols Datastores von Anfang an bei aktivierter Replizierung erstellt werden. Dabei müssen sie Volumes verwenden, die vorab auf den ONTAP Systemen mit SnapMirror Beziehungen erstellt wurden. Hierfür sind vorab-Konfigurationen wie Cluster-Peering und SVM-Peering erforderlich. Diese Aktivitäten sollten von Ihrem ONTAP-Administrator ausgeführt werden, da hierdurch die Zuständigkeiten zwischen denen, die die ONTAP-Systeme über mehrere Standorte hinweg managen, und denen, die in erster Linie für den vSphere-Betrieb verantwortlich sind, streng getrennt werden.
+
+Dafür muss der vSphere Administrator eine neue Anforderung erfüllen. Da Volumes außerhalb der ONTAP Tools erstellt werden, ist es nicht bekannt, dass die Änderungen, die Ihr ONTAP-Administrator bis zur regelmäßigen planmäßigen Neuerfassungszeit vorgenommen hat. Daher ist es eine Best Practice, immer wieder neu zu ermitteln, wenn Sie eine Volume- oder SnapMirror Beziehung erstellen, die mit VVols verwendet werden soll. Klicken Sie einfach mit der rechten Maustaste auf den Host oder Cluster und wählen Sie die NetApp ONTAP Tools > Aktualisieren von Host- und Speicherdaten aus, wie im folgenden Screenshot dargestellt.
+
+image:vsrm-ontap9_image5.png["Fehler: Fehlendes Grafikbild"]
+
+Bei VVols und SRM ist Vorsicht geboten. Niemals geschützte und ungesicherte VMs in demselben VVols Datastore zusammen Der Grund dafür: Wenn Sie SRM für das Failover an Ihrem DR-Standort verwenden, werden nur die VMs, die Teil der Sicherungsgruppe sind, in die DR online geschaltet. Wenn Sie die Sicherung rückgängig machen (das SnapMirror aus der DR wieder in die Produktionsumgebung verschieben), können die VMs, die nicht Failover waren, überschrieben werden und wertvolle Daten enthalten.
+
+
+
+== Allgemeines zu Array-Paaren
+
+Für jedes Array-Paar wird ein Array-Manager erstellt. Zusammen mit SRM und ONTAP Tools erfolgt die Kopplung jedes Arrays mit dem Umfang einer SVM, auch wenn Cluster-Anmeldedaten verwendet werden. So können Sie DR-Workflows zwischen Mandanten segmentieren, basierend auf den ihnen zugewiesenen SVMs. Sie können mehrere Array-Manager für ein bestimmtes Cluster erstellen und sie können asymmetrisch sein. Sie können Fan-out oder Fan-in zwischen verschiedenen ONTAP 9 Clustern. So können beispielsweise SVM-A und SVM-B auf Cluster-1 und damit auf SVM-C auf Cluster-2, SVM-D auf Cluster-3 oder umgekehrt genutzt werden.
+
+Wenn Sie Array-Paare in SRM konfigurieren, sollten Sie sie immer in SRM auf die gleiche Weise hinzufügen, wie Sie sie den ONTAP Tools hinzugefügt haben. Das bedeutet, dass sie denselben Benutzernamen, dasselbe Passwort und dieselbe Management-LIF verwenden müssen. Diese Anforderung stellt sicher, dass SRA ordnungsgemäß mit dem Array kommuniziert. Der folgende Screenshot veranschaulicht, wie ein Cluster in ONTAP-Tools angezeigt wird und wie es zu einem Array Manager hinzugefügt werden kann.
+
+image:vsrm-ontap9_image6.jpg["Fehler: Fehlendes Grafikbild"]
+
+
+
+== Allgemeines zu Replikationsgruppen
+
+Replikationsgruppen enthalten logische Sammlungen von virtuellen Maschinen, die zusammen wiederhergestellt werden. Mit den ONTAP Tools VASA Provider werden automatisch Replikationsgruppen für Sie erstellt. Da die ONTAP SnapMirror Replizierung auf Volume-Ebene stattfindet, befinden sich alle VMs in einem Volume in derselben Replizierungsgruppe.
+
+Es gibt mehrere Faktoren, die bei Replizierungsgruppen berücksichtigt werden müssen und die Art und Weise, wie VMs über FlexVol Volumes verteilt werden. Durch die Gruppierung ähnlicher VMs in demselben Volume kann die Storage-Effizienz bei älteren ONTAP Systemen erhöht werden, bei denen es keine Deduplizierung auf Aggregatebene gibt. Durch Gruppierung wird jedoch die Größe des Volumes erhöht und die Parallelität der Volume I/O verringert. Moderne ONTAP Systeme bieten ein optimales Gleichgewicht aus Performance und Storage-Effizienz, indem VMs über FlexVol Volumes im selben Aggregat verteilt werden. Dadurch werden die Deduplizierung auf Aggregatebene genutzt und die I/O-Parallelisierung über mehrere Volumes hinweg verbessert. Sie können VMs in den Volumes zusammen wiederherstellen, da eine (nachfolgend erläutert) Sicherungsgruppe mehrere Replizierungsgruppen enthalten kann. Der Nachteil dieses Layouts besteht darin, dass Blöcke mehrmals über das Netzwerk übertragen werden können, da die Aggregat-Deduplizierung bei Volume SnapMirror nicht berücksichtigt wird.
+
+Eine letzte Überlegung für Replikationsgruppen besteht darin, dass jede von Natur aus eine logische Konsistenzgruppe ist (nicht zu verwechseln mit SRM-Konsistenzgruppen). Das liegt daran, dass alle VMs im Volume mithilfe desselben Snapshots zusammen übertragen werden. Wenn Sie also VMs haben, die stets konsistent sein müssen, sollten Sie sie in der gleichen FlexVol speichern.
+
+
+
+== Allgemeines zu Schutzgruppen
+
+Sicherungsgruppen definieren VMs und Datastores in Gruppen, die am geschützten Standort zusammen wiederhergestellt werden. Am geschützten Standort befinden sich die VMs, die in einer Schutzgruppe konfiguriert sind, im normalen Steady-State-Betrieb. Es ist wichtig zu beachten, dass eine Schutzgruppe nicht mehrere Array-Manager umfassen kann, obwohl SRM möglicherweise mehrere Array-Manager für eine Schutzgruppe anzeigt. Aus diesem Grund sollten Sie VM-Dateien nicht über Datastores auf unterschiedlichen SVMs verteilen.
+
+
+
+== Recovery-Pläne sprechen
+
+Recovery-Pläne legen fest, welche Schutzgruppen im gleichen Prozess wiederhergestellt werden. Mehrere Sicherungsgruppen können im selben Recovery-Plan konfiguriert werden. Um darüber hinaus mehr Optionen für die Ausführung von Recovery-Plänen zu aktivieren, kann eine einzige Sicherungsgruppe in mehreren Recovery-Plänen enthalten sein.
+
+Durch Recovery-Pläne können SRM-Administratoren Recovery-Workflows definieren, indem VMs einer Prioritätsgruppe von 1 (hoch) bis 5 (niedrig) zugewiesen werden, wobei 3 (mittel) standardmäßig verwendet wird. Innerhalb einer Prioritätsgruppe können VMs für Abhängigkeiten konfiguriert werden.
+
+So könnte Ihr Unternehmen beispielsweise über eine geschäftskritische Tier-1-Applikation für seine Datenbank auf einen Microsoft SQL Server zurückgreifen. Sie entscheiden also, Ihre VMs in Prioritätsgruppe 1 einzufügen. Innerhalb der Prioritätsgruppe 1 beginnen Sie mit der Planung des Auftrages der Dienste. Sie möchten wahrscheinlich, dass Ihr Microsoft Windows Domain Controller vor Ihrem Microsoft SQL Server hochgefahren wird, was vor Ihrem Anwendungsserver online sein müsste, usw. Sie würden all diese VMs zur Prioritätsgruppe hinzufügen und dann die Abhängigkeiten einstellen, da Abhängigkeiten nur innerhalb einer bestimmten Prioritätsgruppe gelten.
+
+NetApp empfiehlt besonders, mit Ihren Applikationsteams zusammenarbeiten zu müssen, um die Reihenfolge der für ein Failover-Szenario erforderlichen Operationen zu ermitteln und die Recovery-Pläne entsprechend zu erstellen.
+
+
+
+== Testen Sie den Failover
+
+Als Best Practice empfiehlt es sich, immer einen Test-Failover durchzuführen, wenn die Konfiguration eines geschützten VM Storage geändert wird. So wird sichergestellt, dass Sie bei einem Notfall darauf vertrauen können, dass Site Recovery Manager Services innerhalb des erwarteten RTO-Ziels wiederherstellen kann.
+
+NetApp empfiehlt zudem, die Funktion der in Gast-Applikationen gelegentlich zu bestätigen, insbesondere nach der Neukonfiguration von VM-Storage.
+
+Wenn ein Test-Recovery-Vorgang ausgeführt wird, wird auf dem ESXi Host für die VMs ein privates Test-Bubble-Netzwerk erstellt. Dieses Netzwerk wird jedoch nicht automatisch mit physischen Netzwerkadaptern verbunden und bietet daher keine Verbindung zwischen den ESXi Hosts. Um die Kommunikation zwischen VMs zu ermöglichen, die während des DR-Tests auf verschiedenen ESXi Hosts ausgeführt werden, wird ein physisches privates Netzwerk zwischen den ESXi Hosts am DR-Standort erstellt. Um zu überprüfen, ob das Testnetzwerk privat ist, kann das Testblasennetzwerk physisch oder mittels VLANs oder VLAN-Tagging getrennt werden. Dieses Netzwerk muss von dem Produktionsnetzwerk getrennt werden, da die VMs wiederhergestellt werden und nicht mit IP-Adressen im Produktionsnetzwerk platziert werden können, die mit den tatsächlichen Produktionssystemen kollidieren können. Nach dem Erstellen eines Recovery-Plans in SRM kann das erstellte Testnetzwerk als privates Netzwerk ausgewählt werden, um die VMs mit während des Tests zu verbinden.
+
+Nachdem der Test validiert und nicht mehr erforderlich ist, führen Sie eine Bereinigung durch. Bei der Durchführung der Bereinigung werden die geschützten VMs in ihren Ausgangszustand zurückversetzt und der Recovery-Plan wird auf den Status „bereit“ zurückgesetzt.
+
+
+
+== Überlegungen zum Failover
+
+Wenn es um Failover an einem Standort zusätzlich zur in diesem Leitfaden beschriebenen Reihenfolge geht, müssen noch einige weitere Aspekte berücksichtigt werden.
+
+Ein Problem, mit dem Sie möglicherweise zu kämpfen haben, ist die Netzwerkunterschiede zwischen den Standorten. In einigen Umgebungen können am primären Standort und am DR-Standort dieselben Netzwerk-IP-Adressen verwendet werden. Diese Fähigkeit wird als Stretched Virtual LAN (VLAN) oder Stretched Network Setup bezeichnet. Andere Umgebungen müssen möglicherweise unterschiedliche Netzwerk-IP-Adressen (z. B. in unterschiedlichen VLANs) am primären Standort relativ zum DR-Standort verwenden.
+
+VMware bietet verschiedene Möglichkeiten zur Lösung dieses Problems. Netzwerkvirtualisierungstechnologien wie VMware NSX-T Data Center abstrahieren den gesamten Netzwerk-Stack von Ebene 2 bis 7 von der Betriebsumgebung und ermöglichen so portablere Lösungen. Weitere Informationen zu link:https://docs.vmware.com/en/Site-Recovery-Manager/8.4/com.vmware.srm.admin.doc/GUID-89402F1B-1AFB-42CD-B7D5-9535AF32435D.html["NSX-T-Optionen mit SRM"^].
+
+SRM ermöglicht es Ihnen auch, die Netzwerkkonfiguration einer VM wie das Recovery zu ändern. Diese Neukonfiguration umfasst Einstellungen wie IP-Adressen, Gateway-Adresse und DNS-Server-Einstellungen. Verschiedene Netzwerkeinstellungen, die bei der Wiederherstellung auf einzelne VMs angewendet werden, können in den Einstellungen einer VM der Eigenschaft im Recovery-Plan angegeben werden.
+
+Um SRM so zu konfigurieren, dass verschiedene Netzwerkeinstellungen auf mehrere VMs angewendet werden können, ohne die Eigenschaften der einzelnen im Recovery-Plan bearbeiten zu müssen, stellt VMware ein Tool namens dr-ip-Customizer bereit. Informationen zur Verwendung dieses Dienstprogramms finden Sie unter link:https://docs.vmware.com/en/Site-Recovery-Manager/8.4/com.vmware.srm.admin.doc/GUID-2B7E2B25-2B82-4BC4-876B-2FE0A3D71B84.html["VMware Dokumentation"^].
+
+
+
+== Schützen
+
+Nach einem Recovery wird der Recovery-Standort zum neuen Produktionsstandort. Da der Recovery-Vorgang die SnapMirror Replizierung ausbrach, ist der neue Produktionsstandort nicht vor zukünftigen Ausfällen geschützt. Als Best Practice wird empfohlen, den neuen Produktionsstandort unmittelbar nach dem Recovery auf einen anderen Standort zu schützen. Wenn der ursprüngliche Produktionsstandort betriebsbereit ist, kann der VMware Administrator den ursprünglichen Produktionsstandort als neuen Recovery-Standort zum Schutz des neuen Produktionsstandorts verwenden und damit die Richtung des Schutzes umkehren. Repschutz ist nur bei nicht-katastrophalen Ausfällen verfügbar. Daher müssen die ursprünglichen vCenter Server, ESXi Server, SRM Server und entsprechenden Datenbanken irgendwann wiederhergestellt werden können. Falls diese nicht verfügbar sind, müssen eine neue Schutzgruppe und ein neuer Recovery-Plan erstellt werden.
+
+
+
+== Failback
+
+Ein Failback-Vorgang ist im Grunde ein Failover in eine andere Richtung als zuvor. Als Best Practice überprüfen Sie, ob der ursprüngliche Standort wieder zu akzeptablen Funktionsstufen zurückkehrt, bevor Sie ein Failback durchführen, oder, anders ausgedrückt, ein Failover zum ursprünglichen Standort durchführen. Falls der ursprüngliche Standort weiterhin kompromittiert wird, sollten Sie ein Failback verzögern, bis der Ausfall ausreichend behoben ist.
+
+Eine weitere Failback Best Practice besteht darin, immer einen Test-Failover auszuführen, nachdem der erneute Schutz abgeschlossen und bevor das endgültige Failback durchgeführt wurde. Dadurch wird sichergestellt, dass die vorhandenen Systeme am ursprünglichen Standort den Betrieb abschließen können.
+
+
+
+== Wiederherstellung der Originalseite
+
+Nach dem Failback sollten Sie mit allen Beteiligte bestätigen, dass ihre Services wieder normal sind, bevor Sie erneut den Schutz starten.
+
+Wenn eine erneute Sicherung nach dem Failback ausgeführt wird, befindet sich die Umgebung im Wesentlichen in dem Zustand, in dem sie sich zu Beginn befand. Die SnapMirror Replizierung wird erneut vom Produktionsstandort zum Recovery-Standort ausgeführt.

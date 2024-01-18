@@ -1,0 +1,113 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-host-config-aix.html 
+keywords: oracle, database, ontap, aix, cio 
+summary: Oracle auf ONTAP unter Nutzung von AIX 
+---
+= IBM AIX
+:allow-uri-read: 
+
+
+[role="lead"]
+Konfigurationsthemen für das IBM AIX-Betriebssystem.
+
+
+
+== Gleichzeitige I/O-Vorgänge
+
+Um eine optimale Leistung auf IBM AIX zu erzielen, muss gleichzeitig I/O verwendet werden Ohne gleichzeitige I/O-Vorgänge sind Performance-Einschränkungen wahrscheinlich, weil AIX serialisierte, atomare I/O-Vorgänge durchführt, was einen beträchtlichen Overhead nach sich zieht.
+
+Ursprünglich hat NetApp die Verwendung von empfohlen `cio` Mount-Option, um die Verwendung von gleichzeitigen I/O-Vorgängen auf dem Dateisystem zu erzwingen. Dieser Prozess hatte jedoch Nachteile und ist nicht mehr erforderlich. Seit der Einführung von AIX 5.2 und Oracle 10gR1 kann Oracle auf AIX einzelne Dateien für gleichzeitige I/O-Vorgänge öffnen, anstatt gleichzeitige I/O-Vorgänge auf dem gesamten Dateisystem zu erzwingen.
+
+Die beste Methode für die Aktivierung gleichzeitiger I/O ist, die festzulegen `init.ora` Parameter `filesystemio_options` Bis `setall`. Auf diese Weise kann Oracle spezifische Dateien zur Verwendung mit gleichzeitigen I/O-Vorgängen öffnen
+
+Wird Verwendet `cio` Als Mount-Option erzwingt die Verwendung von gleichzeitigen I/O-Vorgängen, was negative Auswirkungen haben kann. Das Erzwingen von gleichzeitigen I/O-Vorgängen deaktiviert beispielsweise das Vorauslesen auf Dateisystemen, was die Performance für I/O-Vorgänge beeinträchtigen kann, die außerhalb der Oracle-Datenbanksoftware auftreten, z. B. das Kopieren von Dateien und das Durchführen von Bandsicherungen. Darüber hinaus sind Produkte wie Oracle GoldenGate und SAP BR*Tools nicht mit der Verwendung des kompatibel `cio` Mount-Option mit bestimmten Versionen von Oracle.
+
+[TIP]
+====
+*NetApp empfiehlt* Folgendes:
+
+* Verwenden Sie das nicht `cio` Mount-Option auf Filesystem-Ebene. Aktivieren Sie stattdessen Concurrent I/O über `filesystemio_options=setall`.
+* Verwenden Sie nur das `cio` Die Mount-Option sollte aktiviert werden, wenn keine Einstellung möglich ist `filesystemio_options=setall`.
+
+
+====
+
+
+== Mount-Optionen für AIX NFS
+
+In der folgenden Tabelle sind die AIX NFS-Mount-Optionen für Oracle Single-Instance-Datenbanken aufgeführt.
+
+|===
+| Dateityp | Mount-Optionen 
+
+
+| AdR-Startseite | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144` 
+
+
+| Steuerdateien
+Datendateien
+Wiederherstellungsprotokolle | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144` 
+
+
+| `ORACLE_HOME` | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+intr` 
+|===
+In der folgenden Tabelle sind die AIX-NFS-Mount-Optionen für RAC aufgeführt.
+
+|===
+| Dateityp | Mount-Optionen 
+
+
+| AdR-Startseite | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144` 
+
+
+| Steuerdateien
+Datendateien
+Wiederherstellungsprotokolle | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+nointr,noac` 
+
+
+| `CRS/Voting` | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+nointr,noac` 
+
+
+| Dediziert `ORACLE_HOME` | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144` 
+
+
+| Freigegeben `ORACLE_HOME` | `rw,bg,hard,[vers=3,vers=4.1],proto=tcp,
+timeo=600,rsize=262144,wsize=262144,
+nointr` 
+|===
+Der Hauptunterschied zwischen Single-Instance- und RAC-Mount-Optionen ist das Hinzufügen von `noac` Zu den Mount-Optionen. Durch diese Ergänzung wird das Caching des Host-Betriebssystems deaktiviert, wodurch alle Instanzen im RAC Cluster eine konsistente Ansicht des Status der Daten haben.
+
+Obwohl Sie den verwenden `cio` Mount-Option und der `init.ora` Parameter `filesystemio_options=setall` Hat die gleiche Wirkung wie die Deaktivierung des Host-Caching, ist es weiterhin erforderlich, zu verwenden `noac`. `noac` Ist für die gemeinsame Nutzung erforderlich `ORACLE_HOME` Bereitstellung, um die Konsistenz von Dateien wie Oracle-Passwortdateien und zu erleichtern `spfile` Parameterdateien. Wenn jede Instanz in einem RAC-Cluster über einen dedizierten verfügt `ORACLE_HOME`, Dann ist dieser Parameter nicht erforderlich.
+
+
+
+== Mount-Optionen für AIX jfs/jfs2
+
+In der folgenden Tabelle sind die AIX jfs/jfs2-Mount-Optionen aufgeführt.
+
+|===
+| Dateityp | Mount-Optionen 
+
+
+| AdR-Startseite | Standardwerte 
+
+
+| Steuerdateien
+Datendateien
+Wiederherstellungsprotokolle | Standardwerte 
+
+
+| ORACLE_HOME | Standardwerte 
+|===
+Vor der Verwendung von AIX `hdisk` Geräte in jeder Umgebung, einschließlich Datenbanken, überprüfen Sie den Parameter `queue_depth`. Dieser Parameter entspricht nicht der HBA-Warteschlangentiefe, sondern bezieht sich auf die SCSI-Warteschlangentiefe der einzelnen `hdisk device. Depending on how the LUNs are configured, the value for `queue_depth` Ist möglicherweise zu niedrig für eine gute Leistung. Die Prüfung hat ergeben, dass der optimale Wert 64 ist.

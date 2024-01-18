@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: postgres/postgres-architecture.html 
+keywords: PostgreSQL,database,postgres 
+summary: PostgreSQL-Datenbanken auf ONTAP 
+---
+= PostgreSQL Architektur
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+PostgreSQL ist ein RDBMS, das auf Client- und Serverarchitektur basiert. Eine PostgreSQL-Instanz wird als Datenbank-Cluster bezeichnet, bei dem es sich um eine Sammlung von Datenbanken und nicht um eine Sammlung von Servern handelt.
+
+image:postgresql-architecture.png["Fehler: Grafik nicht gefunden"]
+
+In einer PostgreSQL-Datenbank gibt es drei Hauptelemente: Den Postmaster, das Frontend (Client) und das Backend Der Client sendet Anfragen an den Postmaster mit Informationen wie IP-Protokoll und zu welcher Datenbank eine Verbindung hergestellt werden soll. Der Postmaster authentifiziert die Verbindung und leitet sie zur weiteren Kommunikation an den Back-End-Prozess weiter. Der Back-End-Prozess führt die Abfrage aus und sendet Ergebnisse direkt an das Frontend (Client).
+
+Eine PostgreSQL-Instanz basiert auf einem Multiprocess-Modell statt auf einem Multithread-Modell. Es gibt mehrere Prozesse für verschiedene Jobs, und jeder Prozess hat seine eigene Funktionalität. Zu den wichtigsten Prozessen gehören der Clientprozess, der WAL Writer-Prozess, der Background Writer-Prozess und der Checkpointer-Prozess:
+
+* Wenn ein Client-Prozess (Vordergrund) Lese- oder Schreibanforderungen an die PostgreSQL-Instanz sendet, werden keine Daten direkt auf die Festplatte geschrieben oder gelesen. Zuerst werden die Daten in gemeinsam genutzten Puffern und WAL-Puffern (Write-Ahead Logging) gepuffert.
+* Ein WAL-Schreibprozess manipuliert den Inhalt der gemeinsam genutzten Puffer und WAL-Puffer, um in die WAL-Protokolle zu schreiben. WAL-Protokolle sind in der Regel Transaktionsprotokolle von PostgreSQL und werden sequenziell geschrieben. Um die Reaktionszeit aus der Datenbank zu verbessern, schreibt PostgreSQL zunächst in die Transaktionsprotokolle und bestätigt den Client.
+* Um die Datenbank in einen konsistenten Zustand zu versetzen, überprüft der Background Writer-Prozess den gemeinsam genutzten Puffer regelmäßig auf fehlerhafte Seiten. Anschließend überträgt es die Daten auf die Datendateien, die auf NetApp Volumes oder LUNs gespeichert sind.
+* Der Checkpointer-Prozess läuft auch periodisch (seltener als der Hintergrundprozess) und verhindert jegliche Änderung der Puffer. Er signalisiert dem WAL Writer-Prozess, den Checkpoint-Datensatz zu schreiben und an das Ende der WAL-Protokolle zu löschen, die auf der NetApp-Festplatte gespeichert sind. Er signalisiert auch, dass der Background Writer-Prozess alle fehlerhaften Seiten auf die Festplatte schreibt und auf diese schreibt.
+

@@ -1,0 +1,165 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-vsphere-settings.html 
+keywords:  
+summary:  
+---
+= Empfohlene ESXi Host-Einstellungen und andere ONTAP Einstellungen
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp hat für ESXi Hosts einen Satz von Einstellungen für Multipathing und HBA-Zeitüberschreitungen entwickelt, um auf der Grundlage eigener Tests für das richtige Verhalten bei ONTAP zu sorgen. Diese Einstellungen lassen sich mit ONTAP Tools für VMware vSphere problemlos konfigurieren. Klicken Sie im Übersichtskonsole im Portlet „Host-Systeme“ auf „Einstellungen bearbeiten“ oder klicken Sie in vCenter mit der rechten Maustaste auf den Host und navigieren Sie zu „ONTAP-Tools“ > „Empfohlene Werte festlegen“. Im Folgenden sind die derzeit empfohlenen Hosteinstellungen für die Version 9.8 angegeben.
+
+|===
+
+
+| *Hosteinstellung* | *Von NetApp empfohlener Wert* | *Neustart Erforderlich* 
+
+
+3+| *ESXi Advanced Configuration* 
+
+
+| VMFS3.HardwareAcceleratLocking | Standard beibehalten (1) | Nein 
+
+
+| VMFS3.EnableBlockDelete | Behalten Sie die Standardeinstellung (0) bei, können sie jedoch bei Bedarf geändert werden.
+Weitere Informationen finden Sie unter link:https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=2007427["VMware KB 2007427"] | Nein 
+
+
+| VMFS3.EnableVMFS6Entmappen | Standard beibehalten (1)
+Weitere Informationen finden Sie unter link:https://core.vmware.com/resource/vmware-vsphere-apis-array-integration-vaai#sec9426-sub4["VMware vSphere APIs – Array-Integration (VAAI)"] | Nein 
+
+
+3+| *NFS-Einstellungen* 
+
+
+| NET.TcpipHeapSize | VSphere 6.0 oder höher: Auf 32 einstellen.
+Alle anderen NFS-Konfigurationen: Auf 30 einstellen | Ja. 
+
+
+| NET.TcpipHeapMax | Sind die meisten vSphere 6.X Versionen auf 512 MB eingestellt.
+Stellen Sie auf 1024 MB für 6.5U3, 6.7U3 und 7.0 oder höher ein. | Ja. 
+
+
+| MaxVolumes: NFS | VSphere 6.0 oder höher: Auf 256 einstellen
+Alle anderen NFS-Konfigurationen: Auf 64 einstellen. | Nein 
+
+
+| NFS41.MaxVolumes | VSphere 6.0 oder höher: Auf 256 einstellen. | Nein 
+
+
+| NFS.MaxQueueDepth^1^ | VSphere 6.0 oder höher: Auf 128 einstellen | Ja. 
+
+
+| NFS.HeartbeatMaxFailures | Alle NFS-Konfigurationen: Auf 10 einstellen | Nein 
+
+
+| HeartbeatFrequency NFS.HeartbeatFrequency | Alle NFS-Konfigurationen: Auf 12 einstellen | Nein 
+
+
+| HeartbeatTimeout NFS.HeartbeatTimeout | Alle NFS-Konfigurationen: Auf 5 einstellen. | Nein 
+
+
+| SunRPC.MaxConnPerIP | VSphere 7.0 oder höher: Auf 128 einstellen. | Nein 
+
+
+3+| *FC/FCoE-Einstellungen* 
+
+
+| Pfadauswahl-Richtlinie | Wenn FC-Pfade mit ALUA verwendet werden: Auf RR (Round Robin) einstellen. Alle anderen Konfigurationen: Auf FIXED einstellen.
+Wenn Sie diesen Wert auf RR einstellen, ist für alle aktiven/optimierten Pfade ein besserer Lastausgleich möglich.
+Der Wert FIXED wird für ältere Konfigurationen ohne ALUA verwendet und verhindert Proxy-I/O-Vorgänge Er trägt also dazu bei, dass I/O-Vorgänge bei einem HA-Paar in einer Umgebung, in der Data ONTAP im 7-Mode ausgeführt wird, nicht auf den anderen Node verlagert werden | Nein 
+
+
+| Disk.QFullSampleSize | Alle Konfigurationen: Auf 32 einstellen.
+Durch die Festlegung dieses Wertes werden I/O-Fehler verhindert. | Nein 
+
+
+| Disk.QFullThreshold | Alle Konfigurationen: Auf 8 einstellen.
+Durch die Festlegung dieses Wertes werden I/O-Fehler verhindert. | Nein 
+
+
+| Emulex FC-HBA-Zeitüberschreitungen | Standardwert verwenden. | Nein 
+
+
+| QLogic FC-HBA-Zeitüberschreitungen | Standardwert verwenden. | Nein 
+
+
+3+| *ISCSI-Einstellungen* 
+
+
+| Pfadauswahl-Richtlinie | Alle iSCSI-Pfade: Auf RR (Round Robin) einstellen.
+Wenn Sie diesen Wert auf RR einstellen, ist für alle aktiven/optimierten Pfade ein besserer Lastausgleich möglich. | Nein 
+
+
+| Disk.QFullSampleSize | Alle Konfigurationen: Auf 32 einstellen.
+Durch die Festlegung dieses Wertes werden I/O-Fehler verhindert | Nein 
+
+
+| Disk.QFullThreshold | Alle Konfigurationen: Auf 8 einstellen.
+Durch die Festlegung dieses Wertes werden I/O-Fehler verhindert. | Nein 
+|===
+
+NOTE: 1 - die erweiterte NFS-Konfigurationsoption MaxQueueDepth funktioniert möglicherweise nicht wie vorgesehen bei der Verwendung von VMware vSphere ESXi 7.0.1 und VMware vSphere ESXi 7.0. Bitte referenzieren link:https://kb.vmware.com/s/article/86331?lang=en_US["VMware KB 86331"] Finden Sie weitere Informationen.
+
+ONTAP-Tools legen beim Erstellen von ONTAP FlexVol Volumes und LUNs bestimmte Standardeinstellungen fest:
+
+|===
+
+
+| *ONTAP-Tool* | *Standardeinstellung* 
+
+
+| Snapshot-Reserve (-percent-Snapshot-space) | 0 
+
+
+| Fraktionale Reserve (-fractional-Reserve) | 0 
+
+
+| Aktualisierung der Zugriffszeit (-atime-Update) | Falsch 
+
+
+| Minimales Vorauslesen (-min-readahead) | Falsch 
+
+
+| Geplante Snapshots | Keine 
+
+
+| Storage-Effizienz | Aktiviert 
+
+
+| Volume-Garantie | Keine (Thin Provisioning) 
+
+
+| Automatische Volumengröße | Vergrößern_verkleinern 
+
+
+| LUN-Speicherplatzreservierung | Deaktiviert 
+
+
+| Zuweisung von LUN-Speicherplatz | Aktiviert 
+|===
+
+
+== Multipath-Einstellungen für die Performance
+
+Obwohl NetApp derzeit nicht durch verfügbare ONTAP-Tools konfiguriert ist, empfiehlt es folgende Konfigurationsoptionen:
+
+* In hochperformanten Umgebungen oder bei Tests der Performance mit einem einzelnen LUN-Datastore sollte die Einstellung der Lastverteilung für die Round-Robin (VMW_PSP_RR) Path Selection Policy (PSP) von der standardmäßigen IOPS-Einstellung 1000 auf einen Wert 1 geändert werden. Siehe VMware KB https://kb.vmware.com/s/article/2069356["2069356"^] Finden Sie weitere Informationen.
+* In vSphere 6.7 Update 1 hat VMware einen neuen Lastausgleichsmechanismus für das Round Robin PSP System eingeführt. Bei der Auswahl des optimalen Pfads für I/O berücksichtigt die neue Option die I/O-Bandbreite und die Pfadlatenz Möglicherweise profitieren Sie von der Verwendung in Umgebungen mit nicht äquivalenter Pfadkonnektivität. So können Sie beispielsweise mehr Netzwerk-Hops auf einem Pfad als auf einem anderen verwenden oder ein NetApp All SAN Array System nutzen. Siehe https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-B7AD0CA0-CBE2-4DB4-A22C-AD323226A257.html?hWord=N4IghgNiBcIA4Gc4AIJgC4FMB2BjAniAL5A["Pfadauswahl-Plug-ins und -Richtlinien"^] Finden Sie weitere Informationen.
+
+
+
+
+== Zusätzliche Dokumentation
+
+Für FCP und iSCSI mit vSphere 7 finden Sie weitere Details unter https://docs.netapp.com/us-en/ontap-sanhost/hu_vsphere_7.html["Verwenden Sie VMware vSphere 7.x mit ONTAP"^]
+Für FCP und iSCSI mit vSphere 8 finden Sie weitere Details unter https://docs.netapp.com/us-en/ontap-sanhost/hu_vsphere_8.html["Verwenden Sie VMware vSphere 8.x mit ONTAP"^]
+Für NVMe-of mit vSphere 7 finden Sie weitere Informationen unter https://docs.netapp.com/us-en/ontap-sanhost/nvme_esxi_7.html["Für NVMe-of finden Sie weitere Details unter NVMe-of Host Configuration for ESXi 7.x with ONTAP"^]
+Für NVMe-of mit vSphere 8 finden Sie weitere Informationen unter https://docs.netapp.com/us-en/ontap-sanhost/nvme_esxi_8.html["Für NVMe-of finden Sie weitere Details unter NVMe-of Host Configuration for ESXi 8.x with ONTAP"^]

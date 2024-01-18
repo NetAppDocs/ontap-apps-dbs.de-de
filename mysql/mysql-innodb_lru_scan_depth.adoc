@@ -1,0 +1,20 @@
+---
+sidebar: sidebar 
+permalink: mysql/mysql-innodb_lru_scan_depth.html 
+keywords: MySQL,MariaDB,innodb_lru_scan_depth 
+summary: MySQL auf ONTAP 
+---
+= innodb_lru_Scan_depth
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Der `innodb_lru_scan_depth` Parameter beeinflusst die Algorithmen und Heuristiken des Flush-Vorgangs für den InnoDB Pufferpool.
+
+Dieser Parameter ist in erster Linie an Performance-Experten interessiert, die I/O-intensive Workloads optimieren. Dieser Parameter gibt für jede Pufferpoolinstanz an, wie weit der Seitenauflauf des Seitenreinigers in der LRU-Seitenliste (Least Recently Used) weiter scannen soll, und sucht nach verschmutzten Seiten, die bereinigt werden sollen. Dieser Hintergrundvorgang wird einmal pro Sekunde durchgeführt.
+
+Sie können den Wert nach oben oder unten anpassen, um die Anzahl der freien Seiten zu minimieren. Stellen Sie den Wert nicht wesentlich höher ein als erforderlich, da die Scans erhebliche Performancekosten verursachen können. Ziehen Sie außerdem in Betracht, diesen Parameter anzupassen, wenn Sie die Anzahl der Pufferpool-Instanzen ändern, da `innodb_lru_scan_depth * innodb_buffer_pool_instances` Definiert den Umfang der Arbeit, die durch den Seitenreinigungsfaden jede Sekunde durchgeführt wird.
+
+Eine Einstellung, die kleiner als die Standardeinstellung ist, eignet sich für die meisten Workloads. Ziehen Sie in Betracht, diesen Wert nur zu erhöhen, wenn Sie freie I/O-Kapazität bei einem typischen Workload haben. Wenn ein schreibintensiver Workload die I/O-Kapazität aussättigt, verringern Sie den Wert umgekehrt, insbesondere wenn ein großer Puffer-Pool vorhanden ist.

@@ -1,0 +1,16 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-dr-snapmirror-cg.html 
+keywords: oracle, data protection, DR, CG 
+summary: Konsistenzgruppenreplizierung für Oracle-Datenbanken 
+---
+= Disaster Recovery für Konsistenzgruppen
+:allow-uri-read: 
+
+
+[role="lead"]
+Die Replizierung von Konsistenzgruppen kann so einfach wie die Terminierung der Replizierung eines einzelnen Volumes über SnapMirror erfolgen. Dazu gehören Datendateien, Steuerdateien, Archivprotokolle und Wiederherstellungsprotokolle. Jedes SnapMirror Update führt zu einer neuen Kopie der Datenbank am Zielstandort, die konsistent und einsatzbereit ist, indem sie die Spiegelung bricht.
+
+Wenn eine Datenbank Volumes umfassen muss, ist ein Snapshot einer Konsistenzgruppe (cg-Snapshot) erforderlich.
+
+Ein weiterer Vorteil dieser Strategie bei Verwendung mit SnapMirror im Replizierungsmodus auf Blockebene ist die vollständige Replizierung aller Snapshots auf dem Quell-Storage-System. Neben der Disaster-Recovery-Kopie wird die volle Anzahl der Backups repliziert.

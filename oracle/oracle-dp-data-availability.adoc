@@ -1,0 +1,72 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-dp-data-availability.html 
+keywords: data protection, availability, takeover, giveback, switchover, switchback 
+summary: Maximieren Sie die Verfügbarkeit mit Oracle auf ONTAP 
+---
+= Oracle Datenverfügbarkeit mit ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP wurde für eine maximale Verfügbarkeit von Oracle-Datenbanken konzipiert. Eine vollständige Beschreibung der Hochverfügbarkeitsfunktionen von ONTAP übersteigt den Rahmen dieses Dokuments. Wie bei der Datensicherheit ist jedoch ein grundlegendes Verständnis dieser Funktionalität bei der Entwicklung einer Datenbankinfrastruktur wichtig.
+
+
+
+== HA-Paare
+
+Die Basiseinheit der Hochverfügbarkeit ist das HA-Paar. Jedes Paar enthält redundante Links, um die Replikation von Daten in NVRAM zu unterstützen. NVRAM ist kein Schreib-Cache. Der RAM im Controller dient als Schreib-Cache. Der Zweck von NVRAM besteht darin, Daten vorübergehend zu protokollieren, um Schutz vor unerwarteten Systemausfällen zu bieten. In dieser Hinsicht ähnelt es einem Datenbank-Redo-Protokoll.
+
+Sowohl NVRAM als auch ein Datenbank-Wiederherstellungsprotokoll werden verwendet, um Daten schnell zu speichern, sodass Datenänderungen so schnell wie möglich vorgenommen werden können. Die Aktualisierung der persistenten Daten auf Laufwerken (oder Datendateien) findet erst später bei einem Prozess statt, der sowohl auf ONTAP- als auch auf den meisten Datenbankplattformen als Checkpoint bezeichnet wird. Weder NVRAM-Daten noch Datenbank-Wiederherstellungsprotokolle werden im normalen Betrieb gelesen.
+
+Wenn ein Controller abrupt ausfällt, sind in NVRAM wahrscheinlich noch nicht gespeicherte Änderungen zu erwarten, die noch nicht auf die Laufwerke geschrieben wurden. Der Partner-Controller erkennt den Ausfall, übernimmt die Kontrolle über die Laufwerke und wendet die erforderlichen Änderungen an, die im NVRAM gespeichert wurden.
+
+
+
+== Takeover und Giveback
+
+Takeover und Giveback beziehen sich auf den Prozess, bei dem die Verantwortung für Storage-Ressourcen zwischen Nodes in einem HA-Paar übertragen wird. Takeover und Giveback sind zweierlei Aspekte:
+
+* Verwaltung der Netzwerkverbindung, die den Zugriff auf die Laufwerke ermöglicht
+* Verwaltung der Antriebe selbst.
+
+
+Die Netzwerkschnittstellen, die CIFS- und NFS-Datenverkehr unterstützen, werden sowohl mit dem Home-Standort als auch mit dem Failover-Standort konfiguriert. Eine Übernahme umfasst das Verschieben der Netzwerkschnittstellen zu ihrem temporären Home-Standort auf einer physischen Schnittstelle, die sich in denselben Subnetzen befindet wie der ursprüngliche Standort. Bei einem Giveback werden die Netzwerkschnittstellen zurück an ihre ursprünglichen Standorte verschoben. Das genaue Verhalten kann nach Bedarf angepasst werden.
+
+Netzwerkschnittstellen, die SAN-Blockprotokolle wie iSCSI und FC unterstützen, werden während des Takeover und Giveback nicht verlagert. Stattdessen sollten LUNs mit Pfaden bereitgestellt werden, die ein vollständiges HA-Paar enthalten, was zu einem primären Pfad und einem sekundären Pfad führt.
+
+
+NOTE: Zusätzliche Pfade zu zusätzlichen Controllern können auch konfiguriert werden, um das Verschieben von Daten zwischen Nodes in einem größeren Cluster zu unterstützen. Dies ist jedoch nicht Teil des HA-Prozesses.
+
+Der zweite Aspekt von Takeover und Giveback ist die Übertragung der Eigentumsrechte an den Festplatten. Der genaue Prozess hängt von mehreren Faktoren ab, einschließlich dem Grund für das Takeover/Giveback und den ausgegebenen Befehlszeilenoptionen. Das Ziel ist es, die Operation so effizient wie möglich durchzuführen. Obwohl der Gesamtprozess möglicherweise mehrere Minuten in Anspruch nimmt, kann der tatsächliche Zeitpunkt, in dem die Eigentumsrechte an dem Laufwerk von einem Node auf einen Node übertragen werden, in der Regel in Sekunden gemessen werden.
+
+
+
+== Takeover-Zeit
+
+Host I/O durchläuft zwar eine kurze I/O-Pause bei Takeover- und Giveback-Vorgängen, jedoch sollte in einer korrekt konfigurierten Umgebung keine Applikationsunterbrechung auftreten. Der eigentliche Transitionsprozess, bei dem I/O verzögert wird, wird in der Regel in Sekunden gemessen. Der Host benötigt jedoch möglicherweise zusätzliche Zeit, um die Änderung der Datenpfade zu erkennen und die I/O-Vorgänge erneut auszuführen.
+
+Die Art der Störung hängt vom Protokoll ab:
+
+* Eine Netzwerkschnittstelle, die NFS- und CIFS-Datenverkehr unterstützt, stellt nach dem Übergang zu einem neuen physischen Standort eine ARP-Anforderung (Address Resolution Protocol) an das Netzwerk aus. Dies führt dazu, dass die Netzwerk-Switches ihre MAC-Adresstabellen (Media Access Control) aktualisieren und die I/O-Verarbeitung fortsetzen Im Falle von geplanten Takeover und Giveback werden Störungen in der Regel in Sekunden gemessen und oftmals nicht feststellbar. Einige Netzwerke sind möglicherweise langsamer, um die Änderung des Netzwerkpfads vollständig zu erkennen, und einige Betriebssysteme können in sehr kurzer Zeit viele I/O-Vorgänge in Warteschlange stellen, die erneut versucht werden müssen. Dadurch kann die für die I/O-Wiederaufnahme erforderliche Zeit verlängert werden
+* Eine Netzwerkschnittstelle, die SAN-Protokolle unterstützt, kann nicht an einen neuen Speicherort verschoben werden. Ein Host-Betriebssystem muss den oder die verwendeten Pfade ändern. Die vom Host beobachtete I/O-Pause hängt von mehreren Faktoren ab. Aus Sicht des Storage-Systems beträgt der Zeitraum, in dem I/O nicht mehr ausgeführt werden kann, nur wenige Sekunden. Verschiedene Host-Betriebssysteme erfordern jedoch möglicherweise eine zusätzliche Zeit, damit eine I/O-Dauer vor einem erneuten Versuch wieder aberkannt wird. Neuere Betriebssysteme können eine Pfadänderung viel schneller erkennen, aber ältere Betriebssysteme benötigen in der Regel bis zu 30 Sekunden, um eine Änderung zu erkennen.
+
+
+Die zu erwartenden Übernahmezeiten, während denen das Storage-System keine Daten für eine Applikationsumgebung bereitstellen kann, sind in der folgenden Tabelle aufgeführt. Es sollte keine Fehler in einer Applikationsumgebung geben, das Takeover sollte stattdessen als kurze Pause bei der I/O-Verarbeitung erscheinen.
+
+|===
+
+
+|  | NFS | AFF | ASA 
+
+
+| Geplante Übernahme | 15 Sek. | 6-10 Sek. | 2-3 Sek. 
+
+
+| Ungeplante Übernahme | 30 Sek. | 6-10 Sek. | 2-3 Sek. 
+|===

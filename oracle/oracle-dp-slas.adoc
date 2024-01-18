@@ -1,0 +1,94 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-dp-slas.html 
+keywords: SLA, data protection, RPO, RTO 
+summary: Oracle Datensicherungs-SLAs 
+---
+= Recovery-Zeitvorgabe, Recovery-Zeitpunkt und Service Level Agreements
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Eine Datensicherungsstrategie sollte durch geschäftliche Anforderungen definiert werden.
+
+Zu diesen Anforderungen gehören Faktoren wie die Geschwindigkeit der Recovery, der maximal zulässige Datenverlust und die Anforderungen an die Aufbewahrung von Backups. Der Datensicherungsplan muss zudem verschiedene gesetzliche Vorgaben für die Datenaufbewahrung und -Wiederherstellung berücksichtigen. Schließlich müssen verschiedene Datenwiederherstellungsszenarien in Betracht gezogen werden, von der typischen und vorhersehbaren Wiederherstellung aufgrund von Benutzer- oder Applikationsfehlern bis hin zu Disaster Recovery-Szenarien, die den vollständigen Ausfall eines Standorts beinhalten.
+
+Kleine Änderungen an Richtlinien zur Datensicherung und Wiederherstellung können sich erheblich auf die Gesamtarchitektur von Storage, Backup und Recovery auswirken. Es ist wichtig, Standards zu definieren und zu dokumentieren, bevor mit dem Design begonnen wird, um eine Verkomplizierung einer Datensicherungsarchitektur zu vermeiden. Unnötige Schutzfunktionen oder -Ebenen führen zu unnötigen Kosten und Management-Overhead. Eine zunächst übersehene Anforderung kann ein Projekt in die falsche Richtung führen oder kurzfristig Designänderungen erfordern.
+
+
+
+== Recovery-Zeitvorgabe
+
+Die Recovery-Zeitvorgabe (Recovery Time Objective, RTO) definiert die maximal zulässige Zeit für die Recovery eines Services. Eine Personaldatenbank könnte beispielsweise eine RTO von 24 Stunden haben, da, obwohl es sehr unpraktisch wäre, den Zugriff auf diese Daten während der Arbeitszeit zu verlieren, das Unternehmen dennoch arbeiten kann. Im Gegensatz dazu würde bei einer Datenbank, die das Hauptbuch einer Bank unterstützt, eine RTO in Minuten oder sogar Sekunden gemessen werden. Ein RTO von null ist nicht möglich, da es eine Möglichkeit geben muss, zwischen einem tatsächlichen Serviceausfall und einem Routineereignis wie einem verlorenen Netzwerkpaket zu unterscheiden. Typische Anforderungen sind jedoch ein RTO von nahezu null.
+
+
+
+== Recovery-Zeitpunkt
+
+Der Recovery Point Objective (RPO) definiert den maximal tolerierbaren Datenverlust. In vielen Fällen wird der RPO lediglich durch die Häufigkeit von Snapshots oder snapmirror Updates bestimmt.
+
+In manchen Fällen lässt sich der RPO-Wert aggressiver einsetzen, da er bestimmte Daten selektiv häufiger schützt. Im Datenbankkontext ist der RPO in der Regel eine Frage, wie viele Protokolldaten in einer bestimmten Situation verloren gehen können. In einem typischen Recovery-Szenario, bei dem eine Datenbank aufgrund eines Produktfehlers oder eines Benutzerfehlers beschädigt wird, sollte der RPO gleich null sein, d. h. es darf keine Daten verloren gehen. Bei der Wiederherstellung wird eine frühere Kopie der Datenbankdateien wiederhergestellt und anschließend die Protokolldateien wiedergegeben, um den Datenbankstatus auf den gewünschten Zeitpunkt zu bringen. Die für diesen Vorgang erforderlichen Protokolldateien sollten sich bereits am ursprünglichen Speicherort befinden.
+
+In ungewöhnlichen Szenarien können Protokolldaten verloren gehen. Zum Beispiel eine versehentliche oder böswillige `rm -rf *` Der Datenbankdateien können zum Löschen aller Daten führen. Die einzige Option wäre die Wiederherstellung aus dem Backup, einschließlich Protokolldateien, und einige Daten würden unweigerlich verloren gehen. Die einzige Option zur Verbesserung des RPO in einer herkömmlichen Backup-Umgebung besteht in der Durchführung wiederholter Backups der Protokolldaten. Dies hat jedoch Einschränkungen aufgrund der ständigen Datenverschiebung und der Schwierigkeiten, ein Backup-System als ständig laufenden Service zu warten. Einer der Vorteile erweiterter Storage-Systeme besteht in der Möglichkeit, Daten vor versehentlichen oder böswilligen Schäden an Dateien zu schützen und somit ein besseres RPO ohne Datenverschiebung zu ermöglichen.
+
+
+
+== Disaster Recovery
+
+Disaster Recovery umfasst die IT-Architektur, Richtlinien und Verfahren, die zur Wiederherstellung eines Services bei einem physischen Ausfall erforderlich sind. Dies kann Überschwemmungen, Brände oder Personen sein, die mit böswilliger oder fahrlässiger Absicht handeln.
+
+Disaster Recovery ist mehr als nur eine Reihe von Recovery-Verfahren. Der gesamte Prozess umfasst die Identifizierung der verschiedenen Risiken, die Definition der Anforderungen an die Datenwiederherstellung und die Servicekontinuität sowie die Bereitstellung der richtigen Architektur mit den zugehörigen Verfahren.
+
+Bei der Festlegung von Datensicherungsanforderungen ist es entscheidend, zwischen den typischen RPO- und RTO-Anforderungen und den für die Disaster Recovery erforderlichen RPO- und RTO-Anforderungen zu unterscheiden. Einige Applikationsumgebungen erfordern einen RPO von null und ein RTO von nahezu null für Datenverluste – von einem relativ normalen Benutzerfehler bis hin zu einem Brand, der ein Datacenter zerstört. Für diese hohen Schutzniveaus gibt es jedoch Kosten- und administrative Konsequenzen.
+
+Im Allgemeinen sollten die Anforderungen an die nicht-Disaster-Recovery aus zwei Gründen strikt erfüllt werden. Zunächst sind Anwendungsfehler und Benutzerfehler, die zu Datenschäden führen, bis zu dem Punkt vorhersehbar, an dem sie fast unvermeidlich sind. Zweitens ist es nicht schwierig, eine Backup-Strategie zu entwickeln, die einen RPO von null und ein RTO von niedrigen Vorgaben liefern kann, solange das Storage-System nicht zerstört wird. Es gibt keinen Grund, ein erhebliches Risiko, das leicht behoben werden kann, nicht anzugehen. Deshalb sollten die RPO- und RTO-Ziele für die lokale Recovery aggressiv sein.
+
+Disaster Recovery-RTO- und RPO-Anforderungen variieren stärker, je nach Wahrscheinlichkeit eines Ausfalls und den Folgen des damit verbundenen Datenverlusts oder der Unterbrechung des Geschäftsbetriebs. RPO- und RTO-Anforderungen sollten auf den tatsächlichen geschäftlichen Anforderungen basieren und nicht auf allgemeinen Prinzipien. Sie müssen mehrere logische und physische Ausfallszenarien berücksichtigen.
+
+
+
+=== Logische Ausfälle
+
+Zu logischen Katastrophen gehören Datenbeschädigungen durch Benutzer, Applikations- oder Betriebssystemfehler und Fehlfunktionen. Zu logischen Katastrophen können auch böswillige Angriffe durch externe Parteien mit Viren oder Würmern gehören oder die Ausnutzung von Schwachstellen von Applikationen. In diesen Fällen wird die physische Infrastruktur unbeschädigt, die zugrunde liegenden Daten sind jedoch nicht mehr gültig.
+
+Eine immer häufiger vorauftretende logische Katastrophe wird als Ransomware bezeichnet. Bei ihr werden Daten mit einem Angriffsvektor verschlüsselt. Die Verschlüsselung schädigt die Daten nicht, macht sie jedoch erst verfügbar, wenn die Zahlung an einen Dritten erfolgt. Immer mehr Unternehmen sind gezielt auf Ransomware-Hacks ausgerichtet. Für diese Bedrohung bietet NetApp manipulationssichere Snapshots, bei denen nicht einmal der Storage-Administrator geschützte Daten vor dem konfigurierten Ablaufdatum ändern kann.
+
+
+
+=== Physische Ausfälle
+
+Zu physischen Ausfällen gehört der Ausfall von Komponenten einer Infrastruktur, die die Redundanzmerkmale übertreffen und zu einem Datenverlust oder erweitertem Service-Verlust führen. Der RAID-Schutz bietet beispielsweise Redundanz für Laufwerke, und die Verwendung von HBAs bietet Redundanz für FC-Port und FC-Kabel. Hardwareausfälle solcher Komponenten sind vorhersehbar und beeinträchtigen nicht die Verfügbarkeit.
+
+In einer Unternehmensumgebung ist es in der Regel möglich, die Infrastruktur eines gesamten Standorts mit redundanten Komponenten so weit zu schützen, dass das einzige vorhersehbare physische Ausfallszenario ein vollständiger Verlust des Standorts ist. Die Planung des Disaster Recovery hängt dann von der Site-to-Site-Replizierung ab.
+
+
+
+=== Synchrone und asynchrone Datensicherung
+
+Im Idealfall würden alle Daten zwischen geografisch verteilten Standorten synchron repliziert werden. Eine solche Replikation ist nicht immer möglich oder sogar aus mehreren Gründen möglich:
+
+* Die synchrone Replikation erhöht zwangsläufig die Schreiblatenz, da alle Änderungen an beiden Standorten repliziert werden müssen, bevor die Applikation/Datenbank mit der Verarbeitung fortfahren kann. Der daraus resultierende Performance-Effekt ist manchmal nicht akzeptabel, sodass die Verwendung von synchroner Spiegelung ausgeschlossen wird.
+* Die zunehmende Einführung von 100 % SSD-Storage bedeutet, dass zusätzliche Schreiblatenz mit größerer Wahrscheinlichkeit zu verzeichnen ist, da die Performance-Erwartungen Hunderttausende IOPS und eine Latenz von unter einer Millisekunde umfassen. Um das volle Potenzial von 100 % SSDs auszuschöpfen, kann ein erneuter Besuch der Disaster-Recovery-Strategie erforderlich sein.
+* Die Anzahl der Datensätze nimmt weiterhin an Byte zu. Dies stellt Unternehmen vor Herausforderungen, wenn es darum geht, genügend Bandbreite für eine synchrone Replizierung sicherzustellen.
+* Die Komplexität der Datensätze nimmt zu und führt zu Herausforderungen beim Management einer umfassenden synchronen Replizierung.
+* Cloud-basierte Strategien sind häufig mit höheren Replizierungsentfernungen und Latenz verbunden, wodurch die Nutzung einer synchronen Spiegelung weiterhin ausgeschlossen wird.
+
+
+NetApp bietet Lösungen, die sowohl synchrone Replikation für höchste Anforderungen an die Datenwiederherstellung als auch asynchrone Lösungen für eine bessere Performance und Flexibilität beinhalten. Darüber hinaus lässt sich die NetApp Technologie nahtlos in viele Replizierungslösungen von Drittanbietern integrieren, wie z. B. Oracle DataGuard
+
+
+
+== Aufbewahrungszeit
+
+Der letzte Aspekt einer Datensicherungsstrategie ist die Zeit für die Datenaufbewahrung, die sehr unterschiedlich sein kann.
+
+* Eine typische Anforderung sind nächtliche Backups von 14 Tagen auf dem primären Standort und 90 Tage Backups auf einem sekundären Standort.
+* Viele Kunden erstellen vierteljährliche eigenständige Archive, die auf unterschiedlichen Medien gespeichert sind.
+* Eine ständig aktualisierte Datenbank benötigt möglicherweise keine Verlaufsdaten, und Backups müssen nur für einige Tage aufbewahrt werden.
+* Gesetzliche Vorschriften erfordern möglicherweise die Wiederherstellbarkeit bis zu einem beliebigen Zeitpunkt jeder beliebigen Transaktion innerhalb eines Zeitfensters von 365 Tagen.
+

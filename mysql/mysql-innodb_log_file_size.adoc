@@ -1,0 +1,20 @@
+---
+sidebar: sidebar 
+permalink: mysql/mysql-innodb_log_file_size.html 
+keywords: MySQL,MariaDB,innodb_log_file_size 
+summary: MySQL auf ONTAP 
+---
+= innodb_Log_file_size
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Die Auswahl der richtigen Größe für die InnoDB-Protokolldateigröße ist wichtig für die Schreibvorgänge und für eine anständige Wiederherstellungszeit nach einem Serverabsturz.
+
+Da so viele Transaktionen in der Datei angemeldet sind, ist die Größe der Protokolldatei für Schreibvorgänge wichtig. Wenn Datensätze geändert werden, wird die Änderung nicht sofort in den Tablespace zurückgeschrieben. Stattdessen wird die Änderung am Ende der Protokolldatei aufgezeichnet und die Seite als verschmutzt markiert. InnoDB verwendet sein Protokoll, um zufällige I/O in sequenzielle I/O-Vorgänge zu konvertieren
+
+Wenn das Protokoll voll ist, wird die fehlerhafte Seite nacheinander in den Tablespace geschrieben, um Speicherplatz in der Protokolldatei freizugeben. Angenommen, ein Server stürzt mitten in einer Transaktion ab, und die Schreibvorgänge werden nur in der Protokolldatei aufgezeichnet. Bevor der Server wieder live gehen kann, muss er eine Wiederherstellungsphase durchlaufen, in der die in der Protokolldatei aufgezeichneten Änderungen wiedergegeben werden. Je mehr Einträge in der Protokolldatei vorhanden sind, desto länger dauert es, bis der Server wiederhergestellt ist.
+
+In diesem Beispiel wirkt sich die Größe der Protokolldatei sowohl auf die Wiederherstellungszeit als auch auf die Schreib-Performance aus. Wenn Sie die richtige Zahl für die Größe der Protokolldatei wählen, gleichen Sie die Recovery-Zeit mit der Schreib-Performance ab. Normalerweise ist alles zwischen 128M und 512M ein gutes Preis-Leistungs-Verhältnis.

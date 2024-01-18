@@ -1,0 +1,14 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-links-nva-1129-design.html 
+keywords: design, HCI, computing, vmware, cloud 
+summary: Das VMware Endbenutzer-Computing mit NetApp HCI ist eine validierte Best-Practice Datacenter-Architektur zur Implementierung virtueller Desktop Workloads im Enterprise-Maßstab. 
+---
+= NVA-1129-DESIGN: VMware End-User Computing mit NetApp HCI und NVIDIA GPUs
+:allow-uri-read: 
+
+
+[role="lead"]
+Das VMware Endbenutzer-Computing mit NetApp HCI ist eine validierte Best-Practice Datacenter-Architektur zur Implementierung virtueller Desktop Workloads im Enterprise-Maßstab. Dieses Dokument beschreibt das Architekturdesign und Best Practices für eine zuverlässige und risikofreie Implementierung der Lösung im Produktionsskala.
+
+link:https://www.netapp.com/pdf.html?item=/media/7121-nva1132designpdf.pdf["NVA-1129-DESIGN: VMware End-User Computing mit NetApp HCI und NVIDIA GPUs"^]

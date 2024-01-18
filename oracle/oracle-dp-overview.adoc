@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-dp-overview.html 
+keywords: oracle, database, ontap 
+summary: Überblick über die Oracle Datensicherung 
+---
+= Oracle Datensicherung mit ONTAP
+:allow-uri-read: 
+
+
+[role="lead"]
+Die geschäftskritischsten Daten befinden sich in Datenbanken.
+
+Ein Unternehmen kann nicht ohne Zugriff auf seine Daten arbeiten, und manchmal definieren die Daten das Unternehmen. Diese Daten müssen geschützt werden. Bei der Datensicherung geht es jedoch mehr als nur um das Sicherstellen eines nutzbaren Backups. Es geht darum, die Backups schnell und zuverlässig durchzuführen und diese sicher zu speichern.
+
+Die andere Seite der Datensicherung ist die Datenwiederherstellung. Wenn auf Daten nicht zugegriffen werden kann, ist das Unternehmen betroffen und kann nicht mehr in Betrieb sein, bis die Daten wiederhergestellt werden. Dieser Prozess muss schnell und zuverlässig sein. Schließlich müssen die meisten Datenbanken vor Ausfällen geschützt werden, was bedeutet, dass ein Replikat der Datenbank beibehalten wird. Das Replikat muss ausreichend aktuell sein. Außerdem muss es schnell und einfach sein, das Replikat zu einer voll funktionsfähigen Datenbank zu machen.
+
+
+NOTE: Diese Dokumentation ersetzt den zuvor veröffentlichten technischen Bericht _TR-4591: Oracle Data Protection: Backup, Recovery und Replication._
+
+
+
+== Planung
+
+Die richtige Datensicherungsarchitektur hängt von den geschäftlichen Anforderungen für die Datenaufbewahrung, Recovery-Fähigkeit und Ausfalltoleranz bei verschiedenen Ereignissen ab.
+
+Betrachten Sie beispielsweise die Anzahl der im Umfang enthaltenen Applikationen, Datenbanken und wichtigen Datensätze. Die Entwicklung einer Backup-Strategie für einen einzelnen Datensatz gewährleistet, dass die Compliance mit typischen SLAs relativ unkompliziert ist, da nicht viele Objekte zu managen sind. Je mehr Datensätze es gibt, desto komplizierter wird das Monitoring und Administratoren müssen sich zunehmend mit dem Vermeiden von Backup-Fehlern befassen. Wenn eine Umgebung also die Skalierung von Cloud- und Service-Provider-Umgebungen erreicht, braucht es einen ganz anderen Ansatz.
+
+Die Datensatzgröße wirkt sich auch auf die Strategie aus. Es gibt beispielsweise viele Optionen für Backup und Recovery mit einer Datenbank mit 100 GB, da die Datenmenge so klein ist. Das einfache Kopieren der Daten von Backup-Medien mit herkömmlichen Tools bietet normalerweise eine ausreichende RTO für die Recovery. Eine 100-TB-Datenbank benötigt normalerweise eine komplett andere Strategie, es sei denn, das RTO erlaubt einen mehrtägigen Ausfall. In diesem Fall könnte ein herkömmliches Backup und Recovery auf Basis von Kopien akzeptabel sein.
+
+Schließlich gibt es Faktoren, die nicht dem Backup- und Recovery-Prozess selbst unterliegen. Gibt es zum Beispiel Datenbanken, die kritische Produktionsaktivitäten unterstützen, was das Recovery zu einem seltenen Ereignis macht, das nur von erfahrenen DBAs durchgeführt wird? Sind Datenbanken alternativ Teil einer großen Entwicklungsumgebung, in der häufig ein Recovery erfolgt und von einem IT-Team mit Generalisten gemanagt wird?

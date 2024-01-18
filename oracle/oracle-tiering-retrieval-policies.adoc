@@ -1,0 +1,55 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-tiering-retrieval-policies.html 
+keywords: tiering, FabricPool 
+summary: Abrufrichtlinien für Pracle Tiering 
+---
+= Abrufrichtlinien
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Die Tiering-Richtlinien steuern, welche Oracle-Datenbankblöcke von der Performance-Tier auf die Kapazitäts-Tier verschoben werden. Abrufrichtlinien steuern, was passiert, wenn ein gestaffeltes Block gelesen wird.
+
+
+
+== Standard
+
+Alle FabricPool-Volumes sind zunächst auf festgelegt `default`, D.h. das Verhalten wird durch die `Cloud-Retrieval-Policy gesteuert. `das genaue Verhalten hängt von der verwendeten Tiering Policy ab.
+
+* `auto`– Nur abrufen zufällig gelesenen Daten
+* `snapshot-only`– Abrufen aller sequentiellen oder zufällig gelesenen Daten
+* `none`– Abrufen aller sequentiellen oder zufällig gelesenen Daten
+* `all`– Daten nicht aus der Kapazitäts-Tier abrufen
+
+
+
+
+== Gelesen
+
+Einstellung `cloud-retrieval-policy` Das Lesen überschreibt das Standardverhalten, sodass ein Lesen von Tiered-Daten dazu führt, dass diese Daten an die Performance-Tier zurückgegeben werden.
+
+Ein Volume könnte beispielsweise lange Zeit unter der wenig verwendet worden sein `auto` die tiering-Richtlinie, und die meisten Blöcke sind nun Tiered Storage.
+
+Wenn bei einer unerwarteten Änderung des Geschäfts ein Teil der Daten wiederholt gescannt werden muss, um einen bestimmten Bericht zu erstellen, kann es wünschenswert sein, den zu ändern `cloud-retrieval-policy` Bis `on-read` Um sicherzustellen, dass alle gelesenen Daten in die Performance-Tier zurückgegeben werden, einschließlich sequenzieller und zufällig gelesener Daten. Dies würde die Performance sequenzieller I/O-Vorgänge für das Volume verbessern.
+
+
+
+== Heraufstufen
+
+Das Verhalten der „heraufstufen“-Richtlinie hängt von der Tiering-Richtlinie ab. Wenn die Tiering-Richtlinie lautet `auto`, Dann Einstellung der `cloud-retrieval-policy `to `promote` Ruft beim nächsten Tiering-Scan alle Blöcke aus der Kapazitäts-Tier zurück.
+
+Wenn die Tiering-Richtlinie lautet `snapshot-only`, Dann sind die einzigen Blöcke, die zurückgegeben werden, die mit dem aktiven Dateisystem verbunden sind. Normalerweise hätte dies keine Auswirkung, weil die einzigen Blöcke unter das gestaffelt wären `snapshot-only` Richtlinie wären Blöcke, die ausschließlich mit Snapshots verknüpft wären. Es gäbe keine Tiered Blocks im aktiven File-System.
+
+Wenn jedoch die Daten auf einem Volume von einem Volume-SnapRestore oder Datei-Klon-Vorgang aus einem Snapshot wiederhergestellt wurden, können einige der Blöcke, die aufgrund ihrer lediglich mit Snapshots verknüpften Speicherebenen verschoben wurden, jetzt vom aktiven File-System benötigt werden. Es kann wünschenswert sein, die vorübergehend zu ändern `cloud-retrieval-policy` Richtlinie an `promote` Alle lokal erforderlichen Blöcke schnell abrufen.
+
+
+
+== Nie
+
+Nehmen Sie keine Blöcke aus der Kapazitäts-Tier heraus.

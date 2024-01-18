@@ -1,0 +1,18 @@
+---
+sidebar: sidebar 
+permalink: mysql/mysql-containers.html 
+keywords: MySQL,MariaDB,containers 
+summary: MySQL auf ONTAP 
+---
+= Container
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Die Containerisierung von MySQL-Datenbanken nimmt immer mehr zu.
+
+Das Low-Level-Container-Management wird fast immer über Docker durchgeführt. Container-Managementplattformen wie OpenShift und Kubernetes vereinfachen das Management großer Container-Umgebungen noch. Die Vorteile der Containerisierung sind niedrigere Kosten, da keine Hypervisor-Lizenz erforderlich ist. Darüber hinaus ermöglichen Container die Ausführung mehrerer Datenbanken isoliert voneinander, während gleichzeitig der gleiche zugrunde liegende Kernel und das gleiche Betriebssystem verwendet werden. Container können in Mikrosekunden bereitgestellt werden.
+
+NetApp bietet mit Astra Trident erweiterte Management-Funktionen für Storage. Mit Astra Trident kann ein in Kubernetes erstellter Container automatisch seinen Storage auf der entsprechenden Tier bereitstellen, Richtlinien für den Export anwenden, Richtlinien für NetApp-Snapshot-Kopien festlegen und sogar einen Container auf einen anderen klonen. Weitere Informationen finden Sie im link:https://docs.netapp.com/us-en/trident/index.html["Astra Trident-Dokumentation"].

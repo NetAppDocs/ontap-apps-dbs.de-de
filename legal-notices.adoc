@@ -16,9 +16,6 @@ summary:
 [role="lead"]
 Rechtliche Hinweise ermöglichen den Zugriff auf Copyright-Erklärungen, Marken, Patente und mehr.
 
-[role="lead"]
-Rechtliche Hinweise ermöglichen den Zugriff auf Copyright-Erklärungen, Marken, Patente und mehr.
-
 
 
 == Urheberrecht
@@ -55,7 +52,7 @@ In den Benachrichtigungsdateien finden Sie Informationen zu Urheberrechten und L
 
 
 
-=== ONTAP
+== ONTAP
 
 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2885801["Hinweis für ONTAP 9.13.1"^]
 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2884813["Hinweis zu ONTAP 9.12.1"^]
@@ -75,7 +72,7 @@ link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2516795["Hinweis für
 
 
 
-=== ONTAP Mediator für MCC IP
+== ONTAP Mediator für MCC IP
 
 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2870521["9.9.1 Hinweis für ONTAP Mediator für MCC IP"^]
 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2870521["9.8 Hinweis für ONTAP Mediator für MCC IP"^]

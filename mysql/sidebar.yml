@@ -3,44 +3,47 @@ section: mysql
 title: MySQL
 entries:
 - title: Überblick
-  url: "/mysql/overview.html"
+  url: "/mysql/mysql-overview.html"
 - title: Datenbankkonfiguration
+  pdf-filename: Datenbankkonfiguration für MySQL
   entries:
   - title: Dateistruktur
-    url: "/mysql/file-structure.html"
+    url: "/mysql/mysql-file-structure.html"
   - title: Konfigurationsübersicht
-    url: "/mysql/configuration.html"
+    url: "/mysql/mysql-configuration.html"
   - title: innodb_Log_file_size
-    url: "/mysql/innodb_log_file_size.html"
+    url: "/mysql/mysql-innodb_log_file_size.html"
   - title: innodb_Flush_log_at_trx_commit
-    url: "/mysql/innodb_flush_log_at_trx_commit.html"
+    url: "/mysql/mysql-innodb_flush_log_at_trx_commit.html"
   - title: innodb_doublewrite
-    url: "/mysql/innodb_doublewrite.html"
+    url: "/mysql/mysql-innodb_doublewrite.html"
   - title: innodb_Buffer_Pool_size
-    url: "/mysql/innodb_buffer_pool_size.html"
+    url: "/mysql/mysql-innodb_buffer_pool_size.html"
   - title: innodb_Flush_Method
-    url: "/mysql/innodb_flush_method.html"
+    url: "/mysql/mysql-innodb_flush_method.html"
   - title: innodb_io_Capacity
-    url: "/mysql/innodb_io_capacity.html"
+    url: "/mysql/mysql-innodb_io_capacity.html"
   - title: innodb_lru_Scan_depth
-    url: "/mysql/innodb_lru_scan_depth.html"
+    url: "/mysql/mysql-innodb_lru_scan_depth.html"
   - title: Open_File_Limits
-    url: "/mysql/open_file_limits.html"
+    url: "/mysql/mysql-open_file_limits.html"
 - title: Host-Konfiguration
+  pdf-filename: Hostkonfiguration für MySQL
   entries:
   - title: Containerisierung
-    url: "/mysql/containers.html"
+    url: "/mysql/mysql-containers.html"
   - title: Slot-Tabellen
-    url: "/mysql/slot-tables.html"
+    url: "/mysql/mysql-slot-tables.html"
   - title: I/O-Planer
-    url: "/mysql/schedulers.html"
+    url: "/mysql/mysql-schedulers.html"
   - title: Dateideskriptoren
-    url: "/mysql/file-descriptors.html"
+    url: "/mysql/mysql-file-descriptors.html"
 - title: Storage-Konfiguration
+  pdf-filename: Storage-Konfiguration für MySQL
   entries:
   - title: MySQL über NFS
-    url: "/mysql/mysql-over-nfs.html"
+    url: "/mysql/mysql-mysql-over-nfs.html"
   - title: MySQL über SAN
-    url: "/mysql/mysql-over-san.html"
+    url: "/mysql/mysql-mysql-over-san.html"
   - title: MySQL Tiering mit FabricPool
-    url: "/mysql/tiering.html"
+    url: "/mysql/mysql-tiering.html"

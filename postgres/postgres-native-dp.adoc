@@ -1,0 +1,28 @@
+---
+sidebar: sidebar 
+permalink: postgres/postgres-native-dp.html 
+keywords: PostgreSQL,database,postgres 
+summary: PostgreSQL-Datenbanken auf ONTAP 
+---
+= Native Datensicherung
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Einer der wichtigsten Aspekte des Storage-Designs ist die Sicherung von PostgreSQL Volumes. Kunden können ihre PostgreSQL-Datenbanken entweder mithilfe des Dump-Ansatzes oder mit Dateisystem-Backups sichern. In diesem Abschnitt werden die verschiedenen Ansätze zur Sicherung einzelner Datenbanken oder des gesamten Clusters erläutert.
+
+Es gibt drei Ansätze für die Sicherung von PostgreSQL-Daten:
+
+* SQL Server Dump
+* Backup auf Filesystem-Ebene
+* Kontinuierliche Archivierung
+
+
+Die Idee hinter der SQL Server Dump-Methode besteht darin, eine Datei mit SQL Server-Befehlen zu generieren, die, wenn sie an den Server zurückgegeben wird, die Datenbank so neu erstellen kann, wie sie zum Zeitpunkt des Dump war. PostgreSQL stellt die Dienstprogramme zur Verfügung `pg_dump` Und `pg_dump_all` Zur Erstellung von individuellen Backups und Backups auf Cluster-Ebene. Diese Dumps sind logisch und enthalten nicht genügend Informationen, die von WAL Replay verwendet werden können.
+
+Eine alternative Backup-Strategie ist die Verwendung von Backup auf Dateisystem-Ebene, bei der Administratoren direkt kopieren die Dateien, die PostgreSQL verwendet, um die Daten in der Datenbank zu speichern. Diese Methode erfolgt im Offline-Modus: Die Datenbank oder das Cluster muss heruntergefahren werden. Eine weitere Alternative ist die Verwendung `pg_basebackup` Zum Ausführen von Hot-Streaming-Backups der PostgreSQL-Datenbank.

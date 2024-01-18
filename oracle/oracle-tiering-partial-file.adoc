@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-tiering-partial-file.html 
+keywords: tiering, fabricpool 
+summary: Partielles Datei-Tiering mit FabricPool 
+---
+= Oracle ermöglicht ein partielles File Tiering
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Da FabricPool auf Block-Ebene arbeitet, können geänderte Dateien teilweise auf Objekt-Storage verschoben werden und dennoch nur teilweise auf Performance-Tier verbleiben.
+
+Dies ist bei Datenbanken üblich. Datenbanken, für die bekanntermaßen inaktive Blöcke enthalten sind, eignen sich auch für das FabricPool Tiering. Beispielsweise kann eine Supply-Chain-Management-Datenbank historische Informationen enthalten, die bei Bedarf verfügbar sein müssen, aber während des normalen Betriebs nicht aufgerufen werden. Mit FabricPool können die inaktiven Blöcke selektiv verschoben werden.
+
+Beispielsweise Datendateien, die auf einem FabricPool Volume mit einem ausgeführt werden `tiering-minimum-cooling-days` Im Zeitraum von 90 Tagen werden sämtliche Blöcke aufbewahrt, auf die in den vorangegangenen 90 Tagen auf der Performance Tier zugegriffen wurde. Alle Daten, auf die 90 Tage lang nicht zugegriffen wird, werden jedoch auf die Kapazitäts-Tier verlagert. In anderen Fällen bleiben bei normalen Applikationsaktivitäten die richtigen Blöcke auf der richtigen Tier erhalten. Wenn beispielsweise eine Datenbank normalerweise dazu verwendet wird, die Daten der letzten 60 Tage regelmäßig zu verarbeiten, ist dies wesentlich geringer `tiering-minimum-cooling-days` Zeitraum kann festgelegt werden, da die natürliche Aktivität der Anwendung dafür sorgt, dass Blöcke nicht vorzeitig verschoben werden.
+
+Der `auto` Richtlinien sollten mit Vorsicht bei Datenbanken verwendet werden. Viele Datenbanken verfügen über periodische Aktivitäten wie etwa Vorgänge zum Quartalsende oder die Neuindizierung. Wenn der Zeitraum dieser Vorgänge größer ist als der `tiering-minimum-cooling-days` Es können Performance-Probleme auftreten. Wenn zum Quartalsende beispielsweise 1 TB an Daten verarbeitet werden müssen, die ansonsten nicht verarbeitet wurden, befinden sich diese Daten möglicherweise nun auf der Kapazitäts-Tier. Lesezugriffe von der Kapazitäts-Tier sind oft extrem schnell und verursachen möglicherweise keine Performance-Probleme. Die genauen Ergebnisse hängen jedoch von der Objektspeicher-Konfiguration ab.
+
+
+
+== Richtlinien
+
+Der `tiering-minimum-cooling-days` Die Richtlinie sollte so hoch eingestellt werden, dass Dateien, die auf der Performance-Tier erforderlich sind, aufbewahrt werden. Beispielsweise müsste eine Datenbank, in der die letzten 60 Tage Daten bei einer optimalen Performance benötigt werden, die festlegen `tiering-minimum-cooling-days` Zeitraum bis 60 Tage. Ähnliche Ergebnisse lassen sich auch anhand der Zugriffsmuster von Dateien erzielen. Wenn beispielsweise die Daten der letzten 90 Tage benötigt werden und die Applikation auf diese 90-Tage-Datenspanne zugreift, verbleiben die Daten in der Performance-Tier. Einstellen des `tiering-minimum-cooling-days` Zeitraum bis 2 Tage würde die Daten sofort nach dem Zeitpunkt verschieben, an dem die Daten weniger aktiv sind.
+
+Der `auto` Eine Richtlinie ist für das Tiering dieser Blöcke erforderlich, da nur die `auto` Die Richtlinie wirkt sich auf Blöcke aus, die sich im aktiven Filesystem befinden.
+
+
+NOTE: Jeder Zugriff auf Daten setzt die Heatmap-Daten zurück. Daher verhindert die Überprüfung der vollständigen Tabelle der Datenbank und sogar die Backup-Aktivitäten, die die Quelldateien lesen, Tiering, da die erforderlichen `tiering-minimum-cooling-days` Schwellenwert wird nie erreicht.

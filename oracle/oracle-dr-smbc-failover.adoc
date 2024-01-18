@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-dr-smbc-failover.html 
+keywords: smbc, sm-bc 
+summary: Oracle Failover mit SM-BC 
+---
+= Oracle Failover mit SM-BC
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Der Hauptgrund für das Hosten einer Oracle-Datenbank auf SM-BC ist die Bereitstellung eines transparenten Failover bei geplanten und ungeplanten Speicherereignissen.
+
+SM-BC unterstützt zwei Arten von Speicher-Failover-Operationen: Geplant und ungeplant, die auf leicht unterschiedliche Weise arbeiten. Ein geplantes Failover wird manuell vom Administrator initiiert, um eine schnelle Umschaltung auf einen Remote-Standort zu ermöglichen, während der ungeplante Failover automatisch vom Mediator am dritten Standort initiiert wird. Der primäre Zweck eines geplanten Failovers ist die Durchführung inkrementeller Patches und Upgrades, Durchführung von Disaster Recovery-Tests oder die Einführung einer formellen Richtlinie für den Wechsel zwischen Standorten während des ganzen Jahres, um die volle Business Continuity-Funktionalität zu belegen.
+
+Die Diagramme zeigen die Vorgänge während des normalen Failover und Failback-Vorgangs an. Zur einfachen Illustration zeigen sie eine replizierte LUN. In einer tatsächlichen SM-BC-Konfiguration basiert die Replikation auf Volumes, wobei jedes Volume eine oder mehrere LUNs enthält. Um das Bild jedoch zu vereinfachen, wurde die Volume-Schicht entfernt.
+
+
+
+== Normaler Betrieb
+
+Im normalen Betrieb kann auf eine LUN entweder über das lokale oder Remote-Replikat zugegriffen werden. Die rote Linie zeigt den optimierten Pfad an, wie von ALUA angekündigt, und das Ergebnis sollte sein, dass IO bevorzugt über diesen Pfad gesendet wird.
+
+Die grüne Linie ist ein aktiver Pfad, aber es würde mehr Latenz verursachen, da IO auf diesem Pfad über den SM-BC-Pfad weitergeleitet werden müsste. Die zusätzliche Latenz hängt von der Geschwindigkeit der Verbindung zwischen den Standorten ab, die für SM-BC verwendet werden.
+
+image:smbc-failover-1.png["Fehler: Fehlendes Grafikbild"]
+
+
+
+== Ausfall
+
+Wenn die aktive gespiegelte Kopie aufgrund eines geplanten oder ungeplanten Failover nicht mehr verfügbar ist, ist sie offensichtlich nicht mehr nutzbar. Das Remote-System verfügt jedoch über ein synchrones Replikat, und es sind bereits SAN-Pfade zum Remote-Standort vorhanden. Das Remote-System kann E/A für diese LUN bedienen.
+
+Ob die Remote-Kopie sofort verwendet wird, hängt davon ab, ob SM-BC im Sync- oder StrictSync-Modus betrieben wird.
+
+image:smbc-failover-2.png["Fehler: Fehlendes Grafikbild"]
+
+
+
+== Failover
+
+Durch Failover wird die Remote-Kopie zur aktiven Kopie. Die Pfade werden von „aktiv“ in „aktiv/optimiert“ geändert und I/O-Vorgänge werden weiterhin ohne Datenverlust verarbeitet.
+
+image:smbc-failover-3.png["Fehler: Fehlendes Grafikbild"]
+
+
+
+== Reparieren
+
+Sobald das Quellsystem wieder in Betrieb genommen wird, kann SM-BC die Replikation neu synchronisieren, aber in die andere Richtung ausführen. Die Konfiguration ist jetzt im Wesentlichen dieselbe wie der Startpunkt, mit Ausnahme, dass die Active-Mirror-Standorte gespiegelt wurden.
+
+image:smbc-failover-4.png["Fehler: Fehlendes Grafikbild"]
+
+
+
+== Failback
+
+Auf Wunsch kann ein Administrator ein Failback durchführen und die aktive Kopie der LUN(s) zurück auf die ursprünglichen Controller verschieben.
+
+image:smbc-failover-1.png["Fehler: Fehlendes Grafikbild"]

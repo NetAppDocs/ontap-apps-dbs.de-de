@@ -1,0 +1,30 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-tiering-logs.html 
+keywords: tiering, fabricpool 
+summary: Tiering von Oracle Archivprotokollen 
+---
+= Oracle Protokoll-Tiering
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Die wahrscheinlich wichtigste Verwendung für FabricPool ist die Verbesserung der Effizienz bekannter, kalter Daten, wie z. B. Transaktions-Logs der Datenbank.
+
+Die meisten relationalen Datenbanken arbeiten im Transaktionsprotokoll-Archivierungsmodus, um Point-in-Time Recovery bereitzustellen. Änderungen an den Datenbanken werden durch die Aufzeichnung der Änderungen in den Transaktionsprotokollen vorgenommen und das Transaktionsprotokoll wird ohne Überschreibung beibehalten. Dies kann zur Anforderung führen, eine enorme Menge an archivierten Transaktions-Logs aufzubewahren. Ähnliche Beispiele gibt es bei vielen anderen Applikations-Workflows, die Daten generieren, die aufbewahrt werden müssen, auf die jedoch mit hoher Wahrscheinlichkeit jemals zugegriffen werden wird.
+
+FabricPool löst diese Probleme mit einer einzigen Lösung mit integriertem Tiering. Dateien werden gespeichert und bleiben an ihrem üblichen Speicherort zugänglich, belegen jedoch praktisch keinen Speicherplatz auf dem primären Array.
+
+
+
+== Richtlinien
+
+Verwenden Sie A `tiering-minimum-cooling-days` Eine Richtlinie von wenigen Tagen führt zur Aufbewahrung von Blöcken in den kürzlich erstellten Dateien (die Dateien sind, die in naher Zukunft am wahrscheinlichsten erforderlich sind) auf der Performance-Tier. Die Datenblöcke aus älteren Dateien werden dann auf die Kapazitäts-Tier verschoben.
+
+Der `auto` Erzwingt sofortiges Tiering, wenn der Kühlschwellenwert erreicht wurde, unabhängig davon, ob die Protokolle gelöscht wurden oder weiterhin im primären Dateisystem vorhanden sind. Auch das Speichern aller potenziell erforderlichen Protokolle an einer zentralen Stelle im aktiven Filesystem vereinfacht das Management. Es gibt keinen Grund, Snapshots zu durchsuchen, um eine Datei zu finden, die wiederhergestellt werden muss.
+
+Einige Applikationen, wie z. B. Microsoft SQL Server, schneiden Transaktions-Log-Dateien während von Backup-Vorgängen ab, sodass sich die Protokolle nicht mehr im aktiven File-System befinden. Die Kapazität kann mithilfe des gespeichert werden `snapshot-only` tiering-Richtlinie, aber die `auto` Die Richtlinie ist für Protokolldaten nicht nützlich, da Protokolldaten im aktiven Dateisystem selten abgekühlt werden sollten.

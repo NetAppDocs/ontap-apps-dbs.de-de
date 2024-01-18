@@ -3,28 +3,29 @@ section: postgres
 title: PostgreSQL
 entries:
 - title: Überblick
-  url: "/postgres/overview.html"
+  url: "/postgres/postgres-overview.html"
 - title: Datenbankkonfiguration
+  pdf-filename: Hostkonfiguration für PostgreSQL
   entries:
   - title: Der Netapp Architektur Sind
-    url: "/postgres/architecture.html"
+    url: "/postgres/postgres-architecture.html"
   - title: Initialisierung
-    url: "/postgres/initialization.html"
+    url: "/postgres/postgres-initialization.html"
   - title: Einstellungen
-    url: "/postgres/db-config.html"
+    url: "/postgres/postgres-db-config.html"
   - title: Tablespaces
-    url: "/postgres/tablespaces.html"
+    url: "/postgres/postgres-tablespaces.html"
 - title: Storage-Konfiguration
+  pdf-filename: Storage-Konfiguration für PostgreSQL
   entries:
   - title: Konfiguration des Dateisystems
-    url: "/postgres/filesystems.html"
-  - title: Tiering
-    url: "/postgres/tiering.html"
+    url: "/postgres/postgres-filesystems.html"
 - title: Datensicherung
+  pdf-filename: Datensicherung für PostgreSQL
   entries:
   - title: Native Datensicherung
-    url: "/postgres/native-dp.html"
+    url: "/postgres/postgres-native-dp.html"
   - title: Snapshot Technologie
-    url: "/postgres/snapshot-dp.html"
+    url: "/postgres/postgres-snapshot-dp.html"
   - title: Datensicherungssoftware
-    url: "/postgres/snapcenter-dp.html"
+    url: "/postgres/postgres-snapcenter-dp.html"

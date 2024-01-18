@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: mysql/mysql-file-structure.html 
+keywords: MySQL,MariaDB 
+summary: MySQL-Dateistruktur 
+---
+= Dateistruktur
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+InnoDB fungiert als mittlere Schicht zwischen Speicher und MySQL-Server, es speichert die Daten auf den Laufwerken.
+
+image:mysql-file-structure1.png["Fehler: Grafikbild nicht gefunden"]
+
+MySQL I/O wird in zwei Typen unterteilt:
+
+* Zufällige Datei-I/O
+* Sequenzielle Datei-I/O
+
+
+image:mysql-file-structure2.png["Fehler: Grafikbild nicht gefunden"]
+
+Datendateien werden zufällig gelesen und überschrieben, was zu einem hohen IOPS-Wert führt. Daher wird SSD-Speicher empfohlen.
+
+Redo-Log-Dateien und binäre Log-Dateien sind Transaktionsprotokolle. Sie werden sequenziell geschrieben, sodass Sie mit dem Schreib-Cache eine gute Performance auf der Festplatte erzielen können. Ein sequenzieller Lesevorgang findet bei der Wiederherstellung statt, jedoch verursacht er selten ein Performance-Problem, da die Größe der Protokolldatei normalerweise kleiner ist als die von Datendateien und sequenzielle Lesevorgänge schneller sind als zufällige Lesevorgänge (die bei Datendateien auftreten).
+
+Der Double-Write-Puffer ist eine Besonderheit von InnoDB. InnoDB schreibt zunächst gerötete Seiten in den Double-Write-Puffer und schreibt dann die Seiten an die richtigen Positionen in den Datendateien. Dieser Prozess verhindert eine Beschädigung der Seite. Ohne den Double-Write-Puffer kann die Seite beschädigt werden, wenn während des Write-to-Drive-Prozesses ein Stromausfall auftritt. Da das Schreiben in den Doppelschreibpuffer sequenziell ist, wird es für HDDs stark optimiert. Bei der Wiederherstellung werden sequenzielle Lesevorgänge durchgeführt.
+
+Da ONTAP NVRAM bereits einen Schreibschutz bietet, ist keine doppelte Schreibpufferung erforderlich. MySQL hat einen Parameter, `skip_innodb_doublewrite`, Um den Double-Write-Puffer zu deaktivieren. Diese Funktion kann die Leistung erheblich verbessern.
+
+Der Insert-Puffer ist ebenfalls eine Besonderheit von InnoDB. Wenn sich nicht eindeutige sekundäre Indexblöcke nicht im Speicher befinden, fügt InnoDB Einträge in den Insert-Puffer ein, um zufällige I/O-Vorgänge zu vermeiden. Der Insert-Puffer wird in regelmäßigen Abständen in die sekundären Indexbäume der Datenbank eingebunden. Der Insert-Puffer reduziert die Anzahl der I/O-Vorgänge, indem I/O-Anfragen an denselben Block zusammengeführt werden. Zufällige I/O-Vorgänge können sequenziell sein. Der Einfügepuffer ist auch für HDDs stark optimiert. Sowohl sequenzielle Schreibvorgänge als auch Lesevorgänge erfolgen im normalen Betrieb.
+
+Rückgängig-Segmente sind wahlfrei E/A-orientiert. Um die Multiversionsparallelität (MVCC) zu gewährleisten, muss InnoDB alte Bilder in den Undo-Segmenten registrieren. Beim Lesen vorheriger Bilder aus den Rückgängigmachungssegmenten sind zufällige Lesevorgänge erforderlich. Wenn Sie eine lange Transaktion mit wiederholbaren Lesevorgängen ausführen (wie z. B. mysqldump – einzelne Transaktion) oder eine lange Abfrage ausführen, können zufällige Lesevorgänge auftreten. Daher ist das Speichern von undo-Segmenten auf SSDs in dieser Instanz besser. Wenn Sie nur kurze Transaktionen oder Abfragen ausführen, stellen die zufälligen Lesevorgänge kein Problem dar.
+
+[TIP]
+====
+*NetApp empfiehlt* aufgrund der InnoDB I/O-Eigenschaften das folgende Speicherdesign-Layout.
+
+* Ein Volume zur Speicherung zufälliger und sequenzieller I/O-orientierter MySQL-Dateien
+* Ein weiteres Volume zur Speicherung rein sequenzieller I/O-orientierter Dateien von MySQL
+
+
+Dieses Layout hilft Ihnen auch bei der Entwicklung von Datensicherungsrichtlinien und -Strategien.
+
+====

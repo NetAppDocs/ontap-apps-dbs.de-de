@@ -1,0 +1,59 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-app-config-rac.html 
+keywords: oracle, database, ontap, rac, disktimeout, misscount 
+summary: Oracle RAC-Einstellungen mit Networked Storage 
+---
+= Oracle Real Application Clusters (RAC)
+:allow-uri-read: 
+
+
+[role="lead"]
+Oracle RAC ist ein Clusterware-Produkt mit verschiedenen Arten von internen Heartbeat-Prozessen, die den Zustand des Clusters überwachen.
+
+
+NOTE: Die Informationen im link:#misscount["Fehlzählung"] Der Abschnitt enthält wichtige Informationen für Oracle RAC-Umgebungen, die Netzwerkspeicher verwenden. In vielen Fällen müssen die standardmäßigen Oracle RAC-Einstellungen geändert werden, um sicherzustellen, dass der RAC-Cluster Netzwerkpfadänderungen und Speicher-Failover-/Switchover-Vorgänge überlebt.
+
+
+
+== Festplatten-Timeout
+
+Der primäre speicherbezogene RAC-Parameter lautet `disktimeout`. Dieser Parameter steuert den Schwellenwert, innerhalb dessen die Abstimmungsdatei E/A abgeschlossen werden muss. Wenn der `disktimeout` Parameter überschritten wird, dann wird der RAC-Knoten aus dem Cluster entfernt. Der Standardwert für diesen Parameter ist 200. Dieser Wert sollte für standardmäßige Storage-Takeover- und Giveback-Verfahren ausreichen.
+
+NetApp empfiehlt, die RAC-Konfigurationen vor ihrer Inbetriebnahme sorgfältig zu testen, da sich viele Faktoren auf einen Takeover oder Giveback auswirken. Neben der Zeit, die für den Abschluss des Storage-Failovers benötigt wird, ist auch für die Verbreitung der Änderungen des Link Aggregation Control Protocol (LACP) zusätzliche Zeit erforderlich. Darüber hinaus muss die SAN-Multipathing-Software eine I/O-Zeitüberschreitung erkennen und einen alternativen Pfad erneut versuchen. Wenn eine Datenbank extrem aktiv ist, muss eine große Menge an I/O-Vorgängen in die Warteschlange gestellt und erneut versucht werden, bevor die Abstimmungs-E/A-Vorgänge verarbeitet werden.
+
+Wenn ein tatsächlicher Storage Takeover oder Giveback nicht möglich ist, kann der Effekt durch Cable Pull-Tests auf dem Datenbankserver simuliert werden.
+
+[TIP]
+====
+*NetApp empfiehlt* Folgendes:
+
+* Verlassen des `disktimeout` Parameter mit dem Standardwert 200.
+* Testen Sie eine RAC-Konfiguration immer gründlich.
+
+
+====
+
+
+== Fehlzählung
+
+Der `misscount` Der Parameter wirkt sich normalerweise nur auf den Netzwerk-Heartbeat zwischen RAC-Knoten aus. Die Standardeinstellung ist 30 Sekunden. Wenn sich die Grid-Binärdateien auf einem Storage Array befinden oder das Boot-Laufwerk des Betriebssystems nicht lokal ist, kann dieser Parameter wichtig werden. Dazu gehören Hosts mit Boot-Laufwerken in einem FC-SAN, über NFS gestartete Betriebssysteme und Boot-Laufwerke in Virtualisierungs-Datastores, beispielsweise eine VMDK-Datei.
+
+Wird der Zugriff auf ein Boot-Laufwerk durch eine Storage-Übernahme oder -Rückgabe unterbrochen, kann es sein, dass der Binärstandort des Grid oder das gesamte Betriebssystem vorübergehend nicht verfügbar ist. Die Zeit, die ONTAP bis zum Abschluss des Storage-Vorgangs und zum Ändern von Pfaden und zum Fortsetzen der I/O benötigt, kann größer sein als die `misscount` Schwellenwert. Infolgedessen wird ein Node sofort entfernt, nachdem die Verbindung zur Boot-LUN oder zu den Grid-Binärdateien wiederhergestellt wurde. In den meisten Fällen werden Entfernung und anschließende Neustarts ohne Protokollmeldungen durchgeführt, um den Grund für das Neubooten zu geben. Da nicht alle Konfigurationen betroffen sind, sollten Sie jeden SAN-Booting, NFS-Booting oder Datastore-basierten Host in einer RAC-Umgebung testen, damit RAC stabil bleibt, wenn die Kommunikation zum Startlaufwerk unterbrochen wird.
+
+Bei nicht-lokalen Startlaufwerken oder einem nicht lokalen Dateisystem, das hostet `grid` Binärdateien, die `misscount` Muss entsprechend geändert werden `disktimeout`. Wenn dieser Parameter geändert wird, führen Sie weitere Tests durch, um auch alle Auswirkungen auf das RAC-Verhalten zu identifizieren, z. B. die Node-Failover-Zeit.
+
+[TIP]
+====
+*NetApp empfiehlt* Folgendes:
+
+* Verlassen Sie den `misscount` Parameter mit dem Standardwert 30, sofern keine der folgenden Bedingungen zutrifft:
++
+** `grid` Binärdateien befinden sich auf einem Network-Attached-Laufwerk, einschließlich NFS-, iSCSI-, FC- und Datastore-basierten Laufwerken.
+** Das Betriebssystem wird über SAN gebootet.
+
+
+* Prüfen Sie in solchen Fällen die Auswirkungen von Netzwerkunterbrechungen, die den Zugriff auf das Betriebssystem oder beeinträchtigen `GRID_HOME` File-Systeme. In einigen Fällen führen solche Unterbrechungen dazu, dass die Oracle RAC-Daemons abgewürgt werden, was zu einem führen kann `misscount`-Based Timeout und Entfernung. Die Zeitüberschreitung beträgt standardmäßig 27 Sekunden. Dies ist der Wert von `misscount` Minus `reboottime`. In solchen Fällen erhöhen `misscount` Bis 200, um zu entsprechen `disktimeout`.
+
+
+====

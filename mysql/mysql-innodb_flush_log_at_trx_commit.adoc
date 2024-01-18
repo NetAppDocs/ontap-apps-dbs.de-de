@@ -1,0 +1,28 @@
+---
+sidebar: sidebar 
+permalink: mysql/mysql-innodb_flush_log_at_trx_commit.html 
+keywords: MySQL,MariaDB,innodb_doublewrite 
+summary: MySQL auf ONTAP 
+---
+= innodb_Flush_log_at_trx_commit
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Wenn eine Datenänderung vorgenommen wird, wird nicht sofort in den Storage geschrieben.
+
+Stattdessen werden die Daten in einem Protokollpuffer aufgezeichnet, einem Teil des Speichers, den InnoDB Pufferänderungen zuweist, die in der Protokolldatei aufgezeichnet werden. InnoDB leert den Puffer in die Protokolldatei, wenn eine Transaktion durchgeführt wird, wenn der Puffer voll wird, oder einmal pro Sekunde, je nachdem, welches Ereignis zuerst eintritt. Die Konfigurationsvariable, die diesen Prozess steuert, ist innodb_flush_log_at_trx_commit. Die Wertoptionen umfassen:
+
+* Wenn Sie es einstellen `innodb_flush_log_trx_at_commit=0`, InnoDB schreibt die geänderten Daten (im InnoDB-Pufferpool) in die Log-Datei (ib_logfile) und leert die Log-Datei (Write to Storage) jede Sekunde. Es tut jedoch nichts, wenn die Transaktion durchgeführt wird. Bei einem Stromausfall oder Systemabsturz können die nicht gespeicherten Daten nicht wiederhergestellt werden, da sie weder auf die Protokolldatei noch auf die Laufwerke geschrieben werden.
+* Wenn Sie es einstellen `innodb_flush_log_trx_commit=1`, InnoDB schreibt den Protokollpuffer in das Transaktionsprotokoll und leert für jede Transaktion auf eine dauerhafte Speicherung. Beispielsweise schreibt InnoDB für alle Transaction Commits in das Protokoll und schreibt anschließend in den Speicher. Langsamer Speicher beeinträchtigt die Performance, beispielsweise wird die Anzahl der InnoDB-Transaktionen pro Sekunde reduziert.
+* Wenn Sie es einstellen `innodb_flush_log_trx_commit=2`, InnoDB schreibt den Protokollpuffer bei jedem Commit in die Protokolldatei, schreibt aber keine Daten in den Speicher. InnoDB leert die Daten einmal pro Sekunde. Selbst bei einem Stromausfall oder Systemabsturz sind die Daten von Option 2 in der Protokolldatei verfügbar und können wiederhergestellt werden.
+
+
+Wenn die Leistung das Hauptziel ist, setzen Sie den Wert auf 2. Da InnoDB einmal pro Sekunde auf die Laufwerke schreibt, nicht für jede Transaktion, verbessert sich die Performance erheblich. Bei einem Stromausfall oder Absturz können die Daten aus dem Transaktions-Log wiederhergestellt werden.
+
+Wenn die Datensicherheit das Hauptziel ist, setzen Sie den Wert auf 1, sodass InnoDB für jeden Transaktionscommit zu den Laufwerken leert. Möglicherweise ist die Performance jedoch beeinträchtigt.
+
+
+TIP: *NetApp empfiehlt* Setzen Sie den innodb_flush_log_trx_commit Wert auf 2, um eine bessere Leistung zu erzielen.

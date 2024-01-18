@@ -1,0 +1,23 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-dp-consistency-group-backup.html 
+keywords: oracle, data, protection, consistency, group, backup, volume, archive, log, redo, controlfiles 
+summary: Backups von Konsistenzgruppen für Oracle auf ONTAP 
+---
+= Backup von Oracle Konsistenzgruppen
+:allow-uri-read: 
+
+
+[role="lead"]
+Für die einfachste mögliche Sicherung, platzieren Sie einfach die gesamte Oracle-Datenbank in einem einzigen Volume.
+
+Der Schutz von Datendateien, Archivprotokollen, Wiederherstellungsprotokollen und Steuerdateien mit einem einzelnen Snapshot ist eine gültige Backup-, Restore- und Replizierungsmethode.  Das RPO ist jedoch auf den Punkt des Backups selbst beschränkt. Er eignet sich für einen RPO von einer Stunde oder länger. Wenn eine Datenbank mehrere Volumes umfasst, sind cg-Snapshots mit einem der zuvor beschriebenen Tools erforderlich.
+
+Beispielsweise kann sich die gesamte Datenbank in einem einzigen Volume mit dem folgenden Snapshot-Zeitplan befinden:
+
+* 72 stündliche Snapshots
+* 30 nächtliche Schnappschüsse
+* 12 monatliche Snapshots
+
+
+Dadurch wird ein RPO von einer Stunde für den festgelegten Zeitraum von 72 Stunden sowie zusätzliche nächtliche und monatliche Backups erzielt. Mehrere Datenbanken oder Applikationsdateien können auch in das einzelne Volume oder den Satz von cg-Snapshots aufgenommen werden, um konsistente Backups in einer größeren Umgebung zu ermöglichen.

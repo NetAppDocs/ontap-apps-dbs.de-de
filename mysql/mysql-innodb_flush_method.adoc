@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: mysql/mysql-innodb_flush_method.html 
+keywords: MySQL,MariaDB,innodb_flush_method 
+summary: MySQL auf ONTAP 
+---
+= innodb_Flush_Method
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Der Parameter innodb_flush_method gibt an, wie InnoDB die Protokoll- und Datendateien öffnet und löscht.
+
+
+
+== Optimierungen
+
+In der InnoDB-Optimierung wird durch die Einstellung dieses Parameters die Datenbankleistung ggf. optimiert.
+
+Die folgenden Optionen sind für das Spülen der Dateien über InnoDB:
+
+* `fsync`. InnoDB verwendet die `fsync()` Systemaufruf, um sowohl die Daten- als auch die Protokolldateien zu leeren. Diese Option ist die Standardeinstellung.
+*  `O_DSYNC`. InnoDB verwendet die `O_DSYNC` Option zum Öffnen und Leeren der Protokolldateien und fsync() zum Leeren der Datendateien. InnoDB wird nicht verwendet `O_DSYNC` Direkt, weil es Probleme mit ihm auf vielen Sorten von UNIX.
+*  `O_DIRECT`. InnoDB verwendet die `O_DIRECT` Option (oder `directio()` Unter Solaris), um die Datendateien zu öffnen und zu verwenden `fsync()` Um sowohl die Daten als auch die Protokolldateien zu löschen. Diese Option ist auf einigen GNU/Linux-Versionen, FreeBSD und Solaris verfügbar.
+* `O_DIRECT_NO_FSYNC`. InnoDB verwendet die `O_DIRECT` Option beim Spülen von E/A, wird jedoch übersprungen `fsync()` Systemaufruf danach. Diese Option ist für einige Arten von Dateisystemen ungeeignet (z. B. XFS). Wenn Sie sich nicht sicher sind, ob Ihr Dateisystem einen erfordert `fsync()` Systemaufruf – zum Beispiel zum Beibehalten aller Dateimetadaten – verwendet den `O_DIRECT` Wählen Sie stattdessen.
+
+
+
+
+== Beobachtung
+
+In den NetApp-Labortests ist der `fsync` Auf NFS und SAN kam die Standardoption zum Einsatz. Im Vergleich dazu war sie ein großartiger Performance-Improvisator `O_DIRECT`. Bei Verwendung der Spülmethode als `O_DIRECT` Bei ONTAP konnten wir beobachten, dass der Client viele Single-Byte-Schreibvorgänge am Rand des 4096. Blocks in serieller Form schreibt. Diese Schreibvorgänge haben die Latenz über das Netzwerk erhöht und die Performance beeinträchtigt.
