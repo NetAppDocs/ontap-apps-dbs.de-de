@@ -6,12 +6,11 @@ summary: Microsoft SQL Server auf ONTAP
 ---
 = Microsoft SQL Server-Speicherkonfiguration
 :allow-uri-read: 
-:firstname: [.lead]
-:author: [.lead]
-:authorinitials: [
-:authors: [.lead]
 :imagesdir: ../media/
 
+
+[role="lead"]
+In den folgenden Abschnitten werden einige wichtige Einstellungen für die Speicherkonfiguration erläutert.
 
 
 

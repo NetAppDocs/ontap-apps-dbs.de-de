@@ -25,9 +25,9 @@ Wenn NFSv4 als Protokoll gewählt wird, empfiehlt NetApp die Verwendung von NFSv
 Verwenden Sie die folgenden Mount-Optionen für allgemeine Datenbank-Workloads:
 
 ....
-rw, hard,nointr,bg,vers=[3|4],proto=tcp,rsize=65536,wsize=65536
+rw,hard,nointr,bg,vers=[3|4],proto=tcp,rsize=65536,wsize=65536
 ....
-Wenn sequenzielle I/O-Vorgänge mit hohem sequenziellen I/O-Bedarf zu erwarten sind, kann die NFS-Übertragungsgröße erhöht werden.
+Wenn sequenzielle I/O-Vorgänge mit hohem I/O-Wert zu erwarten sind, kann die NFS-Übertragungsgröße wie im folgenden Abschnitt beschrieben erhöht werden.
 
 
 
@@ -57,7 +57,7 @@ Cluster01::*>
 Sobald die Übertragungsgröße auf ONTAP-Ebene erhöht wurde, werden die folgenden Mount-Optionen verwendet:
 
 ....
-rw, hard,nointr,bg,vers=[3|4],proto=tcp,rsize=262144,wsize=262144
+rw,hard,nointr,bg,vers=[3|4],proto=tcp,rsize=262144,wsize=262144
 ....
 
 

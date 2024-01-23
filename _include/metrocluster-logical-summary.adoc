@@ -139,10 +139,6 @@ Im Gegensatz dazu leitet die MetroCluster IP Architektur alle I/O ausschließlic
 
 
 
-=== Mediator Automatic Unbeaufsichtigte Umschaltung (MAUSO)
-
-
-
 === Virtueller dritter Standort mit ClusterLion
 
 ClusterLion ist eine fortschrittliche MetroCluster Monitoring-Appliance, die als virtueller dritter Standort fungiert. Dieser Ansatz ermöglicht die sichere Implementierung von MetroCluster in einer Konfiguration mit zwei Standorten und einer vollständig automatisierten Umschaltfunktion. Des Weiteren kann ClusterLion zusätzliche Überwachung auf Netzwerkebene durchführen und Vorgänge nach der Umschaltung ausführen. Die vollständige Dokumentation ist bei ProLion erhältlich.
