@@ -62,9 +62,9 @@ entries:
     entries:
     - title: LUN-Ausrichtung
       url: "/oracle/oracle-storage-san-config-lun-alignment.html"
-    - title: Anzahl der LUNs und LUN-Größe
+    - title: Die LUN-Anzahl und die LUN-Größe
       url: "/oracle/oracle-storage-san-config-lun-sizing.html"
-    - title: LUN-Größe wird zugewiesen
+    - title: LUN-Größe
       url: "/oracle/oracle-storage-san-config-lun-resizing.html"
     - title: LVM-Striping
       url: "/oracle/oracle-storage-san-config-lvm-striping.html"
@@ -114,7 +114,7 @@ entries:
   entries:
   - title: Überblick
     url: "/oracle/oracle-dp-overview.html"
-  - title: RPO, TRO und SLAs
+  - title: RPO, RTO und SLAs
     url: "/oracle/oracle-dp-slas.html"
   - title: Datenverfügbarkeit
     url: "/oracle/oracle-dp-data-availability.html"
