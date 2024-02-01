@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: mysql/mysql-mysql-over-san.html 
 keywords: MySQL,MariaDB,SAN 
-summary: MySQL auf ONTAP 
+summary: MySQL mit SAN 
 ---
-= MySQL über SAN
+= MySQL mit SAN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/

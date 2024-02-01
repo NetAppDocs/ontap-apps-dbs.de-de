@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: mysql/mysql-open_file_limits.html 
 keywords: MySQL,MariaDB,open_file_limits 
-summary: MySQL auf ONTAP 
+summary: MySQL und open_file_limits 
 ---
 = Open_File_Limits
 :allow-uri-read: 

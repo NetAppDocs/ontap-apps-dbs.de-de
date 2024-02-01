@@ -4,7 +4,7 @@ permalink: oracle/oracle-notes-optimization-and-benchmarking.html
 keywords: oracle, database, ontap, performance, hammerdb, swingbench, calibrate_io, slob2, orion, slob, benchmarking, benchmark 
 summary: Oracle-Performance-Tests 
 ---
-= Performance-Optimierung und -Benchmarking von Oracle
+= Verfahren zur Optimierung der Oracle-Performance und zum Benchmarking
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -24,9 +24,9 @@ Das genaue Testen der Datenbank-Storage-Performance ist dabei ein extrem kompliz
 
 Darüber hinaus müssen Aufgaben außerhalb von Storage-Datenbanken berücksichtigt werden. An diesem Punkt kann die Optimierung der Storage-Performance keine nützlichen Vorteile ergeben, da die Storage-Performance keinen einschränkenden Faktor mehr für die Performance darstellt.
 
-Da sich die meisten Datenbankkunden nun für All-Flash-Arrays entscheiden, sind weitere Überlegungen anzustellen. Betrachten Sie beispielsweise Performance-Tests auf einem AFF8080 System mit zwei Nodes:
+Da sich die meisten Datenbankkunden nun für All-Flash-Arrays entscheiden, sind weitere Überlegungen anzustellen. Betrachten Sie beispielsweise Performance-Tests auf einem AFF A900 System mit zwei Nodes:
 
-* Mit einem Lese-/Schreib-Verhältnis von 75/25 können zwei AFF8080 Nodes über 300.000 zufällige Datenbank-IOPS liefern, bevor die Latenz sogar die 1-ms-Marke überschreitet. Dies geht weit über die aktuellen Performance-Anforderungen der meisten Datenbanken hinaus, sodass sich die erwartete Verbesserung nur schwer vorhersagen lässt. Storage würde zu einem großen Teil als Engpass gelöscht werden.
+* Mit einem Lese-/Schreib-Verhältnis von 80/20 können zwei A900 Nodes über 1 Mio. zufällige Datenbank-IOPS liefern, bevor die Latenz sogar die 150µs-Marke überschreitet. Dies geht weit über die aktuellen Performance-Anforderungen der meisten Datenbanken hinaus, sodass sich die erwartete Verbesserung nur schwer vorhersagen lässt. Storage würde zu einem großen Teil als Engpass gelöscht werden.
 * Die Netzwerkbandbreite ist eine immer häufiger auftretende Ursache für Leistungseinschränkungen. Lösungen mit rotierenden Festplatten sind beispielsweise häufig Engpässe in der Datenbank-Performance, da die I/O-Latenz sehr hoch ist. Wenn Latenzbeschränkungen von einem All-Flash-Array beseitigt werden, verschiebt sich die Barriere häufig in das Netzwerk. Dies ist insbesondere bei virtualisierten Umgebungen und Blade-Systemen so bemerkenswert, dass sich die tatsächliche Netzwerkverbindung nur schwer visualisieren lässt. Das kann Performance-Tests erschweren, wenn das Storage-System selbst aufgrund von Bandbreiteneinschränkungen nicht vollständig ausgelastet werden kann.
 * Der Vergleich der Performance eines All-Flash-Arrays mit einem Array mit rotierenden Festplatten ist im Allgemeinen aufgrund der deutlich verbesserten Latenz von All-Flash-Arrays nicht möglich. Die Testergebnisse sind in der Regel nicht aussagekräftig.
 * Der Vergleich der IOPS-Spitzenperformance mit einem All-Flash-Array ist häufig kein nützlicher Test, da Datenbanken nicht durch Storage-I/O eingeschränkt werden Angenommen, ein Array unterstützt 500.000 zufällige IOPS, ein anderes dagegen 300.000. Der Unterschied ist in der Praxis irrelevant, wenn eine Datenbank 99 % ihrer Zeit für die CPU-Verarbeitung aufwendet. Die Workloads schöpfen dabei niemals alle Kapazitäten des Storage-Arrays aus. Demgegenüber sind IOPS-Spitzenfunktionen bei einer Konsolidierungsplattform durchaus von großer Bedeutung, bei der das Storage-Array voraussichtlich auf seine Spitzenfunktionen ausgelastet ist.

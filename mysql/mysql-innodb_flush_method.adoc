@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: mysql/mysql-innodb_flush_method.html 
 keywords: MySQL,MariaDB,innodb_flush_method 
-summary: MySQL auf ONTAP 
+summary: MySQL und innodb_flush_method 
 ---
 = innodb_Flush_Method
 :allow-uri-read: 
