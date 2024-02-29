@@ -13,10 +13,7 @@ summary: Auf dieser Seite werden die Best Practices zur Implementierung einer Ne
 :imagesdir: ../media/
 
 
-
-
-== Über VVols und SPBM
-
+[role="lead"]
 NetApp war schon früh als Design-Partner von VMware an der Entwicklung von vSphere Virtual Volumes (VVols) beteiligt und stellte architekturspezifischen Input und frühzeitig Unterstützung für VVols und VMware vSphere APIs for Storage Awareness (VASA) bereit. Durch diesen Ansatz wurde VMFS nicht nur granulares VM-Storage-Management ermöglicht, sondern auch die Automatisierung der Storage-Bereitstellung durch Storage Policy Based Management (SPBM) unterstützt.
 
 SPBM bietet ein Framework, das als Abstraktionsebene zwischen den für Ihre Virtualisierungsumgebung verfügbaren Storage-Services und den über Richtlinien bereitgestellten Storage-Elementen dient. Storage-Architekten können mit diesem Ansatz Storage-Pools mit unterschiedlichen Funktionen entwerfen, die von VM-Administratoren einfach genutzt werden können. Administratoren können die Workload-Anforderungen von Virtual Machines an die bereitgestellten Storage Pools anpassen, wodurch verschiedene Einstellungen pro VM oder Virtual Disk granular kontrolliert werden können.

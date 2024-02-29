@@ -11,13 +11,10 @@ summary: Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrer
 :icons: font
 :linkattrs: 
 :imagesdir: ../media/
-:firstname: [.lead]
-:author: [.lead]
-:authorinitials: [
-:authors: [.lead]
-:revnumber: 
-:revdate: and so on.
 
+
+[role="lead"]
+Durch das Klonen eines Storage-Objekts können Sie schnell Kopien für andere Zwecke erstellen, beispielsweise zum Provisionieren weiterer VMs, für Backup- und Recovery-Vorgänge usw.
 
 In vSphere können Sie VMs, virtuelle Festplatten, vVol oder Datastores klonen. Nach dem Klonen kann das betreffende Objekt weiter angepasst werden. Dies geschieht häufig durch einen automatisierten Prozess. VSphere unterstützt sowohl vollständige Klone als auch Linked Clones, bei denen Änderungen separat vom ursprünglichen Objekt verfolgt werden.
 

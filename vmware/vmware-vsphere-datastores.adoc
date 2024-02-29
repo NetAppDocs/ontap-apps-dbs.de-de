@@ -4,20 +4,15 @@ permalink: vmware/vmware-vsphere-datastores.html
 keywords: vSphere, datastore, VMFS, FC, FCoE, NVMe/FC, iSCSI, NFS, vVols 
 summary: Auf dieser Seite werden die Best Practices zur Implementierung einer NetApp ONTAP Storage-Lösung in einer VMware vSphere Umgebung beschrieben. 
 ---
-= Datenspeicher und Protokolle
-:hardbreaks:
+= VSphere Datastore- und Protokollfunktionen
 :allow-uri-read: 
-:nofooter: 
-:icons: font
-:linkattrs: 
-:imagesdir: ../media/
-:firstname: [.lead]
-:author: [.lead]
-:authorinitials: [
-:authors: [.lead]
-:revdate: == vSphere datastore and protocol features
 
 
+
+
+== VSphere Datastore- und Protokollfunktionen
+
+[role="lead"]
 Sieben Protokolle können für die Anbindung von VMware vSphere ESXi Hosts an ONTAP Systeme für Datastores genutzt werden:
 
 * FCP
@@ -86,7 +81,7 @@ In der folgenden Tabelle sind die unterstützten Funktionen in Bezug auf VMware 
 Diese Einstellung ist der Standard für alle VMs im NFS, wenn nicht VAAI verwendet wird. 
 
 
-| Natives VMware Multipathing | Ja. | Ja. | Ja, Verwendung des neuen High Performance Plug-ins (HPP) | K. A. 
+| Natives VMware Multipathing | Ja. | Ja. | Ja, Verwendung des neuen High Performance Plug-ins (HPP) | Für das NFS v4.1 Session-Trunking ist ONTAP 9.14.1 und höher erforderlich 
 |===
 In der folgenden Tabelle werden die unterstützten ONTAP Storage-Managementfunktionen aufgeführt.
 
@@ -199,7 +194,7 @@ Im Allgemeinen empfiehlt NetApp zur Bereitstellung herkömmlicher und VVols Data
 
 Wenn Sie vSphere mit Systemen mit ONTAP Software verwenden, ist die Konfiguration von Netzwerkeinstellungen einfach und erfolgt ähnlich wie andere Netzwerkkonfigurationen. Folgende Punkte sind dabei zu berücksichtigen:
 
-* Separater Storage-Netzwerk-Traffic aus anderen Netzwerken. Ein separates Netzwerk kann mithilfe eines dedizierten VLANs oder separater Switches für Storage eingerichtet werden. Falls im Storage-Netzwerk physische Pfade wie Uplinks geteilt werden, sind eventuell QoS oder zusätzliche Uplink-Ports erforderlich, um eine ausreichende Bandbreite sicherzustellen. Stellen Sie keine direkte Verbindung zwischen Hosts und Storage her. Verwenden Sie Switches, um redundante Pfade zu verwenden und VMware HA ohne Eingriff von Microsoft HA zu arbeiten. Siehe link:vmware-vsphere-network.html#direct-connect-networking["Direct-Connect-Netzwerk"] Finden Sie weitere Informationen.
+* Separater Storage-Netzwerk-Traffic aus anderen Netzwerken. Ein separates Netzwerk kann mithilfe eines dedizierten VLANs oder separater Switches für Storage eingerichtet werden. Falls im Storage-Netzwerk physische Pfade wie Uplinks geteilt werden, sind eventuell QoS oder zusätzliche Uplink-Ports erforderlich, um eine ausreichende Bandbreite sicherzustellen. Stellen Sie keine direkte Verbindung zwischen Hosts und Storage her. Verwenden Sie Switches, um redundante Pfade zu verwenden und VMware HA ohne Eingriff von Microsoft HA zu arbeiten. Siehe link:vmware-vsphere-network.html["Direkte Netzwerkverbindung"] Finden Sie weitere Informationen.
 * Jumbo Frames können genutzt werden, sofern dies gewünscht ist und von Ihrem Netzwerk unterstützt wird, insbesondere bei Verwendung von iSCSI. Vergewissern Sie sich bei ihrem Einsatz, dass sie auf allen Netzwerkgeräten, VLANs etc. Im Pfad zwischen Storage und dem ESXi Host gleich konfiguriert sind. Anderenfalls kann es zu Performance- oder Verbindungsproblemen kommen. Auf dem virtuellen ESXi Switch, dem VMkernel Port, sowie den physischen Ports oder den Interface Groups muss für jeden ONTAP Node auch jeweils dieselbe MTU festgelegt sein.
 * NetApp empfiehlt eine Deaktivierung der Netzwerk- Flusssteuerung nur an den Cluster-Netzwerkports innerhalb eines ONTAP Clusters. Für die übrigen Netzwerkports, die für Daten-Traffic verwendet werden, gibt NetApp im Hinblick auf Best Practices keine weiteren Empfehlungen. Diese Ports sollten Sie nach Bedarf aktivieren oder deaktivieren. Siehe http://www.netapp.com/us/media/tr-4182.pdf["TR-4182"^] Für mehr Hintergrund zur Flusssteuerung.
 * Wenn ESXi und ONTAP Storage-Arrays mit Ethernet-Storage-Netzwerken verbunden werden, empfiehlt NetApp, die Ethernet-Ports, mit denen diese Systeme verbunden werden, mit der Cisco PortFast Funktion oder als Rapid Spanning Tree Protocol (RSTP)-Edge-Ports zu konfigurieren. NetApp empfiehlt die Aktivierung der Spanning Tree PortFast Trunk-Funktion in Umgebungen mit Verwendung der Cisco PortFast Funktion und 802.1Q VLAN-Trunking entweder für den ESXi Server oder für die ONTAP Storage-Arrays.
@@ -371,7 +366,7 @@ In der folgenden Tabelle sind NFS-Versionen und unterstützte Funktionen aufgef�
 | Kerberos Authentifizierung | Nein | Ja (Erweiterung mit vSphere 6.5 und höher zur Unterstützung von AES, krb5i) 
 
 
-| Multipathing-Unterstützung | Nein | Nein 
+| Multipathing-Unterstützung | Nein | Ja. 
 |===
 
 
@@ -402,7 +397,7 @@ Im Folgenden finden Sie einige weitere NetApp Best Practices:
 * Verwenden Sie die Standardwerte für die FlexGroup Volume-Bereitstellung. Es empfiehlt sich zwar ONTAP-Tools für VMware vSphere, da sie die FlexGroup in vSphere erstellen und gemountet werden. Zudem ist ONTAP System Manager oder die Befehlszeile kann für spezielle Anforderungen verwendet werden. Verwenden Sie selbst dann Standardwerte wie die Anzahl der konstituierenden Mitglieder pro Node, da dies mit vSphere am gründlichsten getestet wurde. Indessen werden nicht-Standardeinstellungen wie das Ändern der Anzahl oder Platzierung von Bestandteilen immer noch vollständig unterstützt.
 * Bei der Größenbestimmung eines FlexGroup-basierten Datenspeichers beachten Sie, dass die FlexGroup aus mehreren kleineren FlexVol Volumes besteht, die einen größeren Namespace erstellen. Wenn Sie daher eine FlexGroup mit acht Komponenten verwenden, sollten Sie den Datenspeicher mindestens die achtfache Größe Ihrer größten Virtual Machine festlegen. Wenn Sie beispielsweise eine 6-TB-VM in Ihrer Umgebung haben, geben Sie der FlexGroup-Datenspeicher die Größe nicht kleiner als 48 TB an.
 * Erlauben Sie FlexGroup, den Datenspeicherplatz zu managen. Autosize und Elastic Sizing wurden mit vSphere Datastores getestet. Sollte der Datenspeicher annähernd die volle Kapazität erhalten, verwenden Sie ONTAP Tools für VMware vSphere oder ein anderes Tool, um die Größe des FlexGroup Volume zu ändern. Bei FlexGroup werden Kapazität und Inodes über die Komponenten hinweg ausgeglichen. So werden die Dateien in einem Ordner (VM) nach Möglichkeit der Kapazität auf dieselbe Komponente priorisiert.
-* VMware und NetApp unterstützen derzeit keinen gemeinsamen Ansatz für Multipath-Netzwerke. Bei NFSv4.1 unterstützt NetApp pNFS, während VMware das Session-Trunking unterstützt. NFSv3 unterstützt nicht mehrere physische Pfade zu einem Volume. Für FlexGroup mit ONTAP 9.8 empfiehlt sich als Best Practice, die FlexGroup von den ONTAP Tools für VMware vSphere erstellen zu lassen. Danach sollten Sie sie abmounten und mithilfe von Round Robin DNS neu einbinden, um die Last über den Cluster zu verteilen. ONTAP Tools verwenden beim Mounten von Datastores nur eine LIF. Nach dem erneuten Mounten des Datastore können ONTAP Tools zur Überwachung und zum Management verwendet werden.
+* VMware und NetApp unterstützen derzeit das NFSv4.1 Session-Trunking ab ONTAP 9.14.1. In den Hinweisen zur NetApp NFS 4.1 Interoperabilitäts-Matrix finden Sie spezifische Versionsdetails. NFSv3 unterstützt nicht mehrere physische Pfade zu einem Volume, sondern beginnend mit vSphere 8.0U2 nconnect. Für FlexGroup mit ONTAP 9.8 empfiehlt sich als Best Practice, die FlexGroup von den ONTAP Tools für VMware vSphere erstellen zu lassen. Danach sollten Sie sie abmounten und mithilfe von Round Robin DNS neu einbinden, um die Last über den Cluster zu verteilen. ONTAP Tools verwenden beim Mounten von Datastores nur eine LIF. Nach dem erneuten Mounten des Datastore können ONTAP Tools zur Überwachung und zum Management verwendet werden.
 * Die Unterstützung für FlexGroup vSphere Datastores wurde mit Version 9.8 auf bis zu 1500 VMs getestet.
 * Nutzen Sie das NFS-Plug-in für VMware VAAI für den Offloaded Data Transfer. Beachten Sie, dass das Klonen innerhalb eines FlexGroup-Datastore verbessert wird, wie bereits erwähnt, aber ONTAP beim Kopieren von VMs zwischen FlexVol und/oder FlexGroup Volumes keine wesentlichen Performance-Vorteile gegenüber ESXi Hostkopien bietet. Berücksichtigen Sie daher beim Einsatz von VAAI oder FlexGroups Ihre Klon-Workloads. Die Änderung der Anzahl zusammengebender Volumes ist eine Möglichkeit zur Optimierung des FlexGroup-basierten Klonens. Ebenso wie die Anpassung der Cache-Zeitüberschreitung.
 * Verwenden Sie ONTAP Tools für VMware vSphere 9.8, um die Performance von FlexGroup VMs mithilfe von ONTAP Kennzahlen (Dashboard- und VM-Berichte) zu überwachen und QoS auf einzelnen VMs zu managen. Diese Metriken sind derzeit nicht über ONTAP-Befehle oder APIs verfügbar.

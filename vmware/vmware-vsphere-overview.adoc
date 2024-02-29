@@ -11,13 +11,10 @@ summary: Seit fast zwei Jahrzehnten ist die NetApp ONTAP Software eine der führ
 :icons: font
 :linkattrs: 
 :imagesdir: ../media/
-:firstname: [.lead]
-:author: [.lead]
-:authorinitials: [
-:authors: [.lead]
-:revnumber: 
-:revdate: and simplify management.
 
+
+[role="lead"]
+Seit fast zwei Jahrzehnten ist die NetApp ONTAP Software eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen. Dieses Dokument bietet eine Einführung in die ONTAP Lösung für vSphere sowie in die neuesten Produktinformationen und Best Practices zur Optimierung der Implementierung, Risikominderung und Vereinfachung des Managements.
 
 
 NOTE: Diese Dokumentation ersetzt zuvor veröffentlichte technische Berichte _TR-4597: VMware vSphere for ONTAP_
