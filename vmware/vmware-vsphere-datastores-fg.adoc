@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-vsphere-datastores-fg.html 
+keywords: vSphere, datastore, VMFS, FC, FCoE, NVMe/FC, iSCSI, NFS, vVols 
+summary: Auf dieser Seite werden die Best Practices zur Implementierung einer NetApp ONTAP Storage-Lösung in einer VMware vSphere Umgebung beschrieben. 
+---
+= FlexGroup Volumes
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 9.8 bietet zusätzlich Unterstützung für FlexGroup Volume Datastores in vSphere und unterstützt außerdem ONTAP Tools für VMware vSphere sowie ein SnapCenter Plug-in für VMware vSphere. FlexGroup vereinfacht die Erstellung großer Datastores und erstellt automatisch eine Reihe von zusammengehörigen Volumes, um die maximale Performance eines ONTAP Systems zu erreichen. Verwenden Sie FlexGroup zusammen mit vSphere, wenn Sie einen einzelnen, skalierbaren vSphere-Datastore mit der Leistung eines vollständigen ONTAP Clusters benötigen oder bei sehr umfangreichen Klon-Workloads von dem neuen FlexGroup Klonmechanismus profitieren möchten.
+
+Neben umfangreichen Systemtests mit vSphere Workloads bietet ONTAP 9.8 auch einen neuen Offload-Mechanismus für FlexGroup Datastores. Sie verwendet eine aktualisierte Kopie-Engine, die die ersten Klone verwendet, um einen lokalen Cache in jedem einzelnen Volume zu füllen. Dieser lokale Cache wird dann verwendet, um VM-Klone bei Bedarf schnell instanziieren zu können.
+
+Betrachten wir das folgende Szenario:
+
+* Sie haben eine neue FlexGroup mit 8 Komponenten erstellt
+* Das Cache-Zeitlimit für die neue FlexGroup ist auf 160 Minuten festgelegt
+
+
+In diesem Szenario sind die ersten 8 Klone vollständig vollständige Kopien anstatt lokale Dateiklone. Für jedes weitere Klonen dieser VM vor Ablauf der 160-Sekunden-Zeitüberschreitung wird die Datei-Klon-Engine innerhalb jeder Komponente nach dem Round-Robin-Verfahren verwendet, um nahezu sofortige Kopien zu erstellen, die gleichmäßig über die einzelnen Volumes verteilt sind.
+
+Bei jedem neuen Klonjob, der ein Volume erhält, wird die Zeitüberschreitung zurückgesetzt. Wenn ein konstituierendes Volume in der Beispiel-FlexGroup vor dem Timeout keine Klonanforderung erhält, wird der Cache für diese bestimmte VM gelöscht und das Volume muss erneut ausgefüllt werden. Wenn sich auch die Quelle des ursprünglichen Klons ändert (z. B. Sie haben die Vorlage aktualisiert), wird der lokale Cache jeder Komponente ungültig, um Konflikte zu vermeiden. Der Cache kann an die Anforderungen Ihrer Umgebung angepasst werden.
+
+In Umgebungen, in denen Unternehmen nicht alle Vorteile des FlexGroup Cache ausschöpfen können, aber trotzdem schnelles standortübergreifendes Klonen benötigen, ist die Verwendung von VVols eine erwägen. Das Volume-übergreifende Klonen mit VVols erfolgt viel schneller als bei herkömmlichen Datastores und ist nicht auf einen Cache angewiesen.
+
+Weitere Informationen zur Verwendung von FlexGroups mit VAAI finden Sie in diesem KB-Artikel: https://kb.netapp.com/?title=onprem%2Fontap%2Fdm%2FVAAI%2FVAAI%3A_How_does_caching_work_with_FlexGroups%253F["VAAI: Wie funktioniert Caching mit FlexGroup Volumes?"^]
+
+ONTAP 9.8 bietet außerdem neue dateibasierte Performance-Metriken (IOPS, Durchsatz und Latenz) für FlexGroup Volume-Dateien, die über das Dashboard von ONTAP Tools für VMware vSphere sowie VM-Berichte eingesehen werden können. Die ONTAP Tools für VMware vSphere Plug-in ermöglichen Ihnen darüber hinaus die Festlegung von QoS-Regeln (Quality of Service) über eine Kombination aus dem Maximum und/oder dem Minimum von IOPS. Diese können über alle VMs in einem Datenspeicher oder individuell für bestimmte VMs hinweg festgelegt werden.
+
+Im Folgenden finden Sie einige weitere NetApp Best Practices:
+
+* Verwenden Sie die Standardwerte für die FlexGroup Volume-Bereitstellung. Es empfiehlt sich zwar ONTAP-Tools für VMware vSphere, da sie die FlexGroup in vSphere erstellen und gemountet werden. Zudem ist ONTAP System Manager oder die Befehlszeile kann für spezielle Anforderungen verwendet werden. Verwenden Sie selbst dann Standardwerte wie die Anzahl der konstituierenden Mitglieder pro Node, da dies mit vSphere am gründlichsten getestet wurde. Indessen werden nicht-Standardeinstellungen wie das Ändern der Anzahl oder Platzierung von Bestandteilen immer noch vollständig unterstützt.
+* Bei der Größenbestimmung eines FlexGroup-basierten Datenspeichers beachten Sie, dass die FlexGroup aus mehreren kleineren FlexVol Volumes besteht, die einen größeren Namespace erstellen. Wenn Sie daher eine FlexGroup mit acht Komponenten verwenden, sollten Sie den Datenspeicher mindestens die achtfache Größe Ihrer größten Virtual Machine festlegen. Wenn Sie beispielsweise eine 6-TB-VM in Ihrer Umgebung haben, geben Sie der FlexGroup-Datenspeicher die Größe nicht kleiner als 48 TB an.
+* Erlauben Sie FlexGroup, den Datenspeicherplatz zu managen. Autosize und Elastic Sizing wurden mit vSphere Datastores getestet. Sollte der Datenspeicher annähernd die volle Kapazität erhalten, verwenden Sie ONTAP Tools für VMware vSphere oder ein anderes Tool, um die Größe des FlexGroup Volume zu ändern. Bei FlexGroup werden Kapazität und Inodes über die Komponenten hinweg ausgeglichen. So werden die Dateien in einem Ordner (VM) nach Möglichkeit der Kapazität auf dieselbe Komponente priorisiert.
+* VMware und NetApp unterstützen derzeit das NFSv4.1 Session-Trunking ab ONTAP 9.14.1. In den Hinweisen zur NetApp NFS 4.1 Interoperabilitäts-Matrix finden Sie spezifische Versionsdetails. NFSv3 unterstützt nicht mehrere physische Pfade zu einem Volume, sondern beginnend mit vSphere 8.0U2 nconnect. Weitere Informationen zu nconnect finden Sie https://docs.netapp.com/us-en/netapp-solutions_nconnect/virtualization/vmware-vsphere8-nfsv3-nconnect.html["NFSv3 nConnect Funktion mit NetApp und VMware"]. Für FlexGroup mit ONTAP 9.8 empfiehlt sich als Best Practice, die FlexGroup von den ONTAP Tools für VMware vSphere erstellen zu lassen. Danach sollten Sie sie abmounten und mithilfe von Round Robin DNS neu einbinden, um die Last über den Cluster zu verteilen. ONTAP Tools verwenden beim Mounten von Datastores nur eine LIF. Nach dem erneuten Mounten des Datastore können ONTAP Tools zur Überwachung und zum Management verwendet werden.
+* Die Unterstützung für FlexGroup vSphere Datastores wurde mit Version 9.8 auf bis zu 1500 VMs getestet.
+* Nutzen Sie das NFS-Plug-in für VMware VAAI für den Offloaded Data Transfer. Beachten Sie, dass das Klonen innerhalb eines FlexGroup-Datastore verbessert wird, wie bereits erwähnt, aber ONTAP beim Kopieren von VMs zwischen FlexVol und/oder FlexGroup Volumes keine wesentlichen Performance-Vorteile gegenüber ESXi Hostkopien bietet. Berücksichtigen Sie daher beim Einsatz von VAAI oder FlexGroups Ihre Klon-Workloads. Die Änderung der Anzahl zusammengebender Volumes ist eine Möglichkeit zur Optimierung des FlexGroup-basierten Klonens. Ebenso wie die Anpassung der Cache-Zeitüberschreitung.
+* Verwenden Sie ONTAP Tools für VMware vSphere 9.8, um die Performance von FlexGroup VMs mithilfe von ONTAP Kennzahlen (Dashboard- und VM-Berichte) zu überwachen und QoS auf einzelnen VMs zu managen. Diese Metriken sind derzeit nicht über ONTAP-Befehle oder APIs verfügbar.
+* QoS (max./min. IOPS) kann auf einzelnen VMs oder auf allen VMs zu diesem Zeitpunkt in einem Datenspeicher festgelegt werden. Die Festlegung der QoS auf allen VMs ersetzt alle separaten Einstellungen pro VM. Einstellungen erweitern nicht auch künftig auf neue oder migrierte VMs. Sie können entweder QoS auf den neuen VMs festlegen oder QoS neu auf alle VMs im Datastore anwenden. Auch folgen die QoS-Richtlinien von FlexGroup nicht der VM, wenn sie in einen anderen Datastore migriert werden. Dies steht im Gegensatz zu VVols, die ihre QoS-Richtlinieneinstellungen beibehalten können, wenn sie zu einem anderen Datastore migriert werden.
+* Das SnapCenter Plug-in für VMware vSphere Version 4.4 und höher unterstützt das Backup und die Recovery von VMs in einem FlexGroup Datastore auf dem primären Storage-System. SCV 4.6 bietet SnapMirror Unterstützung für FlexGroup-basierte Datastores.
+
