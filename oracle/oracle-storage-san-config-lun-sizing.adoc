@@ -4,7 +4,7 @@ permalink: oracle/oracle-storage-san-config-lun-sizing.html
 keywords: SAN, ASM, LVM 
 summary: Richtlinien zur Größenanpassung von Oracle Datenbanken und zur LUN-Anzahl 
 ---
-= Größenanpassung von Oracle-LUNs und LUN-Anzahl
+= Größenbestimmung von LUNs und LUN-Anzahl bei der Oracle Datenbank
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

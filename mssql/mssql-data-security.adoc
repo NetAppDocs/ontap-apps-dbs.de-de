@@ -76,7 +76,7 @@ Weitere Informationen finden Sie unter link:https://docs.netapp.com/us-en/ontap/
 
 Für die Automatisierung sind API-Aufrufe erforderlich, aber nicht alle Tools benötigen vollständigen administrativen Zugriff. Um Automatisierungssysteme zu sichern, ist RBAC auch auf API-Ebene verfügbar. Sie können die Benutzerkonten für die Automatisierung auf die erforderlichen API-Aufrufe beschränken. Die Überwachungssoftware benötigt beispielsweise keinen Änderungszugriff, sondern nur Lesezugriff. Workflows, die Storage bereitstellen, müssen Storage nicht löschen können.
 
-Erfahren Sie mehr link:https://docs.netapp.com/us-en/ontap-automation/rest/rbac_overview.html["Hier."]
+Um mehr zu erfahren, starten Sie den https://docs.netapp.com/us-en/ontap-automation/rest/rbac_overview.html[here.]
 
 
 

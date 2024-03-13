@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: oracle/oracle-tiering-whole-file.html 
 keywords: tiering, fabricpool 
-summary: Oracle Full Tile Tiering 
+summary: FabricPool-Tiering für vollständige Dateien in der Oracle-Datenbank 
 ---
-= Vollständiges File Tiering für Oracle
+= FabricPool-Tiering für vollständige Dateien in der Oracle-Datenbank
 :allow-uri-read: 
 
 

@@ -2,14 +2,14 @@
 sidebar: sidebar 
 permalink: oracle/oracle-dp-storage-snapshot-optimized-backups.html 
 keywords: oracle, data protection, snapshot-optimized, crash-consistent 
-summary: Snapshot optimiertes Backup 
+summary: Oracle Storage Snapshot optimierte Backups 
 ---
-= Oracle Storage Snapshot optimierte Backups
+= Oracle Database Storage Snapshot optimierte Backups
 :allow-uri-read: 
 
 
 [role="lead"]
-Snapshot basiertes Backup und Recovery werden mit Oracle 12c noch einfacher, da eine Datenbank nicht im Hot-Backup-Modus platziert werden muss. Daraus ergibt sich die Möglichkeit, Snapshot basierte Backups direkt auf einem Storage-System zu planen und dennoch eine vollständige oder zeitpunktgenaue Recovery durchzuführen.
+Snapshot-basiertes Backup und Recovery wurden vor der Veröffentlichung von Oracle 12c noch einfacher, da eine Datenbank nicht im Hot-Backup-Modus platziert werden muss. Daraus ergibt sich die Möglichkeit, Snapshot basierte Backups direkt auf einem Storage-System zu planen und dennoch eine vollständige oder zeitpunktgenaue Recovery durchzuführen.
 
 Obwohl DBAs mit der Hot-Backup-Wiederherstellung vertrauter sind, ist es seit langem möglich, Snapshots zu verwenden, die nicht erstellt wurden, während sich die Datenbank im Hot-Backup-Modus befand. Für Oracle 10g und 11g waren während der Recovery zusätzliche manuelle Schritte erforderlich, um die Datenbankkonsistenz zu gewährleisten. Mit Oracle 12c, `sqlplus` Und `rman` Enthalten die zusätzliche Logik zur Wiedergabe von Archivprotokollen für Datendatei-Backups, die sich nicht im Hot-Backup-Modus befanden.
 

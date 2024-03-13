@@ -150,19 +150,19 @@ entries:
       url: "/oracle/oracle-dr-mcc-failover.html"
     - title: NV-FEHLER
       url: "/oracle/oracle-dr-mcc-nvfail.html"
-    - title: Einzelne Instanz auf MetroCluster
+    - title: Oracle SI auf MetroCluster
       url: "/oracle/oracle-dr-mcc-si.html"
     - title: Oracle RAC auf MetroCluster
       url: "/oracle/oracle-dr-mcc-rac.html"
-  - title: SnapMirror Business Continuity
+  - title: SnapMirror Active Sync
     entries:
     - title: Der Netapp Architektur Sind
       url: "/oracle/oracle-dr-smbc-architecture.html"
     - title: Failover
       url: "/oracle/oracle-dr-smbc-failover.html"
-    - title: Einzelne Instanz auf SM-BC
+    - title: Oracle SI mit SnapMirror Active Sync
       url: "/oracle/oracle-dr-smbc-si.html"
-    - title: Oracle RAC auf SM-BC
+    - title: Oracle RAC mit aktiver SnapMirror Synchronisierung
       url: "/oracle/oracle-dr-smbc-rac.html"
     - title: Ausfallszenarien
       url: "/oracle/oracle-dr-smbc-failure-scenarios.html"

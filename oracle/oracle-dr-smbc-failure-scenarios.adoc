@@ -1,10 +1,10 @@
 ---
 permalink: oracle/oracle-dr-smbc-failure-scenarios.html 
 sidebar: sidebar 
-keywords: SM-BC, smbc, failover 
-summary: Fehlerszenarien für Oracle SM-BC 
+keywords: SnapMirror active sync, smbc, failover 
+summary: Oracle Datenbanken und SnapMirror Ausfallszenarien für die aktive Synchronisierung 
 ---
-= Fehlerszenarien für Oracle SM-BC
+= Oracle Datenbanken und SnapMirror Ausfallszenarien für die aktive Synchronisierung
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,7 +14,7 @@ summary: Fehlerszenarien für Oracle SM-BC
 
 
 [role="lead"]
-Es gibt mehrere SnapMirror Business Continuity (SM-BC)-Ausfallszenarien, die jeweils unterschiedliche Ergebnisse haben.
+Es gibt mehrere SnapMirror Active Sync (SM-AS) Fehler-Szenarien, die jeweils unterschiedliche Ergebnisse haben.
 
 [cols="1,1"]
 |===
@@ -43,7 +43,7 @@ Es erfolgt eine automatische Neusynchronisierung, wenn die Site online ist.
 | Verlust von Festplatten | I/O wird bei bis zu drei aufeinanderfolgenden Festplattenausfällen fortgesetzt. Dies ist Teil von RAID-TEC. 
 
 
-| Verlust des gesamten Standorts in einer typischen Bereitstellung | Server auf dem ausgefallenen Standort sind offensichtlich nicht mehr verfügbar. Applikationen mit Clustering-Unterstützung können für die Ausführung an beiden Standorten und den Betrieb an einem alternativen Standort konfiguriert werden. Allerdings erfordern die meisten Applikationen eine Tiebreaker an einem dritten Standort, ähnlich wie SM-BC den Mediator erfordert.
+| Verlust des gesamten Standorts in einer typischen Bereitstellung | Server auf dem ausgefallenen Standort sind offensichtlich nicht mehr verfügbar. Applikationen mit Clustering-Unterstützung können für die Ausführung an beiden Standorten und den Betrieb an einem alternativen Standort konfiguriert werden. Allerdings erfordern die meisten Applikationen eine Tiebreaker an einem dritten Standort, ähnlich wie SM-AS den Mediator erfordert.
 
 Ohne Cluster auf Applikationsebene müssen Applikationen am noch aktiven Standort gestartet werden. Dies würde sich auf die Verfügbarkeit auswirken, aber RPO=0 wird beibehalten. Es gehen keine Daten verloren. 
 |===

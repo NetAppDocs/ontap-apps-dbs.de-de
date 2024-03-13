@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: oracle/oracle-migration-fli-planning.html 
 keywords: migration, oracle, fli 
-summary: Vorbereiten von ONTAP für eine FLI-Migration 
+summary: Oracle Migration with FLI – Planung 
 ---
-= FLI Planning - Oracle
+= Oracle Migration with FLI – Planung
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

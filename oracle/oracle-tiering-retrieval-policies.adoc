@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: oracle/oracle-tiering-retrieval-policies.html 
 keywords: tiering, FabricPool 
-summary: Abrufrichtlinien für Pracle Tiering 
+summary: Oracle Datenbanken und FabricPool Abrufrichtlinien 
 ---
-= Abrufrichtlinien
+= Oracle Datenbanken und FabricPool Abrufrichtlinien
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: oracle/oracle-dp-planning.html 
 keywords: data protection, DR, snapshots, CG 
-summary: ONTAP Datensicherungsstrategien 
+summary: Planung der Datensicherung für Oracle Datenbanken 
 ---
-= Planung der Datensicherheit
+= Planung der Datensicherung für Oracle Datenbanken
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,7 +14,7 @@ summary: ONTAP Datensicherungsstrategien
 
 
 [role="lead"]
-Die richtige Datensicherungsarchitektur hängt von den geschäftlichen Anforderungen für die Datenaufbewahrung, Recovery-Fähigkeit und Ausfalltoleranz bei verschiedenen Ereignissen ab.
+Die richtige Datensicherungsarchitektur für Oracle-Datenbanken hängt von den geschäftlichen Anforderungen für die Datenaufbewahrung, Recovery-Fähigkeit und die Toleranz für Unterbrechungen bei verschiedenen Ereignissen ab.
 
 Betrachten Sie beispielsweise die Anzahl der im Umfang enthaltenen Applikationen, Datenbanken und wichtigen Datensätze. Die Entwicklung einer Backup-Strategie für einen einzelnen Datensatz gewährleistet, dass die Compliance mit typischen SLAs relativ unkompliziert ist, da nicht viele Objekte zu managen sind. Je mehr Datensätze es gibt, desto komplizierter wird das Monitoring und Administratoren müssen sich zunehmend mit dem Vermeiden von Backup-Fehlern befassen. Wenn eine Umgebung also die Skalierung von Cloud- und Service-Provider-Umgebungen erreicht, braucht es einen ganz anderen Ansatz.
 
@@ -52,7 +52,7 @@ Am einfachsten legen Sie alle Dateien oder LUNs in einer einzelnen Volume-Konsis
 
 == Architektur für Replizierung und Disaster Recovery
 
-In diesem Abschnitt geht es um die Remote-Datensicherung, bei der Daten zum sicheren externen Storage und zur Disaster Recovery an einen Remote-Standort repliziert werden. Beachten Sie, dass diese Tabellen keine Datensicherung für die synchrone Spiegelung berücksichtigen. Informationen zu dieser Anforderung finden Sie in der NetApp MetroCluster-Dokumentation einschließlich link:../metrocluster/overview.html["MetroCluster"] Und link:../smbc/overview.html["SnapMirror Business Continuity"]
+In diesem Abschnitt geht es um die Remote-Datensicherung, bei der Daten zum sicheren externen Storage und zur Disaster Recovery an einen Remote-Standort repliziert werden. Beachten Sie, dass diese Tabellen keine Datensicherung für die synchrone Spiegelung berücksichtigen. Informationen zu dieser Anforderung finden Sie in der NetApp MetroCluster-Dokumentation einschließlich link:../metrocluster/overview.html["MetroCluster"] Und link:../smbc/overview.html["SnapMirror Active Sync"]
 
 Das DR RPO wird durch die verfügbare Netzwerkbandbreite und die Gesamtgröße der zu sichernden Daten begrenzt. Nach der Erstellung des ersten Basistransfers basieren die Updates nur auf den geänderten Daten. Dies ist in der Regel ein geringer Prozentsatz des gesamten Datacenter-Platzbedarfs, obwohl es Ausnahmen gibt.
 

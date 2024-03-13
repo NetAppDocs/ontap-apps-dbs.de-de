@@ -1,0 +1,9 @@
+= Temperaturempfindliche Speichereffizienz
+:allow-uri-read: 
+
+
+
+
+=== Temperaturempfindliche Speichereffizienz
+
+Temperature Sensitive Storage Efficiency (TSSE) ist eine Verfügbarkeit in ONTAP 9.8 und höher. Sie basiert auf Blockzugriff-Heatmaps, um selten genutzte Blöcke zu identifizieren und sie mit höherer Effizienz zu komprimieren.

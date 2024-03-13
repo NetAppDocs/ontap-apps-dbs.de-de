@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: oracle/oracle-storage-nfs-config-caching.html 
 keywords: NFS 
-summary: NFS Attribute Caching-Datenbanken 
+summary: NFS Caching mit Oracle Datenbanken 
 ---
-= NFS Caching mit Datenbanken
+= NFS Caching mit Oracle Datenbanken
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

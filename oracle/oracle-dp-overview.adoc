@@ -9,7 +9,7 @@ summary: Überblick über die Oracle Datensicherung
 
 
 [role="lead"]
-Die geschäftskritischsten Daten befinden sich in Datenbanken.
+NetApp weiß, dass die geschäftskritischsten Daten in Datenbanken zu finden sind.
 
 Ein Unternehmen kann nicht ohne Zugriff auf seine Daten arbeiten, und manchmal definieren die Daten das Unternehmen. Diese Daten müssen geschützt werden. Bei der Datensicherung geht es jedoch mehr als nur um das Sicherstellen eines nutzbaren Backups. Es geht darum, die Backups schnell und zuverlässig durchzuführen und diese sicher zu speichern.
 

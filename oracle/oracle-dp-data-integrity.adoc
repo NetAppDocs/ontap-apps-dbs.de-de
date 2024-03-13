@@ -2,14 +2,14 @@
 sidebar: sidebar 
 permalink: oracle/oracle-dp-data-integrity.html 
 keywords: checksums, data integrity 
-summary: Prüfsummen und Oracle-Datensicherung 
+summary: Prüfsummen und Oracle-Datenbankintegrität 
 ---
-= Prüfsummen und Oracle-Datenintegrität
+= Prüfsummen und Oracle-Datenbankintegrität
 :allow-uri-read: 
 
 
 [role="lead"]
-Eine häufig an NetApp gerichtete Frage ist der Schutz der Datenintegrität in einer Oracle-Datenbank.
+ONTAP und die unterstützten Protokolle umfassen mehrere Funktionen zum Schutz der Integrität der Oracle-Datenbank, darunter sowohl Daten im Ruhezustand als auch Daten, die über das Netzwerk übertragen werden.
 
 Die logische Datensicherung innerhalb von ONTAP setzt sich aus drei Kernanforderungen zusammen:
 

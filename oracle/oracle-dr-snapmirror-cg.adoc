@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: oracle/oracle-dr-snapmirror-cg.html 
 keywords: oracle, data protection, DR, CG 
-summary: Konsistenzgruppenreplizierung für Oracle-Datenbanken 
+summary: Disaster Recovery für Oracle Datenbanken und Konsistenzgruppen 
 ---
-= Disaster Recovery für Konsistenzgruppen
+= Disaster Recovery für Oracle Datenbanken und Konsistenzgruppen
 :allow-uri-read: 
 
 

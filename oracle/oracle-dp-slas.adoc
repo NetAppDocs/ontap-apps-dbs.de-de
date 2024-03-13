@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: oracle/oracle-dp-slas.html 
 keywords: SLA, data protection, RPO, RTO 
-summary: Oracle Datensicherungs-SLAs 
+summary: Datensicherungs-SLAs für Oracle Datenbanken 
 ---
-= Recovery-Zeitvorgabe, Recovery-Zeitpunkt und Service Level Agreements
+= RTO-, RPO- und SLA-Planung für Oracle Database
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,7 +14,7 @@ summary: Oracle Datensicherungs-SLAs
 
 
 [role="lead"]
-Eine Datensicherungsstrategie sollte durch geschäftliche Anforderungen definiert werden.
+Mit ONTAP können Sie in einfacher Weise eine Datensicherungsstrategie für Oracle Database an Ihre Geschäftsanforderungen anpassen.
 
 Zu diesen Anforderungen gehören Faktoren wie die Geschwindigkeit der Recovery, der maximal zulässige Datenverlust und die Anforderungen an die Aufbewahrung von Backups. Der Datensicherungsplan muss zudem verschiedene gesetzliche Vorgaben für die Datenaufbewahrung und -Wiederherstellung berücksichtigen. Schließlich müssen verschiedene Datenwiederherstellungsszenarien in Betracht gezogen werden, von der typischen und vorhersehbaren Wiederherstellung aufgrund von Benutzer- oder Applikationsfehlern bis hin zu Disaster Recovery-Szenarien, die den vollständigen Ausfall eines Standorts beinhalten.
 

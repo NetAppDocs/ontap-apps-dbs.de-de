@@ -4,7 +4,7 @@ permalink: oracle/oracle-network-config-fc.html
 keywords: SAN, zoning 
 summary: FC-Netzwerkkonfiguration für Oracle-Datenbanken 
 ---
-= FC-Konfiguration für Oracle
+= FC-Konfiguration für Oracle-Datenbanken
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

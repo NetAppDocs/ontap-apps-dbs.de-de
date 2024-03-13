@@ -1,0 +1,39 @@
+= Pfadzugriff
+:allow-uri-read: 
+
+
+SnapMirror Active Sync ist im Grunde eine erweiterte SnapMirror Funktion für SAN. Hosts können sowohl von dem System, das die LUN hostet, als auch von dem System, das dessen Replikat hostet, auf eine LUN zugreifen.
+
+SnapMirror Active Sync und SnapMirror Sync nutzen ein Replizierungs-Engine, allerdings enthält SnapMirror Active Sync zusätzliche Funktionen wie transparenten Applikations-Failover und Failback für Enterprise-Applikationen.
+
+In der Praxis funktioniert es ähnlich wie eine granulare Version von MetroCluster, indem es eine selektive und granulare synchrone RPO=0-Replizierung für individuelle Workloads ermöglicht. Das Verhalten der Pfade auf niedriger Ebene unterscheidet sich sehr von MetroCluster, aber das Endergebnis aus der Sicht des Hosts ist ähnlich.
+
+
+
+== Pfadzugriff
+
+Mit SnapMirror sind die Storage-Geräte sowohl von den primären als auch von den Remote-Storage Arrays aus für das Host-Betriebssystem sichtbar. Pfade werden über das Asymmetric Logical Unit Access (ALUA)-Protokoll verwaltet. Hierbei handelt es sich um ein branchenübliches Protokoll zur Identifizierung optimierter Pfade zwischen einem Storage-System und einem Host.
+
+Der Gerätepfad, der den kürzesten Zugriff auf E/A hat, wird als aktiv/optimiert betrachtet, und der Rest der Pfade gilt als aktiv/nicht optimiert.
+
+Die aktive SnapMirror Sync Beziehung besteht zwischen einem SVM-Paar, das sich auf unterschiedlichen Clustern befindet. Beide SVMs können Daten bereitstellen. ALUA verwendet jedoch bevorzugt die SVM, die derzeit Eigentümer der Laufwerke ist, auf denen sich die LUNs befinden. Die E/A-Vorgänge für die Remote-SVM werden über den mit dem aktiven synchronen SnapMirror-Interconnect per Proxy zugewiesen.
+
+image:smas-failover-1.png["Fehler: Fehlendes Grafikbild"]
+
+
+
+== Synchrone Replizierung
+
+Im normalen Betrieb ist die Remote-Kopie jederzeit ein synchrones RPO=0-Replikat, mit einer Ausnahme. Wenn die Daten nicht repliziert werden können, müssen bei der aktiven Synchronisierung von SnapMirror die Daten repliziert und die I/O-Bereitstellung fortgesetzt werden. Diese Option wird von Kunden bevorzugt, die den Verlust des Replikationslinks in einem Notfall erwägen oder die nicht möchten, dass der Geschäftsbetrieb unterbrochen wird, wenn Daten nicht repliziert werden können.
+
+
+
+== Storage-Hardware
+
+Im Gegensatz zu anderen Disaster Recovery-Lösungen für Storage bietet SnapMirror Active Sync asymmetrische Plattformflexibilität. Die Hardware an den einzelnen Standorten muss nicht identisch sein. Dank dieser Funktion können Sie die Größe der Hardware anpassen, die zur Unterstützung der SnapMirror Active Sync verwendet wird. Das Remote-Storage-System kann identisch mit dem primären Standort sein, wenn es einen vollständigen Produktions-Workload unterstützen muss. Wenn jedoch ein Ausfall zu einer Verringerung der I/O führt, könnte ein kleineres System am Remote-Standort kostengünstiger sein.
+
+
+
+== ONTAP Mediator
+
+Der ONTAP Mediator ist eine Softwareanwendung, die vom NetApp Support heruntergeladen wird. Der Mediator automatisiert Failover-Vorgänge für den primären und den Remote-Standort-Speicher-Cluster. Es kann auf einer kleinen Virtual Machine (VM) implementiert werden, die entweder vor Ort oder in der Cloud gehostet wird. Nach der Konfiguration fungiert er als dritter Standort, um Failover-Szenarien für beide Standorte zu überwachen.

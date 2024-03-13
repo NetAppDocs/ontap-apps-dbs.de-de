@@ -4,7 +4,7 @@ permalink: oracle/oracle-tiering-backups.html
 keywords: tiering, fabricpool 
 summary: Backup-Tiering für Oracle 
 ---
-= Backup-Tiering für Oracle
+= Backup-Tiering für Oracle Datenbank
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

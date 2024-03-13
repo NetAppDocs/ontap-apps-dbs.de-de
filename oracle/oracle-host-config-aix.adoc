@@ -2,14 +2,14 @@
 sidebar: sidebar 
 permalink: oracle/oracle-host-config-aix.html 
 keywords: oracle, database, ontap, aix, cio 
-summary: Oracle auf ONTAP unter Nutzung von AIX 
+summary: Oracle Datenbanken mit AIX 
 ---
-= IBM AIX
+= Oracle Datenbanken mit IBM AIX
 :allow-uri-read: 
 
 
 [role="lead"]
-Konfigurationsthemen für das IBM AIX-Betriebssystem.
+Konfigurationsthemen für Oracle Database auf IBM AIX mit ONTAP.
 
 
 
