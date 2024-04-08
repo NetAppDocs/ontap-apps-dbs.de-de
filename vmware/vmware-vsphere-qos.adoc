@@ -90,7 +90,7 @@ ONTAP QoS und VMware vSphere Storage I/O Control (SIOC) sind Technologien, die s
 
 VMware Storage Distributed Resource Scheduler (SDRS) ist eine Funktion von vSphere, die VMs auf Storage basierend auf der aktuellen I/O-Latenz und der Speicherplatznutzung platziert. Danach werden die VM oder VMDKs unterbrechungsfrei zwischen den Datastores in einem Datastore-Cluster (auch Pod genannt) verschoben und es wird der beste Datastore ausgewählt, in dem die VM oder die VMDKs im Datastore-Cluster platziert werden sollen. Ein Datastore-Cluster ist eine Sammlung ähnlicher Datastores, die aus Sicht des vSphere Administrators in einer einzigen Verbrauchseinheit aggregiert werden.
 
-Wenn Sie SDRS mit den NetApp ONTAP Tools für VMware vSphere verwenden, müssen Sie zuerst einen Datastore mit dem Plug-in erstellen, vCenter verwenden, um das Datastore-Cluster zu erstellen und dann den Datastore hinzufügen. Nach der Erstellung des Datastore-Clusters können diesem direkt aus dem Assistenten für die Datastore-Bereitstellung auf der Seite „Details“ weitere Datastores hinzugefügt werden.
+Wenn Sie SDRS mit ONTAP Tools für VMware vSphere verwenden, müssen Sie zuerst einen Datastore mit dem Plug-in erstellen, das Datastore-Cluster mithilfe von vCenter erstellen und diesem dann den Datastore hinzufügen. Nach der Erstellung des Datastore-Clusters können diesem direkt aus dem Assistenten für die Datastore-Bereitstellung auf der Seite „Details“ weitere Datastores hinzugefügt werden.
 
 Weitere ONTAP Best Practices für SDRS:
 
@@ -116,13 +116,13 @@ Das SCP unterstützt die minimale und/oder maximale QoS für die Daten-VVols ein
 
 In der folgenden Abbildung sind die ONTAP Tools für das Dashboard von VMware vSphere 9.8 VVols dargestellt.
 
-image:vsphere_ontap_image7.png["Fehler: Fehlendes Grafikbild"]
+image:vsphere_ontap_image7.png["ONTAP Tools für das VVols Dashboard von VMware vSphere 9.8"]
 
 Nachdem ein Storage-Funktionsprofil definiert wurde, können damit anhand der Storage-Richtlinie, in der die entsprechenden Anforderungen angegeben sind, VMs bereitgestellt werden. Durch die Zuordnung zwischen der VM-Storage-Richtlinie und dem Datastore-Storage-Funktionsprofil kann in vCenter eine Liste kompatibler Datastores zur Auswahl angezeigt werden. Dieser Ansatz wird als richtlinienbasiertes Storage-Management bezeichnet.
 
 VASA stellt die Technologie bereit, mit der der Storage abgefragt und eine Reihe von Storage-Funktionen an vCenter zurückgegeben werden können. VASA Provider stellen die Übersetzung zwischen den Storage-System-APIs und -Konstrukten einerseits und den von vCenter erkannten VMware APIs bereit. NetApp VASA Provider für ONTAP wird als Teil der ONTAP Tools für die VMware vSphere Appliance VM angeboten. Das vCenter Plug-in bietet die Schnittstelle zum Bereitstellen und Managen von vVol Datastores und bietet die Möglichkeit, Storage-Funktionsprofile zu definieren.
 
-ONTAP unterstützt sowohl VMFS als auch NFS vVol Datastores. Bei gemeinsamer Verwendung von VVols und SAN-Datastores profitieren Sie von einigen der Vorteile von NFS, beispielsweise von Granularität auf VM-Ebene. Im Folgenden werden einige der zu berücksichtigende Best Practices beschrieben. Weitere Informationen finden Sie unter http://www.netapp.com/us/media/tr-4400.pdf["TR-4400"^]:
+ONTAP unterstützt sowohl VMFS als auch NFS vVol Datastores. Bei gemeinsamer Verwendung von VVols und SAN-Datastores profitieren Sie von einigen der Vorteile von NFS, beispielsweise von Granularität auf VM-Ebene. Im Folgenden werden einige der zu berücksichtigende Best Practices beschrieben. Weitere Informationen finden Sie unter link:vmware-vvols-overview.html["TR-4400"^]:
 
 * Ein vVol Datastore kann aus mehreren FlexVol Volumes auf mehreren Cluster-Nodes bestehen. Den einfachsten Ansatz stellt ein einzelner Datastore dar, selbst wenn die Volumes unterschiedliche Funktionen haben. SPBM stellt sicher, dass ein kompatibles Volume für die VM verwendet wird. Die Volumes müssen allerdings alle einer einzigen ONTAP SVM angehören und es muss über ein einziges Protokoll auf sie zugegriffen werden. Für jedes Protokoll reicht eine logische Schnittstelle pro Node aus. Es empfiehlt sich nicht, mehrere ONTAP Versionen in einem einzelnen vVol Datastore zu nutzen, da sich die Storage-Funktionen in verschiedenen Versionen unter Umständen unterscheiden.
 * Verwenden Sie die ONTAP Tools für VMware vSphere Plug-in, um vVol Datastores zu erstellen und zu managen. Neben dem Management des Datastores und dessen Profil erstellt es bei Bedarf automatisch einen Protokollendpunkt für den Zugriff auf die VVols. Falls LUNs verwendet werden, werden LUN-Protokollendpunkte (PES) mit LUN-IDs ab 300 zugeordnet. Vergewissern Sie sich, dass die erweiterte Systemeinstellung des ESXi-Hosts aktiviert ist `Disk.MaxLUN` Ermöglicht eine LUN-ID-Nummer, die über 300 liegt (Standard ist 1,024). Wählen Sie diesen Schritt aus: ESXi Host in vCenter, dann Registerkarte „Configure“ und suchen Sie `Disk.MaxLUN` In der Liste der erweiterten Systemeinstellungen.
@@ -132,7 +132,7 @@ ONTAP unterstützt sowohl VMFS als auch NFS vVol Datastores. Bei gemeinsamer Ver
 
 In der folgenden Abbildung werden die VVols Komponenten angezeigt.
 
-image:vsphere_ontap_image8.png["Fehler: Fehlendes Grafikbild"]
+image:vsphere_ontap_image8.png["VVols Komponenten"]
 
 
 
@@ -141,7 +141,7 @@ image:vsphere_ontap_image8.png["Fehler: Fehlendes Grafikbild"]
 Eine weitere Stärke von ONTAP ist die umfassende Unterstützung für die Hybrid Cloud, bei der Systeme in Ihrer Private Cloud vor Ort mit Public-Cloud-Funktionen vereint werden. Im Folgenden sind einige NetApp Cloud-Lösungen aufgeführt, die gemeinsam mit vSphere verwendet werden können:
 
 * *Cloud Volumes.* NetApp Cloud Volumes Service für Amazon Web Services oder Google Cloud Platform und Azure NetApp Files für ANF bieten hochperformante, Multiprotokoll-gemanagte Storage-Services in führenden Public-Cloud-Umgebungen. Sie können direkt von den Gästen der VMware Cloud VM verwendet werden.
-* *Cloud Volumes ONTAP.* die NetApp Cloud Volumes ONTAP Datenmanagement-Software bietet Kontrolle, Schutz, Flexibilität und Effizienz für Ihre Unternehmensdaten in der gewünschten Cloud. Cloud Volumes ONTAP ist eine Cloud-native Datenmanagement-Software auf der Basis der Storage-Software NetApp ONTAP. Nutzen Sie diese Technologie zusammen mit Cloud Manager, um Cloud Volumes ONTAP Instanzen gemeinsam mit Ihren lokalen ONTAP Systemen zu implementieren und zu managen. Nutzen Sie erweiterte NAS- und iSCSI SAN-Funktionen mit einheitlichem Datenmanagement einschließlich Snapshots und SnapMirror Replizierung.
+* *Cloud Volumes ONTAP.* die NetApp Cloud Volumes ONTAP Datenmanagement-Software bietet Kontrolle, Schutz, Flexibilität und Effizienz für Ihre Unternehmensdaten in der gewünschten Cloud. Cloud Volumes ONTAP ist eine Cloud-native Datenmanagement-Software auf der Basis von ONTAP Storage. Nutzen Sie diese Technologie zusammen mit Cloud Manager, um Cloud Volumes ONTAP Instanzen gemeinsam mit Ihren lokalen ONTAP Systemen zu implementieren und zu managen. Nutzen Sie erweiterte NAS- und iSCSI SAN-Funktionen mit einheitlichem Datenmanagement einschließlich Snapshots und SnapMirror Replizierung.
 * *Cloud-Services.* Verwenden Sie Cloud Backup Service oder SnapMirror Cloud, um Daten mithilfe von Public-Cloud-Storage vor lokalen Systemen zu schützen. Cloud Sync hilft bei der Migration und bei der Synchronisierung Ihrer Daten in NAS-, Objektspeicher- und Cloud Volumes Service-Storage.
 * *FabricPool.* FabricPool bietet schnelles und einfaches Tiering für ONTAP Daten. Selten genutzte, „kalte“ Blöcke können zu einem Objektspeicher in Public Clouds oder zu einem privaten StorageGRID Objektspeicher migriert werden und beim erneuten Zugriff auf die ONTAP-Daten automatisch wieder abgerufen werden. Alternativ können Sie die Objekt-Tier als dritte Schutzebene für Daten verwenden, die bereits von SnapVault gemanagt werden. Dieser Ansatz kann Ihnen ermöglichen https://www.linkedin.com/pulse/rethink-vmware-backup-again-keith-aasen/["Speichern Sie mehr Snapshots Ihrer VMs"^] Auf primären und/oder sekundären ONTAP-Storage-Systemen.
 * *ONTAP Select.* mit softwaredefiniertem NetApp Storage erweitern Sie Ihre Private Cloud über das Internet auf Remote-Einrichtungen und Niederlassungen, in denen Sie ONTAP Select zur Unterstützung von Block- und Fileservices sowie denselben vSphere Datenmanagementfunktionen nutzen können, die Sie in Ihrem Unternehmens-Datacenter haben.
@@ -177,10 +177,10 @@ Eine typische Implementierung einer virtuellen Infrastruktur auf ONTAP setzt auf
 
 Der folgende Screenshot zeigt die Ansicht der virtuellen Active IQ Unified Manager Machines.
 
-image:vsphere_ontap_image9.png["Fehler: Fehlendes Grafikbild"]
+image:vsphere_ontap_image9.png["Ansicht der virtuellen Maschinen von Active IQ Unified Manager"]
 
 Unified Manager stellt das zugrunde liegende Untersystem einer virtuellen Umgebung in einer topologischen Übersicht vor, um zu ermitteln, ob beim Computing-Node, Netzwerk oder Storage ein Latenzproblem aufgetreten ist. Die Ansicht zeigt außerdem das spezifische Objekt, das aufgrund der Performance-Verzögerung Korrekturmaßnahmen ergreifen und das zugrunde liegende Problem lösen kann.
 
 Der folgende Screenshot zeigt die erweiterte AIQUM-Topologie.
 
-image:vsphere_ontap_image10.png["Fehler: Fehlendes Grafikbild"]
+image:vsphere_ontap_image10.png["AIQUM erweiterte Topologie"]

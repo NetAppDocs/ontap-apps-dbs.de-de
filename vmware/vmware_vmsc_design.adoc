@@ -47,23 +47,23 @@ Führen Sie zum Konfigurieren eines HA-Clusters die folgenden Schritte aus:
 . Klicken Sie mit der rechten Maustaste auf das Datacenter-Objekt, und wählen Sie Neuer Cluster aus. Unter Grundlagen stellen Sie sicher, dass Sie vSphere DRS und vSphere HA aktiviert haben. Schließen Sie den Assistenten ab.
 
 
-image::../media/vmsc_3_1.png[Ein Screenshot einer Computerbeschreibung wird automatisch generiert,624,302]
+image::../media/vmsc_3_1.png[Neuer Cluster,624,302]
 
 . Wählen Sie den Cluster aus, und wechseln Sie zur Registerkarte Konfigurieren. Wählen Sie vSphere HA aus, und klicken Sie auf Bearbeiten.
 . Wählen Sie unter Host-Überwachung die Option Host-Überwachung aktivieren aus.
 
 
-image::../media/vmsc_3_2.png[Ein Screenshot einer Computerbeschreibung wird automatisch generiert,624,475]
+image::../media/vmsc_3_2.png[Aktivieren der Host-Überwachungsoption,624,475]
 
 . Wählen Sie auf der Registerkarte „Fehler und Antworten“ unter „VM-Überwachung“ die Option „nur VM-Überwachung“ oder „VM- und Anwendungsüberwachung“ aus.
 
 
-image::../media/vmsc_3_3.png[Ein Screenshot einer Computerbeschreibung wird automatisch generiert,624,480]
+image::../media/vmsc_3_3.png[VM-Monitoring,624,480]
 
 . Legen Sie unter Admission Control die Option HA-Eintrittskontrolle auf Cluster-Ressourcenreserve fest. Verwenden Sie 50 % CPU/MEM.
 
 
-image::../media/vmsc_3_4.png[Ein Screenshot einer Computerbeschreibung wird automatisch generiert,624,479]
+image::../media/vmsc_3_4.png[Zugangskontrolle,624,479]
 
 . Klicken Sie auf „OK“.
 . Wählen Sie DRS und klicken Sie auf BEARBEITEN.
@@ -236,22 +236,22 @@ Führen Sie die folgenden Schritte aus, um ein Datastore-Cluster für jeden Stan
 * NetApp empfiehlt, Storage DRS im manuellen Modus zu konfigurieren, sodass der Administrator entscheiden und kontrollieren kann, wann Migrationen stattfinden.
 
 
-image::../media/vmsc_3_9.png[Eine Nahaufnahme einer Textbeschreibung wird automatisch generiert,528,94]
+image::../media/vmsc_3_9.png[Storage DRS,528,94]
 
 . Vergewissern Sie sich, dass das Kontrollkästchen E/A-Metrik für SDRS-Empfehlungen aktivieren aktiviert ist. Die metrischen Einstellungen können mit Standardwerten belassen werden.
 
 
-image::../media/vmsc_3_10.png[Ein Screenshot einer Computerbeschreibung wird automatisch generiert,624,241]
+image::../media/vmsc_3_10.png[SDRS-Empfehlungen,624,241]
 
 . Wählen Sie das HA-Cluster aus, und klicken Sie auf Weiter.
 
 
-image::../media/vmsc_3_11.png[Ein Screenshot einer Computerbeschreibung wird automatisch generiert,624,149]
+image::../media/vmsc_3_11.png[HA-Cluster,624,149]
 
 . Wählen Sie die Datastores aus, die zu Standort A gehören, und klicken Sie auf Weiter.
 
 
-image::../media/vmsc_3_12.png[Ein Screenshot einer Computerbeschreibung wird automatisch generiert,624,134]
+image::../media/vmsc_3_12.png[Datenspeicher,624,134]
 
 . Überprüfen Sie die Optionen, und klicken Sie auf Fertig stellen.
 . Wiederholen Sie diese Schritte, um das Datastore-Cluster an Standort B zu erstellen und sicherzustellen, dass nur Datastores von Standort B ausgewählt sind.

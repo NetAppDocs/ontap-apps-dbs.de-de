@@ -14,7 +14,7 @@ summary: PostgreSQL-Datenbanken auf ONTAP
 
 
 [role="lead"]
-PostgreSQL wird mit Varianten wie PostgreSQL, PostgreSQL Plus und EDB Postgres Advanced Server (EPAS) geliefert. PostgreSQL wird typischerweise als Back-End-Datenbank für Multi-Tier-Applikationen implementiert. Es wird von gängigen Middleware-Paketen (wie PHP, Java, Python, Tcl/TK, ODBC, Und JDBC) und war in der Vergangenheit eine beliebte Wahl für Open-Source-Datenbankmanagementsysteme. NetApp ONTAP ist eine ausgezeichnete Wahl für die Ausführung von PostgreSQL-Datenbanken aufgrund seiner Zuverlässigkeit, seiner hohen Performance und seiner effizienten Datenmanagementfunktionen.
+PostgreSQL wird mit Varianten wie PostgreSQL, PostgreSQL Plus und EDB Postgres Advanced Server (EPAS) geliefert. PostgreSQL wird typischerweise als Back-End-Datenbank für Multi-Tier-Applikationen implementiert. Es wird von gängigen Middleware-Paketen (wie PHP, Java, Python, Tcl/TK, ODBC, Und JDBC) und war in der Vergangenheit eine beliebte Wahl für Open-Source-Datenbankmanagementsysteme. ONTAP ist eine ausgezeichnete Wahl für die Ausführung von PostgreSQL-Datenbanken aufgrund seiner Zuverlässigkeit, seiner hohen Performance und seiner effizienten Datenmanagementfunktionen.
 
 
 NOTE: Diese Dokumentation zu ONTAP und der PostgreSQL-Datenbank ersetzt die zuvor veröffentlichte _TR-4770: PostgreSQL-Datenbank unter ONTAP Best Practices._

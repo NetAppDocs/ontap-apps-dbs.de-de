@@ -16,7 +16,7 @@ summary: NFS-Konfiguration für Oracle Datenbanken
 [role="lead"]
 NetApp bietet seit über 30 Jahren NFS-Storage der Enterprise-Klasse. Seine Einsatzbereich wächst aufgrund der Einfachheit mit dem Trend zu Cloud-basierten Infrastrukturen.
 
-Das NFS-Protokoll umfasst mehrere Versionen mit unterschiedlichen Anforderungen. Eine vollständige Beschreibung der NFS-Konfiguration mit ONTAP finden Sie unter link:https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf["TR-4067 NFS on NetApp ONTAP Best Practices"^]. In den folgenden Abschnitten werden einige der kritischeren Anforderungen und häufigen Benutzerfehler behandelt.
+Das NFS-Protokoll umfasst mehrere Versionen mit unterschiedlichen Anforderungen. Eine vollständige Beschreibung der NFS-Konfiguration mit ONTAP finden Sie unter link:https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf["TR-4067 NFS on ONTAP Best Practices"^]. In den folgenden Abschnitten werden einige der kritischeren Anforderungen und häufigen Benutzerfehler behandelt.
 
 
 
@@ -122,7 +122,7 @@ Für die meisten Applikationen gibt es kaum einen Unterschied zwischen NFSv3 und
 
 TIP: *NetApp empfiehlt* NFSv4.1 zu verwenden, wenn NFSv4-Funktionen erforderlich sind. Es gibt einige funktionale Verbesserungen am NFSv4-Protokoll in NFSv4.1, die die Ausfallsicherheit in bestimmten Edge-Fällen verbessern.
 
-Der Wechsel zu NFSv4 ist komplizierter als einfach die Mount-Optionen von vers=3 auf vers=4.1 zu ändern. Eine ausführlichere Erläuterung der NFSv4-Konfiguration mit ONTAP, einschließlich Anleitungen zur Konfiguration des Betriebssystems, finden Sie unter https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf["TR-4067 NFS on NetApp ONTAP Best Practices"^]. Die folgenden Abschnitte dieses TR erklären einige der Grundvoraussetzungen für die Verwendung von NFSv4.
+Der Wechsel zu NFSv4 ist komplizierter als einfach die Mount-Optionen von vers=3 auf vers=4.1 zu ändern. Eine ausführlichere Erläuterung der NFSv4-Konfiguration mit ONTAP, einschließlich Anleitungen zur Konfiguration des Betriebssystems, finden Sie unter https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf["TR-4067 NFS on ONTAP Best Practices"^]. Die folgenden Abschnitte dieses TR erklären einige der Grundvoraussetzungen für die Verwendung von NFSv4.
 
 
 

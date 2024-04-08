@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: mssql/mssql-files-and-filegroups.html 
-keywords: MS-SQL,mssql,SQL Server 
-summary: Microsoft SQL Server auf ONTAP 
+keywords: MSSQL,SQL Server, backup, recovery, database file management 
+summary: Platzierung von Microsoft SQL Server-Datenbankdateien 
 ---
 = Microsoft SQL Server Datenbankdateien und Dateigruppen
 :allow-uri-read: 
@@ -10,7 +10,7 @@ summary: Microsoft SQL Server auf ONTAP
 
 
 [role="lead"]
-Eine SQL Server-Datenbank ist eine Sammlung von Objekten, mit denen Sie Daten speichern und bearbeiten können.
+Die korrekte Platzierung von SQL Server-Datenbankdateien auf ONTAP ist in der ersten Implementierungsphase entscheidend. Dies sorgt für optimale Performance, Speicherplatz-Management, Backup- und Wiederherstellungszeiten, die Ihren geschäftlichen Anforderungen entsprechend konfiguriert werden können.
 
 Theoretisch unterstützt SQL Server (64-Bit) 32,767 Datenbanken pro Instanz und 524.272 TB Datenbankgröße, obwohl die typische Installation normalerweise über mehrere Datenbanken verfügt. Die Anzahl der Datenbanken, die SQL Server verarbeiten kann, hängt jedoch von der Last und der Hardware ab. Es ist nicht ungewöhnlich, dass SQL Server Instanzen Dutzende, Hunderte oder sogar Tausende kleine Datenbanken hosten.
 
@@ -34,7 +34,7 @@ Sie können die ursprüngliche Dateigröße und die automatischen Wachstumsparam
 
 TIP: *NetApp empfiehlt*, dass alle Dateien in der einzelnen Dateigruppe die gleiche Anfangsgröße und die gleichen Autogrowth-Parameter haben, wobei die Grow-Größe in Megabyte und nicht in Prozentsätzen definiert ist. Dies hilft dem proportionalen Füllalgorithmus, Schreibaktivitäten gleichmäßig über Datendateien hinweg auszugleichen.
 
-Jedes Mal, wenn SQL Server die Dateien vergrößert, füllt es neu zugewiesenen Speicherplatz in den Dateien mit Nullen. Dieser Prozess blockiert alle Sitzungen, die in die entsprechende Datei geschrieben werden müssen, oder generiert im Falle eines Wachstums des Transaktionsprotokolls Transaktionsprotokolle.
+Jedes Mal, wenn SQL Server Dateien vergrößert, füllt es neu zugewiesenen Speicherplatz mit Nullen. Dieser Prozess blockiert alle Sitzungen, die in die entsprechende Datei geschrieben werden müssen, oder generiert im Falle eines Wachstums des Transaktionsprotokolls Transaktionsprotokolle.
 
 SQL Server löscht das Transaktionsprotokoll immer auf Null, und dieses Verhalten kann nicht geändert werden. Sie können jedoch festlegen, ob Datendateien auf Null gesetzt werden, indem Sie die sofortige Dateiinitialisierung aktivieren oder deaktivieren. Durch die sofortige Dateiinitialisierung wird das Wachstum von Datendateien beschleunigt und der Zeitaufwand für die Erstellung oder Wiederherstellung der Datenbank verringert.
 
@@ -48,23 +48,14 @@ Um zu überprüfen, ob die Berechtigung aktiviert ist, können Sie den Code aus 
 
 ....
 DBCC TRACEON(3004,3605,-1)
-
 GO
-
 CREATE DATABASE DelMe
-
 GO
-
 EXECUTE sp_readerrorlog
-
 GO
-
 DROP DATABASE DelMe
-
 GO
-
 DBCC TRACEOFF(3004,3605,-1)
-
 GO
 ....
 Wenn die sofortige Dateiinitialisierung nicht aktiviert ist, zeigt das SQL Server-Fehlerprotokoll an, dass SQL Server die mdf-Datendatei zusätzlich zum Nullsetzen der ldf-Protokolldatei auf Null setzt, wie im folgenden Beispiel gezeigt. Wenn die sofortige Dateiinitialisierung aktiviert ist, wird nur das Nullsetzen der Protokolldatei angezeigt.

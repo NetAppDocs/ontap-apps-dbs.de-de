@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: vmware/vmware_vmsc_overview.html 
 keywords: VMware, Data protection, MetroCluster, SMBC, SnapMirror active sync, vMSC 
-summary: VSphere Metro Storage-Cluster mit NetApp ONTAP 
+summary: VSphere Metro Storage-Cluster mit ONTAP 
 ---
-= VSphere Metro Storage-Cluster mit NetApp ONTAP
+= VSphere Metro Storage-Cluster mit ONTAP
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -22,7 +22,7 @@ VMSC Lösungen werden sowohl mit NetApp® MetroCluster™ als auch mit SnapMirro
 
 == Lösungen für kontinuierliche Verfügbarkeit für vSphere Umgebungen
 
-Die NetApp ONTAP Architektur ist eine flexible und skalierbare Storage-Plattform, die SAN- (FCP, iSCSI und NVMe-of) und NAS-Services (NFS v3 und v4.1) für Datastores bietet. Die Storage-Systeme NetApp AFF, ASA und FAS nutzen das ONTAP Betriebssystem, um zusätzliche Protokolle für Gast-Storage wie S3 und SMB/CIFS anzubieten.
+Die ONTAP-Architektur ist eine flexible und skalierbare Storage-Plattform, die SAN- (FCP, iSCSI und NVMe-of) und NAS-Services (NFS v3 und v4.1) für Datastores bietet. Die Storage-Systeme NetApp AFF, ASA und FAS nutzen das ONTAP Betriebssystem, um zusätzliche Protokolle für Gast-Storage wie S3 und SMB/CIFS anzubieten.
 
 NetApp MetroCluster nutzt die NetApp HA-Funktion (Controller Failover oder CFO) zum Schutz vor Controller-Ausfällen. Außerdem beinhaltet es lokale SyncMirror Technologie, Cluster Failover bei Disaster (Controller Failover on Demand oder CFOD), Hardware-Redundanz und geografische Trennung, um ein hohes Maß an Verfügbarkeit zu erreichen. SyncMirror spiegelt Daten synchron auf die beiden Hälften der MetroCluster Konfiguration und schreibt sie in zwei Plexe: Der lokale Plex (auf dem lokalen Shelf), der aktiv Daten bereitstellt, und der Remote-Plex (auf dem Remote-Shelf), der normalerweise keine Daten bereitstellt. Für alle MetroCluster Komponenten wie Controller, Storage, Kabel, Switches (zur Verwendung mit Fabric MetroCluster) und Adapter besteht Hardwareredundanz.
 

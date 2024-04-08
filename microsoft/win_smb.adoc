@@ -1,0 +1,144 @@
+---
+sidebar: sidebar 
+permalink: microsoft/win_smb.html 
+keywords: Windows,Hyper-V,VHDX,VM,Virtual 
+summary: ONTAP NAS-Storage für Hyper-V mit SMB3 
+---
+= Bereitstellung in SMB-Umgebungen
+:allow-uri-read: 
+
+
+[role="lead"]
+ONTAP bietet unter Verwendung des SMB3-Protokolls einen stabilen und hochperformanten NAS Storage für Hyper-V Virtual Machines.
+
+Wenn eine SVM mit dem CIFS-Protokoll erstellt wird, wird ein CIFS-Server auf der SVM ausgeführt, die Teil der Windows Active Directory Domain ist. SMB-Freigaben können für ein Home Directory verwendet und Hyper-V und SQL Server Workloads hosten. Die folgenden Funktionen von SMB 3.0 werden in ONTAP unterstützt:
+
+* Persistente Handles (kontinuierlich verfügbare Dateifreigaben)
+* Witness-Protokoll
+* Cluster-Client-Failover
+* Erkennung von horizontaler Skalierbarkeit
+* ODX
+* Remote-VSS
+
+
+
+
+== Bereitstellung von SMB Share auf Windows Server
+
+
+
+=== Voraussetzungen
+
+Für die Verwendung von NetApp Storage in NAS-Umgebungen in Windows Server gelten folgende Anforderungen:
+
+* ONTAP Cluster verfügen über eine gültige CIFS-Lizenz.
+* Mindestens ein Aggregat wird erstellt.
+* Eine logische Datenschnittstelle (LIF) wird erstellt und die Datenschnittstelle muss für CIFS konfiguriert werden.
+* Ein DNS-konfigurierter Windows Active Directory-Domänenserver und Domänenadministratoranmeldeinformationen sind vorhanden.
+* Jeder Knoten im NetApp-Cluster ist mit dem Windows-Domänencontroller zeitsynchronisiert.
+
+
+
+
+=== Active Directory-Domänencontroller
+
+Ein NetApp Storage Controller kann einem Active Directory ähnlich wie einem Windows Server angeschlossen und innerhalb dessen betrieben werden. Während der Erstellung der SVM können Sie den DNS konfigurieren, indem Sie den Domain-Namen und die Details des Name Servers angeben. Die SVM versucht, nach einem Active Directory-Domänencontroller zu suchen, indem sie den DNS nach einem Active Directory-/Lightweight Directory Access Protocol-(LDAP-)Server in einer Weise abfragt, die Windows Server ähnelt.
+
+Damit das CIFS-Setup ordnungsgemäß funktioniert, müssen die NetApp Storage Controller mit dem Windows Domain Controller synchronisiert werden. NetApp empfiehlt eine Zeitskew zwischen dem Windows Domain Controller und dem NetApp Storage Controller von maximal fünf Minuten. Es empfiehlt sich, den NTP-Server (Network Time Protocol) für die Synchronisierung des ONTAP-Clusters mit einer externen Zeitquelle zu konfigurieren. Führen Sie zum Konfigurieren des Windows-Domänencontrollers als NTP-Server den folgenden Befehl auf dem ONTAP-Cluster aus:
+
+....
+$domainControllerIP = "<input IP Address of windows domain controller>"
+cluster::> system services ntp server create â€“server $domainControllerIP
+....
+
+
+=== Einsatz
+
+. Erstellen Sie eine neue SVM mit aktiviertem NAS-Protokoll CIFS. Eine neue SVM kann mit einer der folgenden Methoden erstellt werden:
++
+** CLI-Befehle auf NetApp ONTAP
+** System Manager
+** Das NetApp PowerShell Toolkit
+
+
+. Konfigurieren Sie das CIFS-Protokoll
++
+.. Geben Sie den CIFS-Servernamen an.
+.. Geben Sie das Active Directory an, mit dem der CIFS-Server verbunden werden muss. Sie müssen über die Anmeldeinformationen des Domänenadministrators verfügen, um dem CIFS-Server das Active Directory beizutreten.
+
+
+. Zuweisung der SVM mit LIFs auf jedem Cluster-Node
+. Starten Sie den CIFS-Service auf der SVM.
+. Erstellen Sie ein Volume mit NTFS-Sicherheitsstil aus dem Aggregat.
+. Erstellen Sie auf dem Volume einen qtree (optional).
+. Erstellen Sie Shares, die dem Volume oder qtree-Verzeichnis entsprechen, sodass über Windows Server auf diese zugegriffen werden kann. Wählen Sie kontinuierliche Verfügbarkeit für Hyper-V während der Erstellung der Freigabe aktivieren, wenn die Freigabe für Hyper-V-Speicher verwendet wird. Auf diese Weise ist Hochverfügbarkeit für Dateifreigaben möglich.
+. Bearbeiten Sie die erstellte Freigabe, und ändern Sie die Berechtigungen, die für den Zugriff auf die Freigabe erforderlich sind. Die Berechtigungen für die SMB-Freigabe müssen so konfiguriert werden, dass sie den Zugriff auf die Computerkonten aller Server gewährt, die auf diese Freigabe zugreifen.
+
+
+
+
+=== Host-Integration
+
+Das NAS-Protokoll CIFS ist nativ in ONTAP integriert. Aus diesem Grund benötigt Windows Server keine zusätzliche Client-Software für den Zugriff auf die Daten auf NetApp ONTAP. Ein NetApp Storage Controller wird im Netzwerk als nativer File Server angezeigt und unterstützt die Microsoft Active Directory-Authentifizierung.
+
+Führen Sie die folgenden Schritte aus, um die zuvor mit Windows Server erstellte CIFS-Freigabe zu ermitteln:
+
+. Melden Sie sich bei Windows Server als Mitglied der Administratorgruppe an.
+. Gehen Sie zu run.exe und geben Sie den vollständigen Pfad der CIFS-Freigabe ein, die für den Zugriff auf die Freigabe erstellt wurde.
+. Um die Freigabe dauerhaft auf dem Windows Server zuzuordnen, klicken Sie mit der rechten Maustaste auf Diesen PC, klicken Sie auf Netzwerklaufwerk zuordnen und geben Sie den Pfad der CIFS-Freigabe an.
+. Bestimmte CIFS-Managementaufgaben können mit Microsoft Management Console (MMC) ausgeführt werden. Bevor Sie diese Aufgaben ausführen, müssen Sie die MMC mithilfe der MMC-Menübefehle mit dem NetApp ONTAP-Speicher verbinden.
++
+.. Um die MMC in Windows Server zu öffnen, klicken Sie im Abschnitt Extras des Server Managers auf Computerverwaltung.
+.. Klicken Sie auf Weitere Aktionen und Verbinden mit einem anderen Computer. Daraufhin wird das Dialogfeld Computer auswählen geöffnet.
+.. Geben Sie den Namen des CIFS-Servers oder die IP-Adresse der SVM-LIF ein, um eine Verbindung zum CIFS-Server herzustellen.
+.. Erweitern Sie System-Tools und freigegebene Ordner, um geöffnete Dateien, Sitzungen und Freigaben anzuzeigen und zu verwalten.
+
+
+
+
+
+
+=== Best Practices In Sich Vereint
+
+* Um sicherzustellen, dass es keine Ausfallzeiten gibt, wenn ein Volume von einem Node auf einen anderen oder im Fall eines Node-Ausfalls verschoben wird, empfiehlt NetApp, die Option für die kontinuierliche Verfügbarkeit der Dateifreigabe zu aktivieren.
+* Bei der Bereitstellung von VMs für Hyper-V über SMB-Umgebungen empfiehlt NetApp, den Copy-Offload auf dem Storage-System zu aktivieren. Auf diese Weise wird die Bereitstellungszeit der VMs verkürzt.
+* Wenn das Storage-Cluster mehrere SMB-Workloads wie SQL Server, Hyper-V und CIFS-Server hostet, empfiehlt NetApp, verschiedene SMB-Workloads auf separaten SVMs in separaten Aggregaten zu hosten. Diese Konfiguration ist von Vorteil, da für jede dieser Workloads ein einzigartiges Storage-Netzwerk- und Volume-Layout erforderlich ist.
+* NetApp empfiehlt, Hyper-V Hosts und NetApp ONTAP Storage mit einem 10-GB-Netzwerk zu verbinden, sofern vorhanden. Bei einer 1-GB-Netzwerkverbindung empfiehlt NetApp die Erstellung einer Schnittstellengruppe, die aus mehreren 1-GB-Ports besteht.
+* Wenn VMs von einer SMB 3.0-Freigabe zu einer anderen migriert werden, empfiehlt NetApp die Aktivierung der CIFS-Offloaded-Funktion auf dem Storage-System, damit die Migration schneller erfolgt.
+
+
+
+
+=== Wissenswertes
+
+* Wenn Sie Volumes für SMB-Umgebungen bereitstellen, müssen die Volumes mit dem NTFS-Sicherheitsstil erstellt werden.
+* Die Zeiteinstellungen für Knoten im Cluster sollten entsprechend eingerichtet werden. Verwenden Sie NTP, wenn der NetApp-CIFS-Server an der Windows Active Directory-Domäne teilnehmen muss.
+* Persistente Handles funktionieren nur zwischen Nodes in einem HA-Paar.
+* Das Witness-Protokoll funktioniert nur zwischen Nodes in einem HA-Paar.
+* Kontinuierlich verfügbare File Shares werden nur für Hyper-V und SQL Server Workloads unterstützt.
+* Der Multichannel SMB wird ab ONTAP 9.4 unterstützt.
+* RDMA wird nicht unterstützt.
+* ReFS wird nicht unterstützt.
+
+
+
+
+== Bereitstellung von SMB Share auf Nano Server
+
+Nano Server benötigt keine zusätzliche Client-Software, um auf Daten auf der CIFS-Freigabe auf einem NetApp-Speicher-Controller zuzugreifen.
+
+Um Dateien von Nano Server auf eine CIFS-Freigabe zu kopieren, führen Sie die folgenden Cmdlets auf dem Remote-Server aus:
+
+ $ip = "<input IP Address of the Nano Server>"
+....
+# Create a New PS Session to the Nano Server
+$session = New-PSSession -ComputerName $ip -Credential ~\Administrator
+....
+ Copy-Item -FromSession $s -Path C:\Windows\Logs\DISM\dism.log -Destination \\cifsshare
+* `cifsshare` Ist die CIFS-Freigabe auf dem NetApp-Speicher-Controller.
+* Führen Sie das folgende Cmdlet aus, um Dateien in Nano Server zu kopieren:
++
+ Copy-Item -ToSession $s -Path \\cifsshare\<file> -Destination C:\
+
+
+Um den gesamten Inhalt eines Ordners zu kopieren, geben Sie den Ordnernamen an und verwenden Sie den Parameter -Recurse am Ende des Cmdlet.

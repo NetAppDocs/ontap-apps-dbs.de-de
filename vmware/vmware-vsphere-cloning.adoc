@@ -22,7 +22,7 @@ Linked Clones eignen sich sehr gut, um Speicherplatz zu sparen, aber sie erhöhe
 
 In der folgenden Abbildung ist das Klonen von ONTAP dargestellt.
 
-image:vsphere_ontap_image5.png["Fehler: Fehlendes Grafikbild"]
+image:vsphere_ontap_image5.png["ONTAP-Klonen"]
 
 Das Klonen kann – in der Regel auf VM-, vVol oder Datastore-Ebene – durch mehrere Verfahren auf Systeme mit ONTAP Software verlagert werden. Hierzu zählen:
 

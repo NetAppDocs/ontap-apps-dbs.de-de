@@ -1,18 +1,18 @@
 ---
 sidebar: sidebar 
 permalink: mssql/mssql-storage-efficiency.html 
-keywords: MS-SQL,mssql,SQL Server 
-summary: Microsoft SQL Server auf ONTAP 
+keywords: MSSQL,SQL Server, efficiency, compression, deduplication 
+summary: Microsoft SQL Server und ONTAP Storage-Effizienz 
 ---
-= ONTAP Storage-Effizienz mit Microsoft SQL Server
+= Microsoft SQL Server- und Storage-Effizienz
 :allow-uri-read: 
 :imagesdir: ../media/
 
 
 [role="lead"]
-Storage-Effizienz bezieht sich auf die Fähigkeit, SQL Server-Daten so zu speichern und zu managen, dass der Speicherplatz auf ein Minimum beschränkt wird und die Gesamt-Performance des Systems kaum oder gar nicht beeinträchtigt wird.
+Die ONTAP Storage-Effizienz ist für das Speichern und Managen von SQL Server-Daten optimiert, sodass Sie den geringsten Speicherplatz benötigen und die Gesamt-Performance des Systems kaum oder gar nicht beeinträchtigen.
 
-Storage-Effizienz ist eine Kombination aus RAID, Bereitstellung (Gesamtlayout und Auslastung), Spiegelung und anderen Datensicherungstechnologien. Mit NetApp Technologien wie Snapshot Kopien, Thin Provisioning und FlexClone lassen sich Kostenvorteile erzielen, indem vorhandener Storage in der Infrastruktur optimiert und künftige Storage-Ausgaben verschoben oder vermieden werden. Je öfter Sie diese Technologien kombinieren, desto größer sind die Einsparungen.
+Storage-Effizienz ist eine Kombination aus RAID, Bereitstellung (Gesamtlayout und Auslastung), Spiegelung und anderen Datensicherungstechnologien. Die NetApp Technologien, einschließlich Snapshots, Thin Provisioning und Klonen, optimieren den vorhandenen Storage in der Infrastruktur und verringern oder vermeiden zukünftige Storage-Ausgaben. Je öfter Sie diese Technologien kombinieren, desto größer sind die Einsparungen.
 
 
 
@@ -96,7 +96,7 @@ Auf hohem Niveau ist Komprimierung ein mathematischer Prozess, bei dem Muster in
 
 NOTE: In den nachfolgenden Abschnitten zu Thin Provisioning finden Sie eine Erläuterung des Wechselspiels zwischen Storage-Effizienz und fraktionaler Reservierung.
 
-SQL Server verfügt auch über eine Funktion zur Komprimierung und zum effizienten Management von Daten. SQL Server unterstützt derzeit zwei Arten der Datenkomprimierung: Row Compression und Page Compression.
+SQL Server selbst verfügt auch über Funktionen zur Komprimierung und zum effizienten Management von Daten. SQL Server unterstützt derzeit zwei Arten der Datenkomprimierung: Row Compression und Page Compression.
 
 Durch die Zeilenkomprimierung wird das Datenspeicherformat geändert. So werden beispielsweise ganze Zahlen und Dezimalzahlen anstelle des nativen Formats mit fester Länge in das Format mit variabler Länge geändert. Außerdem werden Zeichenketten mit fester Länge durch das Entfernen von Leerzeichen in das Format mit variabler Länge geändert. Die Seitenkomprimierung implementiert die Zeilenkomprimierung und zwei weitere Komprimierungsstrategien (Prefix-Komprimierung und Wörterbuchkomprimierung). Weitere Details zur Seitenkomprimierung finden Sie unter link:https://learn.microsoft.com/en-us/sql/relational-databases/data-compression/page-compression-implementation?view=sql-server-ver16&redirectedfrom=MSDN["Implementierung Der Seitenkomprimierung"^].
 

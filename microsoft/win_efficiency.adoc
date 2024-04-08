@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: microsoft/win_efficiency.html 
+keywords: Windows,Hyper-V,VHDX,VM,Virtual 
+summary: ONTAP Storage-Effizienz mit Microsoft Hyper-V 
+---
+= Storage-Effizienz
+:allow-uri-read: 
+
+
+[role="lead"]
+ONTAP bietet branchenführende Storage-Effizienz für virtualisierte Umgebungen, einschließlich Microsoft Hyper-V. NetApp bietet darüber hinaus Garantie-Programme für Storage-Effizienz.
+
+
+
+== NetApp Deduplizierung
+
+NetApp Deduplizierung entfernt Blockduplikate auf Storage Volume-Ebene und speichert nur eine physische Kopie, unabhängig von der Anzahl der logischen Kopien. Daher erzeugt die Deduplizierung die Illusion, dass es mehrere Kopien dieses Blocks gibt. Deduplizierung entfernt automatisch doppelte Datenblöcke auf 4-KB-Blockebene über ein gesamtes Volume. Bei diesem Prozess wird Storage neu beansprucht, um Speicherplatz und potenzielle Performance-Einsparungen zu erzielen, indem die Anzahl der physischen Schreibvorgänge auf die Festplatte reduziert wird. Die Deduplizierung kann in Hyper-V Umgebungen zu einer Platzeinsparung von mehr als 70 % führen.
+
+
+
+== Thin Provisioning
+
+Thin Provisioning bietet eine effiziente Möglichkeit, Storage bereitzustellen, da der Storage nicht vorab zugewiesen wird. Das bedeutet, dass bei der Erstellung eines Volume oder einer LUN mit Thin Provisioning der Speicherplatz im Storage-System nicht genutzt wird. Der Speicherplatz bleibt ungenutzt, bis die Daten auf die LUN oder das Volume geschrieben werden und nur so viel Speicherplatz verwendet wird, wie zur Speicherung der Daten notwendig ist. NetApp empfiehlt die Aktivierung von Thin Provisioning auf dem Volume und die Deaktivierung der LUN-Reservierung.
+
+
+
+== Quality of Service
+
+Mit Storage QoS in Clustered ONTAP können Sie Storage-Objekte gruppieren und Durchsatzbegrenzungen in der Gruppe festlegen. Storage QoS kann verwendet werden, um den Durchsatz auf Workloads zu begrenzen und die Workload-Performance zu überwachen. Storage-Administratoren können so Workloads je nach Organisation, Applikation, Geschäftsbereich oder Produktions- oder Entwicklungsumgebung trennen.
+
+In Enterprise-Umgebungen bietet Storage QoS folgende Vorteile:
+
+* Verhindert, dass sich Benutzer-Workloads gegenseitig beeinträchtigen
+* Sichert kritische Applikationen mit spezifischen Reaktionszeiten, die in IT-als-Service-Umgebungen (ITaaS) erfüllt werden müssen.
+* Verhindert, dass sich Mandanten gegenseitig beeinträchtigen.
+* Vermeidung von Performance-Einbußen durch Hinzufügen neuer Mandanten
+
+
+Mit QoS können Sie die Menge der an eine SVM, ein flexibles Volume, eine LUN oder eine Datei gesendeten I/O begrenzen. Die I/O-Operationen können durch die Anzahl der Operationen oder den Datendurchsatz begrenzt werden.
+
+In der folgenden Abbildung wird SVM mit einer eigenen QoS-Richtlinie dargestellt, die ein maximales Durchsatzlimit durchsetzt.
+
+image:win_image13.png["Storage Virtual Machine mit einer eigenen QoS-Richtlinie,width=319,height=341"]
+
+Führen Sie zum Konfigurieren einer SVM mit einer eigenen QoS-Richtlinie und für das Monitoring der Richtliniengruppe die folgenden Befehle auf Ihrem ONTAP-Cluster aus:
+
+....
+# create a new policy group pg1 with a maximum throughput of 5,000 IOPS
+cluster::> qos policy-group create pg1 -vserver vs1 -max-throughput 5000iops
+....
+....
+# create a new policy group pg2 without a maximum throughput
+cluster::> qos policy-group create pg2 -vserver vs2
+....
+....
+# monitor policy group performance
+cluster::> qos statistics performance show
+....
+....
+# monitor workload performance
+cluster::> qos statistics workload performance show
+....

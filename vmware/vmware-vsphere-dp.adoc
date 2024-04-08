@@ -24,7 +24,7 @@ Diese Plug-ins bieten erweiterte Funktionen zur Sicherung von Datenbanken in phy
 
 Die folgende Abbildung zeigt ein Beispiel für die Implementierung von SnapCenter.
 
-image:vsphere_ontap_image4.png["Fehler: Fehlendes Grafikbild"]
+image:vsphere_ontap_image4.png["SnapCenter Implementierung"]
 
 Falls Sie erweiterte Disaster-Recovery-Funktionen nutzen möchten, sollten Sie in Betracht ziehen, NetApp SRA für ONTAP mit VMware Site Recovery Manager zu kombinieren. Dadurch wird die Replizierung von Datastores an einen DR-Standort unterstützt. Darüber hinaus werden unterbrechungsfreie Tests in der DR-Umgebung ermöglicht, indem die replizierten Datastores geklont werden. Das Recovery nach einem Ausfall und die erneute Sicherung der Produktion nach Behebung des Ausfalls wurden durch die in SRA integrierte Automatisierung ebenfalls vereinfacht.
 

@@ -14,7 +14,7 @@ summary: Dieses Dokument beschreibt die Produktsicherheit für ONTAP Tools für 
 
 
 [role="lead"]
-Das Software-Engineering mit NetApp ONTAP Tools für VMware vSphere nutzt folgende sichere Entwicklungsaktivitäten:
+Das Software Engineering mit ONTAP Tools für VMware vSphere nutzt die folgenden sicheren Entwicklungsaktivitäten:
 
 * *Threat Modeling.* der Zweck der Bedrohungsmodellierung ist es, Sicherheitslücken in einem Feature, einer Komponente oder einem Produkt frühzeitig im Lebenszyklus der Softwareentwicklung zu entdecken. Ein Bedrohungsmodell ist eine strukturierte Darstellung aller Informationen, die die Sicherheit einer Anwendung beeinflussen. Im Wesentlichen ist es ein Blick auf die Anwendung und ihre Umgebung durch die Linsen der Sicherheit.
 * *Dynamic Application Security Testing (DAST).* Diese Technologie wurde entwickelt, um gefährdete Bedingungen für Anwendungen im laufenden Zustand zu erkennen. DAST testet die freigesetzten HTTP- und HTML-Schnittstellen von Web-enable-Anwendungen.
@@ -27,7 +27,7 @@ Das Software-Engineering mit NetApp ONTAP Tools für VMware vSphere nutzt folgen
 
 == Produktsicherheitsfunktionen
 
-Die NetApp ONTAP Tools für VMware vSphere umfassen die folgenden Sicherheitsfunktionen in jeder Version.
+Die ONTAP Tools für VMware vSphere beinhalten in jeder Version die folgenden Sicherheitsfunktionen.
 
 * *Anmeldebanner* SSH ist standardmäßig deaktiviert und erlaubt nur einmalige Anmeldungen, wenn sie über die VM-Konsole aktiviert sind. Das folgende Anmeldebanner wird angezeigt, nachdem der Benutzer einen Benutzernamen in die Anmeldeaufforderung eingegeben hat:
 +

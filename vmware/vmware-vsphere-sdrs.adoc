@@ -18,7 +18,7 @@ VMware Storage Distributed Resource Scheduler (SDRS) ist eine Funktion von vSphe
 
 Danach werden die VM oder VMDKs unterbrechungsfrei zwischen den Datastores in einem Datastore-Cluster (auch Pod genannt) verschoben und es wird der beste Datastore ausgewählt, in dem die VM oder die VMDKs im Datastore-Cluster platziert werden sollen. Ein Datastore-Cluster ist eine Sammlung ähnlicher Datastores, die aus Sicht des vSphere Administrators in einer einzigen Verbrauchseinheit aggregiert werden.
 
-Wenn Sie SDRS mit den NetApp ONTAP Tools für VMware vSphere verwenden, müssen Sie zuerst einen Datastore mit dem Plug-in erstellen, vCenter verwenden, um das Datastore-Cluster zu erstellen und dann den Datastore hinzufügen. Nach der Erstellung des Datastore-Clusters können diesem direkt aus dem Assistenten für die Datastore-Bereitstellung auf der Seite „Details“ weitere Datastores hinzugefügt werden.
+Wenn Sie SDRS mit ONTAP Tools für VMware vSphere verwenden, müssen Sie zuerst einen Datastore mit dem Plug-in erstellen, das Datastore-Cluster mithilfe von vCenter erstellen und diesem dann den Datastore hinzufügen. Nach der Erstellung des Datastore-Clusters können diesem direkt aus dem Assistenten für die Datastore-Bereitstellung auf der Seite „Details“ weitere Datastores hinzugefügt werden.
 
 Weitere ONTAP Best Practices für SDRS:
 

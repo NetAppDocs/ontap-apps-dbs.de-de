@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: microsoft/win_additional_information.html 
+keywords: Windows,Hyper-V,VHDX,VM,Virtual 
+summary: Zusätzliche Ressourcen für Microsoft Windows und Hyper-V 
+---
+= Wo Sie weitere Informationen finden
+:allow-uri-read: 
+
+
+[role="lead"]
+Zusätzliche Ressourcen für Microsoft Windows und Hyper-V
+
+* ONTAP-Konzepte
++
+https://docs.netapp.com/us-en/ontap/concepts/introducing-data-management-software-concept.html[]
+
+* Best Practices für modernes SAN
++
+https://www.netapp.com/media/10680-tr4080.pdf[]
+
+* Datenverfügbarkeit und Integrität von All-SAN-Arrays der NetApp mit der NetApp ASA
++
+https://www.netapp.com/pdf.html?item=/media/85671-tr-4968.pdf[]
+
+* Best Practices für SMB-Protokolle
+* https://www.netapp.com/pdf.html?item=/media/10678-tr-4543pdf.pdfGetting[] Gestartet mit Nano Server +
+https://technet.microsoft.com/library/mt126167.aspx[]
+* Was ist neu in Hyper-V auf Windows Server +
+https://technet.microsoft.com/windows-server-docs/compute/hyper-v/what-s-new-in-hyper-v-on-windows[]
+

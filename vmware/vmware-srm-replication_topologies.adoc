@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: vmware/vmware-srm-replication_topologies.html 
 keywords: vmware, site, recovery manager, vsrm, replication, technologies, snapmirror layouts, array manager, snapvault, qtress, fc, iscsi, supported 
-summary: In ONTAP 9 sind die physischen Komponenten eines Clusters für Cluster-Administratoren sichtbar, sind aber für die Applikationen und Hosts, die das Cluster nutzen, nicht direkt sichtbar. 
+summary: Replizierungstopologien unter Einsatz von ONTAP mit SnapMirror und VMware SRM 
 ---
 = Replizierungstopologien
 :hardbreaks:
@@ -36,13 +36,13 @@ Eine einzelne VM kann aus den folgenden Gründen keine Daten besitzen – Virtua
 
 Die folgenden Abbildungen zeigen die Szenarien des SnapMirror Beziehungs-Layouts, die von SRM und SRA unterstützt werden. Jede VM in den replizierten Volumes besitzt die Daten auf nur einem SRM Array (SVM) an jedem Standort.
 
-image:vsrm-ontap9_image7.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image7.png["Layout der SnapMirror Beziehung"]
 
-image:vsrm-ontap9_image8.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image8.png["Layout der SnapMirror Beziehung"]
 
-image:vsrm-ontap9_image9.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image9.png["Layout der SnapMirror Beziehung"]
 
-image:vsrm-ontap9_image10.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image10.png["Layout der SnapMirror Beziehung"]
 
 
 
@@ -50,7 +50,7 @@ image:vsrm-ontap9_image10.png["Fehler: Fehlendes Grafikbild"]
 
 Wenn Sie in SRM Array-basierte Replizierung (ABR) verwenden, werden Schutzgruppen auf ein einzelnes Array-Paar isoliert, wie im folgenden Screenshot dargestellt. In diesem Szenario `SVM1` Und `SVM2` Werden mit Peering durchgeführt `SVM3` Und `SVM4` Am Recovery-Standort. Sie können jedoch nur eines der beiden Array-Paare auswählen, wenn Sie eine Schutzgruppe erstellen.
 
-image:vsrm-ontap9_image11.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image11.png["Array-Paare"]
 
 
 
@@ -58,13 +58,13 @@ image:vsrm-ontap9_image11.png["Fehler: Fehlendes Grafikbild"]
 
 Nicht unterstützte Konfigurationen beinhalten Daten (VMDK oder RDM) auf mehreren SVMs, die sich im Besitz einer individuellen VM befinden. In den folgenden Abbildungen sind `VM1` Kann aus dem Grund nicht für den Schutz mit SRM konfiguriert werden `VM1` Verfügt über Daten auf zwei SVMs.
 
-image:vsrm-ontap9_image12.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image12.png["Nicht unterstützte Konfigurationen"]
 
-image:vsrm-ontap9_image13.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image13.png["Nicht unterstützte Konfigurationen"]
 
 Jegliche Replizierungsbeziehungen, bei denen ein einzelnes NetApp Volume von einer Quell-SVM auf mehrere Ziele in derselben SVM oder in verschiedenen SVMs repliziert wird, werden als SnapMirror Fan-out bezeichnet. Fan-out wird mit SRM nicht unterstützt. In der folgenden Abbildung ist das Beispiel dargestellt. `VM1` Kann nicht für den Schutz in SRM konfiguriert werden, da es mit SnapMirror an zwei verschiedenen Standorten repliziert wird.
 
-image:vsrm-ontap9_image14.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image14.png["Nicht unterstützte Konfigurationen"]
 
 
 
@@ -72,7 +72,7 @@ image:vsrm-ontap9_image14.png["Fehler: Fehlendes Grafikbild"]
 
 SRM unterstützt keine Kaskadierung von SnapMirror Beziehungen, bei denen ein Quell-Volume auf einem Ziel-Volume repliziert wird und das Ziel-Volume ebenfalls mit SnapMirror auf einem anderen Ziel-Volume repliziert wird. In dem in der folgenden Abbildung gezeigten Szenario kann SRM nicht für das Failover zwischen mehreren Standorten verwendet werden.
 
-image:vsrm-ontap9_image15.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image15.png["Kaskadierung von SnapMirror Beziehungen"]
 
 
 
@@ -103,11 +103,11 @@ In einer VMware Umgebung verfügt jeder Datenspeicher über eine universelle ein
 
 Die folgende Abbildung zeigt die Kaskadenkonfiguration von SnapMirror auf SnapVault. Wenn sich das SnapVault Ziel am DR-Standort oder an einem tertiären Standort befindet, der nicht von einem Ausfall am primären Standort betroffen ist, kann die Umgebung neu konfiguriert werden, sodass Backups nach dem Failover fortgesetzt werden können.
 
-image:vsrm-ontap9_image16.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image16.png["SnapMirror auf SnapVault Kaskadierung"]
 
 In der folgenden Abbildung wird die Konfiguration dargestellt, nachdem SRM die SnapMirror Replizierung zurück auf den primären Standort umgekehrt hat. Die Umgebung wurde außerdem neu konfiguriert, sodass SnapVault Backups von der jetzt SnapMirror Quelle durchgeführt werden. Bei dieser Einrichtung handelt es sich um eine Fan-out-Konfiguration für SnapMirror SnapVault.
 
-image:vsrm-ontap9_image17.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image17.png["SnapMirror to SnapVault Kaskadierung rückwärts"]
 
 Nachdem SRM ein Failback und eine zweite Umkehrung der SnapMirror Beziehungen durchführt, sind die Produktionsdaten am primären Standort zurück. Die Daten werden jetzt auf dieselbe Weise gesichert wie vor dem Failover zum DR-Standort – über SnapMirror und SnapVault Backups.
 

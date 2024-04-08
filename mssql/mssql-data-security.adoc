@@ -1,16 +1,16 @@
 ---
 sidebar: sidebar 
 permalink: mssql/mssql-data-security.html 
-keywords: MS-SQL,mssql,SQL Server, securing databases, security 
-summary: Microsoft SQL Server auf ONTAP 
+keywords: MSSQL,SQL Server, securing databases on ONTAP, snaplock, multiadmin verification, backup, tamperproof snapshots 
+summary: Sichern von Microsoft SQL Server auf ONTAP 
 ---
-= Datenbanksicherheit
+= Sichern von Microsoft SQL Server auf ONTAP
 :allow-uri-read: 
 :imagesdir: ../media/
 
 
 [role="lead"]
-Die Sicherung einer Datenbankumgebung ist ein mehrdimensionaler Prozess, der über das Management der Datenbank selbst hinausgeht. NetApp bietet verschiedene einzigartige Funktionen, die den Storage-Aspekt Ihrer Datenbankinfrastruktur sichern sollen.
+Die Sicherung einer SQL Server-Datenbankumgebung ist ein mehrdimensionaler Aufwand, der über das Management der Datenbank selbst hinausgeht. ONTAP bietet verschiedene einzigartige Funktionen, die den Storage-Aspekt Ihrer Datenbankinfrastruktur sichern sollen.
 
 
 

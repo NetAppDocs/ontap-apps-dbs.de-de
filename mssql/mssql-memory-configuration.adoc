@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: mssql/mssql-memory-configuration.html 
-keywords: MS-SQL,mssql,SQL Server 
-summary: Microsoft SQL Server auf ONTAP 
+keywords: MSSQL,SQL Server, memory 
+summary: Microsoft SQL Server-Speicherkonfiguration 
 ---
 = Microsoft SQL Server-Speicherkonfiguration
 :allow-uri-read: 
@@ -10,7 +10,7 @@ summary: Microsoft SQL Server auf ONTAP
 
 
 [role="lead"]
-In den folgenden Abschnitten werden einige wichtige Einstellungen für die Speicherkonfiguration erläutert.
+Im folgenden Abschnitt wird das Konfigurieren der Speichereinstellungen des SQL-Servers erläutert, um die Datenbankleistung zu optimieren.
 
 
 
@@ -37,17 +37,11 @@ Die Verwendung von SQL Server Management Studio zur Anpassung des minimalen oder
 
 ....
 EXECUTE sp_configure 'show advanced options', 1
-
 GO
-
 EXECUTE sp_configure 'min server memory (MB)', 2048
-
 GO
-
 EXEC sp_configure 'max server memory (MB)', 120832
-
 GO
-
 RECONFIGURE WITH OVERRIDE
 ....
 
@@ -70,9 +64,9 @@ Er steuert die maximale RAM-Größe, die ursprünglich für die Erstellung von I
 
 == Min. Arbeitsspeicher pro Abfrage
 
-Wenn eine Abfrage ausgeführt wird, versucht SQL Server, die optimale Speichermenge für die effiziente Ausführung zuzuweisen.
+Wenn eine Abfrage ausgeführt wird, versucht SQL Server, die optimale Speichergröße für eine effiziente Ausführung zuzuweisen.
 
-Standardmäßig weist die Einstellung Min. Arbeitsspeicher pro Abfrage > oder = bis 1024 KB für jede auszulaufende Abfrage zu. Es empfiehlt sich, diese Einstellung auf den Standardwert 0 zu belassen, damit SQL Server die für Indexerstellung zugewiesene Speichermenge dynamisch verwalten kann. Wenn SQL Server jedoch über mehr RAM verfügt, als für eine effiziente Ausführung erforderlich ist, kann die Leistung einiger Abfragen erhöht werden, wenn Sie diese Einstellung erhöhen. Solange also auf dem Server, der nicht von SQL Server verwendet wird, Speicher verfügbar ist, können andere Anwendungen oder das Betriebssystem diese Einstellung erhöhen, was die gesamte SQL Server-Leistung verbessern kann. Wenn kein freier Speicher verfügbar ist, kann eine Erhöhung dieser Einstellung die Gesamtleistung beeinträchtigen.
+Standardmäßig weist die Einstellung Min. Speicher pro Abfrage >= bis 1024 KB für jede auszufüllende Abfrage zu. Es empfiehlt sich, diese Einstellung auf den Standardwert 0 zu belassen, damit SQL Server die für Indexerstellung zugewiesene Speichermenge dynamisch verwalten kann. Wenn SQL Server jedoch über mehr RAM verfügt, als für eine effiziente Ausführung erforderlich ist, kann die Leistung einiger Abfragen erhöht werden, wenn Sie diese Einstellung erhöhen. Solange also auf dem Server, der nicht von SQL Server verwendet wird, Speicher verfügbar ist, können andere Anwendungen oder das Betriebssystem diese Einstellung erhöhen, was die gesamte SQL Server-Leistung verbessern kann. Wenn kein freier Speicher verfügbar ist, kann eine Erhöhung dieser Einstellung die Gesamtleistung beeinträchtigen.
 
 image:mssql-min-memory-per-query.png["Fehler: Fehlendes Grafikbild"]
 
@@ -108,14 +102,9 @@ Das folgende Beispiel zeigt einen T-SQL-Befehl zum Einrichten einer Pufferpool-E
 
 ....
 USE master
-
 GO
-
 ALTER SERVER CONFIGURATION
-
 SET BUFFER POOL EXTENSION ON
-
   (FILENAME = ‘P:\BUFFER POOL EXTENSION\SQLServerCache.BUFFER POOL EXTENSION', SIZE = 32 GB);
-
 GO
 ....

@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: microsoft/win_deploy_hyperv_lmce.html 
+keywords: Windows,Hyper-V,VHDX,VM,Virtual 
+summary: In diesem Anhang wird die Bereitstellung von Live-Migration in einer Cluster-Umgebung beschrieben. 
+---
+= Bereitstellung von Hyper-V Live Migration in einer Cluster-Umgebung
+:allow-uri-read: 
+
+
+[role="lead"]
+In diesem Anhang wird die Bereitstellung von Live-Migration in einer Cluster-Umgebung beschrieben.
+
+
+
+== Voraussetzungen
+
+Für die Bereitstellung der Live-Migration müssen Hyper-V-Server in einem Failover-Cluster mit Shared Storage konfiguriert sein. Lesen Sie den Abschnitt link:win_deploy_hyperv.html["Hyper-V Clustering"] Entnehmen.
+
+
+
+== Einsatz
+
+Gehen Sie wie folgt vor, um die Live-Migration in einer Cluster-Umgebung zu nutzen:
+
+. Wählen Sie in Failover Cluster Manager den Cluster aus, und erweitern Sie ihn. Wenn der Cluster nicht angezeigt wird, klicken Sie auf Failover Cluster Manager, klicken Sie auf mit Cluster verbinden, und geben Sie den Cluster-Namen ein.
+. Klicken Sie auf Rollen, in der alle in einem Cluster verfügbaren VMs aufgeführt sind.
+. Klicken Sie mit der rechten Maustaste auf die VM und klicken Sie auf Verschieben. Dadurch stehen Ihnen drei Optionen zur Verfügung:
++
+** *Live Migration.* Sie können einen Knoten manuell auswählen oder dem Cluster erlauben, den besten Knoten auszuwählen. Bei der Live-Migration kopiert das Cluster den von der VM verwendeten Arbeitsspeicher vom aktuellen Node auf einen anderen Node. Wenn die VM zu einem anderen Node migriert wird, sind die von der VM benötigten Arbeitsspeicher- und Statusinformationen bereits für die VM vorhanden. Diese Migrationsmethode erfolgt nahezu ohne Verzögerung, aber nur eine VM kann gleichzeitig live migriert werden.
+** *Schnelle Migration.* Sie können einen Knoten manuell auswählen oder dem Cluster erlauben, den besten Knoten auszuwählen. Bei einer schnellen Migration kopiert das Cluster den von einer VM genutzten Speicher auf eine Festplatte im Storage. Wenn die VM zu einem anderen Node migriert wird, können daher die von der VM benötigten Arbeitsspeicher- und Statusinformationen schnell von der Festplatte des anderen Node gelesen werden. Durch die schnelle Migration können mehrere VMs gleichzeitig migriert werden.
+** *Migration des virtuellen Maschinenspeichers.* Diese Methode verwendet den Assistenten zum Verschieben des virtuellen Maschinenspeichers. Mit diesem Assistenten können Sie die VM-Festplatte zusammen mit anderen Dateien auswählen, die an einen anderen Speicherort verschoben werden sollen. Dabei kann es sich um eine CSV- oder SMB-Freigabe handeln.
+
+
+

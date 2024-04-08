@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: vmware/vmware-srm-vvol-troubleshooting.html 
 keywords: vmware, site, recovery manager, vsrm, hybrid, cloud, srm, vvols, replication 
-summary: Der Workflow in SRM unterscheidet sich deutlich, wenn VVols Replizierung mit dem verwendet wird, was mit SRA und herkömmlichen Datastores verwendet wird. 
+summary: Die VVols Replizierung mit VASA bietet im Vergleich zu SRA und herkömmlichen Datastores einzigartige Funktionen. 
 ---
 = Fehlerbehebung bei SRM bei Nutzung der VVols-Replizierung
 :hardbreaks:

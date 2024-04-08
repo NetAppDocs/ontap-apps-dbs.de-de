@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: vmware/vmware-vsphere-datastores-top.html 
 keywords: vSphere, datastore, VMFS, FC, FCoE, NVMe/FC, iSCSI, NFS, vVols 
-summary: Auf dieser Seite werden die Best Practices zur Implementierung einer NetApp ONTAP Storage-Lösung in einer VMware vSphere Umgebung beschrieben. 
+summary: Auf dieser Seite werden die Best Practices zur Implementierung einer ONTAP Storage-Lösung in einer VMware vSphere Umgebung beschrieben. 
 ---
 = Übersicht über vSphere Datastore- und Protokollfunktionen
 :hardbreaks:
@@ -46,7 +46,7 @@ Standard-NFS. MaxVolumes ist 8. Erhöhen Sie mit den ONTAP Tools für VMware vSp
 | Maximale Datastore-Dateigröße | 62 TB | 62 TB | 62 TB | 62 TB mit ONTAP 9.12.1P2 und höher 
 
 
-| Optimale „Queue depth“ pro LUN oder Filesystem | 64-256 | 64-256 | Autonegotiation Ist Eingeschaltet | Siehe NFS.MaxQueueDepth in https://docs.netapp.com/us-en/netapp-solutions/virtualization/vsphere_ontap_recommended_esxi_host_and_other_ontap_settings.html["Empfohlene ESXi Host-Einstellungen und andere ONTAP Einstellungen"^]. 
+| Optimale „Queue depth“ pro LUN oder Filesystem | 64-256 | 64-256 | Autonegotiation Ist Eingeschaltet | Siehe NFS.MaxQueueDepth in link:vmware-vsphere-settings.html["Empfohlene ESXi Host-Einstellungen und andere ONTAP Einstellungen"^]. 
 |===
 In der folgenden Tabelle sind die unterstützten Funktionen in Bezug auf VMware Storage aufgeführt.
 

@@ -31,7 +31,7 @@ Die ONTAP Tools für VMware vSphere sind eine Reihe von Tools, die ONTAP Storage
 
 In der folgenden Abbildung sind die ONTAP Tools für vSphere dargestellt.
 
-image:vsphere_ontap_image1.png["Fehler: Fehlendes Grafikbild"]
+image:vsphere_ontap_image1.png["ONTAP Tools für vSphere"]
 
 
 

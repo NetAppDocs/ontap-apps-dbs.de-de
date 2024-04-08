@@ -2,19 +2,19 @@
 sidebar: sidebar 
 permalink: vmware/vmware-vvols-overview.html 
 keywords: tr-4400, vvols, ontap, virtual volumes 
-summary:  
+summary: 'Dies ist eine Übersicht über VMware vSphere Virtual Volumes (VVols) mit ONTAP' 
 ---
 = Überblick
 :allow-uri-read: 
 
 
 [role="lead"]
-Seit über zwei Jahrzehnten ist die NetApp ONTAP Software eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen.
+ONTAP ist seit über zwei Jahrzehnten eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen.
 
 Dieses Dokument behandelt die ONTAP Funktionen für VMware vSphere Virtual Volumes (VVols), einschließlich der neuesten Produktinformationen und Anwendungsfälle sowie Best Practices und andere Informationen, um die Implementierung zu optimieren und Fehler zu reduzieren.
 
 
-NOTE: Diese Dokumentation ersetzt zuvor veröffentlichte technische Berichte _TR-4400: VMware vSphere Virtual Volumes (VVols) durch NetApp ONTAP_
+NOTE: Diese Dokumentation ersetzt zuvor veröffentlichte technische Berichte _TR-4400: VMware vSphere Virtual Volumes (VVols) durch ONTAP_
 
 Andere Dokumente wie Leitfäden und Kompatibilitätslisten werden durch Best Practices ergänzt. Sie werden basierend auf Labortests und umfassenden praktischen Erfahrungen der NetApp Ingenieure und Kunden entwickelt. Es handelt sich hierbei unter Umständen nicht nur um geeignete oder unterstützte Praktiken, sondern im Allgemeinen um die einfachsten Lösungen, die die Anforderungen der meisten Kunden erfüllen.
 
@@ -109,19 +109,19 @@ image::vvols-image4.png[Einhaltung der Virtual Machine Storage-Richtlinien,320,1
 
 == NetApp VVols Unterstützung
 
-NetApp ONTAP unterstützt die VASA Spezifikation seit der ersten Version im Jahr 2012. Während andere NetApp Storage-Systeme VASA unterstützen, konzentriert sich dieses Dokument auf die derzeit unterstützten Versionen von ONTAP 9.
+ONTAP unterstützt die VASA Spezifikation seit ihrer ersten Version im Jahr 2012. Während andere NetApp Storage-Systeme VASA unterstützen, konzentriert sich dieses Dokument auf die derzeit unterstützten Versionen von ONTAP 9.
 
 
 
-=== NetApp ONTAP
+=== ONTAP
 
-Neben ONTAP 9 auf AFF, ASA und FAS Systemen unterstützt NetApp VMware-Workloads auf ONTAP Select, Amazon FSX für NetApp ONTAP mit VMware Cloud auf AWS, Azure NetApp Files mit der Lösung Azure VMware, Cloud Volumes Service mit Google Cloud VMware Engine und NetApp Private Storage in Equinix, Die spezifische Funktionalität kann jedoch je nach Dienstanbieter und verfügbarer Netzwerkverbindung variieren. Es ist auch möglich, von vSphere Gasts auf Daten zuzugreifen, die in diesen Konfigurationen sowie auf Cloud Volumes ONTAP gespeichert sind.
+Neben ONTAP 9 auf AFF, ASA und FAS Systemen unterstützt NetApp VMware-Workloads auf ONTAP Select, Amazon FSX for NetApp mit VMware Cloud on AWS, Azure NetApp Files mit der Azure VMware Lösung, Cloud Volumes Service mit Google Cloud VMware Engine und NetApp Private Storage in Equinix, die spezifische Funktionalität kann jedoch je nach Dienstanbieter und verfügbarer Netzwerkverbindung variieren. Es ist auch möglich, von vSphere Gasts auf Daten zuzugreifen, die in diesen Konfigurationen sowie auf Cloud Volumes ONTAP gespeichert sind.
 
 Zum Zeitpunkt der Veröffentlichung sind Hyperscaler-Umgebungen nur auf herkömmliche NFS v3-Datastores beschränkt. Daher sind VVols nur mit lokalen ONTAP Systemen oder Cloud-vernetzten Systemen verfügbar, die die gesamten Funktionen von On-Premises-Systemen bereitstellen, z. B. von NetApp Partnern und Service-Providern auf der ganzen Welt.
 
 _Weitere Informationen zu ONTAP finden Sie unter https://docs.netapp.com/us-en/ontap-family/["ONTAP Produktdokumentation"^]_
 
-_Weitere Informationen zu den Best Practices von ONTAP und VMware vSphere finden Sie unter https://docs.netapp.com/us-en/netapp-solutions/virtualization/vsphere_ontap_ontap_for_vsphere.html["TR-4597"^]_
+_Weitere Informationen zu den Best Practices von ONTAP und VMware vSphere finden Sie unter link:vmware-vsphere-overview.html["TR-4597"^]_
 
 
 

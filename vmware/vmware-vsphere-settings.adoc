@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: vmware/vmware-vsphere-settings.html 
-keywords:  
-summary:  
+keywords: VMware,vSphere,ESXi,settings,NFS,iSCSI,FC,FCP 
+summary: In diesem Dokument werden die empfohlenen Speicher- und Netzwerkeinstellungen kategorisiert und aufgelistet. 
 ---
 = Empfohlene ESXi Host-Einstellungen und andere ONTAP Einstellungen
 :hardbreaks:
@@ -14,7 +14,11 @@ summary:
 
 
 [role="lead"]
-NetApp hat für ESXi Hosts einen Satz von Einstellungen für Multipathing und HBA-Zeitüberschreitungen entwickelt, um auf der Grundlage eigener Tests für das richtige Verhalten bei ONTAP zu sorgen. Diese Einstellungen lassen sich mit ONTAP Tools für VMware vSphere problemlos konfigurieren. Klicken Sie im Übersichtskonsole im Portlet „Host-Systeme“ auf „Einstellungen bearbeiten“ oder klicken Sie in vCenter mit der rechten Maustaste auf den Host und navigieren Sie zu „ONTAP-Tools“ > „Empfohlene Werte festlegen“. Im Folgenden sind die derzeit empfohlenen Hosteinstellungen für die Version 9.8 angegeben.
+NetApp hat optimale ESXi Host-Einstellungen für NFS- und Blockprotokolle entwickelt. Des Weiteren finden Sie spezielle Anleitungen zu Multipathing- und HBA-Zeitüberschreitungseinstellungen, um ein angemessenes Verhalten gegenüber ONTAP auf der Grundlage interner Tests von NetApp und VMware zu gewährleisten.
+
+Diese Werte lassen sich mit den ONTAP-Tools für VMware vSphere problemlos einstellen: Klicken Sie im Dashboard „Zusammenfassung“ im Portlet „Hostsysteme“ auf „Einstellungen bearbeiten“ oder klicken Sie mit der rechten Maustaste auf den Host in vCenter. Navigieren Sie dann zu „ONTAP-Tools“ > „Empfohlene Werte festlegen“.
+
+Im Folgenden finden Sie die derzeit empfohlenen Host-Einstellungen für die Versionen 9.8-9.13.
 
 |===
 
@@ -48,7 +52,7 @@ Stellen Sie auf 1024 MB für 6.5U3, 6.7U3 und 7.0 oder höher ein. | Ja.
 
 
 | MaxVolumes: NFS | VSphere 6.0 oder höher: Auf 256 einstellen
-Alle anderen NFS-Konfigurationen: Auf 64 einstellen. | Nein 
+Alle anderen NFS-Konfigurationen auf 64 eingestellt. | Nein 
 
 
 | NFS41.MaxVolumes | VSphere 6.0 oder höher: Auf 256 einstellen. | Nein 
@@ -152,7 +156,7 @@ ONTAP-Tools legen beim Erstellen von ONTAP FlexVol Volumes und LUNs bestimmte St
 Obwohl NetApp derzeit nicht durch verfügbare ONTAP-Tools konfiguriert ist, empfiehlt es folgende Konfigurationsoptionen:
 
 * In hochperformanten Umgebungen oder bei Tests der Performance mit einem einzelnen LUN-Datastore sollte die Einstellung der Lastverteilung für die Round-Robin (VMW_PSP_RR) Path Selection Policy (PSP) von der standardmäßigen IOPS-Einstellung 1000 auf einen Wert 1 geändert werden. Siehe VMware KB https://kb.vmware.com/s/article/2069356["2069356"^] Finden Sie weitere Informationen.
-* In vSphere 6.7 Update 1 hat VMware einen neuen Lastausgleichsmechanismus für das Round Robin PSP System eingeführt. Bei der Auswahl des optimalen Pfads für I/O berücksichtigt die neue Option die I/O-Bandbreite und die Pfadlatenz Möglicherweise profitieren Sie von der Verwendung in Umgebungen mit nicht äquivalenter Pfadkonnektivität. So können Sie beispielsweise mehr Netzwerk-Hops auf einem Pfad als auf einem anderen verwenden oder ein NetApp All SAN Array System nutzen. Siehe https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-B7AD0CA0-CBE2-4DB4-A22C-AD323226A257.html?hWord=N4IghgNiBcIA4Gc4AIJgC4FMB2BjAniAL5A["Pfadauswahl-Plug-ins und -Richtlinien"^] Finden Sie weitere Informationen.
+* In vSphere 6.7 Update 1 hat VMware einen neuen Lastausgleichsmechanismus für das Round Robin PSP System eingeführt. Bei der Auswahl des optimalen Pfads für I/O berücksichtigt die neue Option die I/O-Bandbreite und die Pfadlatenz Möglicherweise profitieren Sie von der Verwendung in Umgebungen mit nicht gleichwertiger Pfadverbindung, z. B. bei mehr Netzwerk-Hops auf einem Pfad als auf einem anderen oder bei Verwendung eines NetApp All-SAN-Array-Systems. Siehe https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-B7AD0CA0-CBE2-4DB4-A22C-AD323226A257.html?hWord=N4IghgNiBcIA4Gc4AIJgC4FMB2BjAniAL5A["Pfadauswahl-Plug-ins und -Richtlinien"^] Finden Sie weitere Informationen.
 
 
 

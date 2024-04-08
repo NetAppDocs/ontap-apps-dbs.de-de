@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: vmware/vmware-srm-operational_best_practices.html 
 keywords: vmware, site, recovery manager, vsrm, datastores, protocols, spbm, vvols, protection, replication, volumes, array, groups, failover test, reportect, failback 
-summary: Wenn möglich, verwenden Sie immer ONTAP Tools, um Datenspeicher und Volumes bereitzustellen. Damit stellen wir sicher, dass Volumes, Verbindungspfade, LUNs, Initiatorgruppen, Exportrichtlinien Und andere Einstellungen sind kompatibel konfiguriert. 
+summary: Best Practices für den Betrieb von VMware SRM und ONTAP Storage 
 ---
 = Best Practices für betriebliche Prozesse
 :hardbreaks:
@@ -25,7 +25,7 @@ In den folgenden Abschnitten werden die betrieblichen Best Practices für VMware
 * Zur Bestätigung der Konnektivität überprüfen Sie immer, ob Sie einen neuen Testdatenspeicher am DR-Standort vom Ziel-ONTAP-Cluster aus mounten und wieder mounten können. Testen Sie jedes Protokoll, das Sie für die Datastore-Konnektivität verwenden möchten. Eine Best Practice besteht darin, mit ONTAP-Tools Ihren Testdatenspeicher zu erstellen, da dies die gesamte Datastore-Automatisierung gemäß den Anweisungen von SRM erfolgt.
 * SAN-Protokolle sollten für jeden Standort homogen sein. Sie können NFS und SAN mixen, aber die SAN-Protokolle sollten nicht innerhalb eines Standorts gemischt werden. Beispielsweise können Sie FCP in Seite A und iSCSI in Standort B verwenden Sie sollten FCP und iSCSI nicht an Standort A verwenden Der Grund hierfür: Der SRA erstellt nicht gemischte Initiatorgruppen am Recovery-Standort, und SRM filtert nicht die Initiatorliste, die den SRA gegeben wurde.
 * In den vorherigen Leitfäden wurde das Erstellen von LIF zur Datenlokalität empfohlen. Das heißt, mounten Sie immer einen Datenspeicher mit einer LIF auf dem Node, der physisch Eigentümer des Volume ist. In modernen Versionen von ONTAP 9 ist das nicht mehr erforderlich. Wenn möglich und im Cluster-Umfang Zugangsdaten angegeben, entscheiden sich ONTAP Tools weiterhin für den Lastausgleich über lokale LIFs hinweg für die Daten, allerdings sind dies keine Voraussetzungen für Hochverfügbarkeit oder Performance.
-* NetApp ONTAP 9 kann so konfiguriert werden, dass Snapshots automatisch entfernt werden, um die Uptime aufrechtzuerhalten, falls ein Speicherplatz nicht ausreicht, wenn Autosize nicht in der Lage ist, eine ausreichende Notfallkapazität zur Verfügung zu stellen. In der Standardeinstellung für diese Funktion werden die von SnapMirror erstellten Snapshots nicht automatisch gelöscht. Wenn SnapMirror Snapshots gelöscht werden, kann NetApp SRA die Replizierung für das betroffene Volume nicht rückgängig machen und erneut synchronisieren. Um zu verhindern, dass ONTAP SnapMirror Snapshots löscht, konfigurieren Sie die Funktion für automatisches Löschen von Snapshots für den Versuch.
+* ONTAP 9 kann so konfiguriert werden, dass Snapshots automatisch entfernt werden, um die Uptime aufrechtzuerhalten, falls ein Speicherplatz nicht ausreicht, wenn Autosize nicht in der Lage ist, eine ausreichende Notfallkapazität zur Verfügung zu stellen. In der Standardeinstellung für diese Funktion werden die von SnapMirror erstellten Snapshots nicht automatisch gelöscht. Wenn SnapMirror Snapshots gelöscht werden, kann NetApp SRA die Replizierung für das betroffene Volume nicht rückgängig machen und erneut synchronisieren. Um zu verhindern, dass ONTAP SnapMirror Snapshots löscht, konfigurieren Sie die Funktion für automatisches Löschen von Snapshots für den Versuch.
 
 
 ....
@@ -45,15 +45,15 @@ Ab SRM 8.3 wird die Sicherung von VMs mit VVols Datastores unterstützt. SnapMir
 
 Im folgenden Beispiel wird die Aktivierung der VVols-Replizierung gezeigt.
 
-image:vsrm-ontap9_image2.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image2.png["VVols Replizierung"]
 
 Der folgende Screenshot zeigt ein Beispiel zu SnapMirror Zeitplänen, die im Assistenten zur Erstellung von VM-Storage-Richtlinien angezeigt werden.
 
-image:vsrm-ontap9_image3.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image3.png["SnapMirror Zeitpläne"]
 
 Der ONTAP VASA Provider unterstützt den Failover auf unterschiedlichen Storage. So kann beispielsweise ein Failover des Systems von ONTAP Select an einem Edge-Standort auf ein AFF System im Core-Datacenter durchgeführt werden. Unabhängig von Ähnlichkeit zum Storage müssen Sie für VM Storage-Richtlinien immer Storage-Richtlinien-Zuordnungen und Reverse-Mappings konfigurieren, damit die Services am Recovery-Standort die Erwartungen und Anforderungen erfüllen. Der folgende Screenshot zeigt ein Beispiel für eine Richtlinienzuordnung.
 
-image:vsrm-ontap9_image4.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image4.png["Richtlinienzuordnung"]
 
 
 
@@ -61,9 +61,9 @@ image:vsrm-ontap9_image4.png["Fehler: Fehlendes Grafikbild"]
 
 Im Gegensatz zu älteren VVols-Datastores müssen replizierte VVols Datastores von Anfang an bei aktivierter Replizierung erstellt werden. Dabei müssen sie Volumes verwenden, die vorab auf den ONTAP Systemen mit SnapMirror Beziehungen erstellt wurden. Hierfür sind vorab-Konfigurationen wie Cluster-Peering und SVM-Peering erforderlich. Diese Aktivitäten sollten von Ihrem ONTAP Administrator durchgeführt werden, da hierdurch die Zuständigkeiten zwischen denjenigen, die ONTAP Systeme an mehreren Standorten managen, und denjenigen, die hauptsächlich für vSphere Vorgänge verantwortlich sind, strikt getrennt werden können.
 
-Dafür muss der vSphere Administrator eine neue Anforderung erfüllen. Da Volumes außerhalb der ONTAP Tools erstellt werden, ist es nicht bekannt, dass die Änderungen, die Ihr ONTAP-Administrator bis zur regelmäßigen planmäßigen Neuerfassungszeit vorgenommen hat. Daher ist es eine Best Practice, immer wieder neu zu ermitteln, wenn Sie eine Volume- oder SnapMirror Beziehung erstellen, die mit VVols verwendet werden soll. Klicken Sie einfach mit der rechten Maustaste auf den Host oder den Cluster und wählen Sie NetApp ONTAP Tools > Host- und Speicherdaten aktualisieren aus, wie im folgenden Screenshot dargestellt.
+Dafür muss der vSphere Administrator eine neue Anforderung erfüllen. Da Volumes außerhalb der ONTAP Tools erstellt werden, ist es nicht bekannt, dass die Änderungen, die Ihr ONTAP-Administrator bis zur regelmäßigen planmäßigen Neuerfassungszeit vorgenommen hat. Daher ist es eine Best Practice, immer wieder neu zu ermitteln, wenn Sie eine Volume- oder SnapMirror Beziehung erstellen, die mit VVols verwendet werden soll. Klicken Sie einfach mit der rechten Maustaste auf den Host oder den Cluster und wählen Sie ONTAP Tools > Host- und Speicherdaten aktualisieren aus, wie im folgenden Screenshot dargestellt.
 
-image:vsrm-ontap9_image5.png["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image5.png["Host- und Speicherdaten aktualisieren"]
 
 Bei VVols und SRM ist Vorsicht geboten. Niemals geschützte und ungesicherte VMs in demselben VVols Datastore zusammen Der Grund dafür: Wenn Sie SRM für das Failover an Ihrem DR-Standort verwenden, werden nur die VMs, die Teil der Sicherungsgruppe sind, in die DR online geschaltet. Wenn Sie die Sicherung rückgängig machen (das SnapMirror aus der DR wieder in die Produktionsumgebung verschieben), können die VMs, die nicht Failover waren, überschrieben werden und wertvolle Daten enthalten.
 
@@ -75,7 +75,7 @@ Für jedes Array-Paar wird ein Array-Manager erstellt. Zusammen mit SRM und ONTA
 
 Wenn Sie Array-Paare in SRM konfigurieren, sollten Sie sie immer in SRM auf die gleiche Weise hinzufügen, wie Sie sie den ONTAP Tools hinzugefügt haben. Das bedeutet, dass sie denselben Benutzernamen, dasselbe Passwort und dieselbe Management-LIF verwenden müssen. Diese Anforderung stellt sicher, dass SRA ordnungsgemäß mit dem Array kommuniziert. Der folgende Screenshot veranschaulicht, wie ein Cluster in ONTAP-Tools angezeigt wird und wie es zu einem Array Manager hinzugefügt werden kann.
 
-image:vsrm-ontap9_image6.jpg["Fehler: Fehlendes Grafikbild"]
+image:vsrm-ontap9_image6.jpg["Cluster"]
 
 
 

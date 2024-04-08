@@ -28,7 +28,7 @@ Die ersten beiden Schritte sind für eine bestehende vSphere-Umgebung, die ONTAP
 +
 ** Fügen Sie den ONTAP-Cluster zu den ONTAP-Tools unter _Storage Systems_ hinzu
 +
-*** ONTAP Tools und SRA unterstützen zwar Anmeldedaten auf Cluster- und SVM-Ebene, doch unterstützt der VASA Provider nur Zugangsdaten auf Cluster-Ebene für Storage-Systeme. Dies liegt daran, dass viele der für VVols verwendeten APIs nur auf Cluster-Ebene verfügbar sind. Wenn Sie daher VVols verwenden möchten, müssen Sie die ONTAP-Cluster mit den Anmeldedaten für den Cluster-Umfang hinzufügen.
+*** ONTAP Tools und SRA unterstützen zwar Anmeldedaten auf Cluster- und SVM-Ebene, doch unterstützt der VASA Provider nur Zugangsdaten auf Cluster-Ebene für Storage-Systeme. Der Grund dafür ist, dass viele der für VVols verwendeten APIs nur auf Cluster-Ebene verfügbar sind. Wenn Sie daher VVols verwenden möchten, müssen Sie die ONTAP-Cluster mit den Anmeldedaten für den Cluster-Umfang hinzufügen.
 
 
 ** Wenn sich Ihre ONTAP-Daten-LIFs in unterschiedlichen Subnetzen von Ihren VMkernel-Adaptern befinden, müssen Sie die VMkernel-Adapter-Subnetze zur Liste der ausgewählten Subnetze im Einstellungsmenü der ONTAP-Tools hinzufügen. Standardmäßig sichern ONTAP Tools Ihren Storage-Datenverkehr nur durch lokalen Subnetzzugriff.

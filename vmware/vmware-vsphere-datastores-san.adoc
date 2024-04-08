@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: vmware/vmware-vsphere-datastores-san.html 
 keywords: vSphere, datastore, VMFS, FC, FCoE, NVMe/FC, iSCSI, NFS, vVols 
-summary: Auf dieser Seite werden die Best Practices zur Implementierung einer NetApp ONTAP Storage-Lösung in einer VMware vSphere Umgebung beschrieben. 
+summary: Auf dieser Seite werden die Best Practices zur Implementierung einer ONTAP Storage-Lösung in einer VMware vSphere Umgebung beschrieben. 
 ---
 = SAN (FC, FCoE, NVMe/FC, iSCSI), RDM
 :hardbreaks:
@@ -14,6 +14,8 @@ summary: Auf dieser Seite werden die Best Practices zur Implementierung einer Ne
 
 
 [role="lead"]
+NetApp ONTAP bietet Block-Storage der Enterprise-Klasse für VMware vSphere unter Verwendung von iSCSI, Fibre Channel Protocol (FCP, kurz FC) und NVMe over Fabrics (NVMe-of). Nachfolgend finden Sie Best Practices zur Implementierung von Blockprotokollen für VM-Storage mit vSphere und ONTAP.
+
 Mit vSphere gibt es drei Methoden, blockbasierten Speicher zu nutzen:
 
 * Mit VMFS Datastores
@@ -25,7 +27,7 @@ VMFS ist ein hochperformantes geclustertes Filesystem, das Datastores bereitstel
 
 VSphere umfasst integrierte Unterstützung für mehrere Pfade zu Storage-Geräten. Dieses Verfahren wird als natives Multipathing (NMP) bezeichnet. NMP kann den Storage-Typ für unterstützte Storage-Systeme erkennen und den NMP-Stack automatisch so konfigurieren, dass die Funktionen des verwendeten Storage-Systems unterstützt werden.
 
-Sowohl NMP als auch NetApp ONTAP unterstützen Asymmetric Logical Unit Access (ALUA) zur Ermittlung optimierter und nicht optimierter Pfade. In ONTAP folgt ein ALUA-optimierter Pfad auf einen direkten Datenpfad. Dabei wird ein Zielport auf dem Node verwendet, der die LUN hostet, auf die zugegriffen wird. ALUA ist sowohl in vSphere als auch in ONTAP standardmäßig aktiviert. NMP erkennt das ONTAP Cluster als ALUA-fähig und verwendet ein ALUA Storage-Array-Plug-in (`VMW_SATP_ALUA`) Und wählt das Plug-in zur Auswahl des Round-Robin-Pfads aus (`VMW_PSP_RR`).
+Sowohl NMP als auch ONTAP unterstützen Asymmetric Logical Unit Access (ALUA) zur Ermittlung optimierter und nicht optimierter Pfade. In ONTAP folgt ein ALUA-optimierter Pfad auf einen direkten Datenpfad. Dabei wird ein Zielport auf dem Node verwendet, der die LUN hostet, auf die zugegriffen wird. ALUA ist sowohl in vSphere als auch in ONTAP standardmäßig aktiviert. NMP erkennt das ONTAP Cluster als ALUA-fähig und verwendet ein ALUA Storage-Array-Plug-in (`VMW_SATP_ALUA`) Und wählt das Plug-in zur Auswahl des Round-Robin-Pfads aus (`VMW_PSP_RR`).
 
 ESXi 6 unterstützt bis zu 256 LUNs und insgesamt bis zu 1,024 Pfade zu LUNs. Alle über diese Grenzen hinausgehenden LUNs oder Pfade werden von ESXi nicht erkannt. Ausgehend von dieser maximalen Anzahl an LUNs lässt das Pfadlimit vier Pfade pro LUN zu. In einem größeren ONTAP Cluster ist es möglich, dass das Pfadlimit vor dem LUN-Limit erreicht wird. Zur Beseitigung dieser Beschränkung unterstützt ONTAP ab Version 8.3 die selektive LUN-Zuordnung (Selective LUN Map, SLM).
 
@@ -47,4 +49,4 @@ Weitere Best Practices, die berücksichtigt werden sollten:
 * Weitere Informationen zur Verwendung von NVMe/FC mit vSphere 7.0 finden Sie im hier https://docs.netapp.com/us-en/ontap-sanhost/nvme_esxi_7.html["ONTAP NVMe/FC-Host-Konfigurationsleitfaden"^] Und http://www.netapp.com/us/media/tr-4684.pdf["TR-4684"^]Die folgende Abbildung zeigt die Multipath-Konnektivität von einem vSphere Host zu einer ONTAP LUN.
 
 
-image:vsphere_ontap_image2.png["Fehler: Fehlendes Grafikbild"]
+image:vsphere_ontap_image2.png["Multipath-Konnektivität"]

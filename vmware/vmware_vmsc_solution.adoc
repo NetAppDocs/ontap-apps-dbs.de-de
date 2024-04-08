@@ -129,7 +129,7 @@ Mithilfe der VM Host-Affinitätsregeln in VMware DRS lässt sich eine logische T
 
 Nachfolgend finden Sie ein Beispiel für VM-Hostgruppen und Affinitätsregeln.
 
-image::../media/vmsc_2_2.png[Ein Diagramm eines Computerservers Beschreibung wird automatisch generiert,528,369]
+image::../media/vmsc_2_2.png[VM Host-Gruppen und Affinitätsregeln,528,369]
 
 
 

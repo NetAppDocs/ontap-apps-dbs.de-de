@@ -14,7 +14,7 @@ summary: 'Mit ONTAP sorgt das Konzept der Storage Virtual Machine (SVM) für ein
 
 
 [role="lead"]
-Die folgenden Abschnitte stellen die Best Practices für die Implementierung mit VMware und ONTAP SRM dar.
+In den folgenden Abschnitten werden die Best Practices für die Implementierung mit ONTAP und VMware SRM beschrieben.
 
 
 

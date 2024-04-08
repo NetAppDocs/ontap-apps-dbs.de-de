@@ -4,26 +4,26 @@ title: Microsoft SQL Server
 entries:
 - title: Überblick
   url: "/mssql/mssql-overview.html"
-- title: Workloads
-  url: "/mssql/mssql-workloads.html"
 - title: Datenbankkonfiguration
   pdf-filename: Datenbankkonfiguration für Microsoft SQL Server
   entries:
-  - title: Shared Instance oder dedizierte Instanz
-    url: "/mssql/mssql-shared-vs-dedicated.html"
   - title: CPU-Konfiguration
     url: "/mssql/mssql-cpu-configuration.html"
   - title: Speicherkonfiguration
     url: "/mssql/mssql-memory-configuration.html"
+  - title: Shared Instance oder dedizierte Instanz
+    url: "/mssql/mssql-shared-vs-dedicated.html"
 - title: Storage-Konfiguration
   pdf-filename: Storage-Konfiguration für Microsoft SQL Server
   entries:
+  - title: Überblick
+    url: "/mssql/mssql-storage-considerations.html"
   - title: Datenbankdateien und Dateigruppen
     url: "/mssql/mssql-files-and-filegroups.html"
+  - title: Protokollverzeichnis
+    url: "/mssql/mssql-log-directory.html"
   - title: Tempdb-Dateien
     url: "/mssql/mssql-tempdb.html"
-  - title: Überlegungen zum Storage
-    url: "/mssql/mssql-storage-considerations.html"
   - title: Storage-Effizienz
     url: "/mssql/mssql-storage-efficiency.html"
 - title: Datensicherung

@@ -36,7 +36,7 @@ Der erste Schritt besteht darin, ein Datenbank-Backup zu erstellen. Insbesondere
 
 === Umgebung
 
-In diesem Beispiel befindet sich die Quelldatenbank auf einem ONTAP-System. Die einfachste Methode zum Erstellen eines Backups einer Datenbank ist die Verwendung einer Snapshot-Kopie. Die Datenbank wird für einige Sekunden in den Hot Backup-Modus versetzt, während ein `snapshot create` Der Vorgang wird auf dem Volume ausgeführt, auf dem die Datendateien gehostet werden.
+In diesem Beispiel befindet sich die Quelldatenbank auf einem ONTAP-System. Die einfachste Methode, um ein Backup einer Datenbank zu erstellen, ist die Verwendung eines Snapshots. Die Datenbank wird für einige Sekunden in den Hot Backup-Modus versetzt, während ein `snapshot create` Der Vorgang wird auf dem Volume ausgeführt, auf dem die Datendateien gehostet werden.
 
 ....
 SQL> alter database begin backup;
@@ -50,7 +50,7 @@ Cluster01::*>
 SQL> alter database end backup;
 Database altered.
 ....
-Das Ergebnis ist eine Snapshot-Kopie auf der Festplatte, die als aufgerufen wird `hotbackup` Die ein Image der Datendateien enthält, während sie sich im Hot Backup-Modus befinden. Wenn die Daten in dieser Snapshot-Kopie zusammen mit den entsprechenden Archivprotokollen konsistent sind, können sie als Grundlage für Wiederherstellungen oder Klone verwendet werden. In diesem Fall wird sie auf den neuen Server repliziert.
+Das Ergebnis ist ein Snapshot auf der Festplatte, der aufgerufen wird `hotbackup` Die ein Image der Datendateien enthält, während sie sich im Hot Backup-Modus befinden. Wenn die Daten in diesem Snapshot mit den entsprechenden Archivprotokollen konsistent sind, können sie als Grundlage für eine Wiederherstellung oder einen Klon verwendet werden. In diesem Fall wird sie auf den neuen Server repliziert.
 
 
 
@@ -58,7 +58,7 @@ Das Ergebnis ist eine Snapshot-Kopie auf der Festplatte, die als aufgerufen wird
 
 Das Backup muss nun in der neuen Umgebung wiederhergestellt werden. Dies kann auf verschiedene Arten erfolgen, z. B. Oracle RMAN, Wiederherstellung über eine Backup-Applikation wie NetBackup oder ein einfacher Kopiervorgang von Datendateien, die im Hot-Backup-Modus platziert wurden.
 
-In diesem Beispiel wird SnapMirror verwendet, um die Snapshot-Kopie namens „HotBackup“ an einen neuen Speicherort zu replizieren.
+In diesem Beispiel wird SnapMirror verwendet, um das Snapshot Hot-Backup an einen neuen Speicherort zu replizieren.
 
 . Erstellen Sie ein neues Volume für den Empfang der Snapshot-Daten. Initialisieren Sie die Spiegelung von `jfsc1_oradata` Bis `vol_oradata`.
 +

@@ -1,29 +1,29 @@
 ---
 sidebar: sidebar 
 permalink: mssql/mssql-data-protection.html 
-keywords: MS-SQL,mssql,SQL Server, SnapCenter, data protection 
-summary: Microsoft SQL Server Datensicherung mit ONTAP 
+keywords: MSSQL,SQL Server, SnapCenter, data protection, app-consistent backup, ONTAP 
+summary: Sichern von Microsoft SQL Server Datenbanken auf ONTAP mit SnapCenter- und T-SQL-Befehlen. 
 ---
-= Microsoft SQL Server Datensicherung mit ONTAP
+= Microsoft SQL Server Datensicherung mit NetApp Management Software
 :allow-uri-read: 
 :imagesdir: ../media/
 
 
 [role="lead"]
-Die Sicherung von Datenbanken ist für jedes Unternehmen von großer Bedeutung. Da die Datenmenge und Anzahl der Datenbanken zugenommen haben, ist die Einhaltung der Recovery Time Objective (RTO) und der Recovery Point Objective (RPO) von großer Bedeutung.
-
-Der wichtigste Faktor bei Datenbank-Backups ist die Nutzung der NetApp Snapshot Technologie. Ein applikationskonsistentes Backup und Datenbank-Layout sind weitere wichtige Kriterien für die Einhaltung von RTO und RPO, die von NetApp SnapCenter orchestriert werden können.
+Die Planung von Datenbank-Backups basiert auf geschäftlichen Anforderungen. Durch die Kombination der NetApp Snapshot Technologie von ONTAP und der Nutzung der Microsoft SQL Server APIs können Sie schnell applikationskonsistente Backups unabhängig von der Größe der Benutzerdatenbanken erstellen. Für erweiterte oder horizontal skalierbare Datenmanagement-Anforderungen bietet NetApp SnapCenter.
 
 
 
 == SnapCenter
 
-SnapCenter ist die NetApp Datensicherungssoftware für Enterprise-Applikationen.SQL Server Datenbanken lassen sich mit dem Plug-in für SQL Server und dem Plug-in für Microsoft Windows schnell und einfach mit NetApp SnapCenter Software sichern.
+SnapCenter ist die NetApp Datensicherungssoftware für Enterprise-Applikationen. Mit dem SnapCenter Plug-in für SQL Server und den vom SnapCenter Plug-in für Microsoft Windows verwalteten Betriebssystemvorgängen können SQL Server Datenbanken schnell und einfach gesichert werden.
 
-Diese Produkte ermöglichen applikationskonsistente Backups, automatisiertes Klonen sowie Restores und Recoverys von SQL Server Datenbanken, Instanzen oder Verfügbarkeitsgruppen.
+Bei der SQL Server-Instanz kann es sich um eine eigenständige Einrichtung oder eine Failover-Cluster-Instanz handeln oder um eine Always-On-Verfügbarkeitsgruppe. Im Ergebnis können Datenbanken über eine zentrale Konsole geschützt, geklont und aus der primären oder sekundären Kopie wiederhergestellt werden. Mit SnapCenter lassen sich SQL Server Datenbanken sowohl vor Ort, in der Cloud als auch in hybriden Konfigurationen managen. Datenbankkopien können für Entwicklungszwecke oder für Berichte in wenigen Minuten auf dem ursprünglichen oder alternativen Host erstellt werden.
 
 
-TIP: *NetApp empfiehlt* SnapCenter zum Erstellen von Snapshot Kopien zu verwenden.
+TIP: *NetApp empfiehlt* SnapCenter zum Erstellen von Snapshot Kopien zu verwenden. Die im Folgenden beschriebene T-SQL-Methode funktioniert ebenfalls, SnapCenter bietet jedoch eine vollständige Automatisierung für Backup-, Restore- und Klonprozesse. Außerdem wird eine Erkennung durchgeführt, um sicherzustellen, dass die richtigen Snapshots erstellt werden. Es ist keine Vorkonfiguration erforderlich.
+...
+SQL Server erfordert außerdem eine Koordination zwischen OS und Storage, um sicherzustellen, dass bei der Erstellung die korrekten Daten in Snapshots vorhanden sind. In den meisten Fällen ist die einzige sichere Methode, dies mit SnapCenter oder T-SQL zu tun. Ohne diese zusätzliche Koordination erstellte Snapshots sind unter Umständen nicht zuverlässig wiederherstellbar.
 
 Weitere Informationen zum SQL Server-Plug-in für SnapCenter finden Sie unter link:https://www.netapp.com/pdf.html?item=/media/12400-tr4714.pdf["TR-4714: Best Practice Guide für SQL Server mit NetApp SnapCenter"^].
 
@@ -31,11 +31,11 @@ Weitere Informationen zum SQL Server-Plug-in für SnapCenter finden Sie unter li
 
 == Datenbanken mit T-SQL-Snapshots werden gesichert
 
-In SQL Server 2022 hat Microsoft T-SQL Snapshots eingeführt. Diese bieten einen integrierten Vorteil als die herkömmliche Methode, die vom Datenbankadministrator nicht einfach verwendet wurde. Durch die Nutzung der ONTAP REST-APIs können Sie Befehle zu Snapshot-Volumes aufrufen.
+In SQL Server 2022 hat Microsoft T-SQL Snapshots eingeführt, die einen Pfad zu Skripting und Automatisierung von Backup-Vorgängen bieten. Anstatt Kopien in voller Größe zu erstellen, können Sie die Datenbank für Snapshots vorbereiten. Sobald die Datenbank für das Backup bereit ist, können Sie Snapshots mithilfe der ONTAP REST-APIs erstellen.
 
 Im Folgenden finden Sie ein Beispiel für einen Backup-Workflow:
 
-. Eine Datenbank mit dem Befehl „ALTER“ einfrieren – damit die Möglichkeit besteht, einen konsistenten Snapshot auf dem zugrunde liegenden Speicher zu erstellen. Danach können Sie die Datenbank auftauen und den Snapshot mit dem BACKUP-Befehl aufzeichnen.
+. Eine Datenbank mit dem Befehl ALTER fixieren. Dadurch wird die Datenbank auf einen konsistenten Snapshot auf dem zugrunde liegenden Speicher vorbereitet. Nach dem Einfrieren können Sie die Datenbank auftauen und den Snapshot mit dem BACKUP-Befehl aufzeichnen.
 . Führen Sie Snapshots mehrerer Datenbanken auf den Speichervolumes gleichzeitig mit den neuen Befehlen BACKUP-GRUPPE und BACKUP-SERVER durch.
 . Führen Sie VOLLSTÄNDIGE Backups oder COPY_ONLY VOLLSTÄNDIGE Backups durch. Diese Backups werden auch in msdb aufgezeichnet.
 . Durchführung einer zeitpunktgenauen Recovery mithilfe von Protokoll-Backups, die mit dem normalen Streaming-Ansatz nach dem VOLLSTÄNDIGEN Snapshot-Backup erstellt wurden. Streaming Differential Backups werden auf Wunsch auch unterstützt.

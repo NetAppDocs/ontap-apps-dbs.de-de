@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: vmware/vmware-vsphere-overview.html 
 keywords: introduction, unified storage, virtual volumes, storage efficiency, hybrid cloud 
-summary: Seit fast zwei Jahrzehnten ist die NetApp ONTAP Software eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen. Dieses Dokument bietet eine Einführung in die ONTAP Lösung für vSphere sowie in die neuesten Produktinformationen und Best Practices zur Optimierung der Implementierung, Risikominderung und Vereinfachung des Managements. 
+summary: ONTAP ist seit fast zwei Jahrzehnten eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen. Dieses Dokument bietet eine Einführung in die ONTAP Lösung für vSphere sowie in die neuesten Produktinformationen und Best Practices zur Optimierung der Implementierung, Risikominderung und Vereinfachung des Managements. 
 ---
 = VMware vSphere mit ONTAP –
 :hardbreaks:
@@ -14,7 +14,7 @@ summary: Seit fast zwei Jahrzehnten ist die NetApp ONTAP Software eine der führ
 
 
 [role="lead"]
-Seit fast zwei Jahrzehnten ist die NetApp ONTAP Software eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen. Dieses Dokument bietet eine Einführung in die ONTAP Lösung für vSphere sowie in die neuesten Produktinformationen und Best Practices zur Optimierung der Implementierung, Risikominderung und Vereinfachung des Managements.
+ONTAP ist seit fast zwei Jahrzehnten eine der führenden Storage-Lösungen für VMware vSphere Umgebungen und wird kontinuierlich mit innovativen Funktionen erweitert, die nicht nur zur Vereinfachung des Managements, sondern auch zu Kostensenkungen beitragen. Dieses Dokument bietet eine Einführung in die ONTAP Lösung für vSphere sowie in die neuesten Produktinformationen und Best Practices zur Optimierung der Implementierung, Risikominderung und Vereinfachung des Managements.
 
 
 NOTE: Diese Dokumentation ersetzt zuvor veröffentlichte technische Berichte _TR-4597: VMware vSphere for ONTAP_

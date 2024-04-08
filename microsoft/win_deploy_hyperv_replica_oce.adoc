@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: microsoft/win_deploy_hyperv_replica_oce.html 
+keywords: Windows,Hyper-V,VHDX,VM,Virtual 
+summary: In diesem Anhang wird die Bereitstellung von Hyper-V Replica außerhalb einer Clusterumgebung beschrieben. 
+---
+= Bereitstellung von Hyper-V Replica außerhalb einer Cluster-Umgebung
+:allow-uri-read: 
+
+
+[role="lead"]
+In diesem Anhang wird die Bereitstellung von Hyper-V Replica außerhalb einer Clusterumgebung beschrieben.
+
+
+
+== Voraussetzungen
+
+* Sie benötigen eigenständige Hyper-V-Server, die sich an demselben oder einem anderen geografischen Standort befinden und als primäre und Replikatserver dienen.
+* Wenn separate Standorte verwendet werden, muss die Firewall an jedem Standort so konfiguriert werden, dass die Kommunikation zwischen dem primären und dem Replikatserver möglich ist.
+* Der Replikatserver muss über genügend Speicherplatz zum Speichern der replizierten Workloads verfügen.
+
+
+
+
+== Einsatz
+
+. Konfigurieren Sie den Replikatserver.
++
+.. Führen Sie das folgende PowerShell-Cmdlet aus, damit die Regeln der eingehenden Firewall eingehenden Replikationsverkehr zulassen:
++
+ Enable-Netfirewallrule -displayname "Hyper-V Replica HTTP Listener (TCP-In)"
+.. Öffnen Sie Hyper-V Manager im Abschnitt Tools von Server Manager.
+.. Klicken Sie in Aktionen auf Hyper-V-Einstellungen.
+.. Klicken Sie auf Replikationskonfiguration und wählen Sie Diesen Computer als Replikatserver aktivieren aus.
+.. Wählen Sie im Abschnitt Authentifizierung und Ports die Authentifizierungsmethode und den Port aus.
+.. Geben Sie im Abschnitt Autorisierung und Speicher den Speicherort für die replizierten VMs und Dateien an.
+
+
+. Aktivieren Sie die VM-Replikation für VMs auf dem primären Server. VM-Replikation wird pro VM und nicht für den gesamten Hyper-V-Server aktiviert.
++
+.. Klicken Sie in Hyper-V Manager mit der rechten Maustaste auf eine VM, und klicken Sie auf Replikation aktivieren, um den Assistenten Replikation aktivieren zu öffnen.
+.. Geben Sie den Namen des Replikatservers an, auf dem die VM repliziert werden muss.
+.. Geben Sie den Authentifizierungstyp und den Port des Replikatservers an, der für den Empfang von Replikationsdatenverkehr auf dem Replikatserver konfiguriert wurde.
+.. Wählen Sie die zu replizierenden VHDs aus.
+.. Wählen Sie die Häufigkeit (Dauer), mit der die Änderungen an den Replikatserver gesendet werden.
+.. Konfigurieren Sie Wiederherstellungspunkte, um die Anzahl der Wiederherstellungspunkte anzugeben, die auf dem Replikatserver beibehalten werden sollen.
+.. Wählen Sie Initial Replication Method, um die Methode anzugeben, mit der die erste Kopie der VM-Daten auf den Replikatserver übertragen werden soll.
+.. Überprüfen Sie die Zusammenfassung, und klicken Sie auf Fertig stellen.
+.. Durch diesen Prozess wird ein VM-Replikat auf dem Replikatserver erstellt.
+
+
+
+
+
+
+== Replizierung
+
+. Führen Sie einen Test-Failover aus, um sicherzustellen, dass die Replikat-VM auf dem Replikatserver ordnungsgemäß funktioniert. Der Test erstellt eine temporäre VM auf dem Replikatserver.
++
+.. Melden Sie sich beim Replikatserver an.
+.. Klicken Sie in Hyper-V Manager mit der rechten Maustaste auf eine Replikat-VM, klicken Sie auf Replikation, und klicken Sie auf Failover testen.
+.. Wählen Sie den zu verwendenden Wiederherstellungspunkt aus.
+.. Bei diesem Vorgang wird eine VM mit dem gleichen Namen erstellt, die mit -Test angehängt wird.
+.. Überprüfung der VM zur Gewährleistung der guten Funktionsweise
+.. Nach dem Failover wird die Test-VM des Replikats gelöscht, wenn Sie für sie die Option „Test-Failover anhalten“ auswählen.
+
+
+. Führen Sie ein geplantes Failover aus, um die letzten Änderungen an der primären VM auf die Replikat-VM zu replizieren.
++
+.. Melden Sie sich beim primären Server an.
+.. Schalten Sie die VM aus, für die ein Failover durchgeführt werden soll.
+.. Klicken Sie in Hyper-V Manager mit der rechten Maustaste auf die ausgeschalteten VM, klicken Sie auf Replikation, und klicken Sie auf geplante Failover.
+.. Klicken Sie auf Failover, um die letzten VM-Änderungen auf den Replikatserver zu übertragen.
+
+
+. Führen Sie bei Ausfall der primären VM ein ungeplantes Failover aus.
++
+.. Melden Sie sich beim Replikatserver an.
+.. Klicken Sie in Hyper-V Manager mit der rechten Maustaste auf eine Replikat-VM, klicken Sie auf Replikation und dann auf Failover.
+.. Wählen Sie den zu verwendenden Wiederherstellungspunkt aus.
+.. Klicken Sie auf Failover, um ein Failover der VM durchzuführen.
+
+
+

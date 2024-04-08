@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: vmware/vmware-security-snapcenter.html 
-keywords: WP-7355, security, snapcenter, treat modeling, dast, vulnerability scanning, penetration testing 
-summary:  
+keywords: WP-7355, security, snapcenter, treat modeling, dast, vulnerability scanning, penetration testing,SCV,VMware,vSphere 
+summary: In diesem Dokument werden die Sicherheitsaspekte des SnapCenter Plug-ins für VMware beschrieben. 
 ---
 = SnapCenter Plug-in VMware vSphere
 :allow-uri-read: 
@@ -16,7 +16,7 @@ Das NetApp SnapCenter Plug-in für VMware vSphere nutzt folgende sichere Entwick
 * *Codewährung von Drittanbietern.* im Rahmen der Entwicklung von Software und der Verwendung von Open-Source-Software (OSS) ist es wichtig, Sicherheitslücken zu beheben, die mit OSS verbunden sein könnten, die in Ihr Produkt integriert wurden. Dies ist ein kontinuierlicher Aufwand, da bei der Version der OSS-Komponente eine neu entdeckte Sicherheitsanfälligkeit jederzeit gemeldet wird.
 * *Schwachstellenscans.* Zweck der Schwachstellenanalyse ist es, häufige und bekannte Sicherheitslücken in NetApp Produkten zu erkennen, bevor diese bei den Kunden freigegeben werden.
 * *Penetrationstest.* Penetrationstest ist der Prozess, um ein System, eine Web-Anwendung oder ein Netzwerk zu evaluieren, um Sicherheitslücken zu finden, die von einem Angreifer ausgenutzt werden könnten. Penetrationstests (Penetrationstests) bei NetApp werden von einer Gruppe genehmigter und vertrauenswürdiger Drittanbieter durchgeführt. Ihr Testumfang umfasst die Einleitung von Angriffen gegen eine Anwendung oder Software wie feindliche Eindringlinge oder Hacker mit ausgereiften Exploitationsmethoden oder -Tools.
-* *Product Security Incident Response Aktivität.* Sicherheitslücken werden sowohl intern als auch extern entdeckt und können ein ernsthaftes Risiko für NetAppâ €™s Ruf darstellen, wenn sie nicht rechtzeitig angesprochen werden. Zur Erleichterung dieses Prozesses meldet ein PSIRT (Product Security Incident Response Team) die Sicherheitsanfälligkeiten und verfolgt diese.
+* *Aktion zur Reaktion auf Produktsicherheitsvorfälle.* Sicherheitsschwachstellen werden sowohl intern als auch extern im Unternehmen entdeckt und können ein ernsthaftes Risiko für den Ruf von NetApp darstellen, wenn sie nicht rechtzeitig behoben werden. Zur Erleichterung dieses Prozesses meldet ein PSIRT (Product Security Incident Response Team) die Sicherheitsanfälligkeiten und verfolgt diese.
 
 
 
@@ -43,7 +43,7 @@ individual files in /usr/share/doc/*/copyright.
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 ....
-* *Rollenbasierte Zugriffssteuerung (Role Based Access Control, RBAC).* NetApp ONTAP Tools verfügen über zwei Arten von RBAC-Steuerelementen:
+* *Rollenbasierte Zugriffssteuerung (Role Based Access Control, RBAC).* ONTAP Tools verfügen über zwei Arten von RBAC-Steuerungsoptionen:
 +
 ** Native vCenter Server-Berechtigungen.
 ** Spezifische Berechtigungen für VMware vCenter Plug-in Weitere Informationen finden Sie unter https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_role_based_access_control.html["Rollenbasierte Zugriffssteuerung (Role Based Access Control, RBAC)"^].
