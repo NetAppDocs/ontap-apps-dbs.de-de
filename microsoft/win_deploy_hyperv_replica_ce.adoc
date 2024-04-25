@@ -15,7 +15,7 @@ Erfahren Sie, wie Sie Hyper-V-Replikate mit Windows Server Failover Cluster bere
 
 == Voraussetzungen
 
-* Sie müssen Hyper-V-Cluster auf demselben oder an verschiedenen geografischen Standorten haben, die als primäre und Replikatcluster dienen. Lesen Sie den Abschnitt „link:\l["Hyper-V Clustering"]„ Für weitere Informationen.
+* Sie müssen Hyper-V-Cluster auf demselben oder an verschiedenen geografischen Standorten haben, die als primäre und Replikatcluster dienen. Prüfen link:win_deploy_hyperv.html["Implementieren Sie Hyper-V Cluster"] Entnehmen.
 * Wenn separate Standorte verwendet werden, muss die Firewall an jedem Standort so konfiguriert werden, dass die Kommunikation zwischen dem primären und dem Replikatcluster möglich ist.
 * Das Replikat-Cluster muss über genügend Speicherplatz zum Speichern der replizierten Workloads verfügen.
 

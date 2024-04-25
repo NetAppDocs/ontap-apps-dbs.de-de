@@ -15,7 +15,7 @@ In diesem Anhang wird die Bereitstellung von Live-Migration in einer Cluster-Umg
 
 == Voraussetzungen
 
-Für die Bereitstellung der Live-Migration müssen Hyper-V-Server in einem Failover-Cluster mit Shared Storage konfiguriert sein. Lesen Sie den Abschnitt link:win_deploy_hyperv.html["Hyper-V Clustering"] Entnehmen.
+Für die Bereitstellung der Live-Migration müssen Hyper-V-Server in einem Failover-Cluster mit Shared Storage konfiguriert sein. Prüfen link:win_deploy_hyperv.html["Implementieren Sie Hyper-V Cluster"] Entnehmen.
 
 
 
