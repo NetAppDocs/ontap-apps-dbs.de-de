@@ -26,7 +26,7 @@ In der Praxis funktioniert es ähnlich wie eine granulare Version von MetroClust
 
 == Pfadzugriff
 
-Mit SnapMirror sind die Storage-Geräte sowohl von den primären als auch von den Remote-Storage Arrays aus für das Host-Betriebssystem sichtbar. Pfade werden über das Asymmetric Logical Unit Access (ALUA)-Protokoll verwaltet. Hierbei handelt es sich um ein branchenübliches Protokoll zur Identifizierung optimierter Pfade zwischen einem Storage-System und einem Host.
+Dank SnapMirror Active Sync sind die Storage-Geräte sowohl von den primären als auch von den Remote-Storage Arrays für das Host-Betriebssystem sichtbar. Pfade werden über das Asymmetric Logical Unit Access (ALUA)-Protokoll verwaltet. Hierbei handelt es sich um ein branchenübliches Protokoll zur Identifizierung optimierter Pfade zwischen einem Storage-System und einem Host.
 
 Der Gerätepfad, der den kürzesten Zugriff auf E/A hat, wird als aktiv/optimiert betrachtet, und der Rest der Pfade gilt als aktiv/nicht optimiert.
 

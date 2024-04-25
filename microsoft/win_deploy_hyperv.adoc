@@ -4,8 +4,13 @@ permalink: microsoft/win_deploy_hyperv.html
 keywords: Windows,Hyper-V,VHDX,VM,Virtual 
 summary: In diesem Anhang wird die Bereitstellung eines Hyper-V-Clusters mit hoher Verfügbarkeit auf NetApp-Speicher beschrieben. 
 ---
-= Implementieren Sie Hyper-V Cluster
+= Implementieren des Hyper-V-Clusters
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]

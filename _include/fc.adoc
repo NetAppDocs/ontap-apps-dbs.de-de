@@ -2,7 +2,7 @@
 :allow-uri-read: 
 
 
-Dies umfasst typische Planungsmaßnahmen wie die Sicherstellung einer ausreichenden Bandbreite auf dem SAN zwischen dem Host und dem Speichersystem, die Überprüfung, ob alle SAN-Pfade zwischen allen erforderlichen Geräten vorhanden sind, unter Verwendung der FC-Port-Einstellungen, die Ihr FC-Switch-Anbieter benötigt, und vermeidet ISL-Konflikte, und ordnungsgemäße Überwachung des SAN-Fabrics verwenden.
+Dazu gehören typische Planungsmaßnahmen wie die Sicherstellung einer ausreichenden Bandbreite auf dem SAN zwischen dem Host und dem Speichersystem, die Überprüfung, ob alle SAN-Pfade zwischen allen erforderlichen Geräten vorhanden sind, unter Verwendung der FC-Port-Einstellungen, die Ihr FC-Switch-Anbieter benötigt, um ISL-Konflikte zu vermeiden, und ordnungsgemäße Überwachung des SAN-Fabrics verwenden.
 
 
 

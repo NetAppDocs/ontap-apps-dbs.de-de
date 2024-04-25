@@ -56,7 +56,7 @@ Weitere Informationen zur administrativen Zugriffssteuerung finden Sie unter lin
 
 == Multi-Faktor-Authentifizierung
 
-ONTAP und bestimmte andere NetApp Produkte unterstützen jetzt Multi-Faktor-Authentifizierung über verschiedene Methoden. Das Ergebnis ist, dass ein kompromittierter Benutzername/Passwort allein kein Sicherheitsthread ohne die Daten des zweiten Faktors, wie z. B. eine FOB oder eine Smartphone-App, ist.
+ONTAP und einige andere NetApp Produkte unterstützen jetzt Multi-Faktor-Authentifizierung (MFA) anhand verschiedener Methoden. Das Ergebnis ist, dass ein kompromittierter Benutzername/Passwort allein kein Sicherheitsthread ohne die Daten des zweiten Faktors, wie z. B. eine FOB oder eine Smartphone-App, ist.
 
 Weitere Informationen finden Sie unter link:https://docs.netapp.com/us-en/ontap/authentication/mfa-overview.html["Hier."]
 
@@ -70,7 +70,7 @@ Um mehr zu erfahren, starten Sie den https://docs.netapp.com/us-en/ontap-automat
 
 
 
-== Überprüfung durch mehrere Administratoren
+== Verifizierung durch mehrere Administratoren (Multi-Admin Verification, MAV)
 
 Die Multi-Faktor-Authentifizierung kann noch weiter ausgebaut werden, indem zwei verschiedene Administratoren mit jeweils eigenen Anmeldeinformationen bestimmte Aktivitäten genehmigen müssen. Dazu gehören das Ändern von Anmeldeberechtigungen, das Ausführen von Diagnosebefehlen und das Löschen von Daten.
 

@@ -5,7 +5,12 @@ keywords: Windows,Hyper-V,VHDX,VM,Virtual
 summary: In diesem Anhang wird die Bereitstellung von Hyper-V Replica außerhalb einer Clusterumgebung beschrieben. 
 ---
 = Bereitstellung von Hyper-V Replica außerhalb einer Cluster-Umgebung
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]

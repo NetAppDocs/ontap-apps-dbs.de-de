@@ -4,8 +4,13 @@ permalink: microsoft/win_environment.html
 keywords: Windows,Hyper-V,VHDX,VM,Virtual 
 summary: Erfahren Sie mehr über NetApp Storage- und Windows Server-Umgebung 
 ---
-= NetApp-Storage- und Windows-Serverumgebung
+= NetApp Storage- und Windows Server-Umgebung
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]
@@ -46,7 +51,7 @@ image:win_image2.png["ONTAP Storage Virtual Machine, Breite=572, Höhe=443"]
 
 
 
-== Bereitstellung von NetApp-Speicher für Windows Server
+== Bereitstellung von NetApp Storage für Windows Server
 
 In SAN- und NAS-Umgebungen kann Windows Server Storage bereitstellen. In einer SAN-Umgebung wird der Storage als Disks von LUNs auf einem NetApp-Volume als Block-Storage zur Verfügung gestellt. In einer NAS-Umgebung wird der Storage als CIFS/SMB-Freigaben auf NetApp Volumes als File-Storage bereitgestellt. Diese Laufwerke und Freigaben können in Windows Server wie folgt angewendet werden:
 
@@ -59,7 +64,7 @@ In SAN- und NAS-Umgebungen kann Windows Server Storage bereitstellen. In einer S
 
 
 
-== Managen von NetApp-Speicher
+== Managen von NetApp Storage
 
 Verwenden Sie eine der folgenden Methoden, um NetApp-Speicher von Windows Server 2016 aus zu verbinden, zu konfigurieren und zu verwalten:
 
@@ -76,7 +81,7 @@ Das NetApp PowerShell Toolkit (PSTK) ist ein PowerShell Modul, das eine End-to-E
 
 
 
-=== Wissenswertes
+=== Dinge, die Sie sich merken sollten
 
 * NetApp unterstützt keine Storage Spaces im Windows Server. Storage Spaces werden nur für JBOD verwendet (nur ein paar Disks) und funktionieren nicht mit irgendeiner Art von RAID (Direct-Attached Storage [das] oder SAN).
 * Cluster-Speicherpools in Windows Server werden von ONTAP nicht unterstützt.
@@ -94,7 +99,7 @@ Das NetApp PowerShell Toolkit (PSTK) ist ein PowerShell Modul, das eine End-to-E
 
 
 
-== Best Practices Für Die Netzwerkumgebung
+== Best Practices für die Netzwerkumgebung
 
 Ethernet-Netzwerke können in die folgenden Gruppen unterteilt werden:
 
@@ -108,7 +113,7 @@ Ethernet-Netzwerke können in die folgenden Gruppen unterteilt werden:
 
 
 
-=== Best Practices In Sich Vereint
+=== Best Practices in sich vereint
 
 * NetApp empfiehlt für jede der oben genannten Funktionen dedizierte physische Ports zur Netzwerkisolierung und zur Performance.
 * Für jede der oben genannten Netzwerkanforderungen (mit Ausnahme der Speicheranforderungen) können mehrere physische Netzwerkports aggregiert werden, um die Last zu verteilen oder eine Fehlertoleranz bereitzustellen.

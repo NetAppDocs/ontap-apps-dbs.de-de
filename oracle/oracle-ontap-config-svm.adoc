@@ -18,7 +18,7 @@ Das Storage-Management für Oracle Datenbanken wird auf einer Storage Virtual Ma
 
 Eine SVM, in der ONTAP CLI als vServer bezeichnet, ist eine grundlegende Funktionseinheit des Storage. Es ist hilfreich, eine SVM mit einem Gast auf einem VMware ESX Server zu vergleichen.
 
-Bei der Erstinstallation verfügt ESX über keine vorkonfigurierten Funktionen, wie z. B. das Hosting eines Gastbetriebssystems oder die Unterstützung einer Endbenutzeranwendung. Es ist ein leerer Container, bis eine Virtual Machine (VM) definiert ist. ONTAP ist ähnlich. Die erste Installation von ONTAP umfasst keine Datenserverfunktionen, bis eine SVM erstellt wurde. Die Datenservices werden von der SVM-Persönlichkeit definiert.
+Bei der Erstinstallation verfügt ESX über keine vorkonfigurierten Funktionen, wie z. B. das Hosten eines Gastbetriebssystems oder die Unterstützung einer Endbenutzeranwendung. Es ist ein leerer Container, bis eine Virtual Machine (VM) definiert ist. ONTAP ist ähnlich. Die erste Installation von ONTAP umfasst keine Datenserverfunktionen, bis eine SVM erstellt wurde. Die Datenservices werden von der SVM-Persönlichkeit definiert.
 
 Wie bei anderen Aspekten der Storage-Architektur hängen die besten Optionen für das Design von SVMs und Logical Interface (LIF) stark von den Skalierungsanforderungen und geschäftlichen Anforderungen ab.
 

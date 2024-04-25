@@ -4,8 +4,13 @@ permalink: microsoft/win_deploy_hyperv_replica_ce.html
 keywords: Windows,Hyper-V,VHDX,VM,Virtual 
 summary: Erfahren Sie, wie Sie Hyper-V-Replikate mit Windows Server Failover Cluster bereitstellen und konfigurieren. 
 ---
-= Bereitstellung von Hyper-V Replica in einer Cluster-Umgebung
+= Bereitstellung von Hyper-V-Replikaten in einer Cluster-Umgebung
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]
@@ -32,7 +37,7 @@ get-clusternode | ForEach-Object \{Invoke-command -computername $_.name -scriptb
 ....
 +
 ....
- # For Certificate authentication
+# For Certificate authentication
 get-clusternode | ForEach-Object \{Invoke-command -computername $_.name -scriptblock \{Enable-Netfirewallrule -displayname "Hyper-V Replica HTTPS Listener (TCP-In)"}}
 ....
 . Konfigurieren Sie das Replikat-Cluster.

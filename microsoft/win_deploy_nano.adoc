@@ -4,8 +4,13 @@ permalink: microsoft/win_deploy_nano.html
 keywords: Windows,Hyper-V,VHDX,VM,Virtual 
 summary: Erfahren Sie mehr über die Bereitstellung von Microsoft Windows Nano Server 
 ---
-= Stellen Sie Nano Server Bereit
+= Einsatz von Nano-Server
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]

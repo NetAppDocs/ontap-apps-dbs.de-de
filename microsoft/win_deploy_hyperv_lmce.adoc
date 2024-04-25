@@ -5,7 +5,12 @@ keywords: Windows,Hyper-V,VHDX,VM,Virtual
 summary: In diesem Anhang wird die Bereitstellung von Live-Migration in einer Cluster-Umgebung beschrieben. 
 ---
 = Bereitstellung von Hyper-V Live Migration in einer Cluster-Umgebung
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]

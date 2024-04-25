@@ -5,7 +5,12 @@ keywords: Windows,Hyper-V,VHDX,VM,Virtual
 summary: ONTAP NAS-Storage für Hyper-V mit SMB3 
 ---
 = Bereitstellung in SMB-Umgebungen
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]
@@ -23,7 +28,7 @@ Wenn eine SVM mit dem CIFS-Protokoll erstellt wird, wird ein CIFS-Server auf der
 
 
 
-== Bereitstellung von SMB Share auf Windows Server
+== Bereitstellen von SMB-Freigaben auf Windows Server
 
 
 
@@ -98,7 +103,7 @@ Führen Sie die folgenden Schritte aus, um die zuvor mit Windows Server erstellt
 
 
 
-=== Best Practices In Sich Vereint
+=== Best Practices in sich vereint
 
 * Um sicherzustellen, dass es keine Ausfallzeiten gibt, wenn ein Volume von einem Node auf einen anderen oder im Fall eines Node-Ausfalls verschoben wird, empfiehlt NetApp, die Option für die kontinuierliche Verfügbarkeit der Dateifreigabe zu aktivieren.
 * Bei der Bereitstellung von VMs für Hyper-V über SMB-Umgebungen empfiehlt NetApp, den Copy-Offload auf dem Storage-System zu aktivieren. Auf diese Weise wird die Bereitstellungszeit der VMs verkürzt.
@@ -109,7 +114,7 @@ Führen Sie die folgenden Schritte aus, um die zuvor mit Windows Server erstellt
 
 
 
-=== Wissenswertes
+=== Dinge, die Sie sich merken sollten
 
 * Wenn Sie Volumes für SMB-Umgebungen bereitstellen, müssen die Volumes mit dem NTFS-Sicherheitsstil erstellt werden.
 * Die Zeiteinstellungen für Knoten im Cluster sollten entsprechend eingerichtet werden. Verwenden Sie NTP, wenn der NetApp-CIFS-Server an der Windows Active Directory-Domäne teilnehmen muss.
@@ -123,7 +128,7 @@ Führen Sie die folgenden Schritte aus, um die zuvor mit Windows Server erstellt
 
 
 
-== Bereitstellung von SMB Share auf Nano Server
+== Bereitstellung von SMB-Freigaben auf Nano Server
 
 Nano Server benötigt keine zusätzliche Client-Software, um auf Daten auf der CIFS-Freigabe auf einem NetApp-Speicher-Controller zuzugreifen.
 

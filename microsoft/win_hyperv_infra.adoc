@@ -5,7 +5,12 @@ keywords: Windows,Hyper-V,VHDX,VM,Virtual
 summary: Hyper-V Storage-Infrastruktur mit ONTAP 
 ---
 = Hyper-V Storage-Infrastruktur auf NetApp
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]
@@ -25,7 +30,7 @@ image:win_image5.png["Hyper-V Storage-Infrastruktur auf NetApp,width=624,height=
 
 
 
-== Hyper-V-Speicher auf NetApp-CIFS-Freigabe
+== Hyper-V-Speicher auf NetApp CIFS
 
 Bevor Sie mit den in diesem Abschnitt aufgeführten Schritten beginnen, lesen Sie den Abschnitt „link:win_smb.html["Bereitstellung in SMB-Umgebungen"].“ Gehen Sie wie folgt vor, um Hyper-V-Speicher auf der NetApp-CIFS-Freigabe zu konfigurieren:
 
@@ -44,7 +49,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 
 
-=== Best Practices In Sich Vereint
+=== Best Practices in sich vereint
 
 * Wenn eine VM und die zugehörigen Daten im NetApp Storage gespeichert sind, empfiehlt NetApp, die NetApp Deduplizierung regelmäßig auf Volume-Ebene durchzuführen. Wenn identische VMs auf einer CSV- oder SMB-Freigabe gehostet werden, lassen sich erhebliche Platzeinsparungen erzielen. Die Deduplizierung wird auf dem Storage-Controller ausgeführt und das Host-System und die VM-Performance werden nicht beeinträchtigt.
 * Wenn Sie iSCSI-LUNs für Hyper-V verwenden, stellen Sie sicher, dass aktiviert ist `iSCSI Service (TCP-In) for Inbound` Und `iSCSI Service (TCP-Out) for Outbound` In den Firewall-Einstellungen auf dem Hyper-V-Host. Auf diese Weise kann iSCSI-Datenverkehr zum und vom Hyper-V-Host und dem NetApp-Controller geleitet werden.
@@ -53,7 +58,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 
 
-=== Wissenswertes
+=== Dinge, die Sie sich merken sollten
 
 * Die Bereitstellung einer VM mithilfe von virtuellem Fibre Channel erfordert einen N_Port ID Virtualizationâ€“enabled FC HBA. Es werden maximal vier FC-Ports unterstützt.
 * Wenn das Hostsystem mit mehreren FC-Ports konfiguriert und der VM vorgelegt wird, muss MPIO in der VM installiert werden, um Multipathing zu aktivieren.
@@ -71,7 +76,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 
 
-== Offloaded Data Transfer
+== Verlagerte Datenübertragung
 
 Microsoft ODX, auch als Copy Offload bezeichnet, ermöglicht direkte Datentransfers innerhalb eines Speichergeräts oder zwischen kompatiblen Speichergeräten, ohne die Daten über den Hostcomputer zu übertragen. NetApp ONTAP unterstützt die ODX Funktion für CIFS- und SAN-Protokolle. ODX kann potenziell die Performance verbessern, wenn Kopien sich innerhalb desselben Volumes befinden, senkt die Auslastung von CPU und Arbeitsspeicher im Client und reduziert die Auslastung der Netzwerk-I/O-Bandbreite.
 
@@ -111,7 +116,7 @@ cluster::> set privilege admin
 
 
 
-=== Wissenswertes
+=== Dinge, die Sie sich merken sollten
 
 * Für CIFS ist ODX nur verfügbar, wenn sowohl der Client als auch der Speicherserver SMB 3.0 und die ODX-Funktion unterstützen.
 * In SAN-Umgebungen ist ODX nur verfügbar, wenn sowohl der Client als auch der Speicherserver die ODX-Funktion unterstützen.
@@ -141,7 +146,7 @@ image:win_image6.png["Hyper-V Failover Cluster und NetApp,width=624,height=271"]
 
 
 
-=== Best Practices In Sich Vereint
+=== Best Practices in sich vereint
 
 * NetApp empfiehlt, die Cluster-Kommunikation im iSCSI-Netzwerk zu deaktivieren, um zu verhindern, dass interne Cluster-Kommunikation und CSV-Datenverkehr über dasselbe Netzwerk übertragen werden.
 * NetApp empfiehlt zur Gewährleistung von Ausfallsicherheit und QoS redundante Netzwerkpfade (mehrere Switches).
@@ -149,7 +154,7 @@ image:win_image6.png["Hyper-V Failover Cluster und NetApp,width=624,height=271"]
 
 
 
-=== Wissenswertes
+=== Dinge, die Sie sich merken sollten
 
 * Für CSV verwendete Laufwerke müssen mit NTFS oder ReFS partitioniert werden. Mit FAT oder FAT32 formatierte Festplatten können nicht für CSV verwendet werden.
 * Für CSVs verwendete Festplatten sollten eine 64K-Formatierung für die Zuweisung verwenden.
@@ -177,7 +182,7 @@ image:win_image7.png["Live-Migration in einer Cluster-Umgebung,width=580,height=
 
 
 
-=== Best Practices In Sich
+=== Best Practices in sich
 
 * Verfügen über einen dedizierten Port für den Datenverkehr von Live-Migrationen.
 * Nutzen Sie ein dediziertes Host-Live-Migrationsnetzwerk, um netzwerkbezogene Probleme während der Migration zu vermeiden.

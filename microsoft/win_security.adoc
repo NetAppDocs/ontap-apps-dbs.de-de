@@ -5,7 +5,12 @@ keywords: Windows,Hyper-V,VHDX,VM,Virtual
 summary: ONTAP Storage-Sicherheit mit Hyper-V 
 ---
 = Sicherheit
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]
@@ -31,6 +36,6 @@ Die BitLocker-Laufwerkverschlüsselung ist eine Datenschutzfunktion, die von Win
 
 
 
-=== Best Practices In Sich
+=== Best Practices in sich
 
 Vor der Aktivierung von BitLocker muss die CSV-Datei in den Wartungsmodus versetzt werden. Daher empfiehlt NetApp, vor dem Erstellen von VMs auf der CSV-Datei Entscheidungen zur BitLocker-basierten Sicherheit zu treffen, um Ausfallzeiten zu vermeiden.

@@ -4,8 +4,13 @@ permalink: microsoft/win_deploy_hyperv_lmoce.html
 keywords: Windows,Hyper-V,VHDX,VM,Virtual 
 summary: In diesem Anhang wird die Verwendung der Hyper-V Live-Migration außerhalb einer Cluster-Umgebung beschrieben 
 ---
-= Bereitstellung von Hyper-V Live Migration außerhalb einer Cluster-Umgebung
+= Implementierung von Hyper-V Live Migration außerhalb einer Cluster-Umgebung
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
 
 
 [role="lead"]
