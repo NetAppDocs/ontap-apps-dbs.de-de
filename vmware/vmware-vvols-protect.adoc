@@ -49,7 +49,7 @@ Derzeit ist VMware SRM die einzige von NetApp unterstützte Lösung für Disaste
 
 === VVols Replizierung mit SRM
 
-image:vvols-image17.png["VVols Replizierung mit SRM,300"]
+image:vvols-image17.png["VVols Replizierung mit SRM"]
 
 
 
@@ -91,7 +91,7 @@ Das SnapCenter Plug-in für VMware vSphere wird als Standalone-Appliance impleme
 
 === Architektur von SnapCenter
 
-image:vvols-image18.png["Architektur von SnapCenter,300"]
+image:snapcenter_arch.png["Architektur von SnapCenter"]
 
 Da zum Zeitpunkt dieses Schreibens die anderen SnapCenter-Plug-ins VVols noch nicht unterstützen, konzentrieren wir uns in diesem Dokument auf das eigenständige Implementierungsmodell.
 
@@ -155,7 +155,7 @@ Die folgenden Best Practices unterstützen Sie dabei, die Vorteile Ihrer SnapCen
 
 === Benachrichtigungsoptionen für Ressourcengruppen
 
-image:vvols-image19.png["Benachrichtigungsoptionen für Ressourcengruppen,300"]
+image:vvols-image19.png["Benachrichtigungsoptionen für Ressourcengruppen"]
 
 
 

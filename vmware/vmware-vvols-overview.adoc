@@ -6,6 +6,10 @@ summary: 'Dies ist eine Übersicht über VMware vSphere Virtual Volumes (VVols) 
 ---
 = Überblick
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
 
 
 [role="lead"]
