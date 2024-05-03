@@ -34,14 +34,6 @@ Siehe link:https://docs.netapp.com/us-en/ontap/volumes/index.html["Dokumentation
 
 
 
-== LUN Thin Provisioning
-
-Die Effizienz des Thin Provisioning von aktiven LUNs in einer Filesystem-Umgebung kann nach und nach verloren gehen, wenn Daten gelöscht werden. Sofern die gelöschten Daten entweder mit Nullen überschrieben werden oder der Speicherplatz mit TRIM/UNMAP-Rückgewinnung freigegeben wird, belegen die „gelöschten“ Daten immer mehr nicht zugewiesene Leerzeichen im Dateisystem. Darüber hinaus kommt Thin Provisioning für aktive LUNs in vielen Datenbankumgebungen nur eingeschränkt zum Einsatz, da Datendateien zum Zeitpunkt der Erstellung auf ihre volle Größe initialisiert werden.
-
-Eine sorgfältige Planung der LVM-Konfiguration kann die Effizienz steigern und den Bedarf an Storage-Bereitstellung und LUN-Anpassung minimieren. Wenn eine LVM wie Veritas VxVM oder Oracle ASM verwendet wird, werden die zugrunde liegenden LUNs in Extents unterteilt, die nur bei Bedarf verwendet werden. Wenn beispielsweise ein Datensatz bei einer Größe von 2 TB beginnt, jedoch im Laufe der Zeit bis auf 10 TB anwachsen könnte, könnte dieser Datensatz auf 10 TB an LUNs platziert werden, die über Thin Provisioning in einer LVM-Festplattengruppe organisiert sind. Zum Zeitpunkt der Erstellung würden nur 2 TB Speicherplatz belegt und zusätzlichen Speicherplatz beanspruchen, wenn Extents zugewiesen werden, um dem Datenwachstum gerecht zu werden. Dieser Prozess ist sicher, solange der Speicherplatz überwacht wird.
-
-
-
 == Fraktionale Reservierungen
 
 Die fraktionale Reserve bezieht sich auf das Verhalten einer LUN in einem Volume in Bezug auf die Platzeffizienz. Wenn die Option `fractional-reserve` Ist auf 100 % festgelegt, können alle Daten im Volume mit jedem Datenmuster 100 % Umsatz verzeichnen, ohne Speicherplatz auf dem Volume zu belegen.
@@ -83,3 +75,10 @@ Obwohl diese Situation verwirrend erscheinen mag, ist es unwahrscheinlich, dass 
 
 
 ====
+
+
+== Zuweisung von freiem Speicherplatz und LVM-Speicherplatz
+
+Die Effizienz des Thin Provisioning von aktiven LUNs in einer Filesystem-Umgebung kann nach und nach verloren gehen, wenn Daten gelöscht werden. Es sei denn, dass gelöschte Daten entweder mit Nullen überschrieben werden (siehe auch link:oracle-storage-san-config-asmru.html["ASMRU"] Oder der Speicherplatz wird mit TRIM/UNMAP-Platzreklamation freigegeben, die „gelöschten“ Daten belegen mehr und mehr nicht zugewiesene Leerzeichen im Dateisystem. Darüber hinaus kommt Thin Provisioning für aktive LUNs in vielen Datenbankumgebungen nur eingeschränkt zum Einsatz, da Datendateien zum Zeitpunkt der Erstellung auf ihre volle Größe initialisiert werden.
+
+Eine sorgfältige Planung der LVM-Konfiguration kann die Effizienz steigern und den Bedarf an Storage-Bereitstellung und LUN-Anpassung minimieren. Wenn eine LVM wie Veritas VxVM oder Oracle ASM verwendet wird, werden die zugrunde liegenden LUNs in Extents unterteilt, die nur bei Bedarf verwendet werden. Wenn beispielsweise ein Datensatz bei einer Größe von 2 TB beginnt, jedoch im Laufe der Zeit bis auf 10 TB anwachsen könnte, könnte dieser Datensatz auf 10 TB an LUNs platziert werden, die über Thin Provisioning in einer LVM-Festplattengruppe organisiert sind. Zum Zeitpunkt der Erstellung würden nur 2 TB Speicherplatz belegt und zusätzlichen Speicherplatz beanspruchen, wenn Extents zugewiesen werden, um dem Datenwachstum gerecht zu werden. Dieser Prozess ist sicher, solange der Speicherplatz überwacht wird.
