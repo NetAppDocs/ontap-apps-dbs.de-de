@@ -1,0 +1,21 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-otv-hardening-timeout.html 
+keywords: VMware, Data protection, security, OTV, Hardening, ONTAP Tools 
+summary: Security Hardening Guide for ONTAP Tools for VMware vSphere. 
+---
+= Zeitüberschreitung Bei Inaktivität
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Um unbefugten Zugriff zu verhindern, wird ein Inaktivitäts-Timeout eingerichtet, das automatisch Benutzer abmeldet, die für einen bestimmten Zeitraum inaktiv sind, während autorisierte Ressourcen verwendet werden. So wird sichergestellt, dass nur autorisierte Benutzer auf die Ressourcen zugreifen können und die Sicherheit gewahrt bleibt.
+
+* Standardmäßig werden die vSphere Client-Sitzungen nach 120 Minuten Leerlaufzeit geschlossen, sodass sich der Benutzer erneut anmelden muss, um die Verwendung des Clients fortzusetzen. Sie können den Timeout-Wert ändern, indem Sie die Datei webclient.properties bearbeiten. Sie können das Timeout des vSphere-Clients konfigurieren https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.vcenterhost.doc/GUID-975412DE-CDCB-49A1-8E2A-0965325D33A5.html["Konfigurieren Sie den Wert für die Zeitüberschreitung des vSphere-Clients"]
+* Die Abmeldezeit für ONTAP-Tools beträgt 30 Minuten für die Web-cli-Sitzung.
+

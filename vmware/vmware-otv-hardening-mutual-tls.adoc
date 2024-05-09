@@ -1,0 +1,59 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-otv-hardening-mutual-tls.html 
+keywords: VMware, Data protection, security, OTV, Hardening, ONTAP Tools 
+summary: Security Hardening Guide for ONTAP Tools for VMware vSphere, Mutual TLS Encryption for Storage Management connections. 
+---
+= Mutual TLS (Certificate-Based Authentication)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP Version 9.7 und höher unterstützen die gegenseitige TLS-Kommunikation. Ab ONTAP Tools für VMware und vSphere 9.12 wird wechselseitiges TLS für die Kommunikation mit neu hinzugefügten Clustern verwendet (je nach ONTAP Version).
+
+
+
+== ONTAP
+
+Für alle zuvor hinzugefügten Speichersysteme: Während eines Upgrades werden alle hinzugefügten Speichersysteme automatisch vertrauenswürdig und die zertifikatbasierten Authentifizierungsmechanismen werden konfiguriert.
+
+Wie im Screenshot unten gezeigt, zeigt die Cluster-Setup-Seite den Status von Mutual TLS (Certificate-Based Authentication) an, die für jeden Cluster konfiguriert wurden.
+
+image:vmware-otv-hardening-mutual-tls-image2.png["bild2,Breite=468,Höhe=158"]
+
+
+
+=== *Cluster Hinzufügen*
+
+Wenn das hinzugefügte Cluster MTLS unterstützt, wird MTLS während des Cluster-Add-Workflows standardmäßig konfiguriert. Der Benutzer muss hierfür keine Konfiguration vornehmen. Im Screenshot unten wird der Bildschirm angezeigt, der dem Benutzer beim Hinzufügen von Cluster angezeigt wird.
+
+image:vmware-otv-hardening-mutual-tls-image3.png["Storage-System hinzufügen, Breite=450, Höhe=400"]
+
+image:vmware-otv-hardening-mutual-tls-image4.png["Storage-System hinzufügen, Breite=468, Höhe=416"]
+
+image:vmware-otv-hardening-mutual-tls-image5.png["Storage-System hinzufügen, Breite=450, Höhe=400"]
+
+image:vmware-otv-hardening-mutual-tls-image6.png["Storage-System hinzufügen, Breite=468, Höhe=516"]
+
+
+
+=== Cluster-Bearbeitung
+
+Während der Cluster-Bearbeitung gibt es zwei Szenarien:
+
+* Wenn das ONTAP-Zertifikat abläuft, muss der Benutzer das neue Zertifikat erhalten und hochladen.
+* Wenn das OTV-Zertifikat abläuft, kann der Benutzer es durch Aktivieren des Kontrollkästchens neu generieren.
++
+** _Generieren Sie ein neues Client-Zertifikat für ONTAP._
+
+
+
+
+image:vmware-otv-hardening-mutual-tls-image7.png["Speichersystem ändern, Breite=468, Höhe=461"]
+
+image:vmware-otv-hardening-mutual-tls-image8.png["Speichersystem ändern, Breite=468, Höhe=461"]

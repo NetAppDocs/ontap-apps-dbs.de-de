@@ -1,0 +1,56 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-otv-hardening-access.html 
+keywords: VMware, Data protection, security, ONTAP tools, Hardening, ONTAP Tools 
+summary: Security Hardening Guide for ONTAP Tools for VMware vSphere, user Access Points. 
+---
+= ONTAP Tools für VMware vSphere Access Points (User)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Mit der Installation der ONTAP Tools für VMware vSphere werden drei Benutzertypen erstellt und verwendet:
+
+. Systembenutzer: Das root-Benutzerkonto
+. Anwendungsbenutzer: Administratorbenutzer, Benutzerkonten und db-Benutzerkonten
+. Support-Benutzer: Das diag-Benutzerkonto
+
+
+
+
+== 1. Systembenutzer
+
+System(root) Benutzer wird von ONTAP-Tools-Installation auf dem zugrunde liegenden Betriebssystem (Debian) erstellt.
+
+* Ein Standardsystembenutzer "root" wird auf Debian von der Installation der ONTAP-Tools erstellt. Der Standardwert ist deaktiviert und kann per Ad-hoc-Funktion über die „Wartung“-Konsole aktiviert werden.
+
+
+
+
+== 2. Anwendungsbenutzer
+
+Der Anwendungsbenutzer wird in ONTAP-Tools als lokaler Benutzer benannt. Diese Benutzer wurden in der Anwendung ONTAP Tools erstellt. In der folgenden Tabelle sind die Typen von Anwendungsbenutzern aufgeführt:
+
+[cols="22%,78%"]
+|===
+| * Benutzer* | *Beschreibung* 
+
+
+| Administratorbenutzer | Es wird während der Installation von ONTAP Tools erstellt, und Benutzer bietet die Anmeldeinformationen während der Bereitstellung der ONTAP Tools. Benutzer haben die Möglichkeit, das 'Passwort' in der 'Wartung'-Konsole zu ändern. Das Passwort läuft in 90 Tagen ab, und Benutzer werden davon ausgehen, dass es sich um dasselbe Passwort handelt. 
+
+
+| Wartungsbenutzer | Es wird während der Installation von ONTAP Tools erstellt, und Benutzer bietet die Anmeldeinformationen während der Bereitstellung der ONTAP Tools. Benutzer haben die Möglichkeit, das 'Passwort' in der 'Wartung'-Konsole zu ändern. Dies ist ein Wartungsbenutzer und wird zur Ausführung der Wartungskonsolenoperationen erstellt. 
+
+
+| Datenbankbenutzer | Es wird während der Installation von ONTAP Tools erstellt, und Benutzer bietet die Anmeldeinformationen während der Bereitstellung der ONTAP Tools. Benutzer haben die Möglichkeit, das 'Passwort' in der 'Wartung'-Konsole zu ändern. Das Passwort läuft in 90 Tagen ab, und Benutzer werden davon ausgehen, dass es sich um dasselbe Passwort handelt. 
+|===
+
+
+== 3. Support user(diag user)
+
+Während der Installation der ONTAP-Tools wird ein Support-Benutzer erstellt. Dieser Benutzer kann für den Zugriff auf ONTAP-Tools bei Problemen oder Ausfällen im Server und zum Sammeln von Protokollen verwendet werden. Standardmäßig ist dieser Benutzer deaktiviert, kann aber per Ad-hoc-Funktion über die „Wartung“-Konsole aktiviert werden. Beachten Sie, dass dieser Benutzer nach einem bestimmten Zeitraum automatisch deaktiviert wird.

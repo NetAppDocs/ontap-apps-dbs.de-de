@@ -1,0 +1,68 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-otv-hardening-integrity.html 
+keywords: VMware, Data protection, security, OTV, Hardening, ONTAP Tools 
+summary: Security Hardening Guide for ONTAP Tools for VMware vSphere, Integrity Verification. 
+---
+= Überprüfen der Integrität der ONTAP Tools für VMware vSphere Installationspakete
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Es gibt zwei Methoden, mit denen Kunden die Integrität ihrer Installationspakete für ONTAP-Tools überprüfen können.
+
+. Überprüfen der Prüfsummen
+. Überprüfen der Signatur
+
+
+Prüfsummen werden auf den Download-Seiten der OTV-Installationspakete zur Verfügung gestellt. Benutzer müssen die Prüfsummen der heruntergeladenen Pakete anhand der auf der Download-Seite angegebenen Prüfsumme überprüfen.
+
+
+
+== Überprüfen der Signatur der ONTAP-Tools OVA
+
+Das vApp-Installationspaket wird in Form eines Tarballs geliefert. Dieser Tarball enthält Zwischen- und Root-Zertifikate für das virtuelle Gerät sowie eine README-Datei und ein OVA-Paket. Die README-Datei führt Benutzer dazu, wie die Integrität des vApp OVA-Pakets überprüft wird.
+
+Kunden müssen auch das bereitgestellte Root- und Intermediate-Zertifikat auf vCenter Version 7.0U3E und höher hochladen.  Bei vCenter-Versionen zwischen 7.0.1 und 7.0.U3E wird die Funktion zur Überprüfung des Zertifikats von VMware nicht unterstützt. Kunden müssen kein Zertifikat für vCenter Version 6.x hochladen
+
+
+
+=== Hochladen des vertrauenswürdigen Stammzertifikats in vCenter
+
+. Melden Sie sich mit dem VMware vSphere Client beim vCenter Server an.
+. Geben Sie den Benutzernamen und das Kennwort für administrator@vsphere.local oder ein anderes Mitglied der vCenter Single Sign-On-Administratorgruppe an. Wenn Sie während der Installation eine andere Domäne angegeben haben, melden Sie sich als Administrator@mydomain an.
+. Navigieren Sie zur Benutzeroberfläche Zertifikatverwaltung: a. Wählen Sie im Home-Menü die Option Administration. B. Klicken Sie unter Zertifikate auf Zertifikatverwaltung.
+. Wenn Sie vom System aufgefordert werden, geben Sie die Anmeldedaten Ihres vCenter-Servers ein.
+. Klicken Sie unter Vertrauenswürdige Stammzertifikate auf Hinzufügen.
+. Klicken Sie auf Durchsuchen, und wählen Sie den Speicherort der .pem-Zertifikatdatei (OTV_OVA_INTER_ROOT_CERT_CHAIN.pem) aus.
+. Klicken Sie Auf Hinzufügen. Das Zertifikat wird dem Store hinzugefügt.
+
+
+Siehe link:https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.authentication.doc/GUID-B635BDD9-4F8A-4FD8-A4FE-7526272FC87D.html["Fügen Sie dem Zertifikatspeicher ein vertrauenswürdiges Stammzertifikat hinzu"] Finden Sie weitere Informationen. Während der Bereitstellung einer vApp (mithilfe der OVA-Datei) kann die digitale Signatur für das vApp-Paket auf der Seite „Details überprüfen“ überprüft werden. Wenn es sich bei dem heruntergeladenen vApp-Paket um ein Originalprodukt handelt, wird in der Spalte „Publisher“ (Herausgeber) die Option „Vertrauenswürdiges Zertifikat“ angezeigt (wie im folgenden Screenshot).
+
+image:vmware-otv-hardening-trusted-publisher.png["Vertrauenswürdiges Zertifikat"]
+
+
+
+== Überprüfen der Signatur der ONTAP-Tools ISO und SRA tar.gz
+
+NetApp teilt sein Code Signing-Zertifikat mit Kunden auf der Produkt-Download-Seite, zusammen mit den Produkt-Zip-Dateien für OTV-ISO und SRA.tgz.
+
+Aus dem Code-Signing-Zertifikat können Benutzer den öffentlichen Schlüssel wie folgt extrahieren:
+
+ #> openssl x509 -in <code-sign-cert, pem file> -pubkey -noout > <public-key name>
+Dann sollte der öffentliche Schlüssel verwendet werden, um die Signatur für iso und tgz Produkt zip wie unten zu überprüfen:
+
+ #> openssl dgst -sha256 -verify <public-key> -signature <signature-file>  <binary-name>
+Beispiel:
+
+....
+#> openssl x509 -in OTV_ISO_CERT.pem -pubkey -noout > OTV_ISO.pub
+#> openssl dgst -sha256 -verify OTV_ISO.pub -signature netapp-ontap-tools-for-vmware-vsphere-9.12-upgrade-iso.sig netapp-ontap-tools-for-vmware-vsphere-9.12-upgrade.iso
+Verified OK  => response
+....
