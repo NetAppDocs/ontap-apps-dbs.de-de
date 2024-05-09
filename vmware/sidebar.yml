@@ -80,7 +80,7 @@ entries:
     url: "/vmware/vmware-security-tools.html"
   - title: SnapCenter Plug-in für VMware vSphere
     url: "/vmware/vmware-security-snapcenter.html"
-- title: Security Hardening Guide for ONTAP Tools for VMware vSphere
+- title: Leitfaden zur Erhöhung der Sicherheit für ONTAP Tools für VMware vSphere
   entries:
   - title: Übersicht über die ONTAP-Tools zur Härtung
     url: "/vmware/vmware-otv-hardening-overview.html"

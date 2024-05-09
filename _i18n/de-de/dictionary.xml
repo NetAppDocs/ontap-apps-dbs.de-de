@@ -5175,9 +5175,6 @@ Wird für SOAP-Verbindungen über HTTPS verwendet</block>
   <block id="90ab4fc7a1c530bceac36bda71efbc5f" category="paragraph">Standardmäßig lautet der Service für NTP ntpd. Es handelt sich hierbei um einen Legacy-Service, der in bestimmten Fällen für virtuelle Maschinen nicht gut funktioniert.</block>
   <block id="6801ecdb823d018c7370042d27b5ee2c" category="section-title">*Debian*</block>
   <block id="dc3bb5166d38d2aec53765aca7c0d24c" category="paragraph">Auf Debian kann der Benutzer auf die Datei /etc/ntp.conf zugreifen, um ntp-Serverdetails zu erhalten.</block>
-  <block id="08fe6a0b481c7eba55985eb19ee19e1e" category="summary">Security Hardening Guide for ONTAP Tools for VMware vSphere, Überblick und Einführung.</block>
-  <block id="baecfb438214487bb004e49d325c66bf" category="doc">Security Hardening Guide for ONTAP Tools for VMware vSphere</block>
-  <block id="8d1618af2c6a6379783e2978ba4a551c" category="paragraph">Der Security Hardening Guide for ONTAP Tools for VMware vSphere enthält umfassende Anweisungen zum Konfigurieren der sichersten Einstellungen.</block>
   <block id="fec65f0c33739368ce5845fadb6cb880" category="paragraph">Diese Anleitungen gelten sowohl für die Anwendungen als auch für das Gastbetriebssystem des Geräts selbst.</block>
   <block id="5aaf8fc9424d7872cf500fb7adcb3b97" category="summary">Security Hardening Guide for ONTAP Tools for VMware vSphere, Konfiguration von Passwortrichtlinien.</block>
   <block id="ca80b83fb98de16af35b38476df589c3" category="doc">Passwortrichtlinien</block>
@@ -5210,4 +5207,7 @@ Wird für SOAP-Verbindungen über HTTPS verwendet</block>
   <block id="cb197b06aa92a742d01e256d58d3e34b" category="sidebar">DOS-Angriff</block>
   <block id="d870a4bd29f74339732a958574d2c4eb" category="sidebar">NTP-Konfiguration</block>
   <block id="339ce1d4220ba7045e3a35ef35279ad3" category="sidebar">Passwortrichtlinien</block>
+  <block id="3698338a95ad1801e25ed154adaf1a70" category="summary">Leitfaden zur Erhöhung der Sicherheit für ONTAP Tools für VMware vSphere, Überblick und Einführung.</block>
+  <block id="47d29daaa26fbfa9c9a069d4cd023ac1" category="doc">Leitfaden zur Erhöhung der Sicherheit für ONTAP Tools für VMware vSphere</block>
+  <block id="fe0e23a929284a636c245a362ada6472" category="paragraph">Der Security Hardening Guide für ONTAP-Tools für VMware vSphere enthält umfassende Anweisungen zur Konfiguration der sichersten Einstellungen.</block>
 </blocks>
