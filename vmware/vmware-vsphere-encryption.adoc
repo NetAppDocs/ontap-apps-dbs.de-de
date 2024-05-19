@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-vsphere-encryption.html 
+keywords: Data protection, Space reclamation, VM and datastore cloning, Storage efficiency, thin provisioning, QoS, SIOC, Storage Distributed Resource Scheduler, DRS, Active IQ Unified Manager, Encryption 
+summary: Die Nachfrage nach der Verschlüsselung von Daten im Ruhezustand steigt immer weiter an und umfasst damit mehr als herkömmliche Daten für alle gespeicherten Datentypen. 
+---
+= Verschlüsselung für vSphere Daten
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Heute besteht eine wachsende Nachfrage, Daten im Ruhezustand durch Verschlüsselung zu sichern. Obwohl der Schwerpunkt anfänglich auf Informationen im Finanz- und Gesundheitswesen lag, gibt es ein zunehmendes Interesse an der Sicherung sämtlicher Informationen – seien sie in Dateien, Datenbanken oder in anderen Datentypen gesichert.
+
+Systeme mit ONTAP Software vereinfachen die Sicherung sämtlicher Daten durch Verschlüsselung im Ruhezustand. NetApp Storage Encryption (NSE) verwendet Self-Encrypting Drives mit ONTAP, um SAN- und NAS-Daten zu sichern. NetApp bietet darüber hinaus NetApp Volume Encryption und NetApp Aggregate Encryption als einen einfachen, softwarebasierten Ansatz zur Verschlüsselung von Volumes auf Festplattenlaufwerken. Für diese Softwareverschlüsselung sind keine speziellen Festplatten oder externen Schlüsselmanager erforderlich. Es ist für ONTAP Kunden kostenlos verfügbar. Sie können ein Upgrade durchführen und mit der Nutzung von IT beginnen, ohne dass es zu Unterbrechungen für Ihre Clients oder Applikationen kommt. Außerdem sind sie gemäß FIPS 140-2 Level 1 Standard validiert, einschließlich Onboard Key Manager.
+
+Für die Sicherung der Daten virtualisierter Applikationen unter VMware vSphere gibt es verschiedene Ansätze. Einer besteht darin, die Daten mit Software innerhalb der VM auf der Ebene des Gastbetriebssystems zu sichern. Alternativ dazu unterstützen neuere Hypervisoren wie vSphere 6.5 jetzt auch Verschlüsselung auf VM-Ebene. Die NetApp Softwareverschlüsselung ist jedoch eine einfache und bietet folgende Vorteile:
+
+* *Keine Auswirkung auf die virtuelle Server-CPU.* in einigen virtuellen Server-Umgebungen ist jeder verfügbare CPU-Zyklus für ihre Anwendungen erforderlich, aber Tests haben ergeben, dass bei Verschlüsselung auf Hypervisor-Ebene bis zu 5x CPU-Ressourcen benötigt werden. Selbst wenn die Verschlüsselungssoftware zur Verlagerung von Verschlüsselungs-Workloads den AES-NI Befehlssatz von Intel unterstützt (wie es bei der NetApp-Softwareverschlüsselung der Fall ist), ist dieser Ansatz aufgrund der Notwendigkeit neuer CPUs, die nicht mit älteren Servern kompatibel sind, unter Umständen nicht realisierbar.
+* *Onboard Key Manager inbegriffen.* die NetApp Software-Verschlüsselung umfasst einen Onboard-Schlüsselmanager ohne zusätzliche Kosten und erleichtert den Einstieg ohne hochverfügbare Verschlüsselungsmanagement-Server, deren Erwerb und Nutzung ein hohes Maß an Komplexität mit sich bringt.
+* *Keine Auswirkungen auf die Storage-Effizienz.* Storage-Effizienztechniken wie Deduplizierung und Komprimierung werden heute weit verbreitet und sind für eine kostengünstige Nutzung von Flash-Speicher von zentraler Bedeutung. Verschlüsselte Daten können in der Regel jedoch nicht dedupliziert oder komprimiert werden. Die Hardware- und Storage-Verschlüsselung von NetApp arbeitet auf niedrigerer Ebene und ermöglicht im Gegensatz zu anderen Ansätzen die vollständige Nutzung der branchenführenden NetApp Storage-Effizienzfunktionen.
+* *Einfache granulare Datastore-Verschlüsselung.* mit NetApp Volume Encryption erhält jedes Volume einen eigenen AES 256-Bit-Schlüssel. Wenn Sie diesen ändern müssen, müssen Sie dazu nur einen einzigen Befehl ausführen. Dieser Ansatz eignet sich ideal, wenn Sie mehrere Mandanten haben oder für unterschiedliche Abteilungen oder Apps eine unabhängige Verschlüsselung nachweisen müssen. Diese Verschlüsselung wird auf Datastore-Ebene gemanagt, was viel einfacher ist als das Management einzelner VMs.
+
+
+Die ersten Schritte mit Softwareverschlüsselung sind ganz einfach. Nach der Installation der Lizenz konfigurieren Sie einfach das Onboard-Verschlüsselungsmanagement, indem Sie eine Passphrase angeben und dann entweder ein neues Volume erstellen oder ein Storage-seitiges Volume verschieben, um die Verschlüsselung zu aktivieren. NetApp arbeitet daran, künftige Versionen seiner VMware Tools um zusätzliche integrierte Unterstützung von Verschlüsselungsfunktionen zu erweitern.
+
+In den folgenden Ressourcen erhalten Sie ausführliche Informationen zu weiteren Sicherheitsthemen.
+
+* link:https://docs.netapp.com/us-en/ontap-technical-reports/security.html["Technische Sicherheitsberichte"]
+* link:https://docs.netapp.com/us-en/ontap-technical-reports/security-hardening-guides.html["Leitfäden zur Erhöhung der Sicherheit"]
+* link:https://docs.netapp.com/us-en/ontap/security-encryption/index.html["Produktdokumentation zu ONTAP Sicherheit und Datenverschlüsselung"]
+

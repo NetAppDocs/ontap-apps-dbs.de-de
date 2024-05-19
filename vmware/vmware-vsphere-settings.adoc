@@ -33,7 +33,7 @@ Im Folgenden finden Sie die derzeit empfohlenen Host-Einstellungen für die Vers
 
 
 | VMFS3.EnableBlockDelete | Behalten Sie die Standardeinstellung (0) bei, können sie jedoch bei Bedarf geändert werden.
-Weitere Informationen finden Sie unter link:https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=2007427["VMware KB 2007427"] | Nein 
+Weitere Informationen finden Sie unter link:https://knowledge.broadcom.com/external/article?legacyId=2007427["VMware KB 2007427"] | Nein 
 
 
 | VMFS3.EnableVMFS6Entmappen | Standard beibehalten (1)
@@ -48,7 +48,7 @@ Alle anderen NFS-Konfigurationen: Auf 30 einstellen | Ja.
 
 
 | NET.TcpipHeapMax | Sind die meisten vSphere 6.X Versionen auf 512 MB eingestellt.
-Stellen Sie auf 1024 MB für 6.5U3, 6.7U3 und 7.0 oder höher ein. | Ja. 
+Für 6.5U3, 6.7U3 und 7.0 oder höher auf Standard (1024 MB) gesetzt. | Ja. 
 
 
 | MaxVolumes: NFS | VSphere 6.0 oder höher: Auf 256 einstellen

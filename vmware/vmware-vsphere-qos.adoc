@@ -14,11 +14,15 @@ summary: Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrer
 
 
 [role="lead"]
-Systeme mit ONTAP Software nutzen die ONTAP Storage-QoS-Funktion, um den Durchsatz in Megabit pro Sekunde und/oder die Anzahl der I/O-Vorgänge pro Sekunde (IOPS) für unterschiedliche Storage-Objekte wie Dateien, LUNs, Volumes oder ganze SVMs zu beschränken.
+Durchsatzbegrenzungen sind bei der Steuerung von Service-Levels, dem Management unbekannter Workloads oder beim Testen von Applikationen vor der Implementierung nützlich, um sicherzustellen, dass sie sich nicht auf andere Workloads in der Produktion auswirken. Sie können auch zur Beschränkung eines als problematisch identifizierten Workloads eingesetzt werden.
 
-Durchsatzbegrenzungen sind bei der Steuerung unbekannter Workloads oder von Test-Workloads vor der Implementierung nützlich, wenn sichergestellt werden soll, dass sie sich nicht auf andere Workloads auswirken. Sie können auch zur Beschränkung eines als problematisch identifizierten Workloads eingesetzt werden. Minimale Service-Level auf Basis der IOPS werden ebenfalls unterstützt, um SAN-Objekten in ONTAP 9.2 und NAS-Objekten in ONTAP 9.3 eine konsistente Performance bereitzustellen.
 
-Bei einem NFS-Datastore kann eine QoS-Richtlinie auf das gesamte FlexVol Volume oder auf einzelne VMDK-Dateien darin angewendet werden. Die QoS-Richtlinien können bei VMFS Datastores mit ONTAP LUNs auf das FlexVol Volume, das die LUNs enthält, oder auf einzelne LUNs angewendet werden, jedoch nicht auf einzelne VMDK-Dateien, weil ONTAP das VMFS Filesystem nicht erkennt. Bei Verwendung von VVols kann über das Storage-Funktionsprofil und die VM-Storage-Richtlinie für einzelne VMs die minimale und/oder maximale QoS festgelegt werden.
+
+== Unterstützung von ONTAP QoS-Richtlinien
+
+Systeme mit ONTAP Software können die Storage QoS-Funktion nutzen, um den Durchsatz in Megabit pro Sekunde und/oder die Anzahl der I/O-Vorgänge pro Sekunde (IOPS) für unterschiedliche Storage-Objekte wie Dateien, LUNs, Volumes oder ganze SVMs zu beschränken.
+
+Minimale Service-Level auf Basis der IOPS werden ebenfalls unterstützt, um SAN-Objekten in ONTAP 9.2 und NAS-Objekten in ONTAP 9.3 eine konsistente Performance bereitzustellen.
 
 Die maximale QoS-Durchsatzbegrenzung für ein Objekt kann in Megabit pro Sekunde und/oder IOPS festgelegt werden. Wenn beide verwendet werden, wird das erste erreichte Limit von ONTAP durchgesetzt. Ein Workload kann mehrere Objekte umfassen. Auf einen oder mehrere Workloads kann eine QoS-Richtlinie angewendet werden. Wird eine Richtlinie auf mehrere Workloads angewendet, teilen diese das in der Richtlinie zulässige Gesamtlimit. Geschachtelte Objekte werden nicht unterstützt (so können beispielsweise nicht jede Datei in einem Volume eine eigene Richtlinie aufweisen). QoS-Mindestwerte können nur als IOPS angegeben werden.
 
@@ -32,18 +36,54 @@ Derzeit sind folgende Tools für das Management von ONTAP QoS-Richtlinien und de
 * ONTAP-Tools für VMware vSphere VASA Provider
 
 
+Wenn Sie eine QoS-Richtlinie einschließlich VMFS und RDM einer LUN zuweisen möchten, können Sie die ONTAP SVM (angezeigt als „vServer“), den LUN-Pfad und die Seriennummer auf der ONTAP Tools für VMware vSphere Startseite aus dem Menü „Storage Systems“ abrufen. Wählen Sie das Storage-System (SVM) und anschließend „Related Objects“ > „SAN“ aus.  Verwenden Sie diesen Ansatz, wenn Sie die QoS mit einem der ONTAP Tools angeben.
+
+Siehe link:https://docs.netapp.com/us-en/ontap/performance-admin/index.html["Performance Monitoring und Management – Überblick"] Finden Sie weitere Informationen.
+
+
+
+== Nicht-VVols NFS-Datastores
+
+Eine ONTAP QoS-Richtlinie kann auf den gesamten Datenspeicher oder auf einzelne VMDK-Dateien darin angewendet werden. Es ist jedoch wichtig zu beachten, dass alle VMs eines herkömmlichen NFS-Datenspeichers (ohne VVols) eine gemeinsame I/O-Warteschlange von einem bestimmten Host verwenden. Wenn eine VM durch eine ONTAP QoS-Richtlinie gedrosselt ist, werden in der Praxis alle I/O-Vorgänge für diesen Datastore scheinbar für diesen Host gedrosselt.
+
+*Beispiel:*
+* Sie konfigurieren eine QoS-Begrenzung auf vm1.vmdk für ein Volume, das als herkömmlicher NFS-Datenspeicher durch Host esxi-01 gemountet wird.
+* Der gleiche Host (esxi-01) verwendet vm2.vmdk und es ist auf dem gleichen Volume.
+* Wenn vm1.vmdk gedrosselt wird, dann wird vm2.vmdk auch scheinen gedrosselt zu sein, da es sich die gleiche IO-Warteschlange mit vm1.vmdk teilt.
+
+*Hinweis:* Dies gilt nicht für VVols.
+
+Ab vSphere 6.5 können Sie bei Datastores, die nicht über VVols verfügen, granulare Dateilimits managen. Sie nutzen dazu Storage Policy-basiertes Management (SPBM) mit Storage I/O Control (SIOC) v2.
+
+Weitere Informationen zum Leistungsmanagement mit SIOC- und SPBM-Richtlinien finden Sie unter den folgenden Links.
+
+link:https://blogs.vmware.com/virtualblocks/2019/07/02/spbm-host-based-rules/["SPBM Host-basierte Regeln: SIOC v2"]
+link:https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-resource-management/GUID-7686FEC3-1FAC-4DA7-B698-B808C44E5E96.html["Managen Sie Storage-I/O-Ressourcen mit vSphere"]
+
 Beachten Sie folgende Vorgaben, wenn Sie eine QoS-Richtlinie auf eine VMDK in NFS anwenden:
 
-* Die Politik muss auf das angewendet werden `vmname- flat.vmdk` Die das tatsächliche Image des virtuellen Laufwerks enthält, nicht das `vmname.vmdk` (Deskriptordatei für virtuelle Festplatten) oder `vmname.vmx` (VM-Deskriptordatei).
+* Die Politik muss auf das angewendet werden `vmname-flat.vmdk` Die das tatsächliche Image des virtuellen Laufwerks enthält, nicht das `vmname.vmdk` (Deskriptordatei für virtuelle Festplatten) oder `vmname.vmx` (VM-Deskriptordatei).
 * Wenden Sie keine Richtlinien auf andere VM-Dateien wie virtuelle Swap-Dateien an (`vmname.vswp`).
 * Wenn Sie Dateipfade mithilfe des vSphere Webclients ermitteln („Datastore“ > „Files“), denken Sie daran, dass dieser die Informationen der zusammenfasst `- flat.vmdk` Und `. vmdk` Und zeigt einfach eine Datei mit dem Namen des an `. vmdk` Aber die Größe der `- flat.vmdk`. Zusatz `-flat` In den Dateinamen, um den richtigen Pfad zu erhalten.
 
 
-Wenn Sie eine QoS-Richtlinie einschließlich VMFS und RDM einer LUN zuweisen möchten, können Sie die ONTAP SVM (angezeigt als „vServer“), den LUN-Pfad und die Seriennummer auf der ONTAP Tools für VMware vSphere Startseite aus dem Menü „Storage Systems“ abrufen. Wählen Sie das Storage-System (SVM) und anschließend „Related Objects“ > „SAN“ aus.  Verwenden Sie diesen Ansatz, wenn Sie die QoS mit einem der ONTAP Tools angeben.
+FlexGroup Datastores bieten erweiterte QoS-Funktionen, wenn ONTAP Tools für VMware vSphere 9.8 und höher verwendet werden. Sie können ganz einfach QoS für alle VMs in einem Datastore oder für bestimmte VMs festlegen. Weitere Informationen finden Sie im Abschnitt „FlexGroup“ dieses Berichts. Beachten Sie, dass die zuvor erwähnten Einschränkungen von QoS bei herkömmlichen NFS-Datastores weiterhin gelten.
 
-Die maximale und minimale QoS kann einer vVol-basierten VM mit ONTAP Tools für VMware vSphere oder Virtual Storage Console 7.1 und höher problemlos zugewiesen werden. Wenn Sie das Storage-Funktionsprofil für den vVol Container erstellen, geben Sie unter der Performance-Funktion einen IOPS-Wert für max und/oder min an und verweisen dann mit der Storage-Richtlinie der VM auf dieses Storage-Funktionsprofil. Verwenden Sie diese Richtlinie beim Erstellen der VM oder beim Anwenden der Richtlinie auf eine vorhandene VM.
 
-FlexGroup Datastores bieten erweiterte QoS-Funktionen, wenn ONTAP Tools für VMware vSphere 9.8 und höher verwendet werden. Sie können ganz einfach QoS für alle VMs in einem Datastore oder für bestimmte VMs festlegen. Weitere Informationen finden Sie im Abschnitt „FlexGroup“ dieses Berichts.
+
+== VMFS-Datastores
+
+Die QoS-Richtlinien können mithilfe von ONTAP LUNs auf das FlexVol Volume, das die LUNs enthält, oder auf einzelne LUNs angewendet werden, jedoch nicht auf einzelne VMDK-Dateien, weil ONTAP das VMFS Filesystem nicht erkennt.
+
+
+
+== VVols Datastores
+
+Die minimale und/oder maximale QoS kann problemlos auf einzelnen VMs oder VMDKs festgelegt werden, ohne dass andere VMs oder VMDK durch das richtlinienbasierte Storage-Management und VVols beeinträchtigt werden.
+
+Wenn Sie das Storage-Funktionsprofil für den vVol Container erstellen, geben Sie unter der Performance-Funktion einen IOPS-Wert für max und/oder min an und verweisen dann mit der Storage-Richtlinie der VM auf dieses Storage-Funktionsprofil. Verwenden Sie diese Richtlinie beim Erstellen der VM oder beim Anwenden der Richtlinie auf eine vorhandene VM.
+
+*Hinweis:* VVols erfordern die Verwendung von ONTAP-Tools für VMware vSphere, die als VASA Provider für ONTAP fungiert. Siehe link:/vmware/vmware-vvols-overview.html["VMware vSphere Virtual Volumes (VVols) mit ONTAP"] Für VVols Best Practices.
 
 
 
@@ -70,10 +110,10 @@ ONTAP QoS und VMware vSphere Storage I/O Control (SIOC) sind Technologien, die s
 | QoS auf LUN festlegen (RDM)? | Ja. | Nein 
 
 
-| QoS auf LUN festlegen (VMFS)? | Ja. | Nein 
+| QoS auf LUN festlegen (VMFS)? | Ja. | Ja (der Datastore kann gedrosselt werden) 
 
 
-| QoS auf Volume festlegen (NFS-Datastore)? | Ja. | Nein 
+| QoS auf Volume festlegen (NFS-Datastore)? | Ja. | Ja (der Datastore kann gedrosselt werden) 
 
 
 | QoS auf SVM festlegen (Mandant)? | Ja. | Nein 
@@ -133,54 +173,3 @@ ONTAP unterstützt sowohl VMFS als auch NFS vVol Datastores. Bei gemeinsamer Ver
 In der folgenden Abbildung werden die VVols Komponenten angezeigt.
 
 image:vsphere_ontap_image8.png["VVols Komponenten"]
-
-
-
-== Cloud-Migration und -Backup
-
-Eine weitere Stärke von ONTAP ist die umfassende Unterstützung für die Hybrid Cloud, bei der Systeme in Ihrer Private Cloud vor Ort mit Public-Cloud-Funktionen vereint werden. Im Folgenden sind einige NetApp Cloud-Lösungen aufgeführt, die gemeinsam mit vSphere verwendet werden können:
-
-* *Cloud Volumes.* NetApp Cloud Volumes Service für Amazon Web Services oder Google Cloud Platform und Azure NetApp Files für ANF bieten hochperformante, Multiprotokoll-gemanagte Storage-Services in führenden Public-Cloud-Umgebungen. Sie können direkt von den Gästen der VMware Cloud VM verwendet werden.
-* *Cloud Volumes ONTAP.* die NetApp Cloud Volumes ONTAP Datenmanagement-Software bietet Kontrolle, Schutz, Flexibilität und Effizienz für Ihre Unternehmensdaten in der gewünschten Cloud. Cloud Volumes ONTAP ist eine Cloud-native Datenmanagement-Software auf der Basis von ONTAP Storage. Nutzen Sie diese Technologie zusammen mit Cloud Manager, um Cloud Volumes ONTAP Instanzen gemeinsam mit Ihren lokalen ONTAP Systemen zu implementieren und zu managen. Nutzen Sie erweiterte NAS- und iSCSI SAN-Funktionen mit einheitlichem Datenmanagement einschließlich Snapshots und SnapMirror Replizierung.
-* *Cloud-Services.* Verwenden Sie Cloud Backup Service oder SnapMirror Cloud, um Daten mithilfe von Public-Cloud-Storage vor lokalen Systemen zu schützen. Cloud Sync hilft bei der Migration und bei der Synchronisierung Ihrer Daten in NAS-, Objektspeicher- und Cloud Volumes Service-Storage.
-* *FabricPool.* FabricPool bietet schnelles und einfaches Tiering für ONTAP Daten. Selten genutzte, „kalte“ Blöcke können zu einem Objektspeicher in Public Clouds oder zu einem privaten StorageGRID Objektspeicher migriert werden und beim erneuten Zugriff auf die ONTAP-Daten automatisch wieder abgerufen werden. Alternativ können Sie die Objekt-Tier als dritte Schutzebene für Daten verwenden, die bereits von SnapVault gemanagt werden. Dieser Ansatz kann Ihnen ermöglichen https://www.linkedin.com/pulse/rethink-vmware-backup-again-keith-aasen/["Speichern Sie mehr Snapshots Ihrer VMs"^] Auf primären und/oder sekundären ONTAP-Storage-Systemen.
-* *ONTAP Select.* mit softwaredefiniertem NetApp Storage erweitern Sie Ihre Private Cloud über das Internet auf Remote-Einrichtungen und Niederlassungen, in denen Sie ONTAP Select zur Unterstützung von Block- und Fileservices sowie denselben vSphere Datenmanagementfunktionen nutzen können, die Sie in Ihrem Unternehmens-Datacenter haben.
-
-
-Ziehen Sie bei dem Entwurf Ihrer VM-basierten Applikationen zukünftige Cloud-Mobilität in Erwägung. Anstatt beispielsweise Applikations- und Datendateien gemeinsam zu platzieren, verwenden Sie einen separaten LUN- oder NFS-Export für die Daten. Damit können Sie VM und Daten getrennt zu Cloud-Services migrieren.
-
-
-
-== Verschlüsselung für vSphere Daten
-
-Heute besteht eine wachsende Nachfrage, Daten im Ruhezustand durch Verschlüsselung zu sichern. Obwohl der Schwerpunkt anfänglich auf Informationen im Finanz- und Gesundheitswesen lag, gibt es ein zunehmendes Interesse an der Sicherung sämtlicher Informationen – seien sie in Dateien, Datenbanken oder in anderen Datentypen gesichert.
-
-Systeme mit ONTAP Software vereinfachen die Sicherung sämtlicher Daten durch Verschlüsselung im Ruhezustand. NetApp Storage Encryption (NSE) verwendet Self-Encrypting Drives mit ONTAP, um SAN- und NAS-Daten zu sichern. NetApp bietet darüber hinaus NetApp Volume Encryption und NetApp Aggregate Encryption als einen einfachen, softwarebasierten Ansatz zur Verschlüsselung von Volumes auf Festplattenlaufwerken. Für diese Softwareverschlüsselung sind keine speziellen Festplatten oder externen Schlüsselmanager erforderlich. Es ist für ONTAP Kunden kostenlos verfügbar. Sie können ein Upgrade durchführen und mit der Nutzung von IT beginnen, ohne dass es zu Unterbrechungen für Ihre Clients oder Applikationen kommt. Außerdem sind sie gemäß FIPS 140-2 Level 1 Standard validiert, einschließlich Onboard Key Manager.
-
-Für die Sicherung der Daten virtualisierter Applikationen unter VMware vSphere gibt es verschiedene Ansätze. Einer besteht darin, die Daten mit Software innerhalb der VM auf der Ebene des Gastbetriebssystems zu sichern. Alternativ dazu unterstützen neuere Hypervisoren wie vSphere 6.5 jetzt auch Verschlüsselung auf VM-Ebene. Die NetApp Softwareverschlüsselung ist jedoch eine einfache und bietet folgende Vorteile:
-
-* *Keine Auswirkung auf die virtuelle Server-CPU.* in einigen virtuellen Server-Umgebungen ist jeder verfügbare CPU-Zyklus für ihre Anwendungen erforderlich, aber Tests haben ergeben, dass bei Verschlüsselung auf Hypervisor-Ebene bis zu 5x CPU-Ressourcen benötigt werden. Selbst wenn die Verschlüsselungssoftware zur Verlagerung von Verschlüsselungs-Workloads den AES-NI Befehlssatz von Intel unterstützt (wie es bei der NetApp-Softwareverschlüsselung der Fall ist), ist dieser Ansatz aufgrund der Notwendigkeit neuer CPUs, die nicht mit älteren Servern kompatibel sind, unter Umständen nicht realisierbar.
-* *Onboard Key Manager inbegriffen.* die NetApp Software-Verschlüsselung umfasst einen Onboard-Schlüsselmanager ohne zusätzliche Kosten und erleichtert den Einstieg ohne hochverfügbare Verschlüsselungsmanagement-Server, deren Erwerb und Nutzung ein hohes Maß an Komplexität mit sich bringt.
-* *Keine Auswirkungen auf die Storage-Effizienz.* Storage-Effizienztechniken wie Deduplizierung und Komprimierung werden heute weit verbreitet und sind für eine kostengünstige Nutzung von Flash-Speicher von zentraler Bedeutung. Verschlüsselte Daten können in der Regel jedoch nicht dedupliziert oder komprimiert werden. Die Hardware- und Storage-Verschlüsselung von NetApp arbeitet auf niedrigerer Ebene und ermöglicht im Gegensatz zu anderen Ansätzen die vollständige Nutzung der branchenführenden NetApp Storage-Effizienzfunktionen.
-* *Einfache granulare Datastore-Verschlüsselung.* mit NetApp Volume Encryption erhält jedes Volume einen eigenen AES 256-Bit-Schlüssel. Wenn Sie diesen ändern müssen, müssen Sie dazu nur einen einzigen Befehl ausführen. Dieser Ansatz eignet sich ideal, wenn Sie mehrere Mandanten haben oder für unterschiedliche Abteilungen oder Apps eine unabhängige Verschlüsselung nachweisen müssen. Diese Verschlüsselung wird auf Datastore-Ebene gemanagt, was viel einfacher ist als das Management einzelner VMs.
-
-
-Die ersten Schritte mit Softwareverschlüsselung sind ganz einfach. Nach der Installation der Lizenz konfigurieren Sie einfach das Onboard-Verschlüsselungsmanagement, indem Sie eine Passphrase angeben und dann entweder ein neues Volume erstellen oder ein Storage-seitiges Volume verschieben, um die Verschlüsselung zu aktivieren. NetApp arbeitet daran, künftige Versionen seiner VMware Tools um zusätzliche integrierte Unterstützung von Verschlüsselungsfunktionen zu erweitern.
-
-
-
-== Active IQ Unified Manager
-
-Active IQ Unified Manager bietet einen Überblick über die VMs in Ihrer virtuellen Infrastruktur und ermöglicht die Überwachung und Fehlerbehebung von Storage- und Performance-Problemen in Ihrer virtuellen Umgebung.
-
-Eine typische Implementierung einer virtuellen Infrastruktur auf ONTAP setzt auf verschiedene Komponenten, die auf Computing-, Netzwerk- und Storage-Ebenen verteilt sind. Alle Performance-Einbußen bei einer VM-Applikation können aufgrund einer Kombination aus Latenzen auftreten, die bei den verschiedenen Komponenten auf den jeweiligen Ebenen auftreten.
-
-Der folgende Screenshot zeigt die Ansicht der virtuellen Active IQ Unified Manager Machines.
-
-image:vsphere_ontap_image9.png["Ansicht der virtuellen Maschinen von Active IQ Unified Manager"]
-
-Unified Manager stellt das zugrunde liegende Untersystem einer virtuellen Umgebung in einer topologischen Übersicht vor, um zu ermitteln, ob beim Computing-Node, Netzwerk oder Storage ein Latenzproblem aufgetreten ist. Die Ansicht zeigt außerdem das spezifische Objekt, das aufgrund der Performance-Verzögerung Korrekturmaßnahmen ergreifen und das zugrunde liegende Problem lösen kann.
-
-Der folgende Screenshot zeigt die erweiterte AIQUM-Topologie.
-
-image:vsphere_ontap_image10.png["AIQUM erweiterte Topologie"]
