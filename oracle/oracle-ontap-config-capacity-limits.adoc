@@ -34,4 +34,4 @@ Die Empfehlung von 10 % freiem Platz ist sehr konservativ. SSD-Aggregate können
 == HDD-Aggregate, einschließlich Flash Pool Aggregaten
 
 
-TIP: *NetApp empfiehlt* mindestens 15% freien Speicherplatz, wenn rotierende Laufwerke verwendet werden. Dazu gehört der gesamte ungenutzte Speicherplatz, einschließlich freiem Speicherplatz innerhalb des Aggregats oder eines Volumes und sämtlicher freier Speicherplatz, der aufgrund der vollständigen Bereitstellung zugewiesen wird, aber nicht von tatsächlichen Daten genutzt wird. Die Leistung wird bei 10 % der Redefreiheit beeinträchtigt.
+TIP: *NetApp empfiehlt* mindestens 15% freien Speicherplatz, wenn rotierende Laufwerke verwendet werden. Dazu gehört der gesamte ungenutzte Speicherplatz, einschließlich freiem Speicherplatz innerhalb des Aggregats oder eines Volumes und sämtlicher freier Speicherplatz, der aufgrund der vollständigen Bereitstellung zugewiesen wird, aber nicht von tatsächlichen Daten genutzt wird. Die Performance wird beeinträchtigt, da der freie Speicherplatz sich etwa bei 10 % befindet.
