@@ -143,7 +143,7 @@ Wie in Abschnitt 1.2 beschrieben, ermöglicht richtlinienbasiertes Management di
 * *Intelligentere Bereitstellung.* die Funktionen des Storage-Systems können über die VASA APIs zugänglich gemacht werden. So können Workflows für die Bereitstellung von erweiterten Funktionen profitieren, ohne dass der VM-Administrator ein Verständnis für das Management des Storage-Systems benötigt.
 * *Schnellere Bereitstellung.* verschiedene Storage-Funktionen können in einem einzelnen Datastore unterstützt und anhand der VM-Richtlinie automatisch für eine VM ausgewählt werden.
 * *Vermeiden von Fehlern.* Storage- und VM-Richtlinien werden vorab entwickelt und bei Bedarf angewendet, ohne dass bei jeder Bereitstellung einer VM Storage angepasst werden muss. Wenn sich die Storage-Funktionen von den festgelegten Richtlinien abdriften, werden Compliance-Alarme ausgelöst. Wie bereits erwähnt, ist die Erstbereitstellung durch SCPs vorhersehbar und wiederholbar, wobei die korrekte Platzierung durch die Verwendung von VM-Speicherrichtlinien auf den SCPs gewährleistet ist.
-* *Besseres Kapazitätsmanagement.* VASA und ONTAP Tools ermöglichen es, bei Bedarf die Storage-Kapazität bis zur induvialen Aggregatebene anzuzeigen und bei niedrigem Kapazitätsbedarf mehrere Alarmebenen bereitzustellen.
+* *Besseres Kapazitätsmanagement.* VASA- und ONTAP-Tools ermöglichen bei Bedarf eine Anzeige der Storage-Kapazität bis auf die einzelne Aggregatebene und ermöglichen bei geringer Kapazität mehrere Alarmebenen.
 
 
 
