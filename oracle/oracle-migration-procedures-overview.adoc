@@ -24,7 +24,9 @@ Es gibt keine einzigen Best Practices für die Erstellung einer Migrationsstrate
 
 Ein Schritt wirft beispielsweise das Problem der Gesamtgröße der Datenbank auf. Der nächste Schritt hängt davon ab, ob die Datenbank mehr oder weniger als 1 TB umfasst. Die empfohlenen Schritte sind genau das – Empfehlungen auf der Basis typischer Kundenpraktiken. Die meisten Kunden würden nicht mit DataGuard eine kleine Datenbank kopieren, aber einige könnten. Die meisten Kunden würden aufgrund der erforderlichen Zeit nicht versuchen, eine 50 TB große Datenbank zu kopieren, aber einige haben möglicherweise ein ausreichend großes Wartungsfenster, um einen solchen Vorgang zu ermöglichen.
 
-Sie finden ein Flussdiagramm mit den Arten von Überlegungen, welche Migrationspfade am besten geeignet sind link:/media/migration-options-flowchart.png["Hier"].
+Das folgende Flussdiagramm zeigt die Arten von Überlegungen, welche Migrationspfade am besten geeignet sind. Sie können mit der rechten Maustaste auf das Bild klicken und es in einer neuen Registerkarte öffnen, um die Lesbarkeit zu verbessern.
+
+image:migration-options-flowchart.png["Flussdiagramm der Migration"].
 
 
 

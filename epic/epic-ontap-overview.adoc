@@ -1,0 +1,22 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-ontap-overview.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP – Übersicht 
+---
+= EPIC auf ONTAP
+:allow-uri-read: 
+
+
+[role="lead"]
+Epic ist einfacher mit ONTAP.
+
+ONTAP ist eine Datenmanagementplattform, mit der Sie Epic-Workloads konsolidieren und gleichzeitig alle Anforderungen hinsichtlich Performance, Datensicherung und Datenmanagement erfüllen können.
+
+Nur auf NetApp können Sie alle Ihre Workloads im Gesundheitswesen für SAN, NAS und Objekt-Storage auf einer einzigen hochverfügbaren Datenmanagementplattform standardisieren. ONTAP ist die weltweit am häufigsten eingesetzte Storage-Softwareplattform mit fast 30 Jahren kontinuierlicher Innovation. Mit nativen ONTAP-Datenmanagement-Tools und Applikationsintegration lassen sich alle Epic-Herausforderungen bewältigen. Es muss keine Vielzahl von Tools von Drittanbietern erworben werden, um Lücken in der Lösung zu schließen.
+
+Viele Storage-Anbieter bieten herkömmlichen, zuverlässigen und schnellen Block-Storage. Sie funktionieren gut, werden aber in der Regel in Silos für die Ausführung eines einzelnen Workloads implementiert, z. B. für Produktion, Bericht, Klarheit, VDI, VMware und NAS. Jedes dieser Silos verfügt über unterschiedliche Hardware und unterschiedliche Management Tools, die typischerweise von unterschiedlichen IT-Gruppen gemanagt werden. Dieser herkömmliche Ansatz trägt zu dem größten Problem im Gesundheitswesen bei, das heute besteht: Der Komplexität.
+
+Mit NetApp wird das Datenmanagement einfacher und effizienter. Anstatt das Problem mit übergroßen Silos zu lösen, verwendet ONTAP Innovation und Technologie, um für jeden Workload ein konsistentes und garantiertes SLA über ein beliebiges Protokoll mit integrierter Datensicherung zu ermöglichen. Diese Funktionen und Tools eignen sich auch für die Cloud Ihrer Wahl, wie unten dargestellt.
+
+image:epic-consolidation.png["Skalierung und Einfachheit für das Gesundheitswesen mit ONTAP"]

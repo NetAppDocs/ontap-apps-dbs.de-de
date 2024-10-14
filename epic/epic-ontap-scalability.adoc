@@ -1,0 +1,22 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-ontap-scalability.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP Skalierbarkeit 
+---
+= Epic auf ONTAP Skalierbarkeit
+:allow-uri-read: 
+
+
+[role="lead"]
+Der Epic Hardware Configuration Guide verzeichnet ~in 3 Jahren ein Wachstum von 20 % pro Jahr. Umgebungen können jedoch auch unerwartet wachsen.
+
+NetApp ermöglicht die nahtlose Skalierung von Performance und Kapazität auf bis zu 12 Nodes für NAS-, SAN- und Objekt-Cluster. Infolgedessen können Sie unterbrechungsfrei vertikal und horizontal skalieren und Ihr Unternehmen wächst.
+
+Epic Iris bietet zusätzliche Skalierungsmöglichkeiten. Mit dieser Lösung können größere Kunden mit mehreren Epic-Instanzen in einer einzigen Instanz konsolidiert werden. Das link:https://www.netapp.com/media/27905-nva-1159-design.pdf["NetApp Verifizierte Architektur – Erfolgsgeschichte auf modernem SAN"^] Dokument zeigt, dass Epic konsolidierte Workloads nahtlos auf 720.000 IOPS in einer einzelnen HA skalieren und horizontal auf über 4 Mio. IOPS in einem Cluster skalieren kann. Ein unterbrechungsfreies Scale-up ist möglich, indem Controller-Upgrades durchgeführt oder Festplatten zu vorhandenen Clustern hinzugefügt werden.
+
+NAS-, SAN- und Objektdaten können zudem unterbrechungsfrei zwischen Nodes im Cluster verschoben werden. Jedes HA-Paar im Cluster kann eine beliebige Kombination aus Systemtypen und Größen von ONTAP FAS und AFF sein. Sie können Ihre Workloads über ein einzelnes Cluster verteilen, um Ihre Storage-Investition zu maximieren.
+
+ONTAP bietet zudem die Option, Objektspeicher auf StorageGRID oder der Cloud als Backup-Ziel und/oder automatisches Tiering-Ziel für Cold Storage zu verwenden. Diese Funktion ermöglicht es Ihnen, teure All-Flash-Festplatten, Tiering von Snapshots und kalte Daten automatisch auf Objekt zu verlagern.
+
+So läuft Epic mit dem NetApp Produktportfolio einfach besser und nutzt ONTAP, diverse Protokolle, StorageGRID und die Cloud Ihrer Wahl. Diese Produkte bieten Optionen für Disaster Recovery, Archivierung, Analyse, Tiering und vieles mehr.

@@ -10,9 +10,9 @@ summary: Microsoft SQL Server tempdb-Platzierung auf ONTAP
 
 
 [role="lead"]
-Tempdb-Datenbank kann stark genutzt werden. Ändern Sie zusätzlich zur optimalen Platzierung von Benutzerdatenbankdateien auf ONTAP die tempdb-Datendateien, um die Zuweisungskonflikte zu verringern
+Die Tempdb-Datenbank kann stark genutzt werden. Neben der optimalen Platzierung von Benutzerdatenbankdateien auf ONTAP ist die Platzierung von tempdb-Datendateien auch wichtig, um die Zuweisungskonflikte zu verringern
 
-Seitenkonflikte können auf den Seiten der lobal Allocation Map (GAM), der Shared Global Allocation Map (SGAM) oder der Page Free Space (PFS) auftreten, wenn SQL Server auf spezielle Systemseiten schreiben muss, um neue Objekte zuzuweisen. Verriegelungen schützen (sperren) diese Seiten im Speicher. In einer stark ausgelasteten SQL Server-Instanz kann es lange dauern, bis ein Latch auf einer Systemseite in tempdb abgerufen wird. Dies führt zu längeren Abfragezeiten und wird als Latch Contention bezeichnet. Lesen Sie die folgenden Best Practices für das Erstellen von tempdb-Datendateien:
+Seitenkonflikte können auf den Seiten Global Allocation Map (GAM), Shared Global Allocation Map (SGAM) oder Page Free Space (PFS) auftreten, wenn SQL Server auf spezielle Systemseiten schreiben muss, um neue Objekte zuzuweisen. Verriegelungen sperren diese Seiten im Speicher. In einer stark ausgelasteten SQL Server-Instanz kann es lange dauern, bis ein Latch auf einer Systemseite in tempdb abgerufen wird. Dies führt zu längeren Abfragezeiten und wird als Latch Contention bezeichnet. Lesen Sie die folgenden Best Practices für das Erstellen von tempdb-Datendateien:
 
 * Für < oder = bis 8 Kerne: Tempdb-Datendateien = Anzahl der Kerne
 * Für > 8 Kerne: 8 tempdb-Datendateien

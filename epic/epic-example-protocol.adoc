@@ -1,0 +1,16 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-example-protocol.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP, Beispielbereitstellung – FCP-Protokoll 
+---
+= Epic auf ONTAP, Beispielbereitstellung – FCP-Protokoll
+:allow-uri-read: 
+
+
+[role="lead"]
+Sobald die SVM erstellt wurde, müssen Sie Protokolle hinzufügen.
+
+Klicken Sie zum Erstellen von FCP-Daten-LIFs auf link:https://docs.netapp.com/us-en/ontap/san-admin/configure-svm-fc-task.html["Hier"^].
+
+Initiatorgruppen erlauben den Serverzugriff auf LUNs. Um eine iGroup zu erstellen, klicken Sie auf link:https://docs.netapp.com/us-en/ontap/san-admin/manage-san-initiators-task.html#view-manage-san-igroups["Hier"^].

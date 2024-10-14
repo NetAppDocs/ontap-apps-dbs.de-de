@@ -24,7 +24,7 @@ image:mssql-filegroups.png["Fehler: Fehlendes Grafikbild"]
 
 Die Fähigkeit, mehrere Datendateien innerhalb der Dateigruppe zu speichern, ermöglicht es Ihnen, die Last auf verschiedene Speichergeräte zu verteilen, wodurch die I/O-Performance des Systems verbessert wird. Der Kontrast für die Transaktionsprotokollanmeldung profitiert nicht von den mehreren Dateien, da SQL Server in sequenzieller Weise in das Transaktionsprotokoll schreibt.
 
-Die Trennung zwischen der Platzierung logischer Objekte in den Dateigruppen und physischen Datenbankdateien ermöglicht es Ihnen, das Layout von Datenbankdateien zu optimieren und so das Storage-Subsystem optimal zu nutzen. Beispielsweise können unabhängige Softwareanbieter (ISVs), die ihre Produkte bei unterschiedlichen Kunden implementieren, die Anzahl der Datenbankdateien basierend auf der zugrunde liegenden I/O-Konfiguration und der erwarteten Datenmenge während der Implementierungsphase anpassen. Diese Änderungen sind für die Anwendungsentwickler transparent, die die Datenbankobjekte in den Dateigruppen statt in Datenbankdateien platzieren.
+Die Trennung zwischen der Platzierung logischer Objekte in den Dateigruppen und physischen Datenbankdateien ermöglicht es Ihnen, das Layout von Datenbankdateien zu optimieren und so das Storage-Subsystem optimal zu nutzen. Die Anzahl der Datendateien, die einen mitgebenden Workload unterstützen, kann nach Bedarf variiert werden, um I/O-Anforderungen und erwartete Kapazität ohne Auswirkungen auf die Applikation zu erfüllen. Diese Variationen im Datenbank-Layout sind für Anwendungsentwickler transparent, die die Datenbankobjekte in Dateigruppen statt in Datenbankdateien platzieren.
 
 
 TIP: *NetApp empfiehlt* die Verwendung der primären Dateigruppe für alles andere als Systemobjekte zu vermeiden. Das Erstellen einer separaten Dateigruppe oder einer Gruppe von Dateigruppen für die Benutzerobjekte vereinfacht die Datenbankverwaltung und Disaster Recovery, insbesondere bei großen Datenbanken.
@@ -62,8 +62,8 @@ Wenn die sofortige Dateiinitialisierung nicht aktiviert ist, zeigt das SQL Serve
 
 image:mssql-zeroing.png["Fehler: Fehlendes Grafikbild"]
 
-Die Wartungsaufgabe zum Ausführen von Volumes wird in SQL Server 2016 vereinfacht und später während des Installationsprozesses als Option bereitgestellt. In dieser Abbildung wird die Option angezeigt, dem SQL Server-Datenbank-Engine-Service die Berechtigung zum Ausführen der Volume-Wartungsaufgabe zu gewähren.
+Die Aufgabe „Volume Maintenance durchführen“ wird in SQL Server 2016 vereinfacht und später während des Installationsprozesses als Option bereitgestellt. In dieser Abbildung wird die Option angezeigt, dem SQL Server-Datenbank-Engine-Service die Berechtigung zum Ausführen der Volume-Wartungsaufgabe zu gewähren.
 
 image:mssql-maintenance.png["Fehler: Fehlendes Grafikbild"]
 
-Eine weitere wichtige Datenbankoption, die die Größe der Datenbankdateien steuert, ist Autoshrink. Wenn diese Option aktiviert ist, verkleinert SQL Server die Datenbankdateien regelmäßig, reduziert deren Größe und gibt Speicherplatz für das Betriebssystem frei. Dieser Vorgang ist ressourcenintensiv und nur selten sinnvoll, da die Datenbankdateien nach einiger Zeit wieder wachsen, wenn neue Daten in das System gelangen. Autoshrink darf in der Datenbank niemals aktiviert werden.
+Eine weitere wichtige Datenbankoption, die die Größe der Datenbankdateien steuert, ist Autoshrink. Wenn diese Option aktiviert ist, verkleinert SQL Server die Datenbankdateien regelmäßig, reduziert deren Größe und gibt Speicherplatz für das Betriebssystem frei. Dieser Vorgang ist ressourcenintensiv und nur selten sinnvoll, da die Datenbankdateien nach einiger Zeit wieder wachsen, wenn neue Daten in das System gelangen. Autoshrink sollte in der Datenbank nicht aktiviert sein.

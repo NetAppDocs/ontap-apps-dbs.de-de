@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-arch-storage.html 
+keywords: epic,cache,iris 
+summary: Epic-Storage-Anforderungen 
+---
+= Epic-Storage-Anforderungen
+:allow-uri-read: 
+
+
+[role="lead"]
+Dedizierte Storage-Ressourcen werden in der Regel für die Produktionsdatenbank bereitgestellt, während gespiegelte Datenbankinstanzen sekundäre Storage-Ressourcen gemeinsam mit anderen Softwarekomponenten von Epic nutzen, beispielsweise den Tools zur Klarstellung-Berichterstellung.
+
+Andere Software-Storage-Umgebungen, die beispielsweise für Applikations- und Systemdateien verwendet werden, werden von den sekundären Storage-Ressourcen ebenfalls bereitgestellt.
+
+Neben den Größenüberlegungen sind bei Epic die folgenden zusätzlichen Regeln für das Storage-Layout sowie wichtige Überlegungen anzustellen:
+
+* Seit 2020 müssen sich alle Workloads von betrieblichen Datenbanken (ODB) auf All-Flash-Arrays befinden.
+* EPIC empfiehlt, dass sich jeder Speicherpool auf separater physischer Hardware befindet, einschließlich Pool1, Pool2, Pool3, NAS1 und NAS2.
+
+
+
+NOTE: Ein Node in einem Cluster kann als Speicherpool angesehen werden. Mit ONTAP 9.4 oder höher und AQoS können Sie geschützte Pools mithilfe von Richtlinien erstellen.
+
+* Neue Empfehlung für Epic 3-2-1 Backup
++
+.. Kopie am Remote-Standort (Disaster Recovery)
+.. Eine der Kopien muss sich auf einer anderen Storage-Plattform als der primären Kopie befinden
+.. Datenkopien zu erstellen
+
+
+
+
+
+NOTE: Kunden, die NetApp SnapMirror zur Sicherung von NetApp verwenden, entsprechen nicht den 3-2-1-1-Empfehlungen. Der Grund dafür ist, dass ONTAP für ONTAP die zweite oben aufgeführte Anforderung nicht erfüllt. Mit SnapMirror direkt aus ONTAP können Sie Objekt-Storage vor Ort (z. B. über StorageGRID) oder in der Cloud nutzen, um Epic-Anforderungen zu erfüllen.
+
+Weitere Informationen zu Storage-Richtlinien finden Sie in den folgenden Epic-Leitfäden, die in Galaxy zur Verfügung stehen:
+
+* Überlegungen zu SAN
+* Speicherprodukte und Technologiestatus (SPATs)
+* Hardware-Konfigurationshandbuch
+

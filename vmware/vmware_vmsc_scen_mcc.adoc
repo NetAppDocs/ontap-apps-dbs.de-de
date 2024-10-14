@@ -22,7 +22,8 @@ In den folgenden Abschnitten werden die erwarteten Ergebnisse verschiedener Ausf
 
 Wenn in diesem Szenario Komponenten wie der HBA-Port, der Netzwerkport, der Front-End-Datenschalterport oder ein FC- oder Ethernet-Kabel ausfallen, wird dieser bestimmte Pfad zum Speichergerät vom ESXi-Host als „tot“ markiert. Wenn mehrere Pfade durch Ausfallsicherheit am HBA/Netzwerk/Switch Port für das Storage-Gerät konfiguriert sind, führt ESXi idealerweise eine Pfadumschaltung durch. Während dieser Zeit bleiben Virtual Machines ohne Beeinträchtigungen verfügbar, da für die Storage-Verfügbarkeit mehrere Pfade zum Storage-Gerät bereitgestellt werden.
 
-*Hinweis:* Es gibt keine Änderung im MetroCluster-Verhalten in diesem Szenario, und alle Datastores bleiben weiterhin von ihren jeweiligen Seiten intakt.
+
+NOTE: Es gibt keine Änderung im MetroCluster Verhalten in diesem Szenario, und alle Datenspeicher sind weiterhin von ihren jeweiligen Seiten intakt.
 
 
 
@@ -72,7 +73,10 @@ In diesem Szenario kommt es zu einem Ausfall von mehr als zwei Festplatten oder 
 
 image::../media/vmsc_5_3.png[Ausfall eines einzelnen Festplatten-Shelfs:,624,576]
 
-*Hinweis:* während dieses Zeitraums gibt es keine Auswirkungen auf die I/O-Vorgänge der virtuellen Maschine, aber die Performance ist beeinträchtigt, da die Daten vom Remote-Festplatten-Shelf über ISL-Links abgerufen werden.
+*[HINWEIS]
+
+* Während dieses Zeitraums gibt es keine Auswirkungen auf die I/O-Vorgänge der virtuellen Maschine, aber die Performance ist beeinträchtigt, da über ISL-Links auf die Daten vom Remote-Festplatten-Shelf aus zugegriffen wird.
+
 
 
 
@@ -96,7 +100,8 @@ image::../media/vmsc_5_5.png[Verbindungsfehler zwischen Switches im Managementne
 
 In diesem Szenario können die ESXi-Hosts an Standort A nicht mit ESXi-Hosts an Standort B kommunizieren, wenn die ISL-Links am Front-End-Hostverwaltungsnetzwerk fehlschlagen Dies führt zu einer Netzwerkpartition, da ESXi-Hosts an einem bestimmten Standort die Netzwerk-Heartbeats nicht an den Master-Node im HA-Cluster senden können. Daher gibt es aufgrund der Partition zwei Netzwerksegmente, und in jedem Segment gibt es einen Master-Knoten, der die VMs vor Host-Ausfällen innerhalb des jeweiligen Standorts schützt.
 
-*Hinweis:* während dieser Zeit bleiben die virtuellen Maschinen aktiv und es gibt keine Änderung im MetroCluster-Verhalten in diesem Szenario. Alle Datenspeicher bleiben von ihren jeweiligen Seiten intakt.
+
+NOTE: Während dieses Zeitraums bleiben die virtuellen Maschinen aktiv, und es gibt keine Änderung im MetroCluster-Verhalten in diesem Szenario. Alle Datenspeicher bleiben von ihren jeweiligen Seiten intakt.
 
 
 
@@ -152,7 +157,8 @@ In einem kompletten Standort-A-Fehlerszenario erhalten die ESXi-Hosts an Standor
 
 Wenn der Versuch des vSphere HA Master-Agenten, eine VM neu zu starten, fehlschlägt (d. h. sie wird registriert und eingeschaltet), wird der Neustart nach einer Verzögerung erneut durchgeführt. Die Verzögerung zwischen den Neustarts kann auf maximal 30 Minuten konfiguriert werden. VSphere HA versucht diese Neustarts für eine maximale Anzahl von Versuchen (standardmäßig sechs Versuche).
 
-*Hinweis:* der HA-Master startet die Neustartversuche erst, wenn der Platzierungsmanager geeigneten Speicher findet. Im Falle eines vollständigen Standortausfalls würde dies nach der Umschaltung der Fall sein.
+
+NOTE: Der HA-Master startet die Neustartversuche nicht, bis der Platzierungsmanager den geeigneten Storage findet. Im Falle eines vollständigen Standortausfalls steht dies also nach der Umschaltung zur Verfügung.
 
 Wenn Standort A umgeschaltet wurde, kann ein nachträglicher Ausfall eines der noch intakten Knoten Standort B nahtlos durch einen Failover auf den noch intakten Knoten bewältigt werden. In diesem Fall wird die Arbeit von vier Nodes jetzt nur von einem Node ausgeführt. Die Wiederherstellung würde in diesem Fall eine Rückgabe an den lokalen Knoten bedeuten. Wenn Standort A wiederhergestellt wird, wird ein Switchback-Vorgang durchgeführt, um den stabilen Konfigurationsbetrieb wiederherzustellen.
 

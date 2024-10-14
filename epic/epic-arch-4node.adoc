@@ -1,0 +1,28 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-arch-4node.html 
+keywords: epic,cache,iris 
+summary: Epic mit vier Nodes 
+---
+= Epic mit vier Nodes
+:allow-uri-read: 
+
+
+[role="lead"]
+Die Abbildungen unten zeigen das Storage-Layout für eine Architektur mit vier Nodes: Ein HA-Paar in Produktionsumgebungen und ein HA-Paar in Disaster Recovery. Die Größe der Controller und die Anzahl der Festplatten basieren auf dem letztgenannten Größenabbild.
+
+NetApp garantiert eine minimale Performance auf Bodenebene durch die Annahme der von SLM empfohlenen AQoS-Richtlinien. Epic unterstützt die Konsolidierung von Storage Pools in ONTAP auf deutlich weniger Hardware. Weitere Informationen finden Sie im Dokument mit den vierteljährlichen Epic-CHATS. Im Grunde können Pool1, Pool2 und NAS1 (aufgelistet im Epic Hardware Configuration Guide) alle auf einem einzigen HA-Paar ausgeführt werden, wobei die Workloads gleichmäßig über die beiden Controller verteilt werden. Bei der Disaster Recovery sind Epic Pool 3 und NAS 3 auch auf die beiden Controller des HA-Paars aufgeteilt.
+
+Umgebungen mit vollständigen Testkopien (z. B. SUP, REL und PJX) werden entweder aus der Epic Produktion, dem Epic Report oder der Epic Disaster Recovery geklont. Informationen zu Epic Backup und -Aktualisierung finden Sie im Abschnitt „Datenmanagement“.
+
+
+
+== Architektur mit vier Nodes
+
+image:epic-4node.png["Epic 4-Node-Architektur"]
+
+
+
+== Workload-Platzierung mit vier Nodes
+
+image:epic-4node-design.png["Epic 4 Node-Platzierung"]

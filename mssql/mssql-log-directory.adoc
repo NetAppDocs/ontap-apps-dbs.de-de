@@ -24,7 +24,7 @@ Platzieren Sie das Protokollverzeichnis auf einem dedizierten Volume oder LUN. D
 
 * Stellen Sie sicher, dass das Host-Protokollverzeichnis nicht von anderen Datentypen gemeinsam genutzt wird, die möglicherweise die Backup-Snapshot-Daten beschädigen können.
 * Platzieren Sie keine Benutzerdatenbanken oder Systemdatenbanken auf einer LUN, die Bereitstellungspunkte hostet.
-* Erstellen Sie das Host-Log-Verzeichnis auf dem dedizierten FlexVol Volume, auf das SnapCenter Transaktionsprotokolle kopiert.
+* Erstellen Sie das Host-Protokollverzeichnis auf einem dedizierten Volume, auf das SnapCenter Transaktionsprotokolle kopiert.
 * Migrieren Sie Datenbanken mithilfe von SnapCenter-Assistenten in NetApp Storage, damit die Datenbanken an gültigen Speicherorten gespeichert werden und so erfolgreiche SnapCenter-Backup- und -Restore-Vorgänge ermöglichen. Beachten Sie, dass der Migrationsprozess für den Fall von Unterbrechungen verantwortlich ist und dazu führen kann, dass die Datenbanken offline gehen, während die Migration durchgeführt wird.
 * Die folgenden Bedingungen müssen für Failover-Cluster-Instanzen (FCIs) von SQL Server gelten:
 +

@@ -42,4 +42,4 @@ Wenn die Mount-Optionen für Single-Instance-Datenbanken verwendet werden, ermö
 Mount-Optionen nur ändern, wenn (a) dNFS verwendet wird und (b) ein Problem auf eine Verzögerung bei der Dateisichtbarkeit zurückzuführen ist. Wenn dNFS nicht verwendet wird, führt die Verwendung der Oracle RAC Mount-Optionen auf einer Single-Instance-Datenbank zu einer verminderte Performance.
 
 
-NOTE: Siehe den Hinweis über `nosharecache` In link:../host-configuration/linux.html#linux-direct-nfs["Mount-Optionen für Linux NFS"] Für ein Linux-spezifisches dNFS-Problem, das ungewöhnliche Ergebnisse liefern kann.
+NOTE: In der Anmerkung zu `nosharecache` in link:oracle-host-config-linux.html#linux-direct-nfs["Mount-Optionen für Linux NFS"] finden Sie ein Linux-spezifisches dNFS-Problem, das zu ungewöhnlichen Ergebnissen führen kann.

@@ -1,0 +1,21 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-config-protocols.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP - Protokolle 
+---
+= Epic auf ONTAP - Protokolle
+:allow-uri-read: 
+
+
+[role="lead"]
+FCP ist das bevorzugte Protokoll für die Bereitstellung von LUNs.
+
+[TIP]
+====
+*NetApp empfiehlt* Einzel-Initiator-Zoning: Ein Initiator pro Zone mit allen erforderlichen Ziel-Ports auf der Speicherung unter Verwendung von weltweiten Port-Namen (WWPNs). Das Vorhandensein von mehr als einem Initiator in einer einzelnen Zone führt wahrscheinlich zu intermittierendem HBA-Crosstalk, was zu erheblichen Störungen führt.
+
+====
+Nach der Erstellung der LUN ordnen Sie die LUN der Initiatorgruppe zu, die die WWPNs des Hosts enthält, um den Zugriff zu ermöglichen.
+
+NetApp unterstützt auch den Einsatz von NVMe/FC (sofern Sie Versionen von AIX und RHEL Betriebssystemen haben) und verbessert die Performance. FCP und NVMe/FC können gleichzeitig im selben Fabric vorhanden sein.

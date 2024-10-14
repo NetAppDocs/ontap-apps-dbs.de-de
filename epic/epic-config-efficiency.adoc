@@ -1,0 +1,28 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-config-efficiency.html 
+keywords: epic,cache,iris 
+summary: Epic Konfiguration zur Storage-Effizienz 
+---
+= Epic Konfiguration zur Storage-Effizienz
+:allow-uri-read: 
+
+
+[role="lead"]
+ONTAP Inline-Effizienzfunktionen sind standardmäßig aktiviert und funktionieren unabhängig von Storage-Protokoll, Applikation oder Storage-Tier.
+
+Effizienzgewinne reduzieren die Menge der Daten, die auf teuren Flash-Storage geschrieben werden, und verringern die Anzahl der erforderlichen Laufwerke. ONTAP bewahrt die Effizienz durch Replizierung. Jede dieser Effizienzen hat selbst für eine latenzempfindliche Applikation wie Epic kaum bis gar keine Auswirkungen auf die Performance.
+
+[TIP]
+====
+*NetApp empfiehlt*, alle Effizienzeinstellungen zu aktivieren, um die Festplattenauslastung zu maximieren. Diese Einstellungen sind auf AFF- und ASA-basierten Systemen standardmäßig aktiviert.
+
+====
+Diese Storage-Effizienz wird durch die folgenden Funktionen ermöglicht:
+
+* Deduplizierung spart auf Primär-Storage Platz, indem es redundante Kopien von Blöcken eines Volumes, das LUNs hostet, entfernt. Diese empfohlene Option ist standardmäßig aktiviert.
+* Bei der Inline-Komprimierung wird die Datenmenge, die auf Festplatte geschrieben werden muss, reduziert. Bei Epic-Workloads wird zudem eine erhebliche Speicherersparnis erzielt. Diese empfohlene Option ist standardmäßig aktiviert.
+* Die Inline-Data-Compaction benötigt 4-kb-Blöcke, die weniger als die Hälfte voll sind, und kombiniert sie in einem einzelnen Block. Diese empfohlene Option ist standardmäßig aktiviert.
+* Thin Replication ist eine zentrale Plattform im Portfolio der NetApp Software für Datensicherung, das auch die NetApp SnapMirror Software umfasst. SnapMirror Thin Replication sichert geschäftskritische Daten und minimiert gleichzeitig die Anforderungen an die Storage-Kapazität. *NetApp empfiehlt*, diese Option zu aktivieren.
+* Deduplizierung von Aggregaten: Die Deduplizierung befindet sich immer auf Volume-Ebene. Mit ONTAP 9.2 wurde die Aggregatdeduplizierung verfügbar und ermöglicht dadurch zusätzliche Einsparungen bei der Festplattenreduzierung. Die nachgelagerte Deduplizierung für Aggregate wurde mit ONTAP 9.3 hinzugefügt. *NetApp empfiehlt*, diese Option zu aktivieren.
+

@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-arch-8node.html 
+keywords: epic,cache,iris 
+summary: Epic 8-Node-Architektur 
+---
+= Epic 8-Node-Architektur
+:allow-uri-read: 
+
+
+[role="lead"]
+Die Abbildungen unten zeigen die Scale-out-Architektur mit acht Nodes. Ebenfalls möglich ist, mit vier Nodes zu beginnen und auf sechs Nodes zu skalieren, wobei die Skalierung auf acht Nodes und mehr fortgesetzt werden kann. Diese Architektur sorgt für das beste Verhältnis zwischen Performance und Kapazität über die sechs produktiven Nodes hinweg.
+
+In diesem Design werden die Testumgebungen in diesem Bericht statt in der Produktion geklont. Dadurch werden Testumgebungen und Integritätsprüfungen aus der Produktion ausgelagert.
+
+
+
+== Architektur mit acht Nodes
+
+image:epic-8node.png["Epic 4-Node-Architektur"]
+
+
+
+== Workload-Platzierung mit acht Nodes
+
+image:epic-8node-design.png["Epic 8 Node-Platzierung"]

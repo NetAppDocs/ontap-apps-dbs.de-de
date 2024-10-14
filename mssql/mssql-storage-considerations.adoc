@@ -10,9 +10,9 @@ summary: Storage-Überlegungen für Microsoft SQL Server
 
 
 [role="lead"]
-Die Kombination aus ONTAP Storage-Lösungen und Microsoft SQL Server ermöglicht die Erstellung von Datenbank-Storage-Designs der Enterprise-Klasse, die den anspruchsvollsten Applikationsanforderungen von heute gerecht werden.
+Die Kombination aus ONTAP Storage-Lösungen und Microsoft SQL Server ermöglicht Datenbank-Storage-Designs der Enterprise-Klasse, die auch die anspruchsvollsten Applikationsanforderungen von heute erfüllen.
 
-Um beide Technologien zu optimieren, ist es wichtig, das SQL Server-I/O-Muster und die Merkmale zu verstehen. Ein gut geplantes Storage-Layout für eine SQL Server Datenbank unterstützt die Performance von SQL Server und das Management der SQL Server Infrastruktur. Ein gutes Storage-Layout ermöglicht außerdem eine erfolgreiche Erstimplementierung und ein reibungsloses Wachstum der Umgebung im Laufe der Zeit, während das Unternehmen wächst.
+Um eine SQL Server auf ONTAP-Lösung zu optimieren, müssen Sie das I/O-Muster und die Merkmale des SQL Servers kennen. Ein gut konzipiertes Storage Layout für eine SQL Server Datenbank muss die Performance-Anforderungen von SQL Server unterstützen und gleichzeitig maximale Management-Fähigkeit der Infrastruktur als Ganzes bieten. Ein gutes Storage-Layout ermöglicht außerdem eine erfolgreiche Erstimplementierung und ein reibungsloses Wachstum der Umgebung im Laufe der Zeit, während das Unternehmen wächst.
 
 
 
@@ -38,7 +38,7 @@ Platzieren Sie für Hochverfügbarkeit (HA) das sekundäre synchrone Replikat de
 
 == Volumes
 
-NetApp FlexVol Volumes werden erstellt und befinden sich in den Aggregaten. Dieser Begriff verursacht manchmal Verwirrung, weil ein ONTAP Volume keine LUN ist.  Ein ONTAP Volume ist ein Management-Container für Daten. Ein Volume kann Dateien, LUNs oder sogar S3 Objekte enthalten. Ein Volume benötigt keinen Speicherplatz, sondern wird nur für das Management der enthaltenen Daten verwendet.
+Volumes werden erstellt und befinden sich in den Aggregaten. Dieser Begriff verursacht manchmal Verwirrung, weil ein ONTAP Volume keine LUN ist. Ein ONTAP Volume ist ein Management-Container für Daten. Ein Volume kann Dateien, LUNs oder sogar S3 Objekte enthalten. Ein Volume benötigt keinen Speicherplatz, sondern wird nur für das Management der enthaltenen Daten verwendet.
 
 
 
@@ -49,12 +49,12 @@ Bevor Sie ein Datenbank-Volume-Design erstellen, ist es wichtig zu wissen, wie d
 * Vermeiden Sie die gemeinsame Nutzung von Volumes zwischen Hosts. Beispielsweise wäre es möglich, 2 LUNs in einem einzelnen Volume zu erstellen und jede LUN mit einem anderen Host zu teilen. Dies sollte jedoch vermieden werden, da das Management dadurch komplizierter wird.
 * Verwenden Sie NTFS-Bereitstellungspunkte anstelle von Laufwerksbuchstaben, um die Beschränkung auf 26 Laufwerksbuchstaben in Windows zu überschreiten. Bei der Verwendung von Volume-Mount-Punkten wird generell empfohlen, dem Volume-Label den gleichen Namen wie dem Mount-Punkt zu geben.
 * Konfigurieren Sie bei Bedarf eine Richtlinie für die automatische Größenanpassung von Volumes, um Speicherplatzbelegung zu verhindern. 17 Best Practice Guide für Microsoft SQL Server mit ONTAP © 2022 NetApp, Inc Alle Rechte vorbehalten.
-* Wenn Sie SQL Server auf einer SMB-Freigabe installieren, stellen Sie sicher, dass Unicode auf den SMB/CIFS-Volumes zum Erstellen von Ordnern aktiviert ist.
+* Wenn Sie SQL Server auf einer SMB-Freigabe installieren, stellen Sie sicher, dass Unicode auf den SMB-Volumes zum Erstellen von Ordnern aktiviert ist.
 * Setzen Sie den Wert der Snapshot-Reserve im Volume auf null, um die Überwachung aus betrieblicher Sicht zu vereinfachen.
 * Snapshot Zeitpläne und Aufbewahrungsrichtlinien deaktivieren Stattdessen können Sie SnapCenter verwenden, um Snapshot Kopien der SQL Server-Daten-Volumes zu koordinieren.
 * Platzieren Sie die SQL Server Systemdatenbanken auf einem dedizierten Volume.
 * Tempdb ist eine Systemdatenbank, die von SQL Server als temporärer Arbeitsbereich verwendet wird, insbesondere für I/O-intensive DBCC-CHECKDB-Vorgänge. Platzieren Sie diese Datenbank daher auf einem dedizierten Volume mit einem separaten Satz von Spindeln. In großen Umgebungen, in denen die Volume-Anzahl eine Herausforderung ist, können Sie tempdb in weniger Volumes konsolidieren und im gleichen Volume wie andere Systemdatenbanken nach einer sorgfältigen Planung speichern. Datenschutz für tempdb hat keine hohe Priorität, da diese Datenbank bei jedem Neustart von SQL Server neu erstellt wird.
-* Platzieren Sie Benutzerdatendateien (.mdf) auf separaten Volumes, da es sich um Workloads mit zufälligen Lese-/Schreibzugriffen handelt. Es ist üblich, Transaktions-Log-Backups häufiger zu erstellen als Datenbank-Backups. Legen Sie aus diesem Grund Transaktions-Log-Dateien (.ldf) auf ein separates Volume oder VMDK aus den Datendateien, so dass für jede Datei unabhängige Backup-Zeitpläne erstellt werden können. Durch diese Trennung werden auch die I/O-Vorgänge bei sequenziellen Schreibvorgängen aus den I/O-Vorgängen für zufällige Lese-/Schreibzugriffe von Datendateien isoliert und die SQL Server Performance deutlich verbessert.
+* Legen Sie Benutzerdatendateien (`.mdf`) auf separaten Volumes, da es sich um zufällige Lese-/Schreib-Workloads handelt. Es ist üblich, Transaktions-Log-Backups häufiger zu erstellen als Datenbank-Backups. Legen Sie daher Transaktions-Log-Dateien (`.ldf`) auf ein separates Volume oder VMDK aus den Datendateien, so dass für jedes Volume unabhängige Backup-Zeitpläne erstellt werden können. Durch diese Trennung werden auch die I/O-Vorgänge bei sequenziellen Schreibvorgängen aus den I/O-Vorgängen für zufällige Lese-/Schreibzugriffe von Datendateien isoliert und die SQL Server Performance deutlich verbessert.
 
 
 
@@ -62,8 +62,8 @@ Bevor Sie ein Datenbank-Volume-Design erstellen, ist es wichtig zu wissen, wie d
 == LUNs
 
 * Stellen Sie sicher, dass sich die Benutzerdatenbankdateien und das Protokollverzeichnis für das Protokoll-Backup auf separaten Volumes befinden, damit die Aufbewahrungsrichtlinie Snapshots bei Verwendung der SnapVault-Technologie nicht überschreibt.
-* Stellen Sie sicher, dass sich SQL Server-Datenbanken auf LUNs befinden, die von LUNs getrennt sind, die keine Datenbankdateien enthalten, z. B. Dateien für die Volltextsuche.
-* Wenn sekundäre Datenbankdateien (als Teil einer Dateigruppe) auf separate Volumes platziert werden, wird die Performance der SQL Server Datenbank verbessert. Diese Trennung ist nur gültig, wenn die mdf-Datei der Datenbank ihre LUN nicht mit anderen mdf-Dateien teilt.
+* Mischen Sie keine Datenbank- und nicht-Datenbankdateien, wie z. B. Dateien mit Volltextsuche, auf derselben LUN.
+* Wenn sekundäre Datenbankdateien (als Teil einer Dateigruppe) auf separate Volumes platziert werden, wird die Performance der SQL Server Datenbank verbessert. Diese Trennung ist nur gültig, wenn die Datei der Datenbank `.mdf`` ihre LUN nicht mit anderen Dateien teilt `.mdf`.
 * Wenn Sie LUNs mit DiskManager oder anderen Werkzeugen erstellen, stellen Sie sicher, dass die Größe der Zuordnungseinheit beim Formatieren der LUNs auf 64K für Partitionen festgelegt ist.
 * Siehe link:https://www.netapp.com/media/10680-tr4080.pdf["Microsoft Windows und natives MPIO unter den Best Practices von ONTAP für modernes SAN"] So wenden Sie Multipathing-Unterstützung unter Windows auf iSCSI-Geräte in den MPIO-Eigenschaften an.
 

@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-example-overview.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP, Beispielimplementierung 
+---
+= Epic auf ONTAP, Beispielimplementierung
+:allow-uri-read: 
+
+
+[role="lead"]
+Dieser Abschnitt führt Sie durch eine vollständige, erweiterte Konfiguration eines ONTAP-Clusters sowie die Bereitstellung und Bereitstellung von Storage für einen Epic-Server.
+
+Zur Erfassung von Details und zur einfacheren Dokumentation wird die Befehlszeile verwendet. Ist die GUI bevorzugt, können Sie alle Einstellungen in System Manager bereitstellen.
+
+In der Vergangenheit ist die erste Masseneinrichtung für größere Projekte in der Regel mit den Befehlen in Tabelle 1 schneller, insbesondere wenn Sie die Befehle in einem Arbeitsblatt verketten. Diese Liste von Befehlen dient auch als ausgezeichnete Build-Dokumentation.
+
+Eine weitere Bereitstellungsoption ist Ansible mit Automatisierungs-Skripten ab Tag 0 und Tag 1. NetApp bietet Hunderte von bestehenden Ansible-Playbooks zum Download an, einschließlich der Ansible Galaxy-Sammlung über den Befehl „Installation der NetApp.ONTAP“ für die Sammlung.
+
+Die GUI eignet sich auch hervorragend mit einer einfachen LUN auf einer Seite und gemeinsam genutztem Provisioning. GUI eignet sich am besten für Vorgänge beim Hinzufügen, Ändern oder Löschen von Speicher. Beide Optionen sind in Ordnung, wenn Sie die Best Practices-Storage-Einstellungen in Tabelle 1 anwenden.
+
+Das vollständige Cluster-Setup und die Storage-/Host-Bereitstellung sollten bei der Bereitstellung nicht länger als eine Stunde in Anspruch nehmen.
+
+*Best Practice Speichereinstellungen*
+
+[cols="1,1"]
+|===
+
+
+| Einstellung | Wert 
+
+
+| Aggregat | Standard-Autoprovisionierung, ein ADP-Aggregat pro Node mit RAID DEP 
+
+
+| SVM | Zwei SVMs bei Verwendung von multiprocol (Block SVM und SMB/NFS SVM) Epic- und Protokoll-Namenskonvention verwenden Verwenden Sie den richtigen Sicherheitsstil 
+
+
+| Volume-Speicherplatzgarantie | Keine 
+
+
+| Richtlinie für Volume-Snapshots | Keine 
+
+
+| Automatische Volumengröße | Wachsen 
+
+
+| Maximale automatische Größenanpassung des Volumes | 2T- oder 2 X-LUN-Größe 
+
+
+| Automatisches Löschen von Volume-Snapshots | Aktiviert 
+
+
+| Volume-Größe | 1.5 x LUN-Größe 
+
+
+| Volume-Layout | Sogar auf Controller verteilt 
+
+
+| Initiatorgruppen | Betriebssystem bei Verwendung mit physischen Servern, VMware-Typ bei Verwendung mit ESX. 
+|===

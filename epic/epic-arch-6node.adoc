@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-arch-6node.html 
+keywords: epic,cache,iris 
+summary: Epic 6-Node-Architektur 
+---
+= Epic 6-Node-Architektur
+:allow-uri-read: 
+
+
+[role="lead"]
+Kunden möchten mit einem Design mit sechs Nodes beginnen oder nahtlos horizontal auf vier bis sechs Nodes skalieren, mit wachsender Nachfrage. Dank horizontaler Skalierung können Workloads unterbrechungsfrei zwischen Nodes verschoben und im Cluster gleichmäßig verteilt werden.
+
+Diese Architektur bietet den besten Performance- und Kapazitätsausgleich im Cluster. Epic Production, Epic Report und Epic Test werden alle auf dem ersten HA-Paar ausgeführt. Das zweite HA-Paar wird für Clarity, Hyperspace, VMware, NAS1 und die verbleibenden Epic-Workloads verwendet. Die Disaster Recovery ist mit der Architektur mit vier Nodes im vorherigen Abschnitt identisch.
+
+
+
+== Architektur mit sechs Nodes
+
+image:epic-6node.png["Epic 6-Node-Architektur"]
+
+
+
+== Workload-Platzierung mit sechs Nodes
+
+image:epic-6node-design.png["Epic 6 Node-Platzierung"]

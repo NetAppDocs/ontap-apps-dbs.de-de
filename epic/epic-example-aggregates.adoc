@@ -1,0 +1,15 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-example-aggregates.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP, Beispielimplementierung – Aggregate 
+---
+= Epic auf ONTAP, Beispielimplementierung – Aggregate
+:allow-uri-read: 
+
+
+[role="lead"]
+Die aktuelle Dokumentation zum Bereitstellen von Aggregaten finden Sie unter link:https://docs.netapp.com/us-en/ontap/disks-aggregates/manage-local-tiers-overview-concept.html["Hier"^].
+
+
+NOTE: Die Standardeinstellungen optimieren Performance und Kapazität. Pro Node wird ein großes Aggregat erstellt.

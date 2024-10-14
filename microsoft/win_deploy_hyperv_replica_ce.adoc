@@ -10,7 +10,7 @@ summary: Erfahren Sie, wie Sie Hyper-V-Replikate mit Windows Server Failover Clu
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]

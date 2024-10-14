@@ -17,26 +17,27 @@ NOTE: Diese Dokumentation ersetzt den zuvor veröffentlichten technischen Berich
 
 NetApp geht davon aus, dass der Leser über die folgenden Kenntnisse verfügt:
 
-* ONTAP Software
+* ONTAP
+* Architektur und Administration von Microsoft SQL Server
+* SnapCenter Backup Software, einschließlich der folgenden Komponenten:
 * NetApp SnapCenter als Backup-Software, einschließlich:
 +
 ** SnapCenter Plug-in für Microsoft Windows
 ** SnapCenter Plug-in für SQL Server
 
 
-* Architektur und Administration von Microsoft SQL Server
 
 
-Dieser Abschnitt zu Best Practices beschränkt sich auf technisches Design basierend auf den Design-Prinzipien und bevorzugten Standards, die NetApp für die Storage-Infrastruktur empfiehlt. Die End-to-End-Implementierung ist nicht im Umfang enthalten.
+Dieser Abschnitt zu Best Practices beschränkt sich auf technisches Design basierend auf den von NetApp für die Storage-Infrastruktur empfohlenen Prinzipien und bevorzugten Standards. Die End-to-End-Implementierung ist nicht im Umfang enthalten.
 
-Informationen zur Kompatibilität der Konfigurationen mit den NetApp Produkten finden Sie im link:https://mysupport.netapp.com/matrix/["NetApp Interoperabilitäts-Matrix-Tool (IMT)"^].
+Informationen zur Kompatibilität der NetApp-Produkte finden Sie unter link:https://mysupport.netapp.com/matrix/["NetApp Interoperabilitäts-Matrix-Tool (IMT)"^].
 
 
 
 == Microsoft SQL Server-Workloads
 
-Vor der Bereitstellung von SQL Server müssen Sie die Anforderungen an die Datenbank-Workloads der Anwendungen kennen, die von Ihren SQL Server-Instanzen unterstützt werden. Jede Applikation hat unterschiedliche Anforderungen an Kapazität, Performance und Verfügbarkeit. Daher sollte jede Datenbank für eine optimale Unterstützung dieser Anforderungen entworfen werden. Viele Unternehmen klassifizieren Datenbanken in mehrere Management-Tiers unter Verwendung von Anwendungsanforderungen zur Definition von SLAs. SQL Server-Workloads können wie folgt beschrieben werden:
+Vor der Bereitstellung von SQL Server müssen Sie die Workload-Anforderungen der von Ihren SQL Server-Datenbankinstanzen unterstützten Applikationen kennen. Jede Applikation hat unterschiedliche Anforderungen an Kapazität, Performance und Verfügbarkeit. Daher sollte jede Datenbank für eine optimale Unterstützung dieser Anforderungen entworfen werden. Viele Unternehmen klassifizieren Datenbanken in mehrere Management-Tiers unter Verwendung von Anwendungsanforderungen zur Definition von SLAs. SQL Server-Workloads werden häufig wie unten beschrieben kategorisiert:
 
-* OLTP-Datenbanken sind oft auch die kritischsten Datenbanken eines Unternehmens. Diese Datenbanken stehen in der Regel kundenorientierten Applikationen gegenüber und werden als unverzichtbar für die Kernprozesse des Unternehmens angesehen. Für geschäftskritische OLTP-Datenbanken und die von ihnen unterstützten Applikationen gibt es oft SLAs, die ein hohes Maß an Performance erfordern und mit hohen Anforderungen an Performance-Verschlechterung und Verfügbarkeit verbunden sind. Sie können auch Kandidaten für „Always On“-Failover-Cluster oder „Always On“-Verfügbarkeitsgruppen sein. Der I/O-Mix dieser Datenbanktypen ist in der Regel durch 75 bis 90 % zufällige Lesevorgänge und 25 bis 10 % Schreibzugriffe gekennzeichnet.
-* Datenbanken des Decision Support System (DSS) können auch als Data Warehouses bezeichnet werden. Diese Datenbanken sind in vielen Unternehmen, die auf Analysen für ihr Geschäft vertrauen, geschäftskritisch. Diese Datenbanken sind sensibel für die CPU-Auslastung und Lesevorgänge von der Festplatte, wenn Abfragen ausgeführt werden. In vielen Unternehmen sind DSS-Datenbanken zum Monats-, Quartals- und Jahresende am wichtigsten Dieser Workload verfügt in der Regel über eine I/O-Kombination mit 100 % Lesevorgängen.
+* OLTP sind häufig die kritischsten Datenbanken in einem Unternehmen. Diese Datenbanken stehen in der Regel kundenorientierten Applikationen gegenüber und werden als unverzichtbar für die Kernprozesse des Unternehmens angesehen. Für geschäftskritische OLTP-Datenbanken und die von ihnen unterstützten Applikationen gibt es oft SLAs, die hohe Performance erfordern, nur mit Einschränkungen bei der Performance verbunden sind und maximale Verfügbarkeit erfordern. Sie können auch Kandidaten für „Always On“-Failover-Cluster oder „Always On“-Verfügbarkeitsgruppen sein. Der I/O-Mix bei diesen Datenbanktypen ist in der Regel durch 75 bis 90 % zufällige Lesevorgänge und 25 bis 10 % Schreibzugriffe gekennzeichnet.
+* Decision Support System (DSS)-Datenbanken, auch als Data Warehouses bezeichnet Diese Datenbanken sind für viele Unternehmen, die auf Analysen für ihr Geschäft vertrauen, geschäftskritisch. Diese Datenbanken sind sensibel für die CPU-Auslastung und Lesevorgänge von der Festplatte, wenn Abfragen ausgeführt werden. In vielen Unternehmen sind DSS-Datenbanken zum Monats-, Quartals- und Jahresende am wichtigsten Dieser Workload verfügt in der Regel über eine I/O-Kombination mit Lesevorgängen von fast 100 % und der I/O-Durchsatz ist oft wichtiger als IOPS.
 

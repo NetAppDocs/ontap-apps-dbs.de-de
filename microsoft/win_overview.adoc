@@ -10,7 +10,7 @@ summary: Überblick über die Virtualisierung von Microsoft Windows und Hyper-V 
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]
@@ -19,7 +19,7 @@ Microsoft Windows Server ist ein Betriebssystem der Enterprise-Klasse, das Netzw
 
 NOTE: *Diese Dokumentation ersetzt die zuvor veröffentlichten technischen Berichte _TR-4568: NetApp-Bereitstellungsrichtlinien und bewährte Speichermethoden für Windows Server_*
 
-.Die NetApp ONTAP(R) Managementsoftware wird auf NetApp Storage-Controllern ausgeführt. Es ist in mehreren Formaten erhältlich.
+.ONTAP läuft auf NetApp Storage Controllern. Es ist in mehreren Formaten erhältlich.
 * Eine Unified Architecture, die Datei-, Objekt- und Blockprotokolle unterstützt Auf diese Weise können die Storage-Controller sowohl als NAS- und SAN-Geräte als auch als Objektspeicher agieren
 * Ein All-SAN-Array (ASA), das sich nur auf Blockprotokolle konzentriert und die I/O-Wiederaufnahme-Zeiten (IORT) optimiert, indem symmetrisches aktiv/aktiv-Multipathing für connect Hosts hinzugefügt wird
 * Eine softwaredefinierte Unified Architecture

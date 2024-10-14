@@ -87,9 +87,13 @@ Solaris ZFS muss sorgfältig installiert und konfiguriert werden, um eine optima
 
 === Mvektor
 
-Solaris 11 beinhaltete eine Änderung bei der Verarbeitung großer I/O-Vorgänge, die zu schwerwiegenden Leistungsproblemen auf SAN-Speicher-Arrays führen können. Das Problem wird ausführlich im NetApp-Fehlerbericht 630173 „Solaris 11 ZFS Performance Regression“ dokumentiert. „Die Lösung besteht darin, einen OS-Parameter mit dem Namen zu ändern `zfs_mvector_max_size`.
+Solaris 11 beinhaltete eine Änderung bei der Verarbeitung großer I/O-Vorgänge, die zu schwerwiegenden Leistungsproblemen auf SAN-Speicher-Arrays führen können. Das Problem ist dokumentiert NetApp Tracking Fehlerbericht 630173, "Solaris 11 ZFS Leistungsregression."
 
-Führen Sie den folgenden Befehl als root aus:
+Dies ist kein ONTAP-Bug. Es handelt sich um einen Solaris-Fehler, der unter Solaris Defects 7199305 und 7082975 nachverfolgt wird.
+
+Sie können den Oracle Support konsultieren, um herauszufinden, ob Ihre Version von Solaris 11 betroffen ist, oder Sie können die Problemumgehung testen, indem Sie auf einen kleineren Wert wechseln `zfs_mvector_max_size`.
+
+Dazu führen Sie den folgenden Befehl als root aus:
 
 ....
 [root@host1 ~]# echo "zfs_mvector_max_size/W 0t131072" |mdb -kw

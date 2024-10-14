@@ -10,9 +10,9 @@ summary: Bereitstellung von Microsoft SQL Server Instanzen
 
 
 [role="lead"]
-Mehrere SQL Server können als einzelne Instanz pro Server oder als mehrere Instanzen konfiguriert werden. Die richtige Entscheidung hängt in der Regel von Faktoren ab, z. B. ob der Server für die Produktion oder Entwicklung verwendet werden soll, ob die Instanz für den Geschäftsbetrieb und die Leistungsziele entscheidend ist.
+SQL Server kann als einzelne Instanz pro Server oder als mehrere Instanzen konfiguriert werden. Die richtige Entscheidung hängt in der Regel von Faktoren ab, z. B. ob der Server für die Produktion oder Entwicklung verwendet werden soll, ob die Instanz für den Geschäftsbetrieb und die Leistungsziele entscheidend ist.
 
-Konfigurationen für gemeinsam genutzte Instanzen sind zwar zunächst einfacher zu konfigurieren, können jedoch zu Problemen führen, bei denen Ressourcen aufgeteilt oder gesperrt werden. Dies führt wiederum zu Leistungsproblemen bei anderen Anwendungen, bei denen Datenbanken auf der gemeinsam genutzten SQL Server-Instanz gehostet werden.
+Konfigurationen für gemeinsam genutzte Instanzen sind zwar zunächst einfacher zu konfigurieren, können jedoch zu Problemen führen, bei denen Ressourcen aufgeteilt oder gesperrt werden. Dies führt wiederum zu Leistungsproblemen für andere Anwendungen, bei denen Datenbanken auf der gemeinsam genutzten SQL Server-Instanz gehostet werden.
 
 Die Fehlerbehebung bei Performance-Problemen kann kompliziert sein, da Sie herausfinden müssen, welche Instanz die eigentliche Ursache ist. Diese Frage wird gegen die Kosten von Betriebssystemlizenzen und SQL Server-Lizenzen abgewogen. Wenn die Applikations-Performance oberste Priorität hat, ist eine dedizierte Instanz sehr empfehlenswert.
 

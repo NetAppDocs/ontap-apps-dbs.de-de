@@ -10,9 +10,7 @@ summary: Microsoft SQL Server und ONTAP Storage-Effizienz
 
 
 [role="lead"]
-Die ONTAP Storage-Effizienz ist für das Speichern und Managen von SQL Server-Daten optimiert, sodass Sie den geringsten Speicherplatz benötigen und die Gesamt-Performance des Systems kaum oder gar nicht beeinträchtigen.
-
-Storage-Effizienz ist eine Kombination aus RAID, Bereitstellung (Gesamtlayout und Auslastung), Spiegelung und anderen Datensicherungstechnologien. Die NetApp Technologien, einschließlich Snapshots, Thin Provisioning und Klonen, optimieren den vorhandenen Storage in der Infrastruktur und verringern oder vermeiden zukünftige Storage-Ausgaben. Je öfter Sie diese Technologien kombinieren, desto größer sind die Einsparungen.
+Die ONTAP Storage-Effizienz wurde für das Speichern und Managen von SQL Server-Daten optimiert, sodass Sie den Speicherplatz auf ein Minimum beschränken und keine Auswirkungen auf die Performance haben.
 
 Funktionen für Platzeffizienz wie Komprimierung, Data-Compaction und Deduplizierung sind darauf ausgelegt, die Menge der logischen Daten zu einer bestimmten Menge des physischen Storage zu erhöhen. Das Ergebnis sind niedrigere Kosten und geringerer Management-Overhead.
 
@@ -69,7 +67,7 @@ Der Grad der erzielten Einsparungen variiert. Bereits komprimierte oder verschl�
 
 === Temperaturempfindliche Speichereffizienz
 
-Temperature Sensitive Storage Efficiency (TSSE) ist eine Verfügbarkeit in ONTAP 9.8 und höher. Sie basiert auf Blockzugriff-Heatmaps, um selten genutzte Blöcke zu identifizieren und sie mit höherer Effizienz zu komprimieren.
+Temperaturempfindliche Speichereffizienz (TSSE) ist ab ONTAP 9.8 verfügbar. Es basiert auf Block-Zugriffs-Heatmaps, um selten genutzte Blöcke zu identifizieren und sie effizienter zu komprimieren.
 
 
 
@@ -132,8 +130,11 @@ Die Datenkomprimierung wird derzeit in den Enterprise-, Developer- und Evaluatio
 Hier sind die Empfehlungen für die Verwaltung von Speicherplatz für SQL Server-Datendateien
 
 * Verwenden Sie Thin Provisioning in SQL Server-Umgebungen, um die Speicherplatzauslastung zu verbessern und bei Einsatz der Speicherplatzgarantiefunktion den gesamten Storage-Bedarf zu senken.
-* Verwenden Sie Autogrow für die meisten gängigen Implementierungskonfigurationen, da der Storage-Administrator nur die Speicherplatznutzung im Aggregat überwachen muss.
-* Es empfiehlt sich, die Deduplizierung auf Volumes mit SQL Server-Datendateien nicht zu aktivieren, es sei denn, das Volume enthält bekanntermaßen mehrere Kopien derselben Daten, wie beispielsweise das Wiederherstellen von Datenbanken aus Backups auf einem einzelnen Volume.
++
+** Verwenden Sie Autogrow für die meisten gängigen Implementierungskonfigurationen, da der Storage-Administrator nur die Speicherplatznutzung im Aggregat überwachen muss.
+
+
+* Aktivieren Sie die Deduplizierung auf Volumes mit SQL Server-Datendateien nicht, es sei denn, das Volume ist bekannt, dass es mehrere Kopien derselben Daten enthält, wie beispielsweise die Wiederherstellung von Datenbanken aus Backups auf einem einzelnen Volume.
 
 
 

@@ -14,7 +14,7 @@ summary: Auf dieser Seite werden die Best Practices zur Implementierung einer ON
 
 
 [role="lead"]
-Sieben Protokolle können für die Anbindung von VMware vSphere ESXi Hosts an ONTAP Systeme für Datastores genutzt werden:
+Sieben Protokolle werden für die Anbindung von VMware vSphere an Datastores auf einem System mit ONTAP verwendet:
 
 * FCP
 * FCoE
@@ -138,7 +138,7 @@ In der folgenden Tabelle sind die unterstützten Backup-Funktionen aufgeführt.
 
 == Auswahl eines Storage-Protokolls
 
-Systeme mit ONTAP Software unterstützen alle wichtigen Storage-Protokolle, sodass die Kunden das für ihre Umgebung am besten geeignete Protokoll auswählen können. Dies hängt von der vorhandenen und geplanten Netzwerkinfrastruktur und den Fähigkeiten der Mitarbeiter ab. Bei von NetApp durchgeführten Tests zeigten sich generell nur geringfügige Unterschiede zwischen Protokollen, die mit ähnlichen Übertragungsgeschwindigkeiten ausgeführt wurden. Daher empfiehlt es sich, den Schwerpunkt in erster Linie auf die Netzwerkinfrastruktur und die Fähigkeiten der Mitarbeiter und erst in zweiter Linie auf die ursprüngliche Protokoll-Performance zu legen.
+Systeme mit ONTAP unterstützen alle wichtigen Storage-Protokolle, sodass die Kunden abhängig von der vorhandenen und geplanten Netzwerkinfrastruktur und den Fähigkeiten der Mitarbeiter das für ihre Umgebung am besten geeignete Protokoll auswählen können. Bei von NetApp durchgeführten Tests zeigten sich generell nur geringfügige Unterschiede zwischen Protokollen, die mit ähnlichen Übertragungsgeschwindigkeiten ausgeführt wurden. Daher empfiehlt es sich, den Schwerpunkt in erster Linie auf die Netzwerkinfrastruktur und die Fähigkeiten der Mitarbeiter und erst in zweiter Linie auf die ursprüngliche Protokoll-Performance zu legen.
 
 Die folgenden Faktoren könnten bei Überlegungen zur Auswahl eines Protokolls hilfreich sein:
 
@@ -174,14 +174,14 @@ Wenn Sie VMs aus einem bestehenden Datastore in einem anderen Storage-System zu 
 * Verwenden Sie Storage vMotion, um den Großteil Ihrer Virtual Machines in ONTAP zu verschieben. Dieser Ansatz ermöglicht nicht nur einen unterbrechungsfreien Betrieb der VMs, sondern auch die Nutzung von ONTAP Storage-Effizienzfunktionen wie Inline-Deduplizierung und -Komprimierung zur Verarbeitung der Daten während der Migration. Es empfiehlt sich unter Umständen, mithilfe von vCenter Funktionen mehrere VMs aus der Bestandsliste auszuwählen und die Migration dann zu einem geeigneten Zeitpunkt zu planen (dazu klicken Sie mit gedrückter Strg-Taste auf „Actions“).
 * Sie können eine Migration auf geeignete Ziel-Datastores zwar genau planen, doch es ist oft einfacher, große Datenmengen zu migrieren und diese anschließend nach Bedarf zu organisieren. Vielleicht möchten Sie diesen Ansatz nutzen, um Ihre Migration in verschiedene Datastores zu steuern, wenn Sie spezielle Datensicherungsanforderungen, z. B. unterschiedliche Snapshot Zeitpläne, haben.
 * Die meisten VMs und deren Storage können im Betrieb (eingeschalteter Zustand) migriert werden. Attached Storage (nicht im Datastore) – beispielsweise in Form von ISOs, LUNs oder NFS-Volumes – aus einem anderen Storage-System muss jedoch unter Umständen im ausgeschalteten Zustand migriert werden.
-* Virtual Machines, bei denen eine präzisere Migration erforderlich ist, sind unter anderem Datenbanken und Applikationen mit Nutzung von Attached Storage. Bei diesen sollten Sie die Migration im Allgemeinen mit den Applikationstools managen. Für Oracle empfiehlt sich zur Migration der Datenbankdateien die Nutzung von Oracle-Tools wie RMAN oder ASM. Siehe https://www.netapp.com/us/media/tr-4534.pdf["TR-4534"^] Finden Sie weitere Informationen. Ganz ähnlich kommen für SQL Server entweder SQL Server Management Studio oder NetApp Tools wie SnapManager für SQL Server oder SnapCenter in Betracht.
+* Virtual Machines, bei denen eine präzisere Migration erforderlich ist, sind unter anderem Datenbanken und Applikationen mit Nutzung von Attached Storage. Bei diesen sollten Sie die Migration im Allgemeinen mit den Applikationstools managen. Für Oracle empfiehlt sich zur Migration der Datenbankdateien die Nutzung von Oracle-Tools wie RMAN oder ASM. Weitere Informationen finden Sie unter https://docs.netapp.com/us-en/ontap-apps-dbs/oracle/oracle-migration-overview.html["Migration von Oracle Datenbanken auf ONTAP Storage-Systeme"^] . Ganz ähnlich kommen für SQL Server entweder SQL Server Management Studio oder NetApp Tools wie SnapManager für SQL Server oder SnapCenter in Betracht.
 
 
 
 
 == ONTAP Tools für VMware vSphere
 
-Wenn Sie vSphere mit ONTAP verwenden, ist es eine Best Practice, die ONTAP Tools für VMware vSphere Plug-in (ehemals Virtual Storage Console) zu installieren und zu verwenden. Dieses vCenter Plug-in vereinfacht das Storage-Management, erhöht die Verfügbarkeit und senkt die Storage-Kosten und den Betriebsaufwand – sei es bei SAN oder bei NAS. Dieses Plug-in nutzt Best Practices für die Bereitstellung von Datastores und optimiert die ESXi Hosteinstellungen für Multipath- und HBA-Timeouts (diese sind in Anhang B beschrieben). Da es sich um ein vCenter Plug-in handelt, ist es für alle vSphere Webclients verfügbar, die eine Verbindung mit dem vCenter Server herstellen.
+Wenn Sie vSphere mit Systemen mit ONTAP verwenden, ist es eine Best Practice, das ONTAP Tools für VMware vSphere Plug-in (früher Virtual Storage Console) zu installieren und zu verwenden. Dieses vCenter Plug-in vereinfacht das Storage-Management, erhöht die Verfügbarkeit und senkt die Storage-Kosten und den Betriebsaufwand – sei es bei SAN oder bei NAS. Dieses Plug-in nutzt Best Practices für die Bereitstellung von Datastores und optimiert die ESXi Hosteinstellungen für Multipath- und HBA-Timeouts (diese sind in Anhang B beschrieben). Da es sich um ein vCenter Plug-in handelt, ist es für alle vSphere Webclients verfügbar, die eine Verbindung mit dem vCenter Server herstellen.
 
 Das Plug-in hilft Ihnen auch bei der Nutzung anderer ONTAP Tools in vSphere Umgebungen. Damit können Sie das NFS-Plug-in für VMware VAAI installieren, das einen Copy-Offload zu ONTAP für VM-Klonvorgänge, eine Speicherplatzreservierung für Thick Virtual Disk Files und ONTAP Snapshot Offload ermöglicht.
 
@@ -193,11 +193,11 @@ Im Allgemeinen empfiehlt NetApp zur Bereitstellung herkömmlicher und VVols Data
 
 == Allgemeines Networking
 
-Wenn Sie vSphere mit Systemen mit ONTAP Software verwenden, ist die Konfiguration von Netzwerkeinstellungen einfach und erfolgt ähnlich wie andere Netzwerkkonfigurationen. Folgende Punkte sind dabei zu berücksichtigen:
+Wenn Sie vSphere mit Systemen mit ONTAP verwenden, ist die Konfiguration von Netzwerkeinstellungen einfach und erfolgt ähnlich wie andere Netzwerkkonfigurationen. Folgende Punkte sind dabei zu berücksichtigen:
 
 * Separater Storage-Netzwerk-Traffic aus anderen Netzwerken. Ein separates Netzwerk kann mithilfe eines dedizierten VLANs oder separater Switches für Storage eingerichtet werden. Falls im Storage-Netzwerk physische Pfade wie Uplinks geteilt werden, sind eventuell QoS oder zusätzliche Uplink-Ports erforderlich, um eine ausreichende Bandbreite sicherzustellen. Stellen Sie keine direkte Verbindung zwischen Hosts und Storage her. Verwenden Sie Switches, um redundante Pfade zu verwenden und VMware HA ohne Eingriff von Microsoft HA zu arbeiten. Siehe link:vmware-vsphere-network.html["Direkte Netzwerkverbindung"] Finden Sie weitere Informationen.
 * Jumbo Frames können genutzt werden, sofern dies gewünscht ist und von Ihrem Netzwerk unterstützt wird, insbesondere bei Verwendung von iSCSI. Vergewissern Sie sich bei ihrem Einsatz, dass sie auf allen Netzwerkgeräten, VLANs etc. Im Pfad zwischen Storage und dem ESXi Host gleich konfiguriert sind. Anderenfalls kann es zu Performance- oder Verbindungsproblemen kommen. Auf dem virtuellen ESXi Switch, dem VMkernel Port, sowie den physischen Ports oder den Interface Groups muss für jeden ONTAP Node auch jeweils dieselbe MTU festgelegt sein.
-* NetApp empfiehlt eine Deaktivierung der Netzwerk- Flusssteuerung nur an den Cluster-Netzwerkports innerhalb eines ONTAP Clusters. Für die übrigen Netzwerkports, die für Daten-Traffic verwendet werden, gibt NetApp im Hinblick auf Best Practices keine weiteren Empfehlungen. Diese Ports sollten Sie nach Bedarf aktivieren oder deaktivieren. Siehe http://www.netapp.com/us/media/tr-4182.pdf["TR-4182"^] Für mehr Hintergrund zur Flusssteuerung.
+* NetApp empfiehlt eine Deaktivierung der Netzwerk- Flusssteuerung nur an den Cluster-Netzwerkports innerhalb eines ONTAP Clusters. Für die übrigen Netzwerkports, die für Daten-Traffic verwendet werden, gibt NetApp im Hinblick auf Best Practices keine weiteren Empfehlungen. Diese Ports sollten Sie nach Bedarf aktivieren oder deaktivieren. Weitere Informationen zur Flusssteuerung finden Sie unter https://www.netapp.com/pdf.html?item=/media/16885-tr-4182pdf.pdf["TR-4182"^].
 * Wenn ESXi und ONTAP Storage-Arrays mit Ethernet-Storage-Netzwerken verbunden werden, empfiehlt NetApp, die Ethernet-Ports, mit denen diese Systeme verbunden werden, mit der Cisco PortFast Funktion oder als Rapid Spanning Tree Protocol (RSTP)-Edge-Ports zu konfigurieren. NetApp empfiehlt die Aktivierung der Spanning Tree PortFast Trunk-Funktion in Umgebungen mit Verwendung der Cisco PortFast Funktion und 802.1Q VLAN-Trunking entweder für den ESXi Server oder für die ONTAP Storage-Arrays.
 * Für die Link-Aggregation empfiehlt NetApp die folgenden Best Practices:
 +

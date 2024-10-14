@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-example-luns.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP, Beispielbereitstellung – LUNs 
+---
+= Epic auf ONTAP, Beispielbereitstellung – LUNs
+:allow-uri-read: 
+
+
+[role="lead"]
+>>> Platzhalter für beschreibenden Satz oder Absatz
+
+LUN erstellen
+
+So erstellen Sie eine LUN: https://docs.netapp.com/us-en/ontap-cli-9141//lun-create.html[]
+
+Fügen Sie Volumes zur CG hinzu
+
+So erstellen oder ändern Sie Konsistenzgruppen: https://docs.netapp.com/us-en/ontap/smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html[]
+
+LUN zuordnen
+
+So ordnen Sie die LUN zu: https://docs.netapp.com/us-en/ontap-cli-9141//lun-mapping-create.html[]
+
+Je nach Version von ONTAP kann die Standardeinstellung für fraktionelle Reserve auf dem Volume 100 % betragen. Diese Konfiguration sollte auf 0 gesetzt werden.

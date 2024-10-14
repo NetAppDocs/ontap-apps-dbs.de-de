@@ -10,7 +10,7 @@ summary: ONTAP NAS-Storage für Hyper-V mit SMB3
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]
@@ -61,7 +61,7 @@ cluster::> system services ntp server create â€“server $domainControllerIP
 
 . Erstellen Sie eine neue SVM mit aktiviertem NAS-Protokoll CIFS. Eine neue SVM kann mit einer der folgenden Methoden erstellt werden:
 +
-** CLI-Befehle auf NetApp ONTAP
+** CLI-Befehle auf ONTAP
 ** System Manager
 ** Das NetApp PowerShell Toolkit
 
@@ -84,14 +84,14 @@ cluster::> system services ntp server create â€“server $domainControllerIP
 
 === Host-Integration
 
-Das NAS-Protokoll CIFS ist nativ in ONTAP integriert. Aus diesem Grund benötigt Windows Server keine zusätzliche Client-Software für den Zugriff auf die Daten auf NetApp ONTAP. Ein NetApp Storage Controller wird im Netzwerk als nativer File Server angezeigt und unterstützt die Microsoft Active Directory-Authentifizierung.
+Das NAS-Protokoll CIFS ist nativ in ONTAP integriert. Aus diesem Grund benötigt Windows Server keine zusätzliche Client-Software für den Zugriff auf die Daten auf ONTAP. Ein NetApp Storage Controller wird im Netzwerk als nativer File Server angezeigt und unterstützt die Microsoft Active Directory-Authentifizierung.
 
 Führen Sie die folgenden Schritte aus, um die zuvor mit Windows Server erstellte CIFS-Freigabe zu ermitteln:
 
 . Melden Sie sich bei Windows Server als Mitglied der Administratorgruppe an.
 . Gehen Sie zu run.exe und geben Sie den vollständigen Pfad der CIFS-Freigabe ein, die für den Zugriff auf die Freigabe erstellt wurde.
 . Um die Freigabe dauerhaft auf dem Windows Server zuzuordnen, klicken Sie mit der rechten Maustaste auf Diesen PC, klicken Sie auf Netzwerklaufwerk zuordnen und geben Sie den Pfad der CIFS-Freigabe an.
-. Bestimmte CIFS-Managementaufgaben können mit Microsoft Management Console (MMC) ausgeführt werden. Bevor Sie diese Aufgaben ausführen, müssen Sie die MMC mithilfe der MMC-Menübefehle mit dem NetApp ONTAP-Speicher verbinden.
+. Bestimmte CIFS-Managementaufgaben können mit Microsoft Management Console (MMC) ausgeführt werden. Bevor Sie diese Aufgaben ausführen, müssen Sie die MMC mithilfe der MMC-Menübefehle mit dem ONTAP-Speicher verbinden.
 +
 .. Um die MMC in Windows Server zu öffnen, klicken Sie im Abschnitt Extras des Server Managers auf Computerverwaltung.
 .. Klicken Sie auf Weitere Aktionen und Verbinden mit einem anderen Computer. Daraufhin wird das Dialogfeld Computer auswählen geöffnet.
@@ -108,7 +108,7 @@ Führen Sie die folgenden Schritte aus, um die zuvor mit Windows Server erstellt
 * Um sicherzustellen, dass es keine Ausfallzeiten gibt, wenn ein Volume von einem Node auf einen anderen oder im Fall eines Node-Ausfalls verschoben wird, empfiehlt NetApp, die Option für die kontinuierliche Verfügbarkeit der Dateifreigabe zu aktivieren.
 * Bei der Bereitstellung von VMs für Hyper-V über SMB-Umgebungen empfiehlt NetApp, den Copy-Offload auf dem Storage-System zu aktivieren. Auf diese Weise wird die Bereitstellungszeit der VMs verkürzt.
 * Wenn das Storage-Cluster mehrere SMB-Workloads wie SQL Server, Hyper-V und CIFS-Server hostet, empfiehlt NetApp, verschiedene SMB-Workloads auf separaten SVMs in separaten Aggregaten zu hosten. Diese Konfiguration ist von Vorteil, da für jede dieser Workloads ein einzigartiges Storage-Netzwerk- und Volume-Layout erforderlich ist.
-* NetApp empfiehlt, Hyper-V Hosts und NetApp ONTAP Storage mit einem 10-GB-Netzwerk zu verbinden, sofern vorhanden. Bei einer 1-GB-Netzwerkverbindung empfiehlt NetApp die Erstellung einer Schnittstellengruppe, die aus mehreren 1-GB-Ports besteht.
+* NetApp empfiehlt, Hyper-V Hosts und ONTAP Storage mit einem 10-GB-Netzwerk zu verbinden, sofern vorhanden. Bei einer 1-GB-Netzwerkverbindung empfiehlt NetApp die Erstellung einer Schnittstellengruppe, die aus mehreren 1-GB-Ports besteht.
 * Wenn VMs von einer SMB 3.0-Freigabe zu einer anderen migriert werden, empfiehlt NetApp die Aktivierung der CIFS-Offloaded-Funktion auf dem Storage-System, damit die Migration schneller erfolgt.
 
 

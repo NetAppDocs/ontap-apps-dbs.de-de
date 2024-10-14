@@ -1,0 +1,23 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-arch-sizing.html 
+keywords: epic,cache,iris 
+summary: Epic Sizing 
+---
+= Epic Sizing
+:allow-uri-read: 
+
+
+[role="lead"]
+Eine der wichtigsten Überlegungen zur Architektur bei der Dimensionierung einer Epic Storage-Umgebung ist die Größe der ODB-Datenbank.
+
+Mithilfe des unten dargestellten Diagramms können Sie eine kleine und mittlere Epic Storage-Architektur auswählen. Diese Designs umfassen die Ausführung aller im Hardware-Konfigurationsleitfaden aufgeführten Workloads. Der Dimensionierungsbaum basiert auf Daten aus über 100 Hardware-Konfigurationsleitfäden und sollte weitgehend akkurat geschätzt werden.
+
+Es ist wichtig zu beachten, dass dies nur ein Ausgangspunkt ist. Bestätigen Sie alle Epic Designs gemeinsam mit unserem Epic Alliance Team. Das Team ist unter der Epic@NetApp.com erreichbar. Jede Implementierung muss Kundenanfragen erfüllen und dabei die von Epic und NetApp empfohlenen Best Practices einhalten.
+
+* Kleine Epic Architektur mit einer Epic Datenbank unter 10 TB
+* Mittelgroße Epic-Architektur mit einer Epic-Datenbank von 10 TB bis 50 TB
+* Große Epic-Architektur mit einer Epic-Datenbank von über 50 TB
+
+
+image:epic-sizing.png["Anleitung zum Epic Sizing"]

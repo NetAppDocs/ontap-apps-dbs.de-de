@@ -1,0 +1,21 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-example-volumes.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP, Beispielbereitstellung – Volumes 
+---
+= Epic auf ONTAP, Beispielbereitstellung – Volumes
+:allow-uri-read: 
+
+
+[role="lead"]
+Informationen zum Erstellen von Volumes finden Sie unter https://docs.netapp.com/us-en/ontap-cli-9141//volume-create.html[]
+
+
+NOTE: Ab ONTAP 9.7 ist die Aggregat- und Volume-Verschlüsselung bei einer NVE-Lizenz sowie integriertem oder externen Verschlüsselungsmanagement standardmäßig aktiviert. Um die Deduplizierung auf Volume-Ebene zu aktivieren, legen Sie den Fehler add -encrypt am Befehl Volume create/modify fest (falls bereits eine NVE Lizenz vorhanden ist).
+
+
+
+== Automatisches Löschen von Snapshots
+
+So löschen Sie Snapshots automatisch: https://docs.netapp.com/us-en/ontap-cli-9141//volume-snapshot-autodelete-modify.html[]

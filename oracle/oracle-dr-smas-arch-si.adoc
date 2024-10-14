@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-dr-smas-arch-si.html 
+keywords: oracle, active sync, mcc, MCC-IP 
+summary: Aktive Synchronisierung mit Oracle SnapMirror 
+---
+= Oracle Single Instance mit SnapMirror Active Sync
+:allow-uri-read: 
+
+
+[role="lead"]
+Die unten erläuterten Beispiele zeigen einige der zahlreichen Optionen für die Bereitstellung von Oracle Single-Instance-Datenbanken mit SnapMirror Active Sync-Replikation.
+
+image:smas-oracle-si-nonuniform.png["Oracle SI mit uneinheitlichem Zugriff"]
+
+
+
+== Failover mit einem vorkonfigurierten Betriebssystem
+
+SnapMirror Active Sync liefert eine synchrone Kopie der Daten am Disaster Recovery-Standort. Für die Verfügbarkeit dieser Daten sind jedoch ein Betriebssystem und die zugehörigen Applikationen erforderlich. Eine grundlegende Automatisierung kann die Failover-Zeit der gesamten Umgebung deutlich verbessern. Clusterware Produkte wie Pacemaker werden häufig eingesetzt, um über die Standorte hinweg einen Cluster zu erstellen, in vielen Fällen ist der Failover-Prozess mit einfachen Skripten angesteuert.
+
+Wenn die primären Knoten verloren gehen, stellt die Clusterware (oder Skripte) die Datenbanken am alternativen Standort online. Eine Option besteht darin, Standby-Server zu erstellen, die für die SAN-Ressourcen, aus denen die Datenbank besteht, vorkonfiguriert sind. Wenn der primäre Standort ausfällt, führt die Clusterware- oder skriptbasierte Alternative eine Abfolge von Aktionen durch, die der folgenden ähneln:
+
+. Fehler am primären Standort erkennen
+. Führen Sie eine Erkennung von FC- oder iSCSI-LUNs durch
+. Mounten von Dateisystemen und/oder Mounten von ASM-Datenträgergruppen
+. Die Datenbank wird gestartet
+
+
+Die primäre Anforderung dieses Ansatzes ist ein Betriebssystem, das am Remote Standort ausgeführt wird. Sie muss mit Oracle-Binärdateien vorkonfiguriert sein, was auch bedeutet, dass Aufgaben wie das Patching von Oracle am primären Standort und am Standby-Standort durchgeführt werden müssen. Alternativ können die Oracle Binärdateien auf den Remote-Standort gespiegelt und gemountet werden, wenn ein Notfall deklariert wird.
+
+Die eigentliche Aktivierung ist einfach. Befehle wie die LUN-Erkennung erfordern nur einige wenige Befehle pro FC-Port. Das Mounten von Dateisystemen ist nichts anderes als ein `mount` Befehl, und sowohl Datenbanken als auch ASM können über die CLI mit einem einzigen Befehl gestartet und gestoppt werden.
+
+
+
+== Failover mit einem virtualisierten Betriebssystem
+
+Der Failover von Datenbankumgebungen kann auf das Betriebssystem selbst erweitert werden. In der Theorie kann dieses Failover mit Boot-LUNs durchgeführt werden, meistens erfolgt es jedoch mit einem virtualisierten Betriebssystem. Das Verfahren ähnelt den folgenden Schritten:
+
+. Fehler am primären Standort erkennen
+. Mounten der Datenspeicher, die die virtuellen Maschinen des Datenbankservers hosten
+. Starten der virtuellen Maschinen
+. Manuelles Starten von Datenbanken oder Konfigurieren der virtuellen Maschinen, um die Datenbanken automatisch zu starten.
+
+
+Beispielsweise kann ein ESX Cluster mehrere Standorte umfassen. Bei einem Notfall können die Virtual Machines nach dem Switchover am Disaster Recovery-Standort online geschaltet werden.
+
+
+
+== Schutz vor Storage-Ausfällen
+
+Das Diagramm oben zeigt die Verwendung von link:oracle-dr-smas-nonuniform.html["Uneinheitlicher Zugriff"], wo das SAN nicht über Standorte verteilt ist. Dies ist unter Umständen einfacher zu konfigurieren und ist angesichts der aktuellen SAN-Funktionen in einigen Fällen die einzige Option, was aber auch bedeutet, dass ein Ausfall des primären Storage-Systems einen Datenbankausfall bis zum Failover der Applikation zur Folge hätte.
+
+Für zusätzliche Ausfallsicherheit könnte die Lösung mit implementiert werdenlink:oracle-dr-smas-uniform.html["Einheitlicher Zugriff"]. Dies würde es den Anwendungen ermöglichen, den Betrieb mit den Pfaden fortzusetzen, die vom gegenüberliegenden Standort angezeigt werden.

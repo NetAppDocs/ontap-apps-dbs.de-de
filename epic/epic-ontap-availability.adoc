@@ -1,0 +1,20 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-ontap-availability.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP Verfügbarkeit 
+---
+= Epic auf ONTAP Verfügbarkeit
+:allow-uri-read: 
+
+
+[role="lead"]
+Die Kernbestandteil von ONTAP ist der unterbrechungsfreie Betrieb, der Ihnen ermöglicht, kostspielige Unterbrechungen Ihres Geschäftsbetriebs zu vermeiden.
+
+NetApp bietet basierend auf Produktionsdaten, die über NetApp Active IQ „Home“ genannt werden, eine Verfügbarkeit von über 99.999999 %. Jedes HA-Paar im Cluster weist keinen Single Point of Failure auf. ONTAP wurde im Jahr 1992 entwickelt und ist die weltweit am häufigsten eingesetzte Datenmanagement-Software für zuverlässigen Storage. Dank des proaktiven Monitorings und der automatischen Lösung von 97 % der Probleme durch Active IQ ist die Verfügbarkeit jetzt noch höher und es werden deutlich weniger Support-Cases unterstützt.
+
+Epic empfiehlt den Einsatz von HA-Storage-Systemen, um den Ausfall von Hardwarekomponenten zu verringern. Diese Empfehlung erstreckt sich von der Basishardware (z. B. redundante Netzteile) bis hin zu Netzwerken (z. B. Multipath-Netzwerke).
+
+Wenn Sie Storage-Upgrades oder vertikale/horizontale Skalierungen oder den Ausgleich von Workloads im Cluster benötigen, haben die Patientenversorgung keine Auswirkungen. Unter Umständen werden Daten verschoben, doch dank Datenmigrationen oder aufwendiger Upgrades muss die Patientenversorgung nie mehr gestört werden. Entscheiden Sie sich für zukunftsweisende Technologie und vermeiden Sie Hardware-Bindung. NetApp bietet sogar eine Verfügbarkeitsgarantie von 100 %.
+
+Weitere Informationen zur Zuverlässigkeit, Verfügbarkeit, Wartungsfreundlichkeit und Sicherheitsfunktionen von NetApp finden Sie im link:https://www.netapp.com/media/67355-wp-7354.pdf["Zuverlässigkeit, Verfügbarkeit, Wartungsfreundlichkeit und Sicherheit der NetApp ONTAP"^]Whitepaper.

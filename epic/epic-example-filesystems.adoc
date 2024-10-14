@@ -1,0 +1,27 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-example-filesystems.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP – Beispielbereitstellung – Dateisysteme 
+---
+= Epic auf ONTAP – Beispielbereitstellung – Dateisysteme
+:allow-uri-read: 
+
+
+[role="lead"]
+Informationen über das Mounten von LUNs, das Erstellen von Volume-Gruppen und logischen Volumes und das Konfigurieren der Dateisysteme finden Sie im Quick Reference Guide zur Epic-Speicherkonfiguration. Verwenden Sie die folgenden Beispielbefehle, um Epic-Produktionsserver für RHEL einzurichten.
+
+
+
+== Dateisystem- und Mount-Optionen
+
+Nachdem die LUNs erstellt und zugeordnet wurden und das Zoning abgeschlossen ist, gehen Sie wie folgt vor, um dem Server Speicher hinzuzufügen.
+
+
+NOTE: In diesem Beispiel haben wir 8 LUNs mit 1024 GB für die DB, 2 LUNs mit 1024 GB für Journale und 2 LUNs mit 1024 GB für Applikationsinstallationen verwendet.
+
+
+
+== Asynchroner I/O
+
+Eine Kopie des Whitepapers „Überlegungen zum Epic SAN“ und des Dokuments „Kurzübersicht zur Storage-Konfiguration“ enthalten Details zur Konfiguration der Hosts und zur Verbindung mit dem Storage. In diesem Abschnitt wird die Einrichtung eines Red hat Enterprise Linux-Hosts erläutert. AIX-Details finden Sie in den referenzierten Dokumenten.

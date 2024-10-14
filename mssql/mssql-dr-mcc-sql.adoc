@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: mssql/mssql-dr-mcc-sql.html 
+keywords: MSSQL,SQL Server, MetroCluster 
+summary: Microsoft SQL Server mit NetApp MetroCluster 
+---
+= Microsoft SQL Server mit MetroCluster
+:allow-uri-read: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Eine Option für den Schutz von SQL Server Datenbanken mit einem RPO von null ist MetroCluster. MetroCluster ist eine einfache, hochperformante RPO=0-Replizierungstechnologie, mit der Sie eine gesamte Infrastruktur mühelos über mehrere Standorte hinweg replizieren können.
+
+SQL Server kann auf einem einzigen MetroCluster System bis zu Tausende von Datenbanken skalieren. Es könnten eigenständige SQL Server-Instanzen oder Failover-Cluster-Instanzen geben. Das MetroCluster System führt nicht unbedingt zu oder ändert keine Best Practices für das Management einer Datenbank.
+
+Eine vollständige Erklärung von MetroCluster geht über den Umfang dieses Dokuments hinaus, aber die Prinzipien sind einfach. MetroCluster kann eine Replizierungslösung RPO=0 mit schnellem Failover bereitstellen. Was Sie auf dieser Grundlage aufbauen, hängt von Ihren Anforderungen ab.
+
+Beispielsweise könnte ein grundlegendes schnelles DR-Verfahren nach einem plötzlichen Standortausfall folgende grundlegende Schritte durchführen:
+
+* Erzwingen einer MetroCluster-Umschaltung
+* Durchführen der Erkennung von FC/iSCSI-LUNs (nur SAN)
+* Mounten Sie File-Systeme
+* Starten Sie SQL Services
+
+
+Die primäre Anforderung dieses Ansatzes ist ein Betriebssystem, das am Remote Standort ausgeführt wird. Es muss mit SQL Server-Setup vorkonfiguriert sein und sollte mit einer gleichwertigen Build-Version aktualisiert werden. SQL Server-Systemdatenbanken können auch am Remote-Standort gespiegelt und gemountet werden, wenn ein Notfall deklariert wird.
+
+Wenn die Volumes, Dateisysteme und der Datastore, die virtualisierte Datenbanken hosten, vor dem Switchover nicht am Disaster-Recovery-Standort verwendet werden, müssen sie nicht auf zugehörigen Volumes festgelegt `dr-force- nvfail` werden.

@@ -10,7 +10,7 @@ summary: Hyper-V Storage-Infrastruktur mit ONTAP
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]
@@ -78,7 +78,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 == Verlagerte Datenübertragung
 
-Microsoft ODX, auch als Copy Offload bezeichnet, ermöglicht direkte Datentransfers innerhalb eines Speichergeräts oder zwischen kompatiblen Speichergeräten, ohne die Daten über den Hostcomputer zu übertragen. NetApp ONTAP unterstützt die ODX Funktion für CIFS- und SAN-Protokolle. ODX kann potenziell die Performance verbessern, wenn Kopien sich innerhalb desselben Volumes befinden, senkt die Auslastung von CPU und Arbeitsspeicher im Client und reduziert die Auslastung der Netzwerk-I/O-Bandbreite.
+Microsoft ODX, auch als Copy Offload bezeichnet, ermöglicht direkte Datentransfers innerhalb eines Speichergeräts oder zwischen kompatiblen Speichergeräten, ohne die Daten über den Hostcomputer zu übertragen. ONTAP unterstützt die ODX Funktion für CIFS- und SAN-Protokolle. ODX kann potenziell die Performance verbessern, wenn Kopien sich innerhalb desselben Volumes befinden, senkt die Auslastung von CPU und Arbeitsspeicher im Client und reduziert die Auslastung der Netzwerk-I/O-Bandbreite.
 
 Mit ODX ist es schneller und effizienter, Dateien innerhalb der SMB-Freigaben, innerhalb der LUNs sowie zwischen SMB-Freigaben und LUNs zu kopieren, wenn sich diese sich in demselben Volume befinden. Dieser Ansatz ist insbesondere in Szenarien hilfreich, in denen mehrere Kopien des Golden Image eines Betriebssystems (VHD/VHDX) innerhalb desselben Volumes erforderlich sind. Es können mehrere Kopien desselben goldenen Images in deutlich kürzerer Zeit erstellt werden, wenn sich Kopien innerhalb desselben Volumes befinden. ODX wird auch bei der Hyper-V Storage Live Migration für die Verschiebung von VM Storage eingesetzt.
 
@@ -134,7 +134,7 @@ Informationen zu ODX finden Sie unter https://docs.netapp.com/us-en/ontap/smb-ad
 
 Failover-Cluster bieten Hochverfügbarkeit und Skalierbarkeit für Hyper-V Server. Ein Failover-Cluster ist eine Gruppe unabhängiger Hyper-V Server, die gemeinsam die Verfügbarkeit und Skalierbarkeit der VMs erhöhen.
 
-Hyper-V Cluster-Server (sogenannte Nodes) werden über das physische Netzwerk und über Cluster-Software verbunden. Diese Nodes verwenden Shared Storage zur Speicherung der VM-Dateien, darunter Konfiguration, VHD-Dateien (virtuelle Festplatte) und Snapshot-Kopien. Beim gemeinsam genutzten Storage kann es sich um eine NetApp SMB/CIFS-Freigabe oder einen CSV auf einer NetApp-LUN handeln, wie in Abbildung 6 dargestellt. Dieser Shared-Storage bietet einen konsistenten und verteilten Namespace, auf den alle Nodes im Cluster gleichzeitig zugreifen können. Wenn daher ein Node im Cluster ausfällt, stellt der andere Node Services für den Prozess Failover bereit. Failover-Cluster können mithilfe des Failover Cluster Manager Snap-ins und der Windows PowerShell Cmdlets für Failover-Clustering gemanagt werden.
+Hyper-V Cluster-Server (sogenannte Nodes) werden über das physische Netzwerk und über Cluster-Software verbunden. Diese Nodes verwenden Shared Storage zur Speicherung der VM-Dateien, darunter Konfiguration, VHD-Dateien (virtuelle Festplatte) und Snapshot-Kopien. Beim gemeinsam genutzten Storage kann es sich um eine NetApp SMB/CIFS-Freigabe oder einen CSV auf einer NetApp LUN handeln, wie unten gezeigt. Dieser Shared-Storage bietet einen konsistenten und verteilten Namespace, auf den alle Nodes im Cluster gleichzeitig zugreifen können. Wenn daher ein Node im Cluster ausfällt, stellt der andere Node Services für den Prozess Failover bereit. Failover-Cluster können mithilfe des Failover Cluster Manager Snap-ins und der Windows PowerShell Cmdlets für Failover-Clustering gemanagt werden.
 
 
 
@@ -200,7 +200,7 @@ Informationen zur Bereitstellung von Live-Migration in einer Cluster-Umgebung fi
 
 Sie können eine VM zwischen zwei nicht geclusterten, unabhängigen Hyper-V Servern migrieren. Bei diesem Prozess kann entweder eine Live-Migration ohne gemeinsame Nutzung oder ohne gemeinsame Nutzung verwendet werden.
 
-* Bei der gemeinsam genutzten Live-Migration wird die VM auf einer SMB-Freigabe gespeichert. Wenn Sie eine VM live migrieren, bleibt der Storage der VM auf der zentralen SMB Freigabe für sofortigen Zugriff durch den anderen Node, wie in der folgenden Abbildung dargestellt.
+* Bei der gemeinsam genutzten Live-Migration wird die VM auf einer SMB-Freigabe gespeichert. Wenn Sie eine VM live migrieren, bleibt der VM-Storage auf der zentralen SMB Share, sodass der andere Node sofort darauf zugreifen kann, wie unten dargestellt.
 
 
 image:win_image8.png["Shared Live-Migration in einer nicht geclusterten Umgebung,width=331,height=271"]

@@ -10,13 +10,13 @@ summary: Erfahren Sie mehr über NetApp Storage- und Windows Server-Umgebung
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]
 Wie im erwähnt link:win_overview.html["Überblick"], NetApp Storage Controller bieten eine echte Unified Architecture, die Datei-, Block- und Objektprotokolle unterstützt. Dazu zählen SMB/CIFS, NFS, NVMe/TCP, NVMe/FC, iSCSI FC (FCP) und S3 zugreifen. Sie erstellen außerdem einen einheitlichen Client- und Host-Zugriff. Derselbe Storage Controller kann gleichzeitig Block-Storage-Service in Form von SAN-LUNs und Fileservices wie NFS und SMB/CIFS bereitstellen. ONTAP ist auch als All-SAN-Array (ASA) verfügbar, das den Hostzugriff über symmetrisches aktiv/aktiv-Multipathing mit iSCSI und FCP optimiert, während die Unified ONTAP-Systeme asymmetrisches aktiv/aktiv-Multipathing verwenden. In beiden Modi verwendet ONTAP ANA für NVMe over Fabrics (NVMe-of) Multipath-Management.
 
-Ein NetApp Storage Controller mit ONTAP Software kann die folgenden Workloads in einer Windows Serverumgebung unterstützen:
+Ein NetApp Storage Controller mit ONTAP kann folgende Workloads in einer Windows Server-Umgebung unterstützen:
 
 * VMs werden auf kontinuierlich verfügbaren SMB 3.0-Freigaben gehostet
 * VMs, die auf LUNs für Cluster Shared Volume (CSV) gehostet werden und auf iSCSI oder FC ausgeführt werden
@@ -77,7 +77,7 @@ Verwenden Sie eine der folgenden Methoden, um NetApp-Speicher von Windows Server
 
 == NetApp PowerShell Toolkit
 
-Das NetApp PowerShell Toolkit (PSTK) ist ein PowerShell Modul, das eine End-to-End-Automatisierung bietet und die Storage-Administration von NetApp ONTAP ermöglicht. Das ONTAP Modul enthält über 2,000 Cmdlets und unterstützt Sie bei der Administration von FAS, NetApp All Flash FAS (AFF), Standard-Hardware und Cloud-Ressourcen.
+Das NetApp PowerShell Toolkit (PSTK) ist ein PowerShell Modul, das eine End-to-End-Automatisierung bietet und die Storage-Administration von ONTAP ermöglicht. Das ONTAP Modul enthält über 2,000 Cmdlets und unterstützt Sie bei der Administration von FAS, NetApp All Flash FAS (AFF), Standard-Hardware und Cloud-Ressourcen.
 
 
 

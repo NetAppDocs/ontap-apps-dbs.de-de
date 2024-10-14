@@ -10,7 +10,7 @@ summary: In diesem Anhang wird die Verwendung der Hyper-V Live-Migration außerh
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]

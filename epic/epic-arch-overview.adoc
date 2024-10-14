@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-arch-overview.html 
+keywords: epic,cache,iris 
+summary: Epic Architektur 
+---
+= Epic Architektur
+:allow-uri-read: 
+
+
+[role="lead"]
+Dieser Abschnitt beschreibt die Epic Softwareumgebung und die wichtigsten Komponenten, für die Storage erforderlich ist. Es enthält wichtige Überlegungen, die als Leitfaden für das Storage-Design dienen sollen.
+
+Epic hat seinen Hauptsitz in Verona, Wisconsin, und stellt Software für mittlere bis große medizinische Gruppen, Krankenhäuser und integrierte Organisationen im Gesundheitswesen her. Zu den Kunden zählen auch kommunale Krankenhäuser, akademische Einrichtungen, Kinderorganisationen, Sicherheitsnetzbetreiber und Systeme mit mehreren Krankenhäusern. Epic-integrierte Software umfasst klinische Funktionen, Zugriffs- und Umsatzfunktionen und gilt auch für zuhause.
+
+Es geht nicht um den Rahmen dieses Dokuments, um die breite Palette von Funktionen zu decken, die von Epic-Software unterstützt werden. Aus Sicht des Storage-Systems nutzt alle Epic Software jedoch für jede Implementierung eine einzige patientenorientierte Datenbank. Epic geht von der InterSystems Caché-Datenbank auf die neue InterSystems Iris-Datenbank über. Da die Speicheranforderungen für Caché und Iris gleich sind, werden wir im Rest dieses Dokuments die Datenbank als Iris bezeichnen. Iris ist für die Betriebssysteme AIX und Linux verfügbar.
+
+
+
+== InterSystems Iris
+
+InterSystems Iris ist die Datenbank, die von der Epic-Anwendung verwendet wird. In dieser Datenbank ist der Datenserver der Zugriffspunkt für dauerhaft gespeicherte Daten. Der Anwendungsserver verwaltet Datenbankabfragen und stellt Datenanfragen an den Datenserver. In den meisten Epic-Softwareumgebungen reicht die Verwendung der SMP-Architektur (symmetrischer Multiprozessor) in einem einzelnen Datenbankserver aus, um die Datenbankanforderungen von Epic-Applikationen zu erfüllen. In großen Implementierungen kann ein verteiltes Modell mit dem Enterprise Caché Protocol (ECP) von InterSystems unterstützt werden.
+
+Durch die Verwendung von Failover-fähiger Cluster-Hardware kann ein Standby-Datenserver auf denselben Speicher zugreifen wie der primäre Datenserver. Außerdem kann der Standby-Datenserver während eines Hardwareausfalls Verarbeitungsaufgaben übernehmen.
+
+InterSystems stellt zudem Technologien bereit, um Anforderungen an Datenreplizierung, Disaster Recovery und Hochverfügbarkeit zu erfüllen. Die Replikationstechnologie von InterSystems wird verwendet, um eine Iris-Datenbank synchron oder asynchron von einem primären Datenserver auf einen oder mehrere sekundäre Datenserver zu replizieren. NetApp SnapMirror wird für die Replizierung von WebBLOB Storage oder für Backup und Disaster Recovery verwendet.
+
+Die aktualisierte Iris-Datenbank hat viele Vorteile:
+
+* Erhöht die Skalierbarkeit und ermöglicht größeren Unternehmen mit mehreren Epic-Instanzen die Konsolidierung in einer größeren Instanz.
+* Ein Lizenzurlaub, bei dem Kunden jetzt zwischen AIX und Red hat Enterprise Linux (RHEL) wechseln können, ohne dafür eine neue Plattformlizenz zu bezahlen.
+
+
+
+
+== Caché Datenbankserver und Storage-Verwendung
+
+* *Produktion* in Epic-Softwareumgebungen wird eine einzelne patientenorientierte Datenbank bereitgestellt. In den Hardwareanforderungen von Epic wird der physische Server, der den primären Lese-/Schreib-Iris-Datenserver hostet, als Produktionsserver bezeichnet. Dieser Server erfordert hochperformanten All-Flash-Storage für Dateien, die zur primären Datenbankinstanz gehören. Für Hochverfügbarkeit unterstützt Epic die Verwendung eines Failover-Datenbankserver, der Zugriff auf dieselben Dateien hat. Iris nutzt Epic Mirror zur Replizierung zu schreibgeschützten Berichten, zur Disaster Recovery und zur Unterstützung schreibgeschützter Kopien. Aus Gründen der Business Continuity kann jeder Datenbanktyp in den Lese-/Schreibmodus umgeschaltet werden.
+* *Report* Ein berichtender Spiegel-Datenbank-Server bietet schreibgeschützten Zugriff auf Produktionsdaten. Es hostet einen Iris-Datenserver, der als Backup-Spiegel des Produktions-Iris-Datenservers konfiguriert ist. Der berichtende Datenbankserver hat die gleichen Speicherkapazitäten wie der Produktions-Datenbankserver. Die Schreib-Performance für Berichte ist dieselbe wie für die Produktion, aber die Lese-Workload-Merkmale unterscheiden sich und haben eine andere Größe.
+* *Unterstützt nur-Lesen* dieser Datenbankserver ist optional und nicht in der Abbildung unten dargestellt. Ein Spiegeldatenbankserver kann auch zur Unterstützung von Epic implementiert werden, um schreibgeschützte Funktionen zu unterstützen, in denen eine Kopie der Produktion im schreibgeschützten Modus zugänglich ist. Aus Gründen der Business Continuity kann dieser Datenbanktyp in den Lese-/Schreibmodus umgeschaltet werden.
+* *Disaster Recovery* um Business Continuity- und Disaster Recovery-Ziele zu erreichen, wird ein Disaster Recovery-Spiegeldatenbankserver üblicherweise an einem Standort bereitgestellt, der geografisch getrennt von den Produktions- und/oder Reporting-Spiegeldatenbankservern ist. Ein Datenbank-Server mit Disaster Recovery-Spiegelung hostet auch einen Iris-Datenserver, der als Backup-Spiegelung des Iris-Datenservers der Produktionsumgebung konfiguriert ist. Wenn der Produktionsstandort längere Zeit nicht mehr verfügbar ist, kann dieser Datenbankserver für die Backup-Spiegelung so konfiguriert werden, dass er als gespiegelte Lese-/Schreibinstanz (SRW) fungiert. Der Backup-Mirror-Datenbankserver hat die gleichen Dateispeicheranforderungen wie der Produktions-Datenbankserver. Im Gegensatz dazu wird die Größe des Datenbank-Storage für die Backup-Spiegelung aus Sicht der Performance für Business Continuity mit dem Produktions-Storage identisch sein.
+
+
+image:epic-iris-odb.png["Epic IRIS ODB"]
+
+* *Test* Gesundheitseinrichtungen stellen häufig Entwicklungs-, Test- und Staging-Umgebungen bereit. Zusätzliche Iris-Datenserver für diese Umgebungen benötigen ebenfalls Storage, der durch dasselbe Storage-System untergebracht werden kann. Epic bietet besondere Anforderungen und Einschränkungen, um zusätzlichen Storage aus einem Shared Storage-System bereitzustellen. Diese speziellen Anforderungen werden durch die in diesem Dokument enthaltenen Best Practices allgemein adressiert.
+
+
+Zusätzlich zu den Iris ODB-Datenservern umfassen Epic-Softwareumgebungen in der Regel weitere Komponenten wie die folgenden und wie in der folgenden Abbildung dargestellt:
+
+* Ein Oracle oder Microsoft SQL Server Datenbankserver als Back-End zu den Clarity Tools für Business-Reporting von Epic
+
+
+
+NOTE: Clarity wird verwendet, um Berichte über Daten zu erstellen, die täglich aus der Iris-Berichtsdatenbank extrahiert wurden.
+
+* WebBLOB-Server (SMB)
+* Mehrzweck-Datenbankserver
+* Virtuelle Mehrzweck-Maschinen (VMs)
+* Hyperspace für Client-Zugriff
+
+
+image:epic-databases.png["Epic Datenbank"]
+
+Die Storage-Anforderungen all dieser Workloads, Pools, NAS- und SAN-Protokolle können konsolidiert und von einem einzigen ONTAP Cluster gehostet werden. Durch diese Konsolidierung können Organisationen im Gesundheitswesen eine einzelne Datenmanagementstrategie für alle Epic- und nicht Epic-Workloads entwickeln.
+
+
+
+== Operative Datenbank-Workloads
+
+Jeder Epic-Datenbankserver führt I/O für die folgenden Dateitypen aus:
+
+* Datenbankdateien
+* Journaldateien
+* Anwendungsdateien
+
+
+Der Workload eines einzelnen Datenbankservers hängt von seiner Rolle in der Epic Softwareumgebung ab. So kommt beispielsweise bei Produktionsdatenbankdateien in der Regel der anspruchsvollste Workload vor, der aus 100 % zufälligen I/O-Anfragen besteht. Der Workload einer gespiegelten Datenbank ist in der Regel weniger anspruchsvoll und weist weniger Leseanforderungen auf. Journal-Datei-Workloads sind überwiegend sequenziell.
+
+Epic unterhält ein Workload-Modell für Storage-Performance-Benchmarks und Kunden-Workloads. Weitere Informationen zum Epic-Workload-Modell, Benchmark-Ergebnisse und Hinweise NetApp zur richtigen Storage-Dimensionierung für Epic-Umgebungen finden Sie unter (Anmeldung zum https://fieldportal.netapp.com/content/192412?assetComponentId=192510["TR-3930i: NetApp Sizing Guidelines for Epic"^] NetApp erforderlich).
+
+Darüber hinaus stellt Epic jedem Kunden einen individuellen Hardware-Konfigurationsleitfaden mit I/O-Projektionen und Storage-Kapazitätsanforderungen zur Verfügung. Die endgültigen Storage-Anforderungen können Entwicklungs-, Test- und/oder Staging-Umgebungen sowie weitere ergänzende Workloads umfassen, die konsolidiert werden können. Kunden können über den Hardware-Konfigurationsleitfaden die gesamten Storage-Anforderungen an NetApp kommunizieren. Dieser Leitfaden enthält alle Daten, die für die Größe einer Epic Implementierung erforderlich sind.
+
+Während der Implementierungsphase bietet Epic einen Leitfaden für das Layout von Datenbank-Storage, der granularere Details auf LUN-Ebene bietet, die für ein erweitertes Storage-Design verwendet werden können. Beachten Sie, dass es sich beim Leitfaden zum Layout von Datenbank-Storage um allgemeine Storage-Empfehlungen handelt, die für NetApp nicht spezifisch sind. Dieser Leitfaden erläutert Ihnen das beste Storage-Layout für NetApp.

@@ -38,7 +38,8 @@ Es gibt einen Unterschied beim Management einer vMSC Konfiguration mit aktiver S
 
 Die Erstellung eines vSphere HA-Clusters ist ein mehrstufiger Prozess, der in vollständig dokumentiert ist https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vcenter-esxi-management/GUID-F7818000-26E3-4E2A-93D2-FCDCE7114508.html["Wie erstellen und konfigurieren Sie Cluster im vSphere Client auf docs.vmware.com"]. Kurz gesagt: Sie müssen zuerst einen leeren Cluster erstellen, dann mit vCenter Hosts hinzufügen und vSphere HA und andere Einstellungen des Clusters angeben.
 
-*Hinweis:* nichts in diesem Dokument ersetzt https://core.vmware.com/resource/vmware-vsphere-metro-storage-cluster-recommended-practices["Empfohlene Practices für VMware vSphere Metro Storage-Cluster"]
+
+NOTE: Nichts in diesem Dokument ersetzt https://core.vmware.com/resource/vmware-vsphere-metro-storage-cluster-recommended-practices["Empfohlene Practices für VMware vSphere Metro Storage-Cluster"]
 
 Führen Sie zum Konfigurieren eines HA-Clusters die folgenden Schritte aus:
 
@@ -155,7 +156,10 @@ In diesem Abschnitt erstellen wir DRS Gruppen für VMs und Hosts für jeden Stan
 * NetApp empfiehlt dringend die Spezifikation *sollte auf Hosts in Gruppe* laufen anstatt der Spezifikation *muss auf Hosts in Gruppe* ausgeführt werden. Im Falle eines Host-Ausfalls von Standort A müssen die VMs von Standort A über vSphere HA auf Hosts an Standort B neu gestartet werden. Bei der letzteren Spezifikation ist jedoch nicht möglich, dass HA die VMs auf Standort B neu starten, da es die harte Regel ist. Die frühere Spezifikation ist eine weiche Regel und wird im Falle von HA verletzt, wodurch die Verfügbarkeit anstatt die Leistung ermöglicht wird.
 
 
-*Hinweis:* Sie können einen ereignisbasierten Alarm erstellen, der ausgelöst wird, wenn eine virtuelle Maschine gegen eine VM-Host-Affinitätsregel verstößt. Fügen Sie im vSphere Client einen neuen Alarm für die virtuelle Maschine hinzu und wählen Sie als Ereignisauslöser „VM verletzt VM-Host Affinity Rule“ aus. Weitere Informationen zum Erstellen und Bearbeiten von Alarmen finden Sie unter http://pubs.vmware.com/vsphere-51/topic/com.vmware.ICbase/PDF/vsphere-esxi-vcenter-server-51-monitoring-performance-guide.pdf["VSphere Monitoring und Performance"] Dokumentation.
+*[HINWEIS]
+
+* Sie können einen ereignisbasierten Alarm erstellen, der ausgelöst wird, wenn eine virtuelle Maschine gegen eine VM-Host-Affinitätsregel verstößt. Fügen Sie im vSphere Client einen neuen Alarm für die virtuelle Maschine hinzu und wählen Sie als Ereignisauslöser „VM verletzt VM-Host Affinity Rule“ aus. Weitere Informationen zum Erstellen und Bearbeiten von Alarmen finden Sie in http://pubs.vmware.com/vsphere-51/topic/com.vmware.ICbase/PDF/vsphere-esxi-vcenter-server-51-monitoring-performance-guide.pdf["VSphere Monitoring und Performance"] der Dokumentation.
+
 
 
 

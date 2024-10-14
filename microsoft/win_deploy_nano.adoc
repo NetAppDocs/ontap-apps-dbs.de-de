@@ -10,7 +10,7 @@ summary: Erfahren Sie mehr über die Bereitstellung von Microsoft Windows Nano S
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]

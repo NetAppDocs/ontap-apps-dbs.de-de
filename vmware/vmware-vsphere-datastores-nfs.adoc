@@ -14,7 +14,7 @@ summary: Auf dieser Seite werden die Best Practices für die Implementierung von
 
 
 [role="lead"]
-Bei NetApp ONTAP handelt es sich unter anderem um ein horizontal skalierbares NAS-Array der Enterprise-Klasse. ONTAP ermöglicht VMware vSphere den gleichzeitigen Zugriff auf NFS-verbundene Datastores von vielen ESXi Hosts und übertrifft dabei die für VMFS Dateisysteme auferlegten Grenzen bei Weitem. Die Verwendung von NFS mit vSphere bietet einige Vorteile in Bezug auf Benutzerfreundlichkeit und Storage-Effizienz. Wie bereits in erwähnt, ist hier ein Überblick gegeben link:vmware-vsphere-datastores-top.html["Datenspeicher"] Abschnitt.
+Bei ONTAP handelt es sich unter anderem um ein horizontal skalierbares NAS-Array der Enterprise-Klasse. ONTAP ermöglicht VMware vSphere den gleichzeitigen Zugriff auf NFS-verbundene Datastores von vielen ESXi Hosts und übertrifft dabei die für VMFS Dateisysteme auferlegten Grenzen bei Weitem. Die Verwendung von NFS mit vSphere bietet einige Vorteile in Bezug auf Benutzerfreundlichkeit, Storage-Effizienz und Sichtbarkeit, wie im  Abschnitt erwähntlink:vmware-vsphere-datastores-top.html["Datenspeicher"].
 
 Für die Verwendung von ONTAP NFS mit vSphere werden folgende Best Practices empfohlen:
 

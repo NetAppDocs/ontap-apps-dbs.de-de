@@ -24,7 +24,7 @@ In der folgenden Abbildung ist das Klonen von ONTAP dargestellt.
 
 image:vsphere_ontap_image5.png["ONTAP-Klonen"]
 
-Das Klonen kann – in der Regel auf VM-, vVol oder Datastore-Ebene – durch mehrere Verfahren auf Systeme mit ONTAP Software verlagert werden. Hierzu zählen:
+Das Klonen kann – in der Regel auf VM-, vVol- oder Datastore-Ebene – durch mehrere Verfahren auf Systeme mit ONTAP verlagert werden. Hierzu zählen:
 
 * VVols, die den NetApp vSphere APIs for Storage Awareness (VASA) Provider verwenden.  ONTAP Klone unterstützen von vCenter gemanagte vVol Snapshots, die platzsparend sind und bei der Erstellung und Löschung eine minimale I/O-Auswirkung haben.  VMs können auch mit vCenter geklont werden. Sie werden dann auch zu ONTAP verlagert, sei es innerhalb eines einzelnen Datastores/Volumes oder zwischen Datastores/Volumes.
 * VSphere Klone und Migration mit vSphere APIs – Array Integration (VAAI). VM-Klonvorgänge können in SAN- und NAS-Umgebungen zu ONTAP verlagert werden (NetApp stellt ein ESXi Plug-in zur Aktivierung von VAAI für NFS bereit).  VSphere verlagert den Betrieb nur auf „kalte“ (ausgeschalteten) VMs in einem NAS-Datastore, während Vorgänge auf heißen VMs (Klonen und Storage vMotion) ebenfalls für SAN verlagert werden. ONTAP nutzt je nach Quelle, Ziel und installierten Produktlizenzen den effizientesten Ansatz. Diese Funktion wird auch von VMware Horizon View unterstützt.

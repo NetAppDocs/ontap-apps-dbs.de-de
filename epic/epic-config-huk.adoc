@@ -1,0 +1,20 @@
+---
+sidebar: sidebar 
+permalink: epic/epic-config-huk.html 
+keywords: epic,cache,iris 
+summary: Epic auf ONTAP - Host Utilities 
+---
+= Epic auf ONTAP - Host Utilities
+:allow-uri-read: 
+
+
+[role="lead"]
+Die NetApp Host Utilities sind Softwarepakete für verschiedene Betriebssysteme, die Management Utilities wie CLI-Binärdateien, Multipath-Treiber und andere wichtige Dateien enthalten `sanlun`, die für einen ordnungsgemäßen SAN-Betrieb erforderlich sind.
+
+[TIP]
+====
+*NetApp empfiehlt* die Installation der NetApp-Hostdienstprogramme auf Hosts, die mit NetApp-Speichersystemen verbunden sind und auf diese zugreifen. Weitere Informationen finden Sie unter link:https://imt.netapp.com/matrix/["Interoperabilitäts-Matrix-Tool"^] und link:https://docs.netapp.com/us-en/ontap-sanhost/["San-Hosts"^] in der Dokumentation.
+
+====
+
+NOTE: Bei AIX ist es besonders wichtig, dass die Host Utilities vor dem Erkennen von LUNs installiert werden. Dadurch wird sichergestellt, dass das LUN-Multipathing-Verhalten korrekt konfiguriert ist. Wenn die Erkennung ohne die Host Utilities ausgeführt wurde, müssen die LUNs mit dem Befehl vom System dekonstruiert und dann über einen Neustart wieder erkannt `cfgmgr` werden `rmdev -dl`.

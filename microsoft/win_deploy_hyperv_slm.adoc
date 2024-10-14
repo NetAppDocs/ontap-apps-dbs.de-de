@@ -10,7 +10,7 @@ summary: So konfigurieren Sie die Live-Migration von Hyper-V-Speicher
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]

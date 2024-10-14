@@ -146,7 +146,7 @@ vserver1  800DT$HuVWBn /vol/new_lvm/LUN8 2
 vserver1  800DT$HuVWBo /vol/new_lvm/LUN9 2
 20 entries were displayed.
 ....
-Wenn Sie einen Offline-Prozess benötigen, verzögern Sie die Neuermittlung oder den Neustart von Diensten bis zum `lun import show` Befehl zeigt an, dass die gesamte Migration erfolgreich und abgeschlossen ist. Anschließend können Sie den Migrationsprozess wie unter beschrieben abschließen link:../migration/migration_options.html#foreign-lun-import-fli["Import fremder LUNs – Abschluss"].
+Wenn Sie einen Offline-Prozess benötigen, verzögern Sie die Neuermittlung oder den Neustart von Diensten, bis der `lun import show` Befehl anzeigt, dass alle Migration erfolgreich und abgeschlossen ist. Anschließend können Sie den Migrationsprozess wie unter beschrieben abschließenlink:oracle-migration-fli-completion.html["Import fremder LUNs – Abschluss"].
 
 Wenn Sie eine Online-Migration benötigen, fahren Sie mit der Neuerkennung der LUNs in ihrem neuen Zuhause fort, und führen Sie die Dienste aus.
 
