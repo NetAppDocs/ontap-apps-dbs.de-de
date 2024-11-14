@@ -33,7 +33,110 @@ Verwenden Sie dNFS nicht mit Round-Robin-Namensauflösungen wie DNS, DDNS, NIS o
 
 
 
-=== Direkter NFS- und Host-Filesystem-Zugriff
+=== Aktivieren von dNFS
+
+Oracle dNFS kann mit NFSv3 ohne Konfiguration arbeiten, die über die Aktivierung der dNFS Library hinaus erforderlich ist (siehe Oracle Dokumentation für den spezifischen Befehl erforderlich), aber wenn dNFS keine Verbindung herstellen kann, kann es im Hintergrund zurück zum Kernel NFS Client zurückkehren. In einem solchen Fall kann die Performance erheblich beeinträchtigt werden.
+
+Wenn Sie dNFS-Multiplexing über mehrere Schnittstellen, mit NFSv4.X, oder Verschlüsselung verwenden möchten, müssen Sie eine oranfstab-Datei konfigurieren. Die Syntax ist extrem streng. Kleine Fehler in der Datei können dazu führen, dass der Start hängend oder umgangen die oranfstab-Datei.
+
+Der einzige Weg, um sicher zu sein, dNFS funktioniert wie erwartet, ist die Abfrage der V-dnfs-Tabellen.
+
+Unten finden Sie ein Beispiel für eine Oranfstab-Datei unter /etc. Dies ist einer von mehreren Speicherorten, an denen eine oranfstab-Datei platziert werden kann.
+
+....
+[root@jfs11 trace]# cat /etc/oranfstab
+server: NFSv3test
+path: jfs_svmdr-nfs1
+path: jfs_svmdr-nfs2
+export: /dbf mount: /oradata
+export: /logs mount: /logs
+nfs_version: NFSv3
+....
+Im ersten Schritt wird überprüft, ob dNFS für die angegebenen Dateisysteme betriebsbereit ist:
+
+....
+SQL> select dirname,nfsversion from v$dnfs_servers;
+
+DIRNAME
+------------------------------------
+NFSVERSION
+----------------
+/logs
+NFSv3.0
+
+/dbf
+NFSv3.0
+....
+Diese Ausgabe zeigt an, dass dNFS mit diesen beiden Dateisystemen verwendet wird, aber es bedeutet *Not*, dass oranfstab betriebsbereit ist. Wenn ein Fehler aufgetreten ist, hätte dNFS die NFS-Dateisysteme des Hosts automatisch erkannt und Sie können immer noch die gleiche Ausgabe von diesem Befehl sehen.
+
+Multipathing kann wie folgt überprüft werden:
+
+....
+SQL> select svrname,path,ch_id from v$dnfs_channels;
+
+SVRNAME
+------------------------------------
+PATH
+------------------------------------
+     CH_ID
+----------
+NFSv3test
+jfs_svmdr-nfs1
+         0
+
+NFSv3test
+jfs_svmdr-nfs2
+         1
+
+SVRNAME
+------------------------------------
+PATH
+------------------------------------
+     CH_ID
+----------
+
+NFSv3test
+jfs_svmdr-nfs1
+         0
+
+NFSv3test
+jfs_svmdr-nfs2
+
+[output truncated]
+
+SVRNAME
+------------------------------------
+PATH
+------------------------------------
+     CH_ID
+----------
+NFSv3test
+jfs_svmdr-nfs2
+         1
+
+NFSv3test
+jfs_svmdr-nfs1
+         0
+
+SVRNAME
+------------------------------------
+PATH
+------------------------------------
+     CH_ID
+----------
+
+NFSv3test
+jfs_svmdr-nfs2
+         1
+
+
+66 rows selected.
+....
+Das sind die Verbindungen, die dNFS verwendet. Für jeden SVRNAME-Eintrag sind zwei Pfade und Kanäle sichtbar. Das bedeutet, dass Multipathing funktioniert, was bedeutet, dass die oranfstab-Datei erkannt und verarbeitet wurde.
+
+
+
+== Direkter NFS- und Host-Filesystem-Zugriff
 
 Die Verwendung von dNFS kann gelegentlich Probleme für Applikationen oder Benutzeraktivitäten verursachen, die auf den sichtbaren Filesystemen basieren, die auf dem Host gemountet sind, da der dNFS-Client vom Host-Betriebssystem aus auf das Filesystem zugreift. Der dNFS-Client kann Dateien ohne Kenntnis des Betriebssystems erstellen, löschen und ändern.
 
