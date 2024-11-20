@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-migration-log-shipping.html 
 keywords: migration, oracle, log shipping 
 summary: Oracle-Migration über Protokollversand 
+searchtitle: Migration der Oracle-Datenbank per Protokollversand 
 ---
-= Migration der Oracle-Datenbank per Protokollversand
+= Protokollversand
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

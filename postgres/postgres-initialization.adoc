@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: postgres/postgres-initialization.html 
 keywords: PostgreSQL,database,postgres 
 summary: PostgreSQL-Initialisierungsparameter 
+searchtitle: PostgreSQL-Initialisierungsparameter 
 ---
-= PostgreSQL-Initialisierungsparameter
+= Initialisierungsparameter
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

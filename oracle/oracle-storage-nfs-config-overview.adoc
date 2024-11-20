@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-storage-nfs-config-overview.html 
 keywords: NFS 
 summary: NFS-Konfiguration für Oracle Datenbanken 
+searchtitle: NFS-Konfiguration für Oracle Datenbanken 
 ---
-= NFS-Konfiguration für Oracle Datenbanken
+= Überblick
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

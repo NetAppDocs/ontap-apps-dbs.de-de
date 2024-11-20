@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dr-mcc-logical.html 
 keywords: metrocluster, mcc, mcc-ip 
 summary: Logische Architektur von MetroCluster und Oracle Datenbanken 
+searchtitle: Logische Architektur von MetroCluster und Oracle Datenbanken 
 ---
-= Logische Architektur von MetroCluster und Oracle Datenbanken
+= Logische Architektur
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

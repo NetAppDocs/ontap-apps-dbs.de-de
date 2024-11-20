@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dr-mcc-syncmirror.html 
 keywords: metrocluster, syncmirror 
 summary: Oracle Database mit SyncMirror 
+searchtitle: Oracle Database mit SyncMirror 
 ---
-= Oracle Database mit SyncMirror
+= SyncMirror
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

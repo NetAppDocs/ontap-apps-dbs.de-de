@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dr-smas-preferred-site.html 
 keywords: Oracle,SM-as,active sync,preferred 
 summary: Oracle und SM-als bevorzugter Standort 
+searchtitle: Bevorzugter Standort für Oracle und SnapMirror Active Sync 
 ---
-= Oracle und SM-als bevorzugter Standort
+= Bevorzugter Standort für SnapMirror Active Sync
 :allow-uri-read: 
 :imagesdir: ../media/
 

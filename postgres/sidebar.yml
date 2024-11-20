@@ -27,7 +27,7 @@ entries:
   entries:
   - title: Native Datensicherung
     url: "/postgres/postgres-native-dp.html"
-  - title: Snapshot Technologie
+  - title: Snapshots
     url: "/postgres/postgres-snapshot-dp.html"
   - title: Datensicherungssoftware
     url: "/postgres/postgres-snapcenter-dp.html"

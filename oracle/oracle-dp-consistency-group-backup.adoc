@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dp-consistency-group-backup.html 
 keywords: oracle, data, protection, consistency, group, backup, volume, archive, log, redo, controlfiles 
 summary: Backups von Konsistenzgruppen für Oracle-Datenbanken auf ONTAP 
+searchtitle: Backups der Konsistenzgruppe in der Oracle Datenbank 
 ---
-= Backups der Konsistenzgruppe in der Oracle Datenbank
+= Backups von Konsistenzgruppen
 :allow-uri-read: 
 
 

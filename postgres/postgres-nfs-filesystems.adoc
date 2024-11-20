@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: postgres/postgres-nfs-filesystems.html 
 keywords: PostgreSQL,database,postgres 
 summary: PostgreSQL-Datenbanken NFS mit ONTAP 
+searchtitle: PostgreSQL-Datenbanken mit NFS-Dateisystemen 
 ---
-= PostgreSQL-Datenbanken mit NFS-Dateisystemen
+= NFS
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

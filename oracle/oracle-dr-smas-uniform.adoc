@@ -2,9 +2,10 @@
 sidebar: sidebar 
 permalink: oracle/oracle-dr-smas-uniform.html 
 keywords: Oracle,SM-as,active sync,uniform 
-summary: Oracle und SM-als einheitlicher Zugang 
+summary: Oracle und SM-als einheitlicher Zugriff 
+searchtitle: Oracle und SM-als einheitlicher Zugriff 
 ---
-= Oracle und SM-als einheitlicher Zugriff
+= Einheitlicher Zugriff
 :allow-uri-read: 
 :imagesdir: ../media/
 

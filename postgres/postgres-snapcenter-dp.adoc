@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: postgres/postgres-snapcenter-dp.html 
 keywords: PostgreSQL,database,postgres 
 summary: PostgreSQL Datensicherungssoftware 
+searchtitle: PostgreSQL Datensicherungssoftware 
 ---
-= PostgreSQL Datensicherungssoftware
+= Datensicherungssoftware
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

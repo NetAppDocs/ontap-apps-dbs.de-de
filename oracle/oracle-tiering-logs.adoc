@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-tiering-logs.html 
 keywords: tiering, fabricpool 
 summary: Tiering von Oracle Archivprotokollen 
+searchtitle: Protokoll-Tiering für die Oracle-Datenbankarchivierung 
 ---
-= Protokoll-Tiering für die Oracle-Datenbankarchivierung
+= Tiering von Archivprotokollen
 :allow-uri-read: 
 :nofooter: 
 :icons: font

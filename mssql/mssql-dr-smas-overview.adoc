@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: mssql/mssql-dr-smas-overview.html 
 keywords: MSSQL,SQL Server, SnapMirror active sync, SMBC, overview 
 summary: Microsoft SQL Server und SnapMirror Active Sync 
+searchtitle: SQL Server und SnapMirror Active Sync 
 ---
-= SQL Server und SnapMirror Active Sync
+= Überblick
 :allow-uri-read: 
 :imagesdir: ../media/
 

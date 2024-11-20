@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-ontap-config-thin-provisioning.html 
 keywords: thin provisioning, oracle 
 summary: Oracle und ONTAP Thin Provisioning 
+searchtitle: Thin Provisioning mit Oracle Datenbanken 
 ---
-= Thin Provisioning mit Oracle Datenbanken
+= Thin Provisioning
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

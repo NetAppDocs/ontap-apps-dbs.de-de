@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dr-overview.html 
 keywords: metrocluster, syncmirror, oracle 
 summary: Disaster Recovery für Oracle-Datenbanken mit ONTAP 
+searchtitle: Disaster Recovery für Oracle-Datenbanken mit ONTAP 
 ---
-= Disaster Recovery für Oracle-Datenbanken mit ONTAP
+= Überblick
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

@@ -2,9 +2,10 @@
 sidebar: sidebar 
 permalink: postgres/postgres-native-dp.html 
 keywords: PostgreSQL,database,postgres 
-summary: PostgreSQL-DatenschutzP 
+summary: PostgreSQL Datensicherung 
+searchtitle: Native PostgreSQL Datensicherung 
 ---
-= PostgreSQL Datensicherung
+= Nativer Ddta-Schutz
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

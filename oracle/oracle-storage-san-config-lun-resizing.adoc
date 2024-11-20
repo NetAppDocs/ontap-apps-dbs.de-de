@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-storage-san-config-lun-resizing.html 
 keywords: SAN, ASM, LVM 
 summary: LUN- und LVM-Größe mit Oracle-Datenbanken 
+searchtitle: LUN-Größe der Oracle-Datenbank und LVM-Anpassung 
 ---
-= LUN-Größe der Oracle-Datenbank und LVM-basierte Anpassung
+= LUN-Größe und LVM-Größe
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

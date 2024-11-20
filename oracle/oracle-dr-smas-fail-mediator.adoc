@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dr-smas-fail-mediator.html 
 keywords: Oracle, SnapMirror active sync, SMBC, failover 
 summary: Fehler beim Mediator bei Oracle und SnapMirror Active Sync 
+searchtitle: Fehler beim Mediator bei Oracle und SnapMirror Active Sync 
 ---
-= Fehler beim Mediator bei Oracle und SnapMirror Active Sync
+= Fehler beim Mediator
 :allow-uri-read: 
 :imagesdir: ../media/
 

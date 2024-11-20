@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-network-config-lifs.html 
 keywords: LIF, multipath, multipathing 
 summary: Design der logischen Schnittstelle für Oracle-Datenbanken 
+searchtitle: Design der logischen Schnittstelle für Oracle-Datenbanken 
 ---
-= Design der logischen Schnittstelle für Oracle-Datenbanken
+= Logische Schnittstellen
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

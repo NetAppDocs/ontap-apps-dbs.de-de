@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: mssql/mssql-dr-smas-failure-scenarios.html 
 keywords: MSSQL,SQL Server, SnapMirror active sync, SMBC, failover 
 summary: Microsoft SQL Server- und SM-AS-Failover-Szenarien 
+searchtitle: Microsoft SQL Server und SnapMirror Active Sync Failover 
 ---
-= Microsoft SQL Server und SnapMirror Active Sync Failover
+= Ausfallszenarien
 :allow-uri-read: 
 :imagesdir: ../media/
 

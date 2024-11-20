@@ -9,7 +9,7 @@ entries:
   entries:
   - title: Dateistruktur
     url: "/mysql/mysql-file-structure.html"
-  - title: Konfigurationsübersicht
+  - title: Konfigurationsparameter
     url: "/mysql/mysql-configuration.html"
   - title: innodb_Log_file_size
     url: "/mysql/mysql-innodb_log_file_size.html"
@@ -41,7 +41,7 @@ entries:
 - title: Storage-Konfiguration
   pdf-filename: Storage-Konfiguration für MySQL
   entries:
-  - title: MySQL über NFS
+  - title: NFS
     url: "/mysql/mysql-mysql-over-nfs.html"
-  - title: MySQL über SAN
+  - title: San
     url: "/mysql/mysql-mysql-over-san.html"

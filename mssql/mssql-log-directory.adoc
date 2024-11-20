@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: mssql/mssql-log-directory.html 
 keywords: MSSQL,SQL Server, volumes, LUN, SnapCenter 
 summary: Protokollverzeichnis von Microsoft SQL Server 
+searchtitle: Protokollverzeichnis von Microsoft SQL Server 
 ---
-= Protokollverzeichnis von Microsoft SQL Server
+= Protokollverzeichnis
 :allow-uri-read: 
 :imagesdir: ../media/
 

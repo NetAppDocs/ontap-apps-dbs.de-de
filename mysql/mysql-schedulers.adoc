@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: mysql/mysql-schedulers.html 
 keywords: MySQL,MariaDB,schedulers 
 summary: MySQL und IO-Scheduler 
+searchtitle: I/O-Planer und MySQL 
 ---
-= I/O-Planer und MySQL
+= I/O-Planer
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/

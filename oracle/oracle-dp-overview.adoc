@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dp-overview.html 
 keywords: oracle, database, ontap 
 summary: Überblick über die Oracle Datensicherung 
+searchtitle: Oracle Datensicherung mit ONTAP 
 ---
-= Oracle Datensicherung mit ONTAP
+= Datensicherung mit ONTAP
 :allow-uri-read: 
 
 

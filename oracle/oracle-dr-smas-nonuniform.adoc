@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dr-smas-nonuniform.html 
 keywords: Oracle,SM-as,active sync,nonuniform 
 summary: Oracle und SM-als uneinheitlicher Zugriff 
+searchtitle: Oracle und SM-als uneinheitlicher Zugriff 
 ---
-= Oracle und SM-als uneinheitlicher Zugriff
+= Uneinheitlicher Zugriff
 :allow-uri-read: 
 :imagesdir: ../media/
 

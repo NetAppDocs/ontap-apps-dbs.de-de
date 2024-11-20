@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dr-smas-overview.html 
 keywords: Oracle,SM-as,active sync 
 summary: Oracle und SnapMirror Active Sync 
+searchtitle: Überblick über die aktive Synchronisierung von Oracle und SnapMirror 
 ---
-= Oracle und SnapMirror Active Sync
+= Überblick
 :allow-uri-read: 
 :imagesdir: ../media/
 

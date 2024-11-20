@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-notes-wafl-alignment-verification.html 
 keywords: oracle, database, ontap, wafl, alignment 
 summary: WAFL-Ausrichtung für Oracle Datenbanken 
+searchtitle: Überprüfung der WAFL Ausrichtung von Oracle Datenbanken 
 ---
-= Überprüfung der WAFL Ausrichtung von Oracle Datenbanken
+= Überprüfung der WAFL-Ausrichtung
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dp-nvfail.html 
 keywords: oracle, metrocluster, nvfail 
 summary: Konfigurieren von NVFAIL zum Schutz von Oracle-Datenbanken 
+searchtitle: Oracle-Datenbanken und NVFAIL 
 ---
-= Oracle-Datenbanken und NVFAIL
+= NV-FEHLER
 :allow-uri-read: 
 
 

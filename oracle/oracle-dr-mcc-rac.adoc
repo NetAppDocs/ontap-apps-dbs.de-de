@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-dr-mcc-rac.html 
 keywords: oracle, metrocluster, extended rac, RAC 
 summary: Oracle Extended RAC mit MetroCluster 
+searchtitle: Oracle Extended RAC auf MetroCluster 
 ---
-= Erweiterter Oracle RAC auf MetroCluster
+= Oracle Extended RAC
 :allow-uri-read: 
 
 

@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: mssql/mssql-dr-smas-nonuniform.html 
 keywords: MSSQL,SQL Server, SnapMirror active sync, SMBC, overview 
 summary: Microsoft SQL Server und SM-als uneinheitlicher Zugriff 
+searchtitle: Microsoft SQL Server und SM-als uneinheitlicher Zugriff 
 ---
-= Microsoft SQL Server und SM-als uneinheitlicher Zugriff
+= Uneinheitlicher Zugriff
 :allow-uri-read: 
 :imagesdir: ../media/
 

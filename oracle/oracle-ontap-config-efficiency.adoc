@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-ontap-config-efficiency.html 
 keywords: oracle, efficiency, compression, compaction, deduplication 
 summary: Oracle Datenbanken und Storage-Effizienz 
+searchtitle: Oracle Database und ONTAP-Effizienzfunktionen 
 ---
-= Oracle Database und ONTAP-Effizienzfunktionen
+= Effizienz
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

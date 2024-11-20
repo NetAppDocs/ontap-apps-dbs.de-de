@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-tiering-object-store-access-interruptions.html 
 keywords: tiering, fabricpool, interruption 
 summary: Unterbrechungen beim Zugriff auf Oracle Datenbanken und Objektspeicher 
+searchtitle: Unterbrechungen beim Zugriff auf Oracle Datenbanken und Objektspeicher 
 ---
-= Unterbrechungen beim Zugriff auf Oracle Datenbanken und Objektspeicher
+= Unterbrechungen des Zugriffs auf Objektspeicher
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

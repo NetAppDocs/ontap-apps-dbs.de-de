@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-ontap-config-capacity-limits.html 
 keywords: capacity 
 summary: Datenbanken und ONTAP Storage-Kapazität und freien Speicherplatz 
+searchtitle: Oracle Datenbanken und Storage-Kapazitätsmanagement 
 ---
-= Oracle Datenbanken und Storage-Kapazitätsmanagement
+= Kapazitätsmanagement
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

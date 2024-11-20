@@ -2,9 +2,10 @@
 sidebar: sidebar 
 permalink: oracle/oracle-dr-smas-fail-snapmirror.html 
 keywords: Oracle, SnapMirror active sync, SMBC, failover 
-summary: Aktives synchronen Failover von Oracle und SnapMirror 
+summary: SnapMirror Active Sync – SnapMirror-Kommunikationsfehler 
+searchtitle: SnapMirror Active Sync – SnapMirror-Kommunikationsfehler 
 ---
-= SnapMirror Active Sync – Verlust der SnapMirror-Konnektivität
+= SnapMirror-Kommunikationsfehler
 :allow-uri-read: 
 :imagesdir: ../media/
 

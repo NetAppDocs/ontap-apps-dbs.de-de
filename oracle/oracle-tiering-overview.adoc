@@ -2,9 +2,10 @@
 permalink: oracle/oracle-tiering-overview.html 
 sidebar: sidebar 
 keywords: tiering, fabricpool 
-summary: FabricPool Tiering-Überwie für Oracle Datenbanken 
+summary: FabricPool Tiering für Oracle Datenbanken – Überblick 
+searchtitle: FabricPool Tiering für Oracle Datenbanken – Überblick 
 ---
-= FabricPool Tiering für Oracle Datenbanken – Überblick
+= Überblick
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 

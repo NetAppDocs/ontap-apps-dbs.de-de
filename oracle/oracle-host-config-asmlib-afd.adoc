@@ -3,8 +3,9 @@ sidebar: sidebar
 permalink: oracle/oracle-host-config-asmlib-afd.html 
 keywords: oracle, database, ontap, asmlib, block size, oracleasm, multipath, afd 
 summary: Oracle-Datenbanken mit Linux und ASMlib/ASM Filter Driver 
+searchtitle: 'Oracle-Datenbanken mit ASMLib/AFD (ASM Filter Driver)' 
 ---
-= Oracle-Datenbanken mit ASMLib/AFD (ASM Filter Driver)
+= ASMLib/AFD (ASM-Filtertreiber)
 :allow-uri-read: 
 
 
