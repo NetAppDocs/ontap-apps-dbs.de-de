@@ -13,7 +13,15 @@ Das Dokument mit Empfehlungen für das Epic Datenbank-Storage-Layout enthält An
 
 Es ist wichtig, dieses Dokument mit der Epic DBA- und Epic-Unterstützung zu prüfen und die Anzahl der LUNs und LUN-Größen festzulegen, da ggf. Anpassungen erforderlich sind. Diese Storage-Empfehlungen sind wichtig für die HBA-Warteschlangentiefe, die Storage-Performance, den einfachen Betrieb und die einfache Erweiterung.
 
-Verwenden Sie für die Berücksichtigung der Warteschlangentiefe des Server-Betriebssystems mindestens acht LUNs (eine LUN pro Volume) für eine Datenbank. Erhöhen Sie die Anzahl der LUNs um ein Vielfaches von acht. Für größere Umgebungen können mehr LUNs erforderlich sein. Verwenden Sie die gleiche Anzahl von Volumes (insgesamt acht, vier pro Node) und fügen Sie LUNs in einem Vielfachen von acht hinzu. Epic empfiehlt, die LUNs < 8 TB und die Anzahl der LUNs < 32 zu behalten. Mit diesem Ansatz können Sie Ihre Epic-Umgebung einfach skalieren.
+Verwenden Sie für die Berücksichtigung der Warteschlangentiefe des Server-Betriebssystems mindestens acht LUNs (eine LUN pro Volume) für eine Datenbank. Erhöhen Sie die Anzahl der LUNs um die Anzahl der Nodes im ONTAP Cluster. Fügen Sie beispielsweise 4 LUNs hinzu, wenn Sie ein Cluster mit 4 Nodes (2 HA-Paar) verwenden. Für größere Umgebungen sind möglicherweise mehr LUNs erforderlich. Verwenden Sie dieselbe Anzahl von Volumes (insgesamt acht, verteilt auf den Storage-Node), und fügen Sie LUNs in Vielfachen von zwei auf den Cluster-Nodes und Volumes hinzu. Mit diesem Ansatz können Sie Ihre Epic-Umgebung einfach skalieren.
+
+*Beispiel 1: ONTAP Cluster mit 2 Knoten*
+
+2 Node, 1 HA-Paar 8 Volumes, 4 Volumes pro Node, 8 LUNs, eine LUN pro Volume, die weitere 2 LUNs hinzufügt, eine auf Node 01 in Volume 01 und eine auf Node 02 in Volume 02.
+
+*Beispiel 2: ONTAP Cluster mit 4 Knoten*
+
+4 Node, 2 HA-Paar 8 Volumes, 2 Volumes pro Node, 8 LUNs, eine LUN pro Volume, eine weitere 4 LUNs, eine auf Node 01 in Volume 01, eine auf Node 02 in Volume 02, eine auf Node 03 in Volume 03, eine auf Node 04 in Volume 04.
 
 Zur Maximierung der Performance für einen Workload, z. B. Epic ODB oder Clarity, funktioniert jedes Layout auch am besten für NetApp Storage. Die Schreib-I/O-Vorgänge werden unter Verwendung von acht Volumes gleichmäßig über Controller verteilt, wodurch die CPU-Auslastung optimiert wird. Für Replizierung und Backup sollte die Anzahl der Volumes zur Vereinfachung des Betriebs auf acht begrenzt werden.
 
@@ -21,7 +29,9 @@ Zur Maximierung der Performance für einen Workload, z. B. Epic ODB oder Clarity
 
 == Skalierungsoptionen
 
-Wenn der Server mehr Storage benötigt, empfiehlt es sich, die LUNs mit Volumes am einfachsten zu vergrößern. Die zweite Option besteht darin, den Volume-Gruppen jeweils ein Vielfaches von acht LUNs hinzuzufügen (eine pro vorhandenem Volume). Durch das Hinzufügen von nur einer oder zwei LUNs kann ein Hotspot erstellt und die Performance beeinträchtigt werden.
+Wenn der Server mehr Storage benötigt, empfiehlt es sich, die LUNs mit Volumes am einfachsten zu vergrößern. Die zweite Option besteht darin, den Volume-Gruppen jeweils ein Vielfaches von zwei LUNs hinzuzufügen (eine pro Volume und Node).
+
+Beispiel:
 
 
 
@@ -30,30 +40,15 @@ Wenn der Server mehr Storage benötigt, empfiehlt es sich, die LUNs mit Volumes 
 image:epic-8lun.png["Epic 8-LUN-Layout"]
 
 
-
-== Volume- und 16-LUN-Layout
-
-image:epic-16lun.png["Epic 16-LUN-Layout"]
-
-
-
-== Volume- und 24-LUN-Layout
-
-image:epic-24lun.png["Epic 24-LUN-Layout"]
-
-
-
-== Volume- und 32-LUN-Layout
-
-image:epic-32lun.png["Epic 32-LUN-Layout"]
+NOTE: Wenn in einer großen Umgebung mehr als 4 Nodes oder 8 LUNs benötigt werden, wenden Sie sich an unser Epic Alliance Team, um die LUN-Designs zu bestätigen. Das Team ist unter der Epic@NetApp.com erreichbar.
 
 
 
 == Best Practices in sich vereint
 
-* Verwenden Sie entweder 8, 16, 24 oder 32 LUNs in 8 Volumes.
+* Verwenden Sie 8 LUNs in 8 Volumes, um zu starten und gleichzeitig 2 LUNs über alle Nodes des Clusters hinweg hinzuzufügen.
 * Gleichen Sie die Workloads über das HA-Paar aus, um Performance und Effizienz zu maximieren.
-* Erstellen Sie LUNs mit der erwarteten Größe für 3 Jahre Wachstum, um zu vermeiden, dass Sie die 10-fachen LUN-Erweiterungseinschränkungen erreichen.
+* Erstellen Sie LUNs mit der Größe, die für ein Wachstum von 3 Jahren erwartet wird. (Weitere Informationen zu maximalen LUN-Größen finden Sie imlink:https://docs.netapp.com/us-en/ontap/san-admin/resize-lun-task.html["ONTAP-Dokumentation"].)
 * Verwendung von Thin Provisioning Volumes und LUNs
 * Verwenden Sie mindestens acht DB-LUNs, zwei Journal-LUNs und zwei App-LUNs. Diese Konfiguration maximiert die Storage Performance und die Warteschlangentiefe des Betriebssystems. Mehr können bei Bedarf aus Kapazitäts- oder anderen Gründen verwendet werden.
 * Wenn Sie LUNs zu Volume-Gruppen hinzufügen müssen, fügen Sie jeweils acht LUNs hinzu.
