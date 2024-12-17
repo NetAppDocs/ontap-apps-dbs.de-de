@@ -66,4 +66,4 @@ SnapMirror Active Sync kann darüber hinaus auf zwei verschiedene Arten implemen
 
 image::../media/vmsc_1_2.png[VMSC-Diagramm mit MCC,624,485]
 
-Siehe https://docs.netapp.com/us-en/ontap/smbc/index.html["NetApp Dokumente"] Für spezifische Design- und Implementierungsinformationen zu SnapMirror Active Sync
+Weitere Informationen über die Vorteile von symmetrischem oder asymmetrischem Design und Einsatz finden Sie im https://docs.netapp.com/us-en/ontap/smbc/index.html["SnapMirror Active Sync Dokumentation"].
