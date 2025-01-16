@@ -3,7 +3,7 @@ sidebar: sidebar
 permalink: mssql/mssql-tempdb.html 
 keywords: MSSQL,SQL Server, tempdb, ONTAP 
 summary: Microsoft SQL Server tempdb-Platzierung auf ONTAP 
-searchtitle: Icrosoft SQL Server tempdb-Dateien 
+searchtitle: Microsoft SQL Server tempdb-Dateien 
 ---
 = Tempdb-Dateien
 :allow-uri-read: 
@@ -11,15 +11,16 @@ searchtitle: Icrosoft SQL Server tempdb-Dateien
 
 
 [role="lead"]
-Die Tempdb-Datenbank kann stark genutzt werden. Neben der optimalen Platzierung von Benutzerdatenbankdateien auf ONTAP ist die Platzierung von tempdb-Datendateien auch wichtig, um die Zuweisungskonflikte zu verringern
+Die Tempdb-Datenbank kann stark genutzt werden. Neben der optimalen Platzierung von Benutzerdatenbankdateien auf ONTAP ist die Platzierung von tempdb-Datendateien auch wichtig, um die Zuweisungskonflikte zu verringern. Tempdb sollte auf einer separaten Festplatte abgelegt und nicht für Benutzerdatendateien freigegeben werden.
 
 Seitenkonflikte können auf den Seiten Global Allocation Map (GAM), Shared Global Allocation Map (SGAM) oder Page Free Space (PFS) auftreten, wenn SQL Server auf spezielle Systemseiten schreiben muss, um neue Objekte zuzuweisen. Verriegelungen sperren diese Seiten im Speicher. In einer stark ausgelasteten SQL Server-Instanz kann es lange dauern, bis ein Latch auf einer Systemseite in tempdb abgerufen wird. Dies führt zu längeren Abfragezeiten und wird als Latch Contention bezeichnet. Lesen Sie die folgenden Best Practices für das Erstellen von tempdb-Datendateien:
 
 * Für < oder = bis 8 Kerne: Tempdb-Datendateien = Anzahl der Kerne
 * Für > 8 Kerne: 8 tempdb-Datendateien
+* Die tempdb-Datendatei sollte mit gleicher Größe erstellt werden
 
 
-Mit dem folgenden Beispielskript wird tempdb geändert, indem acht tempdb-Dateien erstellt und tempdb auf den Mount-Punkt verschoben wird `C:\MSSQL\tempdb` Für SQL Server 2012 und höher.
+Mit dem folgenden Beispielskript wird tempdb geändert, indem acht tempdb-Dateien gleicher Größe erstellt und tempdb auf den Mount-Punkt für SQL Server 2012 und höher verschoben `C:\MSSQL\tempdb` wird.
 
 ....
 use master
