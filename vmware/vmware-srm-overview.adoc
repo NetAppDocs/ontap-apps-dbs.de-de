@@ -57,6 +57,9 @@ SRM kann Ihren DR-Plan mithilfe der proprietären NetApp FlexClone Technologie u
 Bei einem echten Ausfall oder sogar einer geplanten Migration können Sie mit SRM alle Last-Minute-Änderungen am Datensatz über ein letztes SnapMirror Update senden (sofern Sie dies tun). Dann wird die Spiegelung unterbrochen und der Datenspeicher wird Ihren DR-Hosts gemountet. An diesem Punkt können Ihre VMs automatisch in beliebiger Reihenfolge gemäß Ihrer vorab geplanten Strategie hochgefahren werden.
 
 
+NOTE: Mit ONTAP Systemen können Sie SVMs zwecks SnapMirror Replizierung im selben Cluster kombinieren, jedoch wurde dieses Szenario nicht mit SRM getestet und zertifiziert. Daher wird empfohlen, bei Verwendung von SRM nur SVMs aus unterschiedlichen Clustern zu verwenden.
+
+
 
 == SRM mit ONTAP und anderen Anwendungsfällen: Hybrid Cloud und Migration
 

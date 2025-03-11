@@ -23,35 +23,32 @@ NOTE: Diese Dokumentation ersetzt zuvor veröffentlichte technische Berichte _TR
 Andere Dokumente wie Leitfäden und Kompatibilitätslisten werden durch Best Practices ergänzt. Sie werden basierend auf Labortests und umfassenden praktischen Erfahrungen der NetApp Ingenieure und Kunden entwickelt. Es handelt sich hierbei unter Umständen nicht nur um geeignete oder unterstützte Praktiken, sondern im Allgemeinen um die einfachsten Lösungen, die die Anforderungen der meisten Kunden erfüllen.
 
 
-TIP: Dieses Dokument wurde mit neuen VVols-Funktionen aus vSphere 8.0 Update 1 aktualisiert, die von der Version 9.12 der ONTAP Tools unterstützt werden.
+TIP: Dieses Dokument wurde mit neuen VVols Funktionen aus vSphere 8.0 Update 3 und der Version ONTAP Tools 10.3 aktualisiert.
 
 
 
 == Virtual Volumes (VVols) – Übersicht
 
-NetApp begann 2012 die Zusammenarbeit mit VMware zur Unterstützung von vSphere APIs for Storage Awareness (VASA) für vSphere 5. Dieser frühe VASA Provider ermöglichte die Definition von Storage-Funktionen in einem Profil, das zur Filterung von Datastores bei der Bereitstellung und zur Überprüfung der Einhaltung der Richtlinie anschließend verwendet werden konnte. Im Laufe der Zeit wurden neue Funktionen hinzugefügt, um eine stärkere Automatisierung der Bereitstellung zu ermöglichen. Zudem wurden Virtual Volumes oder VVols hinzugefügt, bei denen individuelle Storage-Objekte für Dateien von Virtual Machines und Virtual Disks verwendet werden. Zu diesen Objekten gehören LUNs, Dateien und jetzt auch vSphere 8. NVMe namespaces.NetApp arbeitete eng mit VMware als Referenzpartner für VVols zusammen, die im Jahr 2015 für vSphere 6 veröffentlicht wurden, und erneut als Design-Partner für VVols, die NVMe over Fabrics in vSphere 8 verwenden. NetApp erweitert VVols kontinuierlich, um die Vorteile der neuesten Funktionen von ONTAP zu nutzen.
+NetApp begann 2012 die Zusammenarbeit mit VMware zur Unterstützung von vSphere APIs for Storage Awareness (VASA) für vSphere 5. Dieser frühe VASA Provider ermöglichte die Definition von Storage-Funktionen in einem Profil, das zur Filterung von Datastores bei der Bereitstellung und zur Überprüfung der Einhaltung der Richtlinie anschließend verwendet werden konnte. Im Laufe der Zeit wurden neue Funktionen hinzugefügt, um eine stärkere Automatisierung der Bereitstellung zu ermöglichen. Zudem wurden Virtual Volumes oder VVols hinzugefügt, bei denen individuelle Storage-Objekte für Dateien von Virtual Machines und Virtual Disks verwendet werden. Dies können LUNs, Dateien und jetzt auch vSphere 8 – NVMe-Namespaces sein. NetApp hat 2015 eng mit VMware als Referenzpartner für VVols zusammengearbeitet, die im Bereich vSphere 6 und erneut als Designpartner für VVols unter Verwendung von NVMe over Fabrics in vSphere 8 veröffentlicht wurden. NetApp erweitert VVols kontinuierlich, um die Vorteile der neuesten Funktionen von ONTAP zu nutzen.
 
 Es gibt mehrere Komponenten, die zu beachten sind:
 
-|===
 
 
-| *VASA Provider* 
+=== VASA Provider
+
+Dies ist die Softwarekomponente, die die Kommunikation zwischen VMware vSphere und dem Speichersystem übernimmt. Bei ONTAP wird VASA Provider in einer Appliance ausgeführt, bekannt als ONTAP Tools für VMware vSphere (kurz ONTAP Tools). Die ONTAP Tools enthalten außerdem ein vCenter Plug-in, einen Storage Replication Adapter (SRA) für VMware Site Recovery Manager und REST-API-Server zum Erstellen Ihrer eigenen Automatisierung. Sobald ONTAP Tools bei vCenter konfiguriert und registriert sind, besteht kaum noch Bedarf für eine direkte Interaktion mit dem ONTAP System, da sich Ihre Storage-Anforderungen nahezu vollständig über die vCenter UI oder ÜBER REST-API-Automatisierung managen lassen.
 
 
-| Dies ist die Softwarekomponente, die die Kommunikation zwischen VMware vSphere und dem Speichersystem übernimmt. Bei ONTAP wird VASA Provider in einer Appliance ausgeführt, bekannt als ONTAP Tools für VMware vSphere (kurz ONTAP Tools). Die ONTAP Tools enthalten außerdem ein vCenter Plug-in, einen Storage Replication Adapter (SRA) für VMware Site Recovery Manager und REST-API-Server zum Erstellen Ihrer eigenen Automatisierung. Sobald ONTAP Tools bei vCenter konfiguriert und registriert sind, besteht kaum noch Bedarf für eine direkte Interaktion mit dem ONTAP System, da sich Ihre Storage-Anforderungen nahezu vollständig über die vCenter UI oder ÜBER REST-API-Automatisierung managen lassen. 
+
+=== Protokollendpunkt (PE)
+
+Der Protokollendpunkt ist ein Proxy für I/O zwischen den ESXi Hosts und dem VVols Datastore. ONTAP VASA Provider erstellt diese automatisch, entweder eine Protokollendpunkt-LUN (4 MB Größe) pro FlexVol Volume des VVols Datastores oder ein NFS-Bereitstellungspunkt pro NFS-Schnittstelle (LIF) auf dem Storage-Node, der ein FlexVol Volume im Datastore hostet. Der ESXi-Host mountet diese Protokollendpunkte direkt statt einzelner vVol-LUNs und Dateien mit virtuellen Laufwerken. Die Protokollendpunkte müssen nicht verwaltet werden, da sie vom VASA Provider zusammen mit den erforderlichen Schnittstellengruppen oder Exportrichtlinien automatisch erstellt, gemountet, unmountet und gelöscht werden.
 
 
-| *Protokollendpunkt (PE)* 
 
+=== Virtual Protocol Endpoint (VPE)
 
-| Der Protokollendpunkt ist ein Proxy für I/O zwischen den ESXi Hosts und dem VVols Datastore. ONTAP VASA Provider erstellt diese automatisch, entweder eine Protokollendpunkt-LUN (4 MB Größe) pro FlexVol Volume des VVols Datastores oder ein NFS-Bereitstellungspunkt pro NFS-Schnittstelle (LIF) auf dem Storage-Node, der ein FlexVol Volume im Datastore hostet. Der ESXi-Host mountet diese Protokollendpunkte direkt statt einzelner vVol-LUNs und Dateien mit virtuellen Laufwerken. Die Protokollendpunkte müssen nicht verwaltet werden, da sie vom VASA Provider zusammen mit den erforderlichen Schnittstellengruppen oder Exportrichtlinien automatisch erstellt, gemountet, unmountet und gelöscht werden. 
-
-
-| *Virtual Protocol Endpoint (VPE)* 
-
-
- a| 
 Neu in vSphere 8 ist bei Verwendung von NVMe over Fabrics (NVMe-of) mit VVols, das Konzept eines Protokollendpunkts in ONTAP nicht mehr relevant. Stattdessen wird ein virtueller PE automatisch vom ESXi-Host für jede ANA-Gruppe instanziiert, sobald die erste VM eingeschaltet ist. ONTAP erstellt automatisch ANA-Gruppen für jedes vom Datenspeicher verwendete FlexVol Volume.
 
 Ein weiterer Vorteil bei der Nutzung von NVMe-of für VVols besteht darin, dass vom VASA Provider keine Bind-Anfragen erforderlich sind. Stattdessen verarbeitet der ESXi-Host die vVol-Bindungsfunktion intern basierend auf dem VPE. Dies verringert die Möglichkeit, dass ein vVol BIND-Ansturm den Service beeinträchtigt.
@@ -60,40 +57,29 @@ Weitere Informationen finden Sie unter https://docs.vmware.com/en/VMware-vSphere
 
 
 
-| *Datastore des virtuellen Volumes* 
+=== Datastore für virtuelle Volumes
+
+Bei dem Virtual Volume Datastore handelt es sich um eine logische Datastore-Darstellung eines VVols-Containers, der von einem VASA Provider erstellt und gemanagt wird. Der Container ist ein Pool an Storage-Kapazität, der aus den vom VASA Provider gemanagten Storage-Systemen bereitgestellt wird. ONTAP Tools unterstützen die Zuweisung mehrerer FlexVol Volumes (auch als Backup Volumes bezeichnet) einem einzelnen VVols-Datastore. Diese VVols Datastores können über mehrere Nodes in einem ONTAP Cluster verteilt werden. Dabei werden Flash- und Hybrid-Systeme mit unterschiedlichen Funktionen kombiniert. Der Administrator kann neue FlexVol Volumes mithilfe des Bereitstellungsassistenten oder DER REST-API erstellen oder vorab erstellte FlexVol Volumes für die Storage-Sicherung auswählen, sofern diese verfügbar sind.
 
 
-| Der Virtual Volume Datastore ist eine logische Datastore-Darstellung eines VVols-Containers, der von einem VASA Provider erstellt und gemanagt wird. Der Container ist ein Pool an Storage-Kapazität, der aus den vom VASA Provider gemanagten Storage-Systemen bereitgestellt wird. ONTAP Tools unterstützen die Zuweisung mehrerer FlexVol Volumes (auch als Backup Volumes bezeichnet) einem einzelnen VVols-Datastore. Diese VVols Datastores können über mehrere Nodes in einem ONTAP Cluster verteilt werden. Dabei werden Flash- und Hybrid-Systeme mit unterschiedlichen Funktionen kombiniert. Der Administrator kann neue FlexVol Volumes mithilfe des Bereitstellungsassistenten oder DER REST-API erstellen oder vorab erstellte FlexVol Volumes für die Storage-Sicherung auswählen, sofern diese verfügbar sind. 
 
+=== Virtuelle Volumes (VVols)
 
-| *Virtual Volumes (VVols)* 
+VVols sind die Dateien und Festplatten der Virtual Machines, die tatsächlich im VVols Datastore gespeichert sind. Der Begriff vVol (Singular) bezieht sich auf eine einzelne spezifische Datei, LUN oder Namespace. ONTAP erstellt NVMe-Namespaces, LUNs oder Dateien, je nachdem, welches Protokoll der Datastore verwendet. Es gibt mehrere unterschiedliche Typen von VVols. Die gängigsten sind Konfiguration (Metadatendateien), Daten (virtuelle Festplatte oder VMDK) und Swap (das beim Einschalten der VM erstellt wird). VVols, die durch die Verschlüsselung von VMware VM geschützt sind, haben einen anderen Typ. Die VMware VM-Verschlüsselung sollte nicht mit der ONTAP-Volume- oder Aggregatverschlüsselung verwechselt werden.
 
-
-| VVols sind die Dateien und Festplatten der Virtual Machines, die tatsächlich im VVols Datastore gespeichert sind. Der Begriff vVol (Singular) bezieht sich auf eine einzelne spezifische Datei, LUN oder Namespace. ONTAP erstellt NVMe-Namespaces, LUNs oder Dateien, je nachdem, welches Protokoll der Datastore verwendet. Es gibt mehrere unterschiedliche Typen von VVols. Die gängigsten sind Konfiguration (Metadatendateien), Daten (virtuelle Festplatte oder VMDK) und Swap (das beim Einschalten der VM erstellt wird). VVols, die durch die Verschlüsselung von VMware VM geschützt sind, haben einen anderen Typ. Die VMware VM-Verschlüsselung sollte nicht mit der ONTAP-Volume- oder Aggregatverschlüsselung verwechselt werden. 
-|===
 
 
 == Richtlinienbasiertes Management
 
-VMware vSphere APIs for Storage Awareness (VASA) erleichtern es VM-Administratoren, alle erforderlichen Storage-Funktionen zu nutzen, um VMs bereitzustellen, ohne mit ihrem Storage-Team interagieren zu müssen. Vor VASA konnten VM-Administratoren VM-Storage-Richtlinien definieren, mussten dann aber gemeinsam mit ihren Storage-Administratoren geeignete Datastores ermitteln – oft anhand der Dokumentation oder von Namenskonventionen. Mit VASA können vCenter Administratoren mit den entsprechenden Berechtigungen eine Reihe von Storage-Funktionen definieren, mit denen vCenter Benutzer dann VMs bereitstellen können. Durch die Zuordnung zwischen VM-Storage-Richtlinie und Datastore-Storage-Funktionsprofil kann in vCenter eine Liste kompatibler Datastores zur Auswahl angezeigt werden. Außerdem können andere Technologien wie Aria (ehemals vRealize) Automation oder Tanzu Kubernetes Grid aktiviert werden, um automatisch Storage aus einer zugewiesenen Richtlinie auszuwählen. Dieser Ansatz wird als richtlinienbasiertes Storage-Management bezeichnet. Während Storage-Funktionsprofile und -Richtlinien auch bei herkömmlichen Datastores verwendet werden können, konzentrieren wir uns hier auf VVols Datastores.
-
-Es gibt zwei Elemente:
-
-|===
+VMware vSphere APIs for Storage Awareness (VASA) erleichtern es VM-Administratoren, alle erforderlichen Storage-Funktionen zu nutzen, um VMs bereitzustellen, ohne mit ihrem Storage-Team interagieren zu müssen. Vor VASA konnten VM-Administratoren VM-Storage-Richtlinien definieren, mussten dann aber gemeinsam mit ihren Storage-Administratoren geeignete Datastores ermitteln – oft anhand der Dokumentation oder von Namenskonventionen. Mit VASA können vCenter Administratoren mit den entsprechenden Berechtigungen eine Reihe von Storage-Funktionen definieren, mit denen vCenter Benutzer dann VMs bereitstellen können. Durch die Zuordnung zwischen VM-Storage-Richtlinie und Datastore-Funktionen kann in vCenter eine Liste kompatibler Datastores zur Auswahl angezeigt werden. Außerdem können andere Technologien wie Aria (ehemals vRealize) Automation oder Tanzu Kubernetes Grid aktiviert werden, um automatisch Storage aus einer zugewiesenen Richtlinie auszuwählen. Dieser Ansatz wird als richtlinienbasiertes Storage-Management bezeichnet. Zwar können VASA Provider Regeln und VM Storage-Richtlinien auch bei herkömmlichen Datastores verwendet werden, doch liegt unser Schwerpunkt hier auf VVols Datastores.
 
 
-| *Storage Capability Profile (SCP)* 
 
+=== VM-Storage-Richtlinien
 
-| Ein Storage-Funktionsprofil (Storage Capability Profile, SCP) ist eine Form von Storage-Vorlage. Damit können vCenter Administratoren festlegen, welche Storage-Funktionen benötigt werden, ohne dass ein Verständnis für das Management dieser Funktionen in ONTAP erforderlich ist. Mit Hilfe einer Vorlage können Administratoren problemlos Storage-Services auf konsistente und vorhersehbare Weise bereitstellen. Zu den in einem SCP beschriebenen Funktionen zählen Performance, Protokolle, Storage-Effizienz und weitere Funktionen. Die spezifischen Funktionen sind je nach Version unterschiedlich. Sie werden mit dem Menü ONTAP Tools für VMware vSphere in der vCenter UI erstellt. SIE können AUCH REST-APIs zum Erstellen von SCPs verwenden. Sie können manuell durch Auswahl einzelner Funktionen erstellt oder automatisch aus vorhandenen (herkömmlichen) Datenspeichern generiert werden. 
+VM Storage-Richtlinien werden in vCenter unter Richtlinien und Profile erstellt. Erstellen Sie für VVols mithilfe von Regeln des NetApp VVols Storage-Typ-Providers ein Regelwerk. ONTAP Tools 10.X bietet jetzt einen einfacheren Ansatz als ONTAP Tools 9.X, da Sie Storage-Attribute direkt in der VM Storage-Richtlinie selbst angeben können.
 
-
-| *VM-Speicherrichtlinie* 
-
-
-| VM Storage-Richtlinien werden in vCenter unter Richtlinien und Profile erstellt. Erstellen Sie für VVols mithilfe von Regeln des NetApp VVols Storage-Typ-Providers ein Regelwerk. ONTAP Tools bietet einen vereinfachten Ansatz, da Sie ein SCP einfach auswählen können, anstatt Sie zur Angabe einzelner Regeln zu zwingen. 
-|===
-Wie oben erwähnt, kann die Verwendung von Richtlinien zur Vereinfachung der Bereitstellung von Volumes beitragen. Wählen Sie einfach eine entsprechende Richtlinie aus. VASA Provider zeigt VVols-Datastores an, die diese Richtlinie unterstützen, und platziert das vVol in einem individuellen, konformen FlexVol Volume (Abbildung 1).
+Wie oben erwähnt, kann die Verwendung von Richtlinien zur Vereinfachung der Bereitstellung von Volumes beitragen. Wählen Sie einfach eine entsprechende Richtlinie aus. VASA Provider zeigt VVols Datastores, die diese Richtlinie unterstützen, und platziert das vVol in einer individuellen, konformen FlexVol volume.
 
 
 
@@ -101,7 +87,7 @@ Wie oben erwähnt, kann die Verwendung von Richtlinien zur Vereinfachung der Ber
 
 image::vvols-image3.png[Implementierung einer Virtual Machine mithilfe der Storage-Richtlinie,800,480]
 
-Sobald eine VM bereitgestellt ist, prüft der VASA Provider weiterhin die Compliance und alarmiert den VM-Administrator mit einem Alarm in vCenter, wenn das Backup-Volume nicht mehr mit der Richtlinie konform ist (Abbildung 2).
+Sobald eine VM bereitgestellt ist, prüft der VASA Provider weiterhin die Compliance und alarmiert den VM-Administrator mit einem Alarm in vCenter, wenn das Backup-Volume nicht mehr mit der Richtlinie konform ist.
 
 
 

@@ -14,11 +14,36 @@ summary: Auf dieser Seite werden die Best Practices zur Implementierung einer ON
 
 
 [role="lead"]
-NetApp war schon früh als Design-Partner von VMware an der Entwicklung von vSphere Virtual Volumes (VVols) beteiligt und stellte architekturspezifischen Input und frühzeitig Unterstützung für VVols und VMware vSphere APIs for Storage Awareness (VASA) bereit. Durch diesen Ansatz wurde VMFS nicht nur granulares VM-Storage-Management ermöglicht, sondern auch die Automatisierung der Storage-Bereitstellung durch Storage Policy Based Management (SPBM) unterstützt.
+NetApp wurde erstmals im Jahr 2012 vorgestellt und war bereits ein früher Design-Partner von VMware bei der Entwicklung von VMware vSphere APIs for Storage Awareness (VASA), der Grundlage des Policy-basierten Storage-Managements (SPBM) für Enterprise Storage Arrays. Durch diesen Ansatz wurde das granulare VM-Storage-Management nur noch für VMFS und NFS Storage verfügbar.
 
-SPBM bietet ein Framework, das als Abstraktionsebene zwischen den für Ihre Virtualisierungsumgebung verfügbaren Storage-Services und den über Richtlinien bereitgestellten Storage-Elementen dient. Storage-Architekten können mit diesem Ansatz Storage-Pools mit unterschiedlichen Funktionen entwerfen, die von VM-Administratoren einfach genutzt werden können. Administratoren können die Workload-Anforderungen von Virtual Machines an die bereitgestellten Storage Pools anpassen, wodurch verschiedene Einstellungen pro VM oder Virtual Disk granular kontrolliert werden können.
+ As a technology design partner, NetApp provided architectural input and in 2015 announced support for vVols. This new technology now enabled the automation of VM-granular and truly array-native storage provisioning through SPBM.
 
-Bei VVols ist ONTAP eine der führenden Lösungen in der Storage-Branche, da es Hunderttausende VVols in einem einzigen Cluster unterstützt. Anbieter von Enterprise-Arrays und kleineren Flash-Arrays hingegen unterstützen gerade einmal mehrere Tausend VVols pro Array. Zudem bringt NetApp mit neuen Funktionen bei der Unterstützung von VVols 3.0 die Weiterentwicklung des granularen VM-Managements voran.
+
+== Virtuelle Volumes (VVols)
+
+VVols sind eine revolutionäre Storage-Architektur, die das granulare Storage-Management von VMs ermöglicht. Dadurch lässt sich Storage nicht nur pro VM (einschließlich VM-Metadaten) managen, sondern sogar pro VMDK. VVols sind eine Kernkomponente der Strategie des Software Defined Data Center (SDDC), die die Grundlage von VMware Cloud Foundation (VCF) bildet und eine effizientere und skalierbarere Storage-Architektur für virtualisierte Umgebungen bietet.
+
+VVols ermöglichen VMs die Storage-Nutzung pro VM, da jedes VM Storage-Objekt in NetApp ONTAP eine eindeutige Einheit ist. Bei ASA r2-Systemen, für die kein Volume-Management mehr erforderlich ist, ist daher jedes VM-Speicherobjekt eine eindeutige Storage-Einheit (SU) auf dem Array und kann unabhängig gesteuert werden. Dadurch können Storage-Richtlinien erstellt werden, die auf einzelne VMs oder VMDKs (und somit auf einzelne Sus) angewendet werden können und granulare Kontrolle über Storage-Services wie z. B. Performance, Verfügbarkeit und Datensicherung bieten.
+
+
+
+== Storage Policy Based Management (SPBM)
+
+SPBM bietet ein Framework, das als Abstraktionsebene zwischen den für Ihre Virtualisierungsumgebung verfügbaren Storage-Services und den über Richtlinien bereitgestellten Storage-Elementen dient. Storage-Architekten können mit diesem Ansatz Storage-Pools mit unterschiedlichen Funktionen entwerfen. Diese Pools können von VM-Administratoren problemlos genutzt werden. Administratoren können dann die Workload-Anforderungen der Virtual Machine an die bereitgestellten Storage-Pools anpassen. Dieser Ansatz vereinfacht das Storage-Management und ermöglicht eine effizientere Nutzung der Storage-Ressourcen.
+
+SPBM ist eine zentrale Komponente von VVols und bietet ein richtlinienbasiertes Framework für das Management von Storage-Services. Die Richtlinien werden von vSphere Administratoren anhand von Regeln und Funktionen erstellt, die vom VASA Provider (VP) des Anbieters offengelegt werden. Richtlinien für verschiedene Storage-Services wie Performance, Verfügbarkeit und Datensicherung können erstellt werden. Richtlinien können individuellen VMs oder VMDKs zugewiesen werden, wodurch Storage-Services granular kontrolliert werden können.
+
+
+
+== NetApp ONTAP und VVols
+
+Bei VVols ist NetApp ONTAP eine der führenden Lösungen in der Storage-Branche, da es Hunderttausende VVols in einem einzigen Cluster unterstützt*. Im Gegensatz dazu unterstützen Anbieter von Enterprise-Arrays und kleineren Flash-Arrays nur wenige Tausend VVols pro Array. ONTAP bietet eine skalierbare und effiziente Storage-Lösung für VMware vSphere Umgebungen, die VVols mit einer umfassenden Auswahl an Storage-Services unterstützt, darunter Datendeduplizierung, Komprimierung, Thin Provisioning und Datensicherung. SPBM ermöglicht die nahtlose Integration mit VMware vSphere Umgebungen.
+
+Zuvor haben wir erwähnt, dass VM-Administratoren Kapazitäten als Storage-Pools belegen können. Dies wird durch die Verwendung von Storage-Containern erreicht, die in vSphere als logische Datastores dargestellt werden.
+
+Storage-Container werden von Storage-Administratoren erstellt und gruppiert, um Storage-Ressourcen zu gruppieren, die von VM-Administratoren belegt werden können. Storage-Container können je nach verwendetem ONTAP-System unterschiedlich erstellt werden. Beim herkömmlichen ONTAP 9 Cluster werden Containern ein oder mehrere FlexVols zugewiesen, die gemeinsam den Storage-Pool bilden. Bei ASA r2-Systemen ist der gesamte Cluster der Storage-Pool.
 
 
 NOTE: Weitere Informationen zu VMware vSphere Virtual Volumes, SPBM und ONTAP finden Sie unter link:vmware-vvols-overview.html["TR-4400: VMware vSphere Virtual Volumes with ONTAP"^].
+
+ \* Depending on platform and protocol

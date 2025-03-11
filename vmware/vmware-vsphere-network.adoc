@@ -66,122 +66,18 @@ Die folgende Tabelle enthält eine Zusammenfassung der Netzwerkkonfigurationsele
 
 == SAN (FC, FCoE, NVMe/FC, iSCSI), RDM
 
-Mit vSphere gibt es drei Methoden, blockbasierten Speicher zu nutzen:
+ONTAP bietet Block-Storage der Enterprise-Klasse für VMware vSphere unter Verwendung des traditionellen iSCSI- und Fibre-Channel-Protokolls (FCP) sowie des hocheffizienten und performanten NVMe-of (Next-Generation Block-Protokoll), das sowohl NVMe/FC als auch NVMe/TCP unterstützt.
 
-* Mit VMFS Datastores
-* Mit Raw Device Mapping (RDM)
-* Auf diese LUN wird von einem Software-Initiator aus einem VM-Gastbetriebssystem zugegriffen und gesteuert
-
-
-VMFS ist ein hochperformantes geclustertes Filesystem, das Datastores bereitstellt, bei denen es sich um Shared-Storage-Pools handelt. VMFS Datastores können mit LUNs konfiguriert werden, auf die über FC, iSCSI, FCoE oder NVMe Namespaces zugegriffen wird, auf die das NVMe/FC-Protokoll zugegriffen wird. Bei VMFS können alle ESX Server in einem Cluster gleichzeitig auf herkömmliche LUNs zugreifen. Die maximale LUN-Größe beträgt bei ONTAP im Allgemeinen 16 TB; daher wird ein VMFS 5 Datastore mit einer maximalen Größe von 64 TB (siehe erste Tabelle in diesem Abschnitt) aus vier 16-TB-LUNs erstellt (alle SAN-Array-Systeme unterstützen die maximale VMFS-LUN-Größe von 64 TB). Da die ONTAP LUN-Architektur keine kleinen individuellen „Queue Depths“ aufweist, sind VMFS Datastores in ONTAP relativ problemlos in einem höheren Maße skalierbar gegenüber herkömmlichen Array-Architekturen.
-
-VSphere umfasst integrierte Unterstützung für mehrere Pfade zu Storage-Geräten. Dieses Verfahren wird als natives Multipathing (NMP) bezeichnet. NMP kann den Storage-Typ für unterstützte Storage-Systeme erkennen und den NMP-Stack automatisch so konfigurieren, dass die Funktionen des verwendeten Storage-Systems unterstützt werden.
-
-Sowohl NMP als auch ONTAP unterstützen Asymmetric Logical Unit Access (ALUA) zur Ermittlung optimierter und nicht optimierter Pfade. In ONTAP folgt ein ALUA-optimierter Pfad auf einen direkten Datenpfad. Dabei wird ein Zielport auf dem Node verwendet, der die LUN hostet, auf die zugegriffen wird. ALUA ist sowohl in vSphere als auch in ONTAP standardmäßig aktiviert. NMP erkennt das ONTAP Cluster als ALUA-fähig und verwendet ein ALUA Storage-Array-Plug-in (`VMW_SATP_ALUA`) Und wählt das Round-Robin-Pfadauswahl-Plug-in aus (`VMW_PSP_RR`).
-
-ESXi 6 unterstützt bis zu 256 LUNs und insgesamt bis zu 1,024 Pfade zu LUNs. Alle über diese Grenzen hinausgehenden LUNs oder Pfade werden von ESXi nicht erkannt. Ausgehend von dieser maximalen Anzahl an LUNs lässt das Pfadlimit vier Pfade pro LUN zu. In einem größeren ONTAP Cluster ist es möglich, dass das Pfadlimit vor dem LUN-Limit erreicht wird. Zur Beseitigung dieser Beschränkung unterstützt ONTAP ab Version 8.3 die selektive LUN-Zuordnung (Selective LUN Map, SLM).
-
-SLM beschränkt die Nodes, die Pfade an eine bestimmte LUN weitergeben. Eine Best Practice von NetApp sieht mindestens eine logische Schnittstelle (Logical Interface, LIF) pro Node pro SVM und die Verwendung von SLM vor, um die Pfade zu begrenzen, die an den Node weitergegeben werden, der die LUN und deren HA-Partner hostet. Es sind zwar noch andere Pfade vorhanden, doch werden diese standardmäßig nicht weitergegeben. Die weitergegebenen Pfade können mit den Node-Argumenten zum Hinzufügen oder Entfernen der Berichterstellung in SLM geändert werden. Beachten Sie, dass in Versionen vor 8.3 erstellte LUNs alle Pfade weitergeben. Sie müssen geändert werden, damit nur die Pfade zum Hosting-HA-Paar weitergegeben werden. Weitere Informationen zu SLM finden Sie in Abschnitt 5.9 von https://www.netapp.com/pdf.html?item=/media/10680-tr4080pdf.pdf["TR-4080"^]. Um die für eine LUN verfügbaren Pfade weiter zu reduzieren, kann auch die frühere Portsatzmethode verwendet werden. Portsätze tragen dazu bei, die Anzahl der sichtbaren Pfade zu verringern, durch die Initiatoren in einer Initiatorgruppe LUNs ausfindig machen können.
-
-* SLM ist standardmäßig aktiviert. Sofern Sie keine Portsätze verwenden, ist keine weitere Konfiguration erforderlich.
-* Für LUNs, die vor Data ONTAP 8.3 erstellt wurden, wenden Sie SLM manuell an, indem Sie den ausführen `lun mapping remove-reporting-nodes` Befehl, um die LUN-Nodes für die Berichterstellung zu entfernen und den LUN-Zugriff auf den LUN-Eigentümer-Node und seinen HA-Partner zu beschränken.
-
-
-Blockprotokolle (iSCSI, FC und FCoE) greifen mithilfe von LUN-IDs und Seriennummern sowie mit eindeutigen Namen auf LUNs zu. FC und FCoE verwenden weltweite Namen (WWNNs und WWPNs) und iSCSI verwendet qualifizierte iSCSI-Namen (IQNs). Der Pfad zu LUNs innerhalb des Storage hat für die Blockprotokolle keine Bedeutung und wird nirgendwo im Protokoll angegeben. Daher muss ein Volume, das nur LUNs enthält, nicht intern gemountet werden. Zudem ist für Volumes, die in Datastores verwendete LUNs enthalten, kein Verbindungspfad erforderlich. Das NVMe-Subsystem in ONTAP funktioniert ähnlich.
-
-Weitere Best Practices, die berücksichtigt werden sollten:
-
-* Vergewissern Sie sich, dass für jede SVM auf jedem Node im ONTAP Cluster eine logische Schnittstelle (LIF) erstellt wird, um maximale Verfügbarkeit und Mobilität zu gewährleisten. Als Best Practice empfiehlt sich für ONTAP SANs die Verwendung von zwei physischen Ports und LIFs pro Node, einer für jede Fabric. Mit ALUA werden Pfade geparst und aktive optimierte (direkte) Pfade im Gegensatz zu aktiven nicht optimierten Pfaden identifiziert. ALUA wird für FC, FCoE und iSCSI verwendet.
-* Nutzen Sie für iSCSI-Netzwerke mehrere VMkernel Netzwerkschnittstellen für verschiedene Subnetze mit NIC-Teaming, wenn mehrere virtuelle Switches vorhanden sind. Darüber hinaus können Sie mehrere physische NICs nutzen, die mit mehreren physischen Switches verbunden sind, um Hochverfügbarkeit und einen höheren Durchsatz bereitzustellen. Die folgende Abbildung zeigt ein Beispiel für Multipath-Konnektivität. Verwenden Sie in ONTAP eine Single-Mode-Schnittstellengruppe mit mehreren Links zu verschiedenen Switches oder LACP mit Multimode-Schnittstellengruppen für hohe Verfügbarkeit und Vorteile bei der Link-Aggregation.
-* Wenn das Challenge-Handshake Authentication Protocol (CHAP) in ESXi für die Zielauthentifizierung verwendet wird, muss es auch in ONTAP über die CLI konfiguriert werden (`vserver iscsi security create`) Oder mit System Manager (bearbeiten Sie die Initiatorsicherheit unter „Storage“ > „SVMs“ > „SVM-Einstellungen“ > „Protocols“ > „iSCSI“).
-* Verwenden Sie ONTAP Tools für VMware vSphere, um LUNs und Initiatorgruppen zu erstellen und zu managen. Das Plug-in bestimmt automatisch die WWPNs von Servern und erstellt entsprechende Initiatorgruppen. Darüber hinaus konfiguriert er LUNs gemäß Best Practices und ordnet sie den richtigen Initiatorgruppen zu.
-* Setzen Sie RDMs mit Bedacht ein, da ihr Management schwieriger sein kann. Zudem verwenden sie auch Pfade, die wie bereits beschrieben beschränkt sind. ONTAP LUNs unterstützen beide https://kb.vmware.com/s/article/2009226["Kompatibilitätsmodus für physischen und virtuellen Modus"^] RDMs:
-* Weitere Informationen zur Verwendung von NVMe/FC mit vSphere 7.0 finden Sie im hier https://docs.netapp.com/us-en/ontap-sanhost/nvme_esxi_7.html["ONTAP NVMe/FC-Host-Konfigurationsleitfaden"^] Und http://www.netapp.com/us/media/tr-4684.pdf["TR-4684"^]. In der folgenden Abbildung ist die Multipath-Konnektivität von einem vSphere Host zu einer ONTAP-LUN dargestellt.
-
-
-image:vsphere_ontap_image2.png["Multipathing-Konnektivität"]
+Detaillierte Best Practices zur Implementierung von Blockprotokollen für VM-Storage mit vSphere und ONTAP finden Sie unter link:vmware-vsphere-datastores-san.html["Datenspeicher und Protokolle – SAN"]
 
 
 
 == NFS
 
-Bei vSphere können Kunden mithilfe von NFS-Arrays der Enterprise-Klasse gleichzeitigen Zugriff auf Datastores auf allen Nodes in einem ESXi Cluster ermöglichen. Wie im Abschnitt zu Datastores erwähnt, gibt es bei der Verwendung von NFS mit vSphere einige Vorteile im Hinblick auf Benutzerfreundlichkeit, Storage-Effizienz und Sichtbarkeit.
+Bei vSphere können Kunden mithilfe von NFS-Arrays der Enterprise-Klasse gleichzeitigen Zugriff auf Datastores auf allen Nodes in einem ESXi Cluster ermöglichen. Wie im  Abschnitt erwähntlink:vmware-vsphere-datastores-top.html["Datenspeicher"], gibt es bei der Verwendung von NFS mit vSphere einige Vorteile im Hinblick auf Benutzerfreundlichkeit, Storage-Effizienz und Sichtbarkeit.
 
-Für die Verwendung von ONTAP NFS mit vSphere werden folgende Best Practices empfohlen:
+Empfohlene Best Practices finden Sie in link:vmware-vsphere-datastores-nfs.html["Datenspeicher und Protokolle – NFS"]
 
-* Verwenden einer einzelnen logischen Schnittstelle (LIF) für jede SVM auf jedem Node im ONTAP-Cluster Die bisherigen Empfehlungen eines LIF pro Datenspeicher sind nicht mehr erforderlich. Der direkte Zugriff (LIF und Datastore auf demselben Node) ist zwar am besten, aber indirekte Zugriffe müssen sich keine Sorgen machen, da die Performance-Auswirkungen im Allgemeinen minimal sind (Mikrosekunden).
-* Alle aktuell unterstützten Versionen von VMware vSphere können sowohl NFS v3 als auch v4.1 verwenden. Die offizielle Unterstützung für nconnect wurde in vSphere 8.0 Update 2 für NFS v3 hinzugefügt. Für NFS v4.1 unterstützt vSphere weiterhin Session-Trunking, Kerberos-Authentifizierung und Kerberos-Authentifizierung mit Integrität. Beachten Sie, dass für das Session-Trunking ONTAP 9.14.1 oder eine neuere Version erforderlich ist. Sie können mehr über die nconnect-Funktion und wie sie die Leistung verbessert unter erfahren link:https://docs.netapp.com/us-en/netapp-solutions/virtualization/vmware-vsphere8-nfsv3-nconnect.html["NFSv3 nConnect Funktion mit NetApp und VMware"].
-
-
-Erwähnenswert ist, dass NFSv3 und NFSv4.1 verschiedene Sperrmechanismen verwenden. NFSv3 verwendet „Client-side locking“, während in NFSv4.1 „Server-side locking“ verwendet wird. Ein ONTAP Volume kann zwar mit beiden Protokollen exportiert werden, doch ESXi kann einen Datastore nur durch ein Protokoll mounten. Dies bedeutet jedoch nicht, dass andere ESXi-Hosts nicht denselben Datastore über eine andere Version mounten können. Um Probleme zu vermeiden, ist es wichtig, die beim Mounten verwendete Protokollversion anzugeben, um sicherzustellen, dass alle Hosts dieselbe Version und somit auch denselben Sperrungsstil anwenden. Es ist entscheidend, zu vermeiden, dass NFS-Versionen über Hosts hinweg gemischt werden. Wenn möglich, verwenden Sie Hostprofile, um die Compliance zu überprüfen.
-** Da keine automatische Datastore-Konvertierung zwischen NFSv3 und NFSv4.1 stattfindet, erstellen Sie einen neuen Datastore für NFSv4.1 und migrieren Sie die VMs mithilfe von Storage vMotion zum neuen Datastore.
-** Bitte beachten Sie die Hinweise in der Tabelle NFS v4.1 Interoperability im link:https://mysupport.netapp.com/matrix/["NetApp Interoperabilitäts-Matrix-Tool"^] Für bestimmte ESXi-Patch-Level, die zur Unterstützung erforderlich sind.
-* NFS-Exportrichtlinien werden verwendet, um den Zugriff durch vSphere-Hosts zu steuern. Sie können eine Richtlinie für mehrere Volumes (Datastores) nutzen. Bei NFSv3 verwendet ESXi den Sicherheitsstil „sys“ (UNIX). Zur Ausführung von VMs ist dabei die Root-Mount-Option erforderlich. In ONTAP wird diese Option als Superuser bezeichnet. Wenn die Option Superuser verwendet wird, ist es nicht erforderlich, die anonyme Benutzer-ID anzugeben. Beachten Sie, dass Exportrichtlinien mit unterschiedlichen Werten für gelten `-anon` Und `-allow-suid` Die ONTAP-Tools können zu Problemen bei der SVM-Erkennung führen. Hier sehen Sie eine Beispielrichtlinie:
-** Access Protocol: nfs3
-** Client-Match-Spezifikation: 192.168.42.21
-** RO-Zugriffsregel: Sys
-** RW-Zugriffsregel: Sys
-** Anonyme UID
-** Superuser: Sys
-* Wenn das NetApp-NFS-Plugin für VMware VAAI verwendet wird, sollte das Protokoll auf eingestellt werden `nfs` Wenn die Regel für die Exportrichtlinie erstellt oder geändert wird. Damit der Copy-Offload funktioniert, wird das NFSv4-Protokoll benötigt und das Protokoll als angegeben `nfs` Beinhaltet automatisch sowohl die NFSv3- als auch die NFSv4-Versionen.
-* NFS-Datastore-Volumes werden aus dem Root-Volume der SVM heraus verbunden. Daher muss ESXi zum Navigieren und Mounten von Datastore Volumes auch Zugriff auf das Root-Volume haben. Die Exportrichtlinie für das Root-Volume und für alle anderen Volumes, in denen die Verbindung des Datastore Volumes geschachtelt ist, muss eine oder mehrere Regeln für die ESXi Server einschließen, die ihnen schreibgeschützten Zugriff gewähren. Hier sehen Sie eine Beispielrichtlinie für das Root-Volume, bei der auch das VAAI Plug-in genutzt wird:
-** Access Protocol: nfs (schließt NFSv3 und NFSv4 ein)
-** Client-Match-Spezifikation: 192.168.42.21
-** RO-Zugriffsregel: Sys
-** RW Access Rule: Never (höchste Sicherheit für Root-Volume)
-** Anonyme UID
-** Superuser: Sys (auch für Root-Volume mit VAAI erforderlich)
-* Verwenden Sie ONTAP-Tools für VMware vSphere (die wichtigste Best Practice):
-** Verwenden Sie ONTAP Tools für VMware vSphere zur Bereitstellung von Datastores, da es das Management von Richtlinien für den Export automatisch vereinfacht.
-** Wenn Sie Datastores für VMware-Cluster mit dem Plug-in erstellen, wählen Sie das Cluster anstelle eines einzigen ESX-Servers aus. Bei dieser Auswahl mountet der Datastore automatisch auf alle Hosts im Cluster.
-** Verwenden Sie die Plug-in Mount-Funktion, um vorhandene Datastores auf neue Server anzuwenden.
-** Wenn Sie keine ONTAP-Tools für VMware vSphere verwenden, verwenden Sie eine einzige Exportrichtlinie für alle Server oder für jeden Cluster von Servern, bei dem eine zusätzliche Zugriffskontrolle erforderlich ist.
-* Obwohl ONTAP eine flexible Namespace-Struktur für Volumes bietet, in der Volumes mithilfe von Verbindungen in einer Baumstruktur angeordnet werden können, ist dieser Ansatz für vSphere nicht geeignet. Für jede VM im Root-Verzeichnis des Datastores wird unabhängig von der Namespace-Hierarchie des Storage ein Verzeichnis erstellt. Daher besteht die Best Practice darin, den Verbindungspfad für Volumes für vSphere im Root-Volume der SVM zu erstellen. Dies entspricht auch der Art und Weise, wie ONTAP Tools für VMware vSphere Datastores bereitstellt. Ohne geschachtelte Verbindungspfade besteht bei Volumes zudem nur eine Abhängigkeit zum Root-Volume. Wenn ein Volume dann offline geschaltet oder sogar absichtlich zerstört wird, wirkt sich dies also nicht auf den Pfad zu den anderen Volumes aus.
-* Eine Blockgröße von 4.000 ist für NTFS-Partitionen auf NFS-Datastores in Ordnung. In der folgenden Abbildung ist die Konnektivität eines vSphere Hosts zu einem ONTAP NFS-Datastore dargestellt.
-
-image:vsphere_ontap_image3.png["Konnektivität von einem vSphere-Host zu einem ONTAP-NFS-Datastore"]
-
-In der folgenden Tabelle sind NFS-Versionen und unterstützte Funktionen aufgeführt.
-
-|===
-| Funktionen von vSphere | NFSv3 | NFSv4.1 
-
-
-| VMotion und Storage vMotion | Ja. | Ja. 
-
-
-| Hochverfügbarkeit | Ja. | Ja. 
-
-
-| Fehlertoleranz | Ja. | Ja. 
-
-
-| DRS | Ja. | Ja. 
-
-
-| Hostprofile | Ja. | Ja. 
-
-
-| Storage DRS | Ja. | Nein 
-
-
-| Storage-I/O-Steuerung | Ja. | Nein 
-
-
-| SRM | Ja. | Nein 
-
-
-| Virtual Volumes | Ja. | Nein 
-
-
-| Hardwarebeschleunigung (VAAI) | Ja. | Ja. 
-
-
-| Kerberos Authentifizierung | Nein | Ja (Erweiterung mit vSphere 6.5 und höher zur Unterstützung von AES, krb5i) 
-
-
-| Multipathing-Unterstützung | Nein | Ja (ONTAP 9.14.1) 
-|===
 
 
 == Direkte Netzwerkverbindung
