@@ -35,8 +35,7 @@ Im Folgenden finden Sie die empfohlenen Host-Einstellungen für alle derzeit unt
 | VMFS3.EnableBlockDelete | Behalten Sie die Standardeinstellung (0) bei, können sie jedoch bei Bedarf geändert werden. Weitere Informationen finden Sie unter link:https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-storage-8-0/storage-provisioning-and-space-reclamation-in-vsphere/storage-space-reclamation-in-vsphere/space-reclamation-for-guest-operating-systems.html["Speicherplatzrückgewinnung für virtuelle VMFS5-Maschinen"] | Nein 
 
 
-| VMFS3.EnableVMFS6Entmappen | Standard beibehalten (1)
-Weitere Informationen finden Sie unter link:https://core.vmware.com/resource/vmware-vsphere-apis-array-integration-vaai#sec9426-sub4["VMware vSphere APIs – Array-Integration (VAAI)"] | Nein 
+| VMFS3.EnableVMFS6Entmappen | Behalten Sie die Standardeinstellung (1) bei. Weitere Informationen finden Sie unter link:https://www.vmware.com/docs/vmw-vmware-vsphere-apis-array-integration-vaai["VMware vSphere APIs – Array-Integration (VAAI)"] | Nein 
 
 
 3+| *NFS-Einstellungen* 
