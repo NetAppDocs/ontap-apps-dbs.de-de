@@ -61,7 +61,11 @@ Verwenden Sie diese Installationscheckliste, um eine erfolgreiche Implementierun
 
 .image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["Fünf"] Implementieren Sie die OVA
 [role="quick-margin-list"]
+* Beachten Sie, dass dieser Schritt bis zu 45 Minuten dauern kann
 * https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/deploy/ontap-tools-deployment.html["Implementieren Sie die OVA"] Verwenden des vSphere-Clients.
+* Wählen Sie in Schritt 3 der OVA-Bereitstellung die Option „Anpassung der Hardware dieser virtuellen Maschine“ aus, und legen Sie Folgendes auf Schritt 10 fest:
+* „CPU-Hot-Add aktivieren“
+* „Hot-Plug-Speicher“
 
 
 .image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-6.png["Sechs"] Fügen Sie vCenter zu ONTAP-Tools hinzu
@@ -71,6 +75,7 @@ Verwenden Sie diese Installationscheckliste, um eine erfolgreiche Implementierun
 
 .image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-7.png["Sieben"] Fügen Sie Storage Back-Ends zu ONTAP Tools hinzu
 [role="quick-margin-list"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/configure-user-role-and-privileges.html["Konfigurieren Sie ONTAP-Benutzerrollen und -Berechtigungen"] Verwenden der enthaltenen JSON-Datei, wenn nicht admin verwendet wird.
 * Bei Verwendung von bei Verwendung von Storage-Mandantenfähigkeit mit SVMs
 * https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/add-storage-backend.html["Onboard Cluster"] Im ONTAP Tools Manager und verknüpfen Sie sie mit vCenters.
 * https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/add-storage-backend.html["Onboard SVMs"] In den ONTAP Tools vCenter UI.
@@ -96,7 +101,6 @@ Verwenden Sie diese Installationscheckliste, um eine erfolgreiche Implementierun
 [role="quick-margin-list"]
 * Erstellen von Affinitätsregeln für VMs in einer HA-Implementierung
 * Bei Verwendung von HA werden die Storage vMotion Nodes zwei und drei auf separate Datastores verschoben (optional, aber empfohlen).
-* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/configure-user-role-and-privileges.html["Konfigurieren Sie ONTAP-Benutzerrollen und -Berechtigungen"] Verwenden der enthaltenen JSON-Datei.
 * https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/manage/certificate-manage.html["Verwenden Sie Zertifikate verwalten"] Im ONTAP-Tools-Manager, um alle erforderlichen CA-signierten Zertifikate zu installieren.
 * Wenn Sie SRA für SRM/VLSR zum Schutz herkömmlicher Datastores aktiviert haben, https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/protect/configure-on-srm-appliance.html["Konfigurieren Sie SRA auf der VMware Live Site Recovery-Appliance"].
 * Konfigurieren Sie native Backups für https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/manage/enable-backup.html["RPO nahezu Null"].
