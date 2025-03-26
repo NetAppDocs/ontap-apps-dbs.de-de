@@ -6,7 +6,10 @@ summary: Microsoft SQL Server-Speicherkonfiguration
 searchtitle: Microsoft SQL Server-Speicherkonfiguration 
 ---
 = Speicherkonfiguration
+:hardbreaks:
 :allow-uri-read: 
+:icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 

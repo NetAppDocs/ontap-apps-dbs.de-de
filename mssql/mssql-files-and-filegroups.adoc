@@ -3,10 +3,13 @@ sidebar: sidebar
 permalink: mssql/mssql-files-and-filegroups.html 
 keywords: MSSQL,SQL Server, backup, recovery, database file management 
 summary: Platzierung von Microsoft SQL Server-Datenbankdateien 
-searchtitle: Microsoft SQL Server Datenbankdateien und Dateigruppen 
+searchtitle: Platzierung von Microsoft SQL Server-Datenbankdateien 
 ---
 = Datenbankdateien und Dateigruppen
+:hardbreaks:
 :allow-uri-read: 
+:icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 

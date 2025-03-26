@@ -6,8 +6,10 @@ summary: MySQL-Konfigurationsparameter
 searchtitle: MySQL-Konfigurationsparameter 
 ---
 = Konfigurationsparameter
+:hardbreaks:
 :allow-uri-read: 
 :icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 

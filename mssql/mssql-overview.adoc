@@ -6,7 +6,10 @@ summary: Microsoft SQL Server auf ONTAP
 searchtitle: Microsoft SQL Server auf ONTAP 
 ---
 = Überblick
+:hardbreaks:
 :allow-uri-read: 
+:icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 

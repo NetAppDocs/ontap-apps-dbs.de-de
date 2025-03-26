@@ -29,4 +29,4 @@ Das primäre Ziel einer Striped-Konfiguration ist es, sicherzustellen, dass Sing
 
 Die folgende Abbildung zeigt drei mögliche Optionen für die Stripe-Größe und Breitenabstimmung. Die Anzahl der LUNs wird ausgewählt, um die oben beschriebenen Performance-Anforderungen zu erfüllen. In allen Fällen beträgt die Gesamtzahl der Daten innerhalb eines einzigen Stripes jedoch 1 MB.
 
-image:ontap-lvm-striping.png["Fehler: Fehlendes Grafikbild"]
+image:../media/ontap-lvm-striping.png["LVM-Striping"]

@@ -6,7 +6,10 @@ summary: Microsoft SQL Server und der ONTAP Mediator
 searchtitle: Microsoft SQL Server und der ONTAP Mediator 
 ---
 = ONTAP Mediator
+:hardbreaks:
 :allow-uri-read: 
+:icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 
@@ -15,7 +18,7 @@ Der Mediator ist für die sichere Automatisierung des Failover erforderlich. Ide
 
 Der Mediator ist nicht wirklich ein Tiebreak, obwohl das ist effektiv die Funktion, die es bietet. Er führt keine Aktionen durch. Stattdessen stellt er einen alternativen Kommunikationskanal für die Kommunikation zwischen Cluster und Cluster bereit.
 
-image:smas-mediator.png["Diagramm der aktiven Synchronisierung von SnapMirror mit dem Mediator"]
+image:../media/smas-mediator.png["Diagramm der aktiven Synchronisierung von SnapMirror mit dem Mediator"]
 
 Die #1 Herausforderung mit automatisiertem Failover ist das Split-Brain-Problem, und dieses Problem tritt auf, wenn Ihre zwei Standorte die Verbindung miteinander verlieren. Was soll geschehen? Sie möchten nicht, dass sich zwei verschiedene Standorte als verbleibende Kopien der Daten bezeichnen, aber wie kann ein einzelner Standort den Unterschied zwischen dem tatsächlichen Verlust des anderen Standorts und der Unfähigkeit, mit dem gegenüberliegenden Standort zu kommunizieren, erkennen?
 

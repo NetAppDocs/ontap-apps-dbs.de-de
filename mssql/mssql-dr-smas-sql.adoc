@@ -3,10 +3,13 @@ sidebar: sidebar
 permalink: mssql/mssql-dr-smas-sql.html 
 keywords: MSSQL,SQL Server, SnapMirror active sync, ONTAP, SMBC, SMas, SnapMirror Business Continuity 
 summary: Microsoft SQL Server und SnapMirror Active Sync 
-searchtitle: Microsoft SQL Server mit aktiver SnapMirror-Synchronisierung 
+searchtitle: Microsoft SQL Server und SnapMirror Active Sync 
 ---
 = Überblick
+:hardbreaks:
 :allow-uri-read: 
+:icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 
@@ -21,7 +24,7 @@ Die Best Practices für das Datei-Layout und die Serverkonfiguration sind diesel
 
 Mit einer eigenständigen Einrichtung konnte SQL Server nur an einem Standort ausgeführt werden. Vermutlich link:mssql-dr-smas-uniform.html["Einheitlich"]würde der Zugriff genutzt werden.
 
-image:smas-onehost.png["Ein Host mit einheitlichem Zugriff"]
+image:../media/smas-onehost.png["Ein Host mit einheitlichem Zugriff"]
 
 Bei einem einheitlichen Zugriff würde ein Storage-Ausfall an einem der Standorte den Datenbankbetrieb nicht unterbrechen. Ein kompletter Standortausfall am Standort, der den Datenbankserver einschloss, würde natürlich zu einem Ausfall führen.
 

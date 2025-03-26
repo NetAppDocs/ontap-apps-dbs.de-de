@@ -35,7 +35,7 @@ Ohne Annäherungseinstellungen verwendet der Host beide Speichersysteme gleichm�
 
 Bei einem AFF System werden die Pfade nach dem Konfigurieren von Host-Nähe wie unten dargestellt angezeigt.
 
-image:smas-uniform-aff.png["SnapMirror Active Sync AFF einheitliche Vernetzung"]
+image:../media/smas-uniform-aff.png["SnapMirror Active Sync AFF einheitliche Vernetzung"]
 
 Im normalen Betrieb sind alle E/A-Vorgänge lokal. Lese- und Schreibvorgänge werden vom lokalen Speicher-Array gewartet. Schreib-I/O muss natürlich auch vom lokalen Controller auf das Remote-System repliziert werden, bevor sie bestätigt wird. Alle Lese-I/O-Vorgänge werden jedoch lokal gewartet und es kommt keine zusätzliche Latenz durch das Durchlaufen der SAN-Verbindung zwischen den Standorten zu.
 
@@ -49,7 +49,7 @@ Es gibt redundante Pfade durch den lokalen Cluster, die aus Gründen der Einfach
 
 NetApp ASA Systeme bieten aktiv/aktiv-Multipathing über alle Pfade eines Clusters hinweg. Dies gilt auch für SM-AS Konfigurationen.
 
-image:smas-uniform-asa.png["SnapMirror Active Sync ASA einheitliche Vernetzung"]
+image:../media/smas-uniform-asa.png["SnapMirror Active Sync ASA einheitliche Vernetzung"]
 
 Eine ASA-Konfiguration mit nicht-einheitlichem Zugriff würde im Wesentlichen auf die gleiche Weise funktionieren wie mit AFF. Bei einheitlichem Zugriff würde IO das WAN überqueren. Dies kann wünschenswert sein oder auch nicht.
 

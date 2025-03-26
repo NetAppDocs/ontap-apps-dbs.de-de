@@ -1,17 +1,20 @@
 ---
 sidebar: sidebar 
 permalink: mssql/mssql-data-security.html 
-keywords: MSSQL,SQL Server, securing databases on ONTAP, snaplock, multiadmin verification, backup, tamperproof snapshots 
+keywords: MSSQL, SQL Server, securing databases on ONTAP, snaplock, multiadmin verification, backup, tamperproof snapshots 
 summary: Sichern von Microsoft SQL Server auf ONTAP 
 searchtitle: Sichern von Microsoft SQL Server auf ONTAP 
 ---
 = Datensicherheit
+:hardbreaks:
 :allow-uri-read: 
+:icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 
 [role="lead"]
-Die Sicherung einer SQL Server-Datenbankumgebung ist ein mehrdimensionaler Aufwand, der über das Management der Datenbank selbst hinausgeht. ONTAP bietet verschiedene einzigartige Funktionen, die den Storage-Aspekt Ihrer Datenbankinfrastruktur sichern sollen.
+Die Sicherung einer SQL Server Datenbankumgebung ist ein mehrdimensionaler Prozess, der über das Management der Datenbank selbst hinausgeht. ONTAP bietet verschiedene einzigartige Funktionen, die den Storage-Aspekt Ihrer Datenbankinfrastruktur sichern sollen.
 
 
 
@@ -21,39 +24,45 @@ Speicher-Snapshots sind Point-in-Time-Replikate der Zieldaten. Die Implementieru
 
 In einigen Fällen können Snapshots direkt auf ONTAP geplant werden. In anderen Fällen muss Software wie SnapCenter vor der Erstellung von Snapshots Applikations- oder Betriebssystemvorgänge orchestrieren. Ganz gleich, welcher Ansatz für Ihren Workload am besten geeignet ist: Eine aggressive Snapshot-Strategie bietet Datensicherheit durch häufigen, leicht zugänglichen Zugriff auf Backups aller Komponenten, von Boot-LUNs bis hin zu geschäftskritischen Datenbanken.
 
-*Hinweis*: Ein flexibles ONTAP-Volume, oder einfacher gesagt, ein Volume ist nicht gleichbedeutend mit einer LUN. Volumes sind Management-Container für Daten wie Dateien oder LUNs. Eine Datenbank kann beispielsweise auf einen Stripe-Satz mit 8 LUNs platziert werden, wobei alle LUNs in einem einzelnen Volume enthalten sind.
+[NOTE]
+====
+Ein flexibles ONTAP Volume oder ganz einfach ein Volume ist nicht gleichbedeutend mit einer LUN. Volumes sind Management-Container für Daten wie Dateien oder LUNs. Eine Datenbank kann beispielsweise auf einen Stripe-Satz mit 8 LUNs platziert werden, wobei alle LUNs in einem einzelnen Volume enthalten sind.
 
-Weitere Informationen zu Snapshots finden Sie auf link:https://docs.netapp.com/us-en/ontap/data-protection/manage-local-snapshot-copies-concept.html["Hier."]
+====
+Weitere Informationen zu Snapshots finden Sie im link:https://docs.netapp.com/us-en/ontap/data-protection/manage-local-snapshot-copies-concept.html["ONTAP Dokumentation."]
 
 
 
 == Manipulationssichere Snapshots
 
-Ab ONTAP 9.12.1 sind Snapshots nicht nur schreibgeschützt, sondern können auch vor versehentlichem oder absichtlichem Löschen geschützt werden. Die Funktion wird Tamperproof Snapshots genannt. Über die Snapshot-Richtlinie kann eine Aufbewahrungsfrist festgelegt und durchgesetzt werden. Die resultierenden Snapshots können erst gelöscht werden, wenn sie ihr Ablaufdatum erreicht haben. Es gibt keine administrativen oder Support Center-Überschreibungen.
+Ab ONTAP 9.12.1 sind Snapshots nicht nur schreibgeschützt, sondern können auch vor versehentlichem oder absichtlichem Löschen geschützt werden. Diese Funktion wird als manipulationssichere Snapshots bezeichnet. Über die Snapshot-Richtlinie kann eine Aufbewahrungsfrist festgelegt und durchgesetzt werden. Die resultierenden Snapshots können erst gelöscht werden, wenn sie ihr Ablaufdatum erreicht haben. Es gibt keine administrativen oder Support Center-Überschreibungen.
 
 So wird sichergestellt, dass ein Eindringling, ein böswilliger Insider oder sogar ein Ransomware-Angriff die Backups nicht kompromittieren kann, selbst wenn er zum Zugriff auf das ONTAP-System selbst geführt hat. In Verbindung mit häufigen Snapshot-Zeitplänen ist das Ergebnis eine äußerst leistungsstarke Datensicherheit mit einem sehr niedrigen RPO.
 
-Weitere Informationen zu manipulationssicheren Snapshots finden Sie auf link:https://docs.netapp.com/us-en/ontap/snaplock/snapshot-lock-concept.html["Hier."]
+
+NOTE: Manipulationssichere Snapshots können nicht mithilfe eines Fabric Pools gestaffelt werden.
+
+Weitere Informationen zu manipulationssicheren Snapshots finden Sie im link:https://docs.netapp.com/us-en/ontap/snaplock/snapshot-lock-concept.html["ONTAP Dokumentation."]
 
 
 
 == SnapMirror Replizierung
 
-Snapshots können auch auf ein Remote-System repliziert werden. Dazu gehören manipulationssichere Snapshots, bei denen die Aufbewahrungsfrist auf das Remote-System angewendet und durchgesetzt wird. Dies führt zu denselben Vorteilen in Bezug auf die Datensicherung wie bei lokalen Snapshots, aber die Daten befinden sich auf einem zweiten Storage-Array. Dadurch wird sichergestellt, dass die Backups durch die Zerstörung des ursprünglichen Arrays nicht beeinträchtigt werden.
+Snapshots können auch auf ein Remote-System repliziert werden. Dazu gehören manipulationssichere Snapshots, bei denen der Aufbewahrungszeitraum auf dem Remote-System angewendet und durchgesetzt wird. Dies führt zu denselben Vorteilen in Bezug auf die Datensicherung wie bei lokalen Snapshots, aber die Daten befinden sich auf einem zweiten Storage-Array. Dadurch wird sichergestellt, dass die Backups durch die Zerstörung des ursprünglichen Arrays nicht beeinträchtigt werden.
 
 Ein zweites System eröffnet auch neue Optionen für die administrative Sicherheit. Beispielsweise trennen einige NetApp Kunden die Authentifizierungsdaten für die primären und sekundären Storage-Systeme. Kein administrativer Benutzer hat Zugriff auf beide Systeme. Das bedeutet, dass ein böswilliger Administrator nicht alle Datenkopien löschen kann.
 
-Weitere Informationen zu SnapMirror finden Sie unter link:https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-unified-replication-concept.html["Hier."]
+Weitere Informationen zu SnapMirror finden Sie im link:https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-unified-replication-concept.html["ONTAP Dokumentation."]
 
 
 
 == Storage Virtual Machines
 
-Ein neu konfiguriertes ONTAP Storage-System ähnelt einem neu bereitgestellten VMware ESX Server, da keiner von ihnen bis zum Erstellen einer Virtual Machine Benutzer unterstützen kann. Mit ONTAP erstellen Sie eine Storage Virtual Machine (SVM), die die grundlegende Storage-Managementeinheit darstellt. Jede SVM verfügt über eigene Storage-Ressourcen, Protokollkonfigurationen, IP-Adressen und FCP-WWNs.  Dies ist die Grundlage der ONTAP Mult-Tenancy.
+Ein neu konfiguriertes ONTAP Storage-System ähnelt einem neu bereitgestellten VMware ESX Server, da keiner von ihnen bis zum Erstellen einer Virtual Machine Benutzer unterstützen kann. Mit ONTAP erstellen Sie eine Storage Virtual Machine (SVM), die die grundlegende Storage-Managementeinheit darstellt. Jede SVM verfügt über eigene Storage-Ressourcen, Protokollkonfigurationen, IP-Adressen und FCP-WWNs. Dies ist die Grundlage der Mandantenfähigkeit von ONTAP.
 
 Beispielsweise können Sie eine SVM für kritische Produktions-Workloads und eine zweite SVM in einem anderen Netzwerksegment für Entwicklungsaktivitäten konfigurieren. Anschließend könnten Sie den Zugriff auf die Produktions-SVM auf bestimmte Administratoren beschränken und Entwicklern eine umfassendere Kontrolle über die Storage-Ressourcen in der Entwicklungs-SVM gewähren. Möglicherweise müssen Sie Ihren Finanz- und HR-Teams auch eine dritte SVM bereitstellen, damit sie besonders wichtige „eyed-only“-Daten speichern können.
 
-Weitere Informationen zu SVMs finden Sie unter link:https://docs.netapp.com/us-en/ontap/concepts/storage-virtualization-concept.html["Hier."]
+Weitere Informationen zu SVMs finden Sie im link:https://docs.netapp.com/us-en/ontap/concepts/storage-virtualization-concept.html["ONTAP Dokumentation."]
 
 
 
@@ -61,15 +70,15 @@ Weitere Informationen zu SVMs finden Sie unter link:https://docs.netapp.com/us-e
 
 ONTAP bietet eine leistungsstarke rollenbasierte Zugriffssteuerung (RBAC) für administrative Anmeldungen. Einige Administratoren benötigen unter Umständen vollständigen Cluster-Zugriff, während andere unter Umständen nur Zugriff auf bestimmte SVMs benötigen. Erfahrene Helpdesk-Mitarbeiter müssen möglicherweise die Volumegröße erhöhen können. Das Ergebnis ist, dass Sie administrativen Benutzern den Zugriff gewähren können, der für die Ausführung ihrer Aufgaben erforderlich ist, und nicht mehr. Darüber hinaus können Sie diese Anmeldungen mit PKI von verschiedenen Anbietern sichern, den Zugriff auf SSH-Schlüssel beschränken und Sperrungen bei fehlgeschlagenen Anmeldeversuchen erzwingen.
 
-Weitere Informationen zur administrativen Zugriffssteuerung finden Sie unter link:https://docs.netapp.com/us-en/ontap/authentication/manage-access-control-roles-concept.html["Hier."]
+Weitere Informationen zur administrativen Zugriffssteuerung finden Sie im link:https://docs.netapp.com/us-en/ontap/authentication/manage-access-control-roles-concept.html["ONTAP Dokumentation."]
 
 
 
-== Multi-Faktor-Authentifizierung
+== Multi-Faktor-Authentifizierung (MFA)
 
 ONTAP und einige andere NetApp Produkte unterstützen jetzt Multi-Faktor-Authentifizierung (MFA) anhand verschiedener Methoden. Das Ergebnis ist, dass ein kompromittierter Benutzername/Passwort allein kein Sicherheitsthread ohne die Daten des zweiten Faktors, wie z. B. eine FOB oder eine Smartphone-App, ist.
 
-Weitere Informationen finden Sie unter link:https://docs.netapp.com/us-en/ontap/authentication/mfa-overview.html["Hier."]
+Weitere Informationen zur Multifaktor-Authentifizierung (MFA) finden Sie im link:https://docs.netapp.com/us-en/ontap/authentication/mfa-overview.html["ONTAP Dokumentation."]
 
 
 
@@ -77,7 +86,7 @@ Weitere Informationen finden Sie unter link:https://docs.netapp.com/us-en/ontap/
 
 Für die Automatisierung sind API-Aufrufe erforderlich, aber nicht alle Tools benötigen vollständigen administrativen Zugriff. Um Automatisierungssysteme zu sichern, ist RBAC auch auf API-Ebene verfügbar. Sie können die Benutzerkonten für die Automatisierung auf die erforderlichen API-Aufrufe beschränken. Die Überwachungssoftware benötigt beispielsweise keinen Änderungszugriff, sondern nur Lesezugriff. Workflows, die Storage bereitstellen, müssen Storage nicht löschen können.
 
-Um mehr zu erfahren, starten Sie den https://docs.netapp.com/us-en/ontap-automation/rest/rbac_overview.html[here.]
+Weitere Informationen zu API-RBAC finden Sie im link:https://docs.netapp.com/us-en/ontap-automation/rest/rbac_overview.html["ONTAP Dokumentation."]
 
 
 
@@ -85,4 +94,4 @@ Um mehr zu erfahren, starten Sie den https://docs.netapp.com/us-en/ontap-automat
 
 Die Multi-Faktor-Authentifizierung kann noch weiter ausgebaut werden, indem zwei verschiedene Administratoren mit jeweils eigenen Anmeldeinformationen bestimmte Aktivitäten genehmigen müssen. Dazu gehören das Ändern von Anmeldeberechtigungen, das Ausführen von Diagnosebefehlen und das Löschen von Daten.
 
-Weitere Informationen zur Multi-Admin-Verifizierung (MAV) finden Sie auf link:https://docs.netapp.com/us-en/ontap/multi-admin-verify/index.html["Hier"]
+Weitere Informationen zur Multi-Admin-Verifizierung (MAV) finden Sie im link:https://docs.netapp.com/us-en/ontap/multi-admin-verify/index.html["ONTAP Dokumentation."]

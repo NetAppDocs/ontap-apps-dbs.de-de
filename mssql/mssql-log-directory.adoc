@@ -6,7 +6,10 @@ summary: Protokollverzeichnis von Microsoft SQL Server
 searchtitle: Protokollverzeichnis von Microsoft SQL Server 
 ---
 = Protokollverzeichnis
+:hardbreaks:
 :allow-uri-read: 
+:icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 

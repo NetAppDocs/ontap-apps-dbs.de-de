@@ -3,10 +3,13 @@ sidebar: sidebar
 permalink: mssql/mssql-storage-efficiency.html 
 keywords: MSSQL,SQL Server, efficiency, compression, deduplication 
 summary: Microsoft SQL Server und ONTAP Storage-Effizienz 
-searchtitle: Microsoft SQL Server- und Storage-Effizienz 
+searchtitle: Microsoft SQL Server und ONTAP Storage-Effizienz 
 ---
 = Storage-Effizienz
+:hardbreaks:
 :allow-uri-read: 
+:icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 
@@ -94,13 +97,14 @@ Thin Provisioning wird nachdrücklich empfohlen, da es das Management vereinfach
 
 Einige Kunden bevorzugen Thick Provisioning entweder für bestimmte Workloads oder generell basierend auf bestehenden Betriebs- und Beschaffungsmethoden.
 
-*Achtung:* Wenn ein Volume mit Thick Provisioning bereitgestellt wird, ist darauf zu achten, dass alle Effizienzfunktionen für dieses Volume, einschließlich Dekomprimierung und Entfernung der Deduplizierung mit dem, vollständig deaktiviert werden `sis undo` Befehl. Das Volume sollte nicht in angezeigt werden `volume efficiency show` Ausgabe: Ist dies der Fall, ist das Volume für Effizienzfunktionen noch teilweise konfiguriert. Daher funktionieren Überschreibungsgarantien anders. Dies erhöht die Wahrscheinlichkeit, dass Konfigurationsübersehungen dazu führen, dass das Volume unerwartet aus dem Speicherplatz kommt und zu Datenbank-I/O-Fehlern führt.
+
+CAUTION: Bei einem Volume mit Thick Provisioning müssen unbedingt alle Effizienzfunktionen des Volumes deaktiviert werden, einschließlich der Dekomprimierung und der Entfernung der Deduplizierung mit dem `sis undo` Befehl. Die Lautstärke sollte nicht in der Ausgabe angezeigt `volume efficiency show` werden. Ist dies der Fall, ist das Volume für Effizienzfunktionen noch teilweise konfiguriert. Daher funktionieren Überschreibungsgarantien anders. Dies erhöht die Wahrscheinlichkeit, dass Konfigurationsübersehungen dazu führen, dass das Volume unerwartet aus dem Speicherplatz kommt und zu Datenbank-I/O-Fehlern führt.
 
 
 
 == Best Practices für Effizienz
 
-NetApp empfiehlt Folgendes:
+*NetApp empfiehlt* Folgendes:
 
 
 

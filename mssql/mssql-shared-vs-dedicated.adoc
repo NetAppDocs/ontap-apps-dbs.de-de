@@ -3,10 +3,13 @@ sidebar: sidebar
 permalink: mssql/mssql-shared-vs-dedicated.html 
 keywords: MSSQL,SQL Server, multiple instances, dedicated instance, ONTAP 
 summary: Bereitstellung von Microsoft SQL Server Instanzen 
-searchtitle: Gemeinsame Instanz von Microsoft SQL Server und dedizierte Instanzen 
+searchtitle: Bereitstellung von Microsoft SQL Server Instanzen 
 ---
 = Shared Instance oder dedizierte Instanz
+:hardbreaks:
 :allow-uri-read: 
+:icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 

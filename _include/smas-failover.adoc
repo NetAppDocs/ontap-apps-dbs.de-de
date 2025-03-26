@@ -14,7 +14,7 @@ Im normalen Betrieb kann auf eine LUN entweder über das lokale oder Remote-Repl
 
 Die grüne Linie ist ein aktiver Pfad, aber es käme zu einer höheren Latenz, da I/O auf diesem Pfad über den aktiven SnapMirror Synchronisierungspfad geleitet werden müsste. Die zusätzliche Latenz hängt von der Geschwindigkeit der Verbindung zwischen Standorten ab, die für die aktive SnapMirror Synchronisierung verwendet wird.
 
-image:smas-failover-1.png["Fehler: Fehlendes Grafikbild"]
+image:../media/smas-failover-1.png["SnapMirror Active Sync Normalbetrieb"]
 
 
 
@@ -22,7 +22,7 @@ image:smas-failover-1.png["Fehler: Fehlendes Grafikbild"]
 
 Wenn die aktive gespiegelte Kopie aufgrund eines geplanten oder ungeplanten Failover nicht mehr verfügbar ist, ist sie offensichtlich nicht mehr nutzbar. Das Remote-System verfügt jedoch über ein synchrones Replikat, und es sind bereits SAN-Pfade zum Remote-Standort vorhanden. Das Remote-System kann E/A für diese LUN bedienen.
 
-image:smas-failover-2.png["Fehler: Fehlendes Grafikbild"]
+image:../media/smas-failover-2.png["Fehler bei der aktiven SnapMirror-Synchronisierung"]
 
 
 
@@ -30,7 +30,7 @@ image:smas-failover-2.png["Fehler: Fehlendes Grafikbild"]
 
 Durch Failover wird die Remote-Kopie zur aktiven Kopie. Die Pfade werden von „aktiv“ in „aktiv/optimiert“ geändert und I/O-Vorgänge werden weiterhin ohne Datenverlust verarbeitet.
 
-image:smas-failover-3.png["Fehler: Fehlendes Grafikbild"]
+image:../media/smas-failover-3.png["SnapMirror-Failover für aktive Synchronisierung"]
 
 
 
@@ -38,7 +38,7 @@ image:smas-failover-3.png["Fehler: Fehlendes Grafikbild"]
 
 Sobald das Quellsystem wieder einsatzbereit ist, kann die SnapMirror Active Sync Replizierung neu synchronisieren, aber in die andere Richtung ausführen. Die Konfiguration ist jetzt im Wesentlichen dieselbe wie der Startpunkt, mit Ausnahme, dass die Active-Mirror-Standorte gespiegelt wurden.
 
-image:smas-failover-4.png["Fehler: Fehlendes Grafikbild"]
+image:../media/smas-failover-4.png["SnapMirror Active Sync Reparatur"]
 
 
 
@@ -46,4 +46,4 @@ image:smas-failover-4.png["Fehler: Fehlendes Grafikbild"]
 
 Auf Wunsch kann ein Administrator ein Failback durchführen und die aktive Kopie der LUN(s) zurück auf die ursprünglichen Controller verschieben.
 
-image:smas-failover-1.png["Fehler: Fehlendes Grafikbild"]
+image:../media/smas-failover-1.png["SnapMirror-Failback für aktive Synchronisierung"]

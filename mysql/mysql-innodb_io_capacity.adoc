@@ -3,10 +3,13 @@ sidebar: sidebar
 permalink: mysql/mysql-innodb_io_capacity.html 
 keywords: MySQL,MariaDB,innodb_io_capacity 
 summary: MySQL und innodb_io_Capacity 
+searchtitle: MySQL und innodb_io_Capacity 
 ---
 = innodb_io_Capacity
+:hardbreaks:
 :allow-uri-read: 
 :icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 
@@ -26,4 +29,4 @@ CAUTION: Verwenden Sie keine Extremwerte wie 20,000 oder mehr, es sei denn, Sie 
 Der InnoDB_IO_Capacity Parameter regelt Spülraten und zugehörige I/O.
 
 
-CAUTION: Sie können die Leistung ernsthaft beeinträchtigen, indem Sie diesen Parameter oder den innodb_io_Capacity_max-Parameter zu hoch einstellen und I/O-Operationen mit vorzeitigem Spülen verschwenden.
+CAUTION: Sie können die Leistung ernsthaft beeinträchtigen, indem Sie diesen Parameter oder den innodb_io_Capacity_max-Parameter zu hoch und zu verschwendernd einstellen

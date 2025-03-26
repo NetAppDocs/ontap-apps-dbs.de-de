@@ -6,8 +6,10 @@ summary: MySQL-Dateideskriptoren
 searchtitle: MySQL-Dateideskriptoren 
 ---
 = Dateideskriptoren
+:hardbreaks:
 :allow-uri-read: 
 :icons: font
+:linkattrs: 
 :imagesdir: ../media/
 
 

@@ -12,7 +12,7 @@ Wenn die SM-AS-Replikation unterbrochen wird, kann die Schreib-I/O nicht abgesch
 
 
 
-=== Standort A (bevorzugte Website)
+== Standort A (bevorzugte Website)
 
 Das Ergebnis eines Ausfalls der Replikationsverbindung auf dem bevorzugten Standort ist eine ca. 15-Sekunden-Pause bei der Schreib-I/O-Verarbeitung, da ONTAP erneut replizierte Schreibvorgänge versucht, bevor festgestellt wird, dass die Replikationsverbindung wirklich nicht erreichbar ist. Nach 15 Sekunden wird die I/O-Verarbeitung von Lese- und Schreibzugriffen von Standort A fortgesetzt. Die SAN-Pfade ändern sich nicht, und die LUNs bleiben online.
 

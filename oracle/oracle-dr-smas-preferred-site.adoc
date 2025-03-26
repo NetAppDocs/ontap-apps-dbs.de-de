@@ -19,7 +19,7 @@ Die `source` Bezeichnung steuert den bevorzugten Standort. Wenn die Replizierung
 
 Die Sourcing/Ziel-Konfiguration kann über Systemmanager angezeigt werden:
 
-image:smas-source-systemmanager.png["SM-Screenshot der SM-as-Quelle"]
+image:../media/smas-source-systemmanager.png["SM-Screenshot der SM-as-Quelle"]
 
 Oder über die CLI:
 

@@ -44,7 +44,7 @@ Auch die Architektur ist einfacher, da die einzigen standortübergreifenden Verb
 
 Weitere Informationen finden Sie in der offiziellen ONTAP-Dokumentation und https://www.netapp.com/pdf.html?item=/media/13481-tr4689.pdf["Architektur und Design der MetroCluster IP-Lösung"^].
 
-image:mccip.png["Fehler: Fehlendes Grafikbild"]
+image:../media/mccip.png["MetroCluster IP Architektur"]
 
 
 
@@ -52,7 +52,7 @@ image:mccip.png["Fehler: Fehlendes Grafikbild"]
 
 Die HA-Paar-Konfiguration von MetroCluster FC nutzt zwei oder vier Nodes pro Standort. Diese Konfigurationsoption erhöht die Komplexität und die Kosten im Vergleich zur Option mit zwei Nodes, bietet aber einen wichtigen Vorteil: intrasite-Redundanz. Bei einem einfachen Controller-Ausfall ist kein Datenzugriff über das WAN erforderlich. Der Datenzugriff bleibt über den alternativen lokalen Controller lokal.
 
-image:mcc-4-node.png["Fehler: Fehlendes Grafikbild"]
+image:../media/mcc-4-node.png["MetroCluster mit vier Nodes"]
 
 Einige Infrastrukturen mehrerer Standorte sind nicht für den aktiv/aktiv-Betrieb konzipiert, sondern werden eher als primärer Standort und Disaster-Recovery-Standort genutzt. In dieser Situation ist eine MetroCluster-Option für HA-Paare aus den folgenden Gründen im Allgemeinen vorzuziehen:
 
@@ -67,7 +67,7 @@ Einige Infrastrukturen mehrerer Standorte sind nicht für den aktiv/aktiv-Betrie
 
 Die MetroCluster Konfiguration mit zwei Nodes verwendet nur einen Node pro Standort. Dieses Design ist einfacher als die Option für HA-Paare, da weniger Komponenten konfiguriert und gewartet werden müssen. Zudem wurden die Infrastrukturanforderungen hinsichtlich Verkabelung und FC-Switching gesenkt. Und schließlich senkt es die Kosten.
 
-image:mcc-2-node.png["Fehler: Fehlendes Grafikbild"]
+image:../media/mcc-2-node.png["MetroCluster mit zwei Nodes"]
 
 Ein solches Design hat ganz offensichtlich zur Folge, dass der Controller-Ausfall an einem einzigen Standort dazu führt, dass die Daten am entgegengesetzten Standort verfügbar sind. Diese Einschränkung ist nicht unbedingt ein Problem. Viele Unternehmen verfügen über standortübergreifende Datacenter-Betriebsabläufe mit verteilten, schnellen Netzwerken mit niedriger Latenz, die im Wesentlichen als eine einzige Infrastruktur fungieren. In diesen Fällen ist die MetroCluster Version mit zwei Nodes die bevorzugte Konfiguration. Systeme mit zwei Nodes werden derzeit im Petabyte-Bereich von mehreren Service-Providern eingesetzt.
 

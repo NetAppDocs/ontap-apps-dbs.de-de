@@ -23,10 +23,10 @@ Die Tiering-Richtlinien steuern, welche Oracle-Datenbankblöcke von der Performa
 
 Alle FabricPool-Volumes sind zunächst auf festgelegt `default`, D.h. das Verhalten wird durch die `Cloud-Retrieval-Policy gesteuert. `das genaue Verhalten hängt von der verwendeten Tiering Policy ab.
 
-* `auto`– Nur abrufen zufällig gelesenen Daten
-* `snapshot-only`– Abrufen aller sequentiellen oder zufällig gelesenen Daten
-* `none`– Abrufen aller sequentiellen oder zufällig gelesenen Daten
-* `all`– Daten nicht aus der Kapazitäts-Tier abrufen
+* `auto`- Nur zufällig gelesene Daten abrufen
+* `snapshot-only`- Alle sequentiellen oder zufällig gelesenen Daten abrufen
+* `none`- Alle sequentiellen oder zufällig gelesenen Daten abrufen
+* `all`- Daten nicht aus der Kapazitätsebene abrufen
 
 
 

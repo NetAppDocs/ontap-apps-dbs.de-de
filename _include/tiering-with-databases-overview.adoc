@@ -10,7 +10,7 @@ FabricPool ist eine Tiering-Technologie, mit der Blöcke als „heiß“ oder �
 
 Es stehen mehrere Tiering-Richtlinien zur Verfügung, die steuern, wie Blöcke als „heiß“ oder „kalt“ klassifiziert werden. Die Richtlinien lassen sich für einzelne Volumes festlegen und bei Bedarf ändern. Es werden nur die Datenblöcke zwischen den Performance- und Kapazitäts-Tiers verschoben. Die Metadaten, die die Struktur der LUN und des File-Systems definieren, verbleiben immer auf der Performance-Tier. Dadurch wird das Management auf ONTAP zentralisiert. Dateien und LUNs unterscheiden sich offenbar nicht von Daten, die auf einer anderen ONTAP-Konfiguration gespeichert sind. Der NetApp AFF oder FAS Controller wendet die definierten Richtlinien an, um Daten auf die entsprechende Tier zu verschieben.
 
-image:oracle-fp_image1.png["Fehler: Fehlendes Grafikbild"]
+image:../media/oracle-fp_image1.png["FabricPool Tiering"]
 
 
 
