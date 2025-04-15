@@ -23,7 +23,6 @@ NetApp geht davon aus, dass der Leser über die folgenden Kenntnisse verfügt:
 
 * ONTAP
 * Architektur und Administration von Microsoft SQL Server
-* SnapCenter Backup Software, einschließlich der folgenden Komponenten:
 * NetApp SnapCenter als Backup-Software, einschließlich:
 +
 ** SnapCenter Plug-in für Microsoft Windows

@@ -45,6 +45,9 @@ NOTE: Manipulationssichere Snapshots können nicht mithilfe eines Fabric Pools g
 Weitere Informationen zu manipulationssicheren Snapshots finden Sie im link:https://docs.netapp.com/us-en/ontap/snaplock/snapshot-lock-concept.html["ONTAP Dokumentation."]
 
 
+NOTE: Replizieren Sie Snapshots in einer neuen ASA Plattform mithilfe der _Vault_-Richtlinie in einen Remote-Cluster und sperren Sie dann das Ziel, um Snapshots manipulationssicher zu machen.
+
+
 
 == SnapMirror Replizierung
 

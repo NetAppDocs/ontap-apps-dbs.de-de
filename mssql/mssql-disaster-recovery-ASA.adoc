@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: mssql/mssql-disaster-recovery-ASA.html 
+keywords: MSSQL,SQL Server, disaster recovery, snapmirror 
+summary: Disaster Recovery für Microsoft SQL Server mit ONTAP 
+searchtitle: Disaster Recovery für Microsoft SQL Server mit ONTAP 
+---
+= Disaster Recovery
+:allow-uri-read: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Enterprise-Datenbanken und Applikationsinfrastrukturen erfordern oft Replizierung zum Schutz vor Naturkatastrophen oder unerwarteten Geschäftsunterbrechungen mit minimaler Ausfallzeit.
+
+Die SQL Server Funktion zur Replizierung von Always-on-Verfügbarkeitsgruppen kann sich als hervorragende Option anbieten. NetApp bietet Optionen zur Integration von Datensicherung mit Always-on. In einigen Fällen empfiehlt es sich jedoch, die ONTAP Replizierungstechnologie mit den folgenden Optionen in Betracht zu ziehen.
+
+
+
+== SnapMirror
+
+Die SnapMirror-Technologie bietet eine schnelle und flexible Unternehmenslösung zur Replizierung von Daten über LANs und WANs. Die SnapMirror Technologie überträgt nach Erstellung der ersten Spiegelung nur geänderte Datenblöcke an das Zielsystem, wodurch die Anforderungen an die Netzwerkbandbreite erheblich gesenkt werden. Sie kann im synchronen oder asynchronen Modus konfiguriert werden. Die synchrone SnapMirror Replizierung in NetApp ASA wird mit dem SnapMirror Active Sync konfiguriert.
+
+
+
+== SnapMirror Active Sync
+
+Für viele Kunden ist für Business Continuity nicht nur ein Remote-Besitz einer Datenkopie erforderlich, sondern es muss die Möglichkeit bestehen, diese Daten schnell zu nutzen, die in NetApp ONTAP mithilfe von SnapMirror Active Sync möglich sind
+
+Bei SnapMirror Active Sync haben Sie im Grunde zwei verschiedene ONTAP-Systeme, die unabhängige Kopien Ihrer LUN-Daten führen, aber zusammenarbeiten, um eine einzige Instanz dieser LUN zu präsentieren. Auf Host-Ebene handelt es sich um eine einzelne LUN-Einheit. SnapMirror Active Sync wird für iSCSI/FC-basierte LUNs unterstützt.
+
+SnapMirror Active Sync bietet RPO=0-Replizierung und ist einfach zwischen zwei unabhängigen Clustern zu implementieren. Sind die beiden Datenkopien synchron, müssen die beiden Cluster nur noch Schreibvorgänge spiegeln. Wenn ein Schreibvorgang auf einem Cluster stattfindet, wird er in das andere Cluster repliziert. Der Schreibvorgang wird dem Host nur dann bestätigt, wenn der Schreibvorgang auf beiden Seiten abgeschlossen ist. Anders als dieses Verhalten bei der Protokollaufteilung sind die beiden Cluster ansonsten normale ONTAP-Cluster.
+
+Ein wichtiger Anwendungsfall für SM-AS ist die granulare Replizierung. Manchmal möchten Sie nicht alle Daten als eine Einheit replizieren oder bestimmte Workloads selektiv ausfallsicher durchführen.
+
+Ein weiterer wichtiger Anwendungsfall für SM-As ist der aktiv/aktiv-Betrieb. Dort sollen vollständig nutzbare Datenkopien auf zwei verschiedenen Clustern verfügbar sein, die sich an zwei verschiedenen Standorten mit identischen Performance-Merkmalen befinden und auf Wunsch nicht über Standorte verteilt werden müssen. Sie können Ihre Applikationen, die bereits auf beiden Standorten ausgeführt werden, sofern die Applikation unterstützt wird, wodurch sich die RTO während eines Failover verringert.

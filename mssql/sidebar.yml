@@ -13,50 +13,81 @@ entries:
     url: "/mssql/mssql-memory-configuration.html"
   - title: Shared Instance oder dedizierte Instanz
     url: "/mssql/mssql-shared-vs-dedicated.html"
-- title: Storage-Konfiguration
-  pdf-filename: Storage-Konfiguration für Microsoft SQL Server
+  - title: Tempdb-Dateien
+    url: "/mssql/mssql-tempdb.html"
+- title: Storage-Konfiguration auf AFF/FAS Systemen
+  pdf-filename: Microsoft SQL Server auf AFF/FAS Systemen
   entries:
   - title: Überblick
     url: "/mssql/mssql-storage-considerations.html"
   - title: Datenbankdateien und Dateigruppen
     url: "/mssql/mssql-files-and-filegroups.html"
-  - title: Protokollverzeichnis
-    url: "/mssql/mssql-log-directory.html"
-  - title: Tempdb-Dateien
-    url: "/mssql/mssql-tempdb.html"
   - title: Storage-Effizienz
     url: "/mssql/mssql-storage-efficiency.html"
-- title: Datensicherung
-  url: "/mssql/mssql-data-protection.html"
-- title: Disaster Recovery
-  entries:
-  - title: Überblick
-    url: "/mssql/mssql-disaster-recovery.html"
-  - title: SnapMirror
-    url: "/mssql/mssql-dr-snapmirror.html"
-  - title: MetroCluster
-    entries:
-    - title: Architektur von MetroCluster
-      url: "/mssql/mssql-dr-mcc-overview.html"
-    - title: SQL Server mit MetroCluster
-      url: "/mssql/mssql-dr-mcc-sql.html"
-  - title: SnapMirror Active Sync
+  - title: Datensicherung
+    url: "/mssql/mssql-data-protection.html"
+  - title: Disaster Recovery
     entries:
     - title: Überblick
-      url: "/mssql/mssql-dr-smas-overview.html"
-    - title: ONTAP Mediator
-      url: "/mssql/mssql-dr-smas-mediator.html"
-    - title: Bevorzugter Standort
-      url: "/mssql/mssql-dr-smas-preferred-site.html"
-    - title: Netzwerktopologie
+      url: "/mssql/mssql-disaster-recovery.html"
+    - title: SnapMirror
+      url: "/mssql/mssql-dr-snapmirror.html"
+    - title: MetroCluster
       entries:
-      - title: Einheitlicher Zugriff
-        url: "/mssql/mssql-dr-smas-uniform.html"
-      - title: Uneinheitlicher Zugriff
-        url: "/mssql/mssql-dr-smas-nonuniform.html"
-    - title: SQL Server mit SM-AS
-      url: "/mssql/mssql-dr-smas-sql.html"
-    - title: Ausfallszenarien
-      url: "/mssql/mssql-dr-smas-failure-scenarios.html"
+      - title: Architektur von MetroCluster
+        url: "/mssql/mssql-dr-mcc-overview.html"
+      - title: SQL Server mit MetroCluster
+        url: "/mssql/mssql-dr-mcc-sql.html"
+    - title: SnapMirror Active Sync
+      entries:
+      - title: Überblick
+        url: "/mssql/mssql-dr-smas-overview.html"
+      - title: ONTAP Mediator
+        url: "/mssql/mssql-dr-smas-mediator.html"
+      - title: Bevorzugter Standort
+        url: "/mssql/mssql-dr-smas-preferred-site.html"
+      - title: Netzwerktopologie
+        entries:
+        - title: Einheitlicher Zugriff
+          url: "/mssql/mssql-dr-smas-uniform.html"
+        - title: Uneinheitlicher Zugriff
+          url: "/mssql/mssql-dr-smas-nonuniform.html"
+      - title: SQL Server mit SM-AS
+        url: "/mssql/mssql-dr-smas-sql.html"
+      - title: Ausfallszenarien
+        url: "/mssql/mssql-dr-smas-failure-scenarios.html"
+- title: Storage-Konfiguration auf ASA r2-Systemen
+  pdf-filename: Microsoft SQL Server auf ASA Systemen
+  entries:
+  - title: Überblick
+    url: "/mssql/mssql-storage-considerations-ASA.html"
+  - title: Datenbankdateien und Dateigruppen
+    url: "/mssql/mssql-files-and-filegroups-ASA.html"
+  - title: Datensicherung
+    url: "/mssql/mssql-data-protection-ASA.html"
+  - title: Disaster Recovery
+    entries:
+    - title: Überblick
+      url: "/mssql/mssql-disaster-recovery-ASA.html"
+    - title: SnapMirror
+      url: "/mssql/mssql-dr-snapmirror-ASA.html"
+    - title: SnapMirror Active Sync
+      entries:
+      - title: Überblick
+        url: "/mssql/mssql-dr-smas-overview-ASA.html"
+      - title: ONTAP Mediator
+        url: "/mssql/mssql-dr-smas-mediator-ASA.html"
+      - title: Bevorzugter Standort
+        url: "/mssql/mssql-dr-smas-preferred-site-ASA.html"
+      - title: Netzwerktopologie
+        entries:
+        - title: Einheitlicher Zugriff
+          url: "/mssql/mssql-dr-smas-uniform-ASA.html"
+        - title: Uneinheitlicher Zugriff
+          url: "/mssql/mssql-dr-smas-nonuniform-ASA.html"
+      - title: SQL Server mit SM-AS
+        url: "/mssql/mssql-dr-smas-sql-ASA.html"
+      - title: Ausfallszenarien
+        url: "/mssql/mssql-dr-smas-failure-scenarios-ASA.html"
 - title: Datensicherheit
   url: "/mssql/mssql-data-security.html"

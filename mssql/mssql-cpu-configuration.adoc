@@ -24,7 +24,7 @@ Hyper-Threading bezieht sich entweder auf die Implementierung von simultanem Mul
 
 Hyper-Threading führt zu logischen CPUs, die dem Betriebssystem als physische CPUs angezeigt werden. SQL Server erkennt dann die zusätzlichen CPUs und nutzt sie so, als gäbe es mehr Kerne als physisch vorhanden. Durch eine stärkere Parallelisierung kann die Performance erheblich gesteigert werden.
 
-Der Nachteil hierbei ist, dass jede SQL Server-Version ihre eigenen Einschränkungen hinsichtlich der Rechenleistung hat, die sie verwenden kann. Weitere Informationen finden Sie unter Kapazitätsgrenzen nach Edition von SQL Server berechnen.
+Der Nachteil hierbei ist, dass jede SQL Server-Version ihre eigenen Einschränkungen hinsichtlich der Rechenleistung hat, die sie verwenden kann. Weitere Informationen finden Sie unter link:https://learn.microsoft.com/en-us/sql/sql-server/compute-capacity-limits-by-edition-of-sql-server?view=sql-server-ver16&redirectedfrom=MSDN["Kapazitätsbeschränkungen für die Datenverarbeitung nach Edition von SQL Server"].
 
 
 

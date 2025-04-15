@@ -1,16 +1,5 @@
----
-sidebar: sidebar 
-permalink: mssql/mssql-files-and-filegroups.html 
-keywords: MSSQL,SQL Server, backup, recovery, database file management 
-summary: Platzierung von Microsoft SQL Server-Datenbankdateien 
-searchtitle: Platzierung von Microsoft SQL Server-Datenbankdateien 
----
-= Datenbankdateien und Dateigruppen
-:hardbreaks:
+= Datenbankdateien & Dateigruppe
 :allow-uri-read: 
-:icons: font
-:linkattrs: 
-:imagesdir: ../media/
 
 
 [role="lead"]
@@ -79,33 +68,3 @@ Die Aufgabe „Volume Maintenance durchführen“ wird in SQL Server 2016 verein
 image:mssql-maintenance.png["Fehler: Fehlendes Grafikbild"]
 
 Eine weitere wichtige Datenbankoption, die die Größe der Datenbankdateien steuert, ist Autoshrink. Wenn diese Option aktiviert ist, verkleinert SQL Server die Datenbankdateien regelmäßig, reduziert deren Größe und gibt Speicherplatz für das Betriebssystem frei. Dieser Vorgang ist ressourcenintensiv und nur selten sinnvoll, da die Datenbankdateien nach einiger Zeit wieder wachsen, wenn neue Daten in das System gelangen. Autoshrink sollte in der Datenbank nicht aktiviert sein.
-
-
-
-=== Protokollverzeichnis
-
-Das Protokollverzeichnis wird in SQL Server angegeben, um die Backup-Daten des Transaktionsprotokolls auf Hostebene zu speichern. Wenn Sie SnapCenter zum Sichern von Protokolldateien verwenden, muss für jeden von SnapCenter verwendeten SQL Server-Host ein Hostprotokollverzeichnis konfiguriert sein, um Protokollsicherungen durchzuführen. Bei SnapCenter gibt es ein Datenbank-Repository, sodass Metadaten, die mit Backup-, Restore- oder Klonvorgängen verbunden sind, in einem zentralen Datenbank-Repository gespeichert werden.
-
-Die Größe des Host-Log-Verzeichnisses wird wie folgt berechnet:
-Größe des Host-Log-Verzeichnisses = ( (maximale DB-LDF-Größe x tägliche Log-Änderungsrate %) x (Snapshot-Aufbewahrung) ÷ (1 - LUN Overhead-Speicherplatz %)
-Die Formel zur Größenbestimmung des Host-Protokollverzeichnisses nimmt einen LUN Overhead von 10 % an
-
-Platzieren Sie das Protokollverzeichnis auf einem dedizierten Volume oder LUN. Die Datenmenge im Host-Log-Verzeichnis hängt von der Größe der Backups und der Anzahl der Tage ab, die Backups aufbewahrt werden. SnapCenter erlaubt nur ein Host-Protokollverzeichnis pro SQL Server-Host. Sie können die Host-Protokollverzeichnisse unter SnapCenter --> Host --> Configure Plug-in konfigurieren.
-
-[TIP]
-====
-*NetApp empfiehlt* für ein Host-Log-Verzeichnis:
-
-* Stellen Sie sicher, dass das Host-Protokollverzeichnis nicht von anderen Datentypen gemeinsam genutzt wird, die möglicherweise die Backup-Snapshot-Daten beschädigen können.
-* Platzieren Sie keine Benutzerdatenbanken oder Systemdatenbanken auf einer LUN, die Bereitstellungspunkte hostet.
-* Erstellen Sie das Host-Protokollverzeichnis auf einem dedizierten Volume, auf das SnapCenter Transaktionsprotokolle kopiert.
-* Migrieren Sie Datenbanken mithilfe von SnapCenter-Assistenten in NetApp Storage, damit die Datenbanken an gültigen Speicherorten gespeichert werden und so erfolgreiche SnapCenter-Backup- und -Restore-Vorgänge ermöglichen. Beachten Sie, dass der Migrationsprozess für den Fall von Unterbrechungen verantwortlich ist und dazu führen kann, dass die Datenbanken offline gehen, während die Migration durchgeführt wird.
-* Die folgenden Bedingungen müssen für Failover-Cluster-Instanzen (FCIs) von SQL Server gelten:
-+
-** Wenn Sie eine Failover-Cluster-Instanz verwenden, muss das Host-Log-Verzeichnis LUN eine Cluster-Festplattenressource in derselben Cluster-Gruppe sein wie die SQL Server-Instanz, die SnapCenter gesichert wird.
-** Wenn Sie eine Failover-Cluster-Instanz verwenden, müssen Benutzerdatenbanken auf gemeinsam genutzte LUNs platziert werden, bei denen es sich um physische Festplatten-Cluster-Ressourcen handelt, die der Cluster-Gruppe zugewiesen sind, die der SQL Server-Instanz zugeordnet ist.
-
-
-
-
-====

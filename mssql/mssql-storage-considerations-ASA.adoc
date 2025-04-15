@@ -1,0 +1,57 @@
+---
+sidebar: sidebar 
+permalink: mssql/mssql-storage-considerations-ASA.html 
+keywords: MSSQL,SQL Server, volumes, LUN, SnapCenter 
+summary: Storage-Überlegungen für Microsoft SQL Server bei ASA Systemen 
+searchtitle: Überlegungen zum Microsoft SQL Server-Storage 
+---
+= Überblick
+:allow-uri-read: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp ASA r2 ist eine vereinfachte und leistungsstarke Lösung für reine SAN-Kunden, die geschäftskritische Workloads ausführen. Die Kombination der ASA r2 Plattform mit ONTAP Storage-Lösungen und Microsoft SQL Server ermöglicht Datenbank-Storage der Enterprise-Klasse, die auch die anspruchsvollsten Applikationsanforderungen von heute erfüllt.
+
+Folgende ASA Plattformen werden als ASA r2 Systeme klassifiziert, die alle SAN-Protokolle (iSCSI, FC, NVMe/FC, NVMe/TCP) unterstützen. Die Protokolle iSCSI, FC, NVMe/FC und NVMe/TCP unterstützen die symmetrische aktiv/aktiv-Architektur für Multipathing, sodass alle Pfade zwischen Hosts und Storage aktiv/optimiert sind:
+
+* ASA A1K
+* ASA A90
+* ASA A70
+* ASA A50
+* ASA A30
+* ASA A20
+
+
+Weitere Informationen finden Sie unter link:https://docs.netapp.com/us-en/asa-r2/index.html["NetApp ASA"]
+
+Um eine SQL Server auf ONTAP-Lösung zu optimieren, müssen Sie das I/O-Muster und die Merkmale des SQL Servers kennen. Ein gut konzipiertes Storage Layout für eine SQL Server Datenbank muss die Performance-Anforderungen von SQL Server unterstützen und gleichzeitig maximale Management-Fähigkeit der Infrastruktur als Ganzes bieten. Ein gutes Storage-Layout ermöglicht außerdem eine erfolgreiche Erstimplementierung und ein reibungsloses Wachstum der Umgebung im Laufe der Zeit, während das Unternehmen wächst.
+
+
+
+== Datenspeicher Design
+
+Microsoft empfiehlt, die Daten- und Protokolldateien auf separaten Laufwerken zu platzieren. Bei Anwendungen, die gleichzeitig Daten aktualisieren und anfordern, ist die Protokolldatei schreibintensiv und die Datendatei (je nach Anwendung) ist Lese-/schreibintensiv. Für den Datenabruf wird die Protokolldatei nicht benötigt. Daher können Datenanfragen aus der Datendatei auf dem eigenen Laufwerk bearbeitet werden.
+
+Wenn Sie eine neue Datenbank erstellen, empfiehlt Microsoft, getrennte Laufwerke für die Daten und Protokolle anzugeben. Um Dateien nach der Datenbankerstellung zu verschieben, muss die Datenbank offline geschaltet werden. Weitere Empfehlungen von Microsoft finden Sie unter link:https://docs.microsoft.com/en-us/sql/relational-databases/policy-based-management/place-data-and-log-files-on-separate-drives?view=sql-server-ver15["Platzieren Sie Daten- und Protokolldateien auf separaten Laufwerken"^].
+
+
+
+=== Überlegungen zu Speichereinheiten
+
+Die Storage-Einheit in ASA bezieht sich auf LUN für SCSI/FC-Hosts oder einen NVMe-Namespace für NVMe-Hosts. Basierend auf dem unterstützten Protokoll werden Sie aufgefordert, LUNs, NVMe Namespace oder beides zu erstellen. Bevor Sie eine Storage-Einheit für die Datenbankimplementierung erstellen, ist es wichtig zu wissen, wie das I/O-Muster und die Merkmale von SQL Server je nach Workload sowie den Backup- und Recovery-Anforderungen variieren. Beachten Sie die folgenden NetApp-Empfehlungen für die Speichereinheit:
+
+* Vermeiden Sie, dieselbe Speichereinheit zwischen mehreren auf demselben Host laufenden SQL Server zu verwenden, um ein kompliziertes Management zu vermeiden. Wenn Sie mehrere SQL Server-Instanzen auf demselben Host ausführen, sollten Sie die Storage-Einheit auf einem Node nicht überschreiten, vermeiden Sie die gemeinsame Nutzung und verfügen stattdessen über eine separate Storage-Einheit pro Instanz pro Host zur Vereinfachung des Datenmanagements.
+* Verwenden Sie NTFS-Bereitstellungspunkte anstelle von Laufwerksbuchstaben, um die Beschränkung auf 26 Laufwerksbuchstaben in Windows zu überschreiten.
+* Snapshot Zeitpläne und Aufbewahrungsrichtlinien deaktivieren Verwenden Sie stattdessen SnapCenter, um Snapshot Kopien der SQL Server Daten-Storage-Einheit zu koordinieren.
+* Platzieren Sie die SQL Server-Systemdatenbanken auf einer dedizierten Speichereinheit.
+* Tempdb ist eine Systemdatenbank, die von SQL Server als temporärer Arbeitsbereich verwendet wird, insbesondere für I/O-intensive DBCC-CHECKDB-Vorgänge. Legen Sie daher diese Datenbank auf eine dedizierte Speichereinheit. In großen Umgebungen, in denen die Anzahl der Speichereinheiten eine Herausforderung darstellt, können Sie tempdb nach sorgfältiger Planung mit Systemdatenbanken in derselben Speichereinheit konsolidieren. Datenschutz für tempdb hat keine hohe Priorität, da diese Datenbank bei jedem Neustart von SQL Server neu erstellt wird.
+* Legen Sie Benutzerdatendateien (`.mdf`) auf eine separate Speichereinheit, da es sich um zufällige Lese-/Schreib-Workloads handelt. Es ist üblich, Transaktions-Log-Backups häufiger zu erstellen als Datenbank-Backups. Legen Sie daher Transaktions-Log-Dateien (`.ldf`) auf eine separate Speichereinheit oder VMDK aus den Datendateien, so dass für jede Datei unabhängige Backup-Zeitpläne erstellt werden können. Durch diese Trennung werden auch die I/O-Vorgänge bei sequenziellen Schreibvorgängen aus den I/O-Vorgängen für zufällige Lese-/Schreibzugriffe von Datendateien isoliert und die SQL Server Performance deutlich verbessert.
+* Stellen Sie sicher, dass sich die Benutzerdatenbankdateien und das Protokollverzeichnis zum Speichern der Protokollsicherung auf einer separaten Speichereinheit befinden, um zu verhindern, dass die Aufbewahrungsrichtlinie Snapshots überschreibt, wenn diese mit der SnapMirror-Funktion mit der Vault-Richtlinie verwendet werden.
+* Mischen Sie keine Datenbank- und nicht-Datenbankdateien, wie z. B. Dateien mit Volltextsuche, auf derselben Speichereinheit.
+* Wenn sekundäre Datenbankdateien (als Teil einer Dateigruppe) auf eine separate Speichereinheit platziert werden, wird die Performance der SQL Server-Datenbank verbessert. Diese Trennung ist nur gültig, wenn die Datei der Datenbank `.mdf` ihre Speichereinheit nicht mit anderen Dateien teilt `.mdf`.
+* Stellen Sie beim Formatieren der Festplatte mithilfe des Datenträgermanagers im Windows-Server sicher, dass die Größe der Zuordnungseinheit für die Partition auf 64K eingestellt ist.
+* Legen Sie keine Benutzerdatenbanken oder Systemdatenbanken auf eine Speichereinheit, die Bereitstellungspunkte hostet.
+* Siehe link:https://www.netapp.com/media/10680-tr4080.pdf["Microsoft Windows und natives MPIO unter den Best Practices von ONTAP für modernes SAN"] So wenden Sie Multipathing-Unterstützung unter Windows auf iSCSI-Geräte in den MPIO-Eigenschaften an.
+* Wenn Sie eine Cluster-Instanz mit Always-On-Failover verwenden, müssen Benutzerdatenbanken auf einer Storage-Einheit platziert werden, die von den Failover-Cluster-Knoten des Windows-Servers gemeinsam genutzt wird, und die Cluster-Ressourcen des physischen Laufwerks werden der Cluster-Gruppe zugewiesen, die der SQL Server-Instanz zugeordnet ist.
+
