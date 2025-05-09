@@ -1,0 +1,56 @@
+---
+sidebar: sidebar 
+permalink: mssql/mssql-ag-snapcenter.html 
+keywords: MSSQL,SQL Server, data protection, snapmirror, availability group 
+summary: Microsoft SQL Server Verfügbarkeitsgruppe mit SnapCenter 
+searchtitle: Microsoft SQL Server Verfügbarkeitsgruppe mit SnapCenter 
+---
+= SQL Server-Verfügbarkeitsgruppe mit SnapCenter
+:allow-uri-read: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapCenter unterstützt das Backup der SQL Server Verfügbarkeitsgruppen-Datenbank, die mit Windows Failover Cluster konfiguriert ist.
+
+Das SnapCenter Plug-in für Microsoft SQL Server muss auf allen Knoten des Windows Server Failover Clusters installiert sein. Lesen Sie die  Informationen unter link:https://docs.netapp.com/us-en/snapcenter/protect-scsql/concept_prerequisites_for_using_snapcenter_plug_in_for_microsoft_sql_server.html["Dokumentation"]Voraussetzungen und die Schritte zum Einrichten der SnapCenter-Plug-ins.
+
+SnapCenter erkennt alle Datenbanken, Instanzen und Verfügbarkeitsgruppen in Windows-Hosts und Ressourcen werden auf der SnapCenter-Ressourcen-Seite aufgelistet.
+
+
+
+=== Sicherung von Datenbanken in der Always-on-Verfügbarkeitsgruppe
+
+Datenbanken in Verfügbarkeitsgruppen können auf verschiedene Weise gesichert werden.
+
+* Backup auf Datenbankebene: Wählen Sie die Verfügbarkeitsdatenbank für die Seite der Datenbankressource aus, fügen Sie die Policy hinzu, die aus vollständigen/protokollierten Backups besteht, und planen Sie die Sicherung. SnapCenter übernimmt das Backup unabhängig von der Datenbankrolle, ob es sich um ein primäres oder ein sekundäres Replikat handelt. Der Schutz kann auch durch Hinzufügen von Datenbanken zur Ressourcengruppe konfiguriert werden.
+* Backup auf Instanzebene: Wählen Sie die Instanz aus, und alle auf der Instanz ausgeführten Datenbanken werden basierend auf der ausgewählten Richtlinie geschützt. Alle Datenbanken, einschließlich der Verfügbarkeitsdatenbank, die als primäres oder sekundäres Replikat ausgeführt wird, werden mithilfe von SnapCenter gesichert. Der Schutz kann auch konfiguriert werden, indem der Ressourcengruppe eine Instanz hinzugefügt wird.
+* Backup auf Verfügbarkeitsgruppenebene: Bei der Konfiguration der Richtlinie bietet SnapCenter eine erweiterte Option für Backups auf Verfügbarkeitsgruppenebene. Mit der Verfügbarkeitsgruppeneinstellung in Policy können Benutzer die Replikatpräferenz für das Backup auswählen. Sie können entweder ein primäres, ein sekundäres Replikat oder alle Replikate auswählen. Die Standardoption basiert auf dem Backup-Replikat, das in der Konfiguration der SQL Server-Verfügbarkeitsgruppe festgelegt wurde.
+
+
+Die Einstellung für Verfügbarkeitsgruppen in der SnapCenter-Richtlinie gilt nur, wenn Backups auf Verfügbarkeitsgruppenebene zum Schutz von Datenbanken von Verfügbarkeitsgruppen verwendet werden und nicht für Backups auf Datenbank- oder Instanzebene gelten.
+
+
+TIP: *NetApp empfiehlt*, das Backup auf Verfügbarkeitsebene für alle Replikate zu verwenden, die auf NetApp ONTAP Storage ausgeführt werden.
+
+
+
+=== Konfigurieren von Protokollsicherungen in SnapCenter
+
+Wenn die Verfügbarkeitsgruppe auf einem eigenständigen SQL Server-Setup eingerichtet wird, muss auf jedem Knoten eines Windows Server Failover-Clusters eine dedizierte Festplatte gemountet werden. Zur Konfiguration des Protokollverzeichnisses zum Speichern von Transaktionsprotokollsicherungen sollte ein dedizierter Datenträger verwendet werden.
+
+Wenn die Verfügbarkeitsgruppe auf dem SQL Server Failover Cluster eingerichtet ist, sollte die Clusterfestplatte auf der SQL Server Failover Cluster-Instanz zum Hostprotokollverzeichnis erstellt werden.
+
+
+
+=== Wiederherstellen der Datenbank in der Verfügbarkeitsgruppen-Einrichtung mit SnapCenter
+
+* SnapCenter bietet die Option für erneutes Seeding, um die Datenbank automatisch von dem letzten Snapshot wiederherzustellen, der auf dem sekundären Replikat verfügbar ist. Der Vorgang für erneutes Seeding wird automatisch wiederhergestellt und wird dem Datenbank-Backup in die Verfügbarkeitsgruppe hinzugefügt.
+* Alternativ können Sie die Replikatdatenbank in der Verfügbarkeitsgruppe wiederherstellen, indem Sie die Verfügbarkeitsgruppe unterbrechen und die vollständige vollständige vollständige Wiederherstellung und Protokollwiederherstellung durchführen. Verwenden Sie SnapCenter, um die Datenbank im norecovery-Modus wiederherzustellen, und verwenden Sie dann SQL Server Management Studio oder T-SQL, um der Datenbank wieder zur Verfügbarkeitsgruppe beizutreten.
+* Für die Wiederherstellung nur eines Teilbereichs von Daten kann die Klonfunktion von SnapCenter verwendet werden, um eine Klonkopie der Datenbank zu erstellen. Die Datenbankkopie wird innerhalb weniger Minuten mit SnapCenter erstellt und anschließend mit den nativen SQL Server Tools in das primäre Replikat exportiert.
+
+
+Die Best Practice zum Einrichten des Datenbank-Storage-Layouts, um die RTO- und RPO-Anforderungen zu erfüllen, finden Sie unter link:https://www.netapp.com/pdf.html?item=/media/12400-tr4714.pdf["TR-4714 Best Practices für Microsoft SQL Server mit NetApp SnapCenter"].
+
+
+NOTE: SnapCenter unterstützt keine verteilte Verfügbarkeitsgruppe und enthaltene Verfügbarkeitsgruppe.
