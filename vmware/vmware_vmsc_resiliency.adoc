@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: vmware/vmware_vmsc_resiliency.html 
-keywords: VMware, Data protection, MetroCluster, SMBC, SnapMirror active sync, vMSC 
+keywords: VMware, Data protection, MetroCluster, SMBC, SMas, SnapMirror active sync, vMSC, metro storage cluster, vSphere, vCenter, business continuity, disaster recovery, ONTAP 
 summary: Erfahren Sie mehr über vSphere Metro Storage-Cluster mit ONTAP 
 ---
 = Ausfallsicherheit bei geplanten und ungeplanten Ereignissen
@@ -16,7 +16,7 @@ summary: Erfahren Sie mehr über vSphere Metro Storage-Cluster mit ONTAP
 [role="lead"]
 NetApp MetroCluster und SnapMirror Active Sync sind leistungsstarke Tools, die die Hochverfügbarkeit und den unterbrechungsfreien Betrieb von NetApp Hardware und ONTAP Software verbessern.
 
-Diese Tools bieten standortweiten Schutz für die gesamte Storage-Umgebung und stellen sicher, dass Ihre Daten immer verfügbar sind. Ob Sie Standalone-Server, hochverfügbare Server-Cluster, Docker Container oder virtualisierte Server verwenden: Die NetApp-Technologie sorgt nahtlos für die Storage-Verfügbarkeit im Falle eines totalen Ausfalls aufgrund von Strom-, Kühlungs- oder Netzwerkkonnektivität, Herunterfahren des Storage-Arrays oder Bedienungsfehlern.
+Diese Tools bieten standortweiten Schutz für die gesamte Storage-Umgebung und stellen sicher, dass Ihre Daten immer verfügbar sind. Ob Sie Standalone-Server, Hochverfügbarkeits-Server-Cluster, Container oder virtualisierte Server verwenden – die NetApp Technologie sorgt nahtlos für die Storage-Verfügbarkeit im Falle eines totalen Ausfalls aufgrund von Strom-, Kühlungs- oder Netzwerkfehlern, Storage Array Shutdown oder Bedienungsfehlern.
 
 MetroCluster und SnapMirror Active Sync bieten drei grundlegende Methoden für die Datenverfügbarkeit bei geplanten und ungeplanten Ereignissen:
 
@@ -31,10 +31,10 @@ Alle ONTAP Cluster außer Cluster mit einem Node (in der Regel softwaredefiniert
 
 Die Übernahme ist ein automatisierter Prozess, bei dem ein Node den Storage des anderen zur Aufrechterhaltung der Datenservices übernimmt. GiveBack bedeutet umgekehrter Prozess, der den normalen Betrieb wiederherstellt. Takeover können geplant werden, beispielsweise bei Hardware-Wartungsarbeiten oder ONTAP Upgrades oder aufgrund von Node-Panic- oder Hardware-Ausfällen.
 
-Während einer Übernahme führen NAS-LIFs (Network Attached Storage Logical Interfaces) in MetroCluster-Konfigurationen automatisch ein Failover durch. Storage Area Network LIFs (SAN LIFs) führen jedoch keinen Failover durch. Sie verwenden weiterhin den direkten Pfad zu den Logical Unit Numbers (LUNs).
+Während einer Übernahme führen NAS LIFs in MetroCluster Konfigurationen automatisch ein Failover durch. SAN LIFs führen jedoch keinen Failover durch, sondern verwenden weiterhin den direkten Pfad zu den Logical Unit Numbers (LUNs).
 
 Weitere Informationen zu HA-Takeover und Giveback finden Sie im https://docs.netapp.com/us-en/ontap/high-availability/index.html["HA-Paar-Management – Übersicht"]. Erwähnenswert ist, dass diese Funktion nicht spezifisch für MetroCluster oder SnapMirror für die aktive Synchronisierung ist.
 
 Eine Standortumschaltung mit MetroCluster erfolgt, wenn ein Standort offline ist oder als geplante Aktivität für die standortweite Wartung vorgesehen ist. Der verbleibende Standort übernimmt die Eigentümerschaft der Storage-Ressourcen (Festplatten und Aggregate) des Offline-Clusters, und die SVMs am ausgefallenen Standort werden online geschaltet und am Disaster-Standort neugestartet. Dabei bleibt die volle Identität für den Client- und Host-Zugriff erhalten.
 
-Da beide Kopien gleichzeitig aktiv verwendet werden, arbeiten Ihre vorhandenen Hosts mit der aktiven SnapMirror Synchronisierung weiter. Der NetApp-Mediator ist erforderlich, um sicherzustellen, dass ein Standort-Failover korrekt ausgeführt wird.
+Da beide Kopien gleichzeitig aktiv verwendet werden, arbeiten Ihre vorhandenen Hosts mit der aktiven SnapMirror Synchronisierung weiter. Der ONTAP-Mediator ist erforderlich, um sicherzustellen, dass ein Standort-Failover korrekt ausgeführt wird.

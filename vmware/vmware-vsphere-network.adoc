@@ -18,9 +18,9 @@ Wenn Sie vSphere mit Systemen mit ONTAP verwenden, ist die Konfiguration von Net
 
 Folgende Punkte sind dabei zu berücksichtigen:
 
-* Separater Storage-Netzwerk-Traffic aus anderen Netzwerken. Ein separates Netzwerk kann mithilfe eines dedizierten VLANs oder separater Switches für Storage eingerichtet werden. Falls im Storage-Netzwerk physische Pfade wie Uplinks geteilt werden, sind eventuell QoS oder zusätzliche Uplink-Ports erforderlich, um eine ausreichende Bandbreite sicherzustellen. Stellen Sie keine direkte Verbindung zwischen Hosts und Storage her. Verwenden Sie Switches, um redundante Pfade zu verwenden und VMware HA ohne Eingriff von Microsoft HA zu arbeiten. Siehe link:vmware-vsphere-network.html["Direkte Netzwerkverbindung"] Finden Sie weitere Informationen.
-* Jumbo Frames können genutzt werden, sofern dies gewünscht ist und von Ihrem Netzwerk unterstützt wird, insbesondere bei Verwendung von iSCSI. Vergewissern Sie sich bei ihrem Einsatz, dass sie auf allen Netzwerkgeräten, VLANs etc. Im Pfad zwischen Storage und dem ESXi Host gleich konfiguriert sind. Anderenfalls kann es zu Performance- oder Verbindungsproblemen kommen. Auf dem virtuellen ESXi Switch, dem VMkernel Port, sowie den physischen Ports oder den Interface Groups muss für jeden ONTAP Node auch jeweils dieselbe MTU festgelegt sein.
-* NetApp empfiehlt eine Deaktivierung der Netzwerk- Flusssteuerung nur an den Cluster-Netzwerkports innerhalb eines ONTAP Clusters. Für die übrigen Netzwerkports, die für Daten-Traffic verwendet werden, gibt NetApp im Hinblick auf Best Practices keine weiteren Empfehlungen. Sie sollten diese Funktion nach Bedarf aktivieren oder deaktivieren. Weitere Informationen zur Flusssteuerung finden Sie unter https://www.netapp.com/pdf.html?item=/media/16885-tr-4182pdf.pdf["TR-4182"^].
+* Separater Storage-Netzwerk-Traffic aus anderen Netzwerken. Ein separates Netzwerk kann mithilfe eines dedizierten VLANs oder separater Switches für Storage eingerichtet werden. Falls im Storage-Netzwerk physische Pfade wie Uplinks geteilt werden, sind eventuell QoS oder zusätzliche Uplink-Ports erforderlich, um eine ausreichende Bandbreite sicherzustellen. Verbinden Sie Hosts nicht direkt mit Storage, es sei denn, Ihr Lösungsleitfaden fordert ausdrücklich darauf an. Verwenden Sie Switches mit redundanten Pfaden, und lassen Sie VMware HA ohne Eingriffe arbeiten.
+* Jumbo Frames sollten verwendet werden, wenn sie von Ihrem Netzwerk unterstützt werden. Vergewissern Sie sich bei ihrem Einsatz, dass sie auf allen Netzwerkgeräten, VLANs etc. Im Pfad zwischen Storage und dem ESXi Host gleich konfiguriert sind. Anderenfalls kann es zu Performance- oder Verbindungsproblemen kommen. Auf dem virtuellen ESXi Switch, dem VMkernel Port, sowie den physischen Ports oder den Interface Groups muss für jeden ONTAP Node auch jeweils dieselbe MTU festgelegt sein.
+* NetApp empfiehlt eine Deaktivierung der Netzwerk- Flusssteuerung nur an den Cluster-Interconnect-Ports innerhalb eines ONTAP Clusters. NetApp gibt im Hinblick auf Best Practices zur Flusskontrolle für die übrigen Netzwerkports, die für Daten-Traffic verwendet werden, keine weiteren Empfehlungen. Sie sollten diese Funktion nach Bedarf aktivieren oder deaktivieren. Weitere Informationen zur Flusssteuerung finden Sie unter https://www.netapp.com/pdf.html?item=/media/16885-tr-4182pdf.pdf["TR-4182"^].
 * Wenn ESXi und ONTAP Storage-Arrays mit Ethernet-Storage-Netzwerken verbunden werden, empfiehlt NetApp, die Ethernet-Ports, mit denen diese Systeme verbunden werden, mit der Cisco PortFast Funktion oder als Rapid Spanning Tree Protocol (RSTP)-Edge-Ports zu konfigurieren. NetApp empfiehlt die Aktivierung der Spanning Tree PortFast Trunk-Funktion in Umgebungen mit Verwendung der Cisco PortFast Funktion und 802.1Q VLAN-Trunking entweder für den ESXi Server oder für die ONTAP Storage-Arrays.
 * Für die Link-Aggregation empfiehlt NetApp die folgenden Best Practices:
 +
@@ -64,7 +64,7 @@ Die folgende Tabelle enthält eine Zusammenfassung der Netzwerkkonfigurationsele
 
 
 
-== SAN (FC, FCoE, NVMe/FC, iSCSI), RDM
+== SAN (FC, NVMe/FC, iSCSI, NVMe/TCP), RDM
 
 ONTAP bietet Block-Storage der Enterprise-Klasse für VMware vSphere unter Verwendung des traditionellen iSCSI- und Fibre-Channel-Protokolls (FCP) sowie des hocheffizienten und performanten NVMe-of (Next-Generation Block-Protokoll), das sowohl NVMe/FC als auch NVMe/TCP unterstützt.
 
@@ -82,7 +82,7 @@ Empfohlene Best Practices finden Sie in link:vmware-vsphere-datastores-nfs.html[
 
 == Direkte Netzwerkverbindung
 
-Storage-Administratoren ziehen es manchmal vor, ihre Infrastruktur zu vereinfachen, indem sie Netzwerk-Switches von der Konfiguration entfernen. Dies kann in einigen Szenarien unterstützt werden.
+Storage-Administratoren ziehen es manchmal vor, ihre Infrastruktur zu vereinfachen, indem sie Netzwerk-Switches von der Konfiguration entfernen. Dies kann in einigen Szenarien unterstützt werden. Allerdings gibt es einige Einschränkungen und Einschränkungen, die zu beachten sind.
 
 
 
@@ -100,7 +100,7 @@ Der Grund, warum ein unterbrechungsfreier Failover mit direkt verbundenem NFS-St
 
 Die zweite BS-NIC könnte als 19 konfiguriert werden 2.168.1.2 und wäre in der Lage, mit der Failed Over 192.168.1.50-Adresse zu kommunizieren, aber die lokalen Routing-Tabellen würden standardmäßig eine *und nur eine*-Adresse verwenden, um mit dem Subnetz 192.168.1.0/24 zu kommunizieren. Ein Sysadmin könnte ein Skript-Framework erstellen, das eine fehlerhafte Netzwerkverbindung erkennt und die lokalen Routing-Tabellen ändert oder Schnittstellen hoch- und herunterfahren würde. Das genaue Verfahren hängt vom verwendeten Betriebssystem ab.
 
-In der Praxis haben NetApp-Kunden NFS direkt verbunden, aber normalerweise nur für Workloads, bei denen IO-Pausen während Failover akzeptabel sind. Wenn harte Mounts verwendet werden, sollte es während solcher Pausen keine IO-Fehler geben. Die E/A-Vorgänge sollten so lange hängen bleiben, bis Dienste wiederhergestellt werden, entweder durch ein Failback oder durch einen manuellen Eingriff, um IP-Adressen zwischen NICs auf dem Host zu verschieben.
+In der Praxis haben NetApp-Kunden NFS direkt verbunden, aber normalerweise nur für Workloads, bei denen IO-Pausen während Failover akzeptabel sind. Wenn harte Mounts verwendet werden, sollte es während solcher Pausen keine IO-Fehler geben. Die E/A-Vorgänge sollten so lange anhalten, bis Dienste wiederhergestellt werden, entweder durch ein Failback oder durch einen manuellen Eingriff, um IP-Adressen zwischen NICs auf dem Host zu verschieben.
 
 
 

@@ -14,18 +14,56 @@ summary: Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrer
 
 
 [role="lead"]
-Zu den größten Stärken von ONTAP für vSphere zählt, dass Sie Ihre VMs sichern und schnell wiederherstellen können und dass Sie diese Funktion mit dem SnapCenter Plug-in für VMware vSphere einfach in vCenter managen können.
+Backups und schnelle Wiederherstellung von Virtual Machines (VMs) sind die wichtigsten Vorteile von ONTAP für vSphere. Diese Funktionalität lässt sich über das SnapCenter Plug-in für VMware vSphere bequem in vCenter managen. Viele Kunden erweitern ihre Backup-Lösungen von Drittanbietern mit SnapCenter, um die Snapshot-Technologie von ONTAP zu nutzen, da diese die schnellste und unkomplizierte Möglichkeit bietet, eine VM mit ONTAP wiederherzustellen. Kunden, die über eine ONTAP One Lizenz verfügen, ist SnapCenter kostenlos erhältlich. Unter Umständen sind auch andere Lizenzpakete erhältlich.
+
+Darüber hinaus lässt sich das SnapCenter Plug-in für VMware in integrieren https://docs.netapp.com/us-en/bluexp-backup-recovery/concept-protect-vm-data.html["BlueXP  für Backup und Recovery von Virtual Machines"^] und ermöglicht so für die meisten ONTAP Systeme effektive 3-2-1-1-Backup-Lösungen. Beachten Sie, dass bei der Verwendung von BlueXP -Backup und -Recovery für Virtual Machines mit Premium-Services, wie Objektspeichern für zusätzlichen Backup-Storage, möglicherweise einige Gebühren anfallen. In diesem Abschnitt werden die verschiedenen zum Schutz Ihrer VMs und Datenspeicher verfügbaren Optionen erläutert.
+
+
+
+== NetApp ONTAP-Volume-Snapshots
 
 Mit Snapshots können Sie ohne Auswirkungen auf die Performance schnell Kopien Ihrer VMs oder Datastores erstellen und diese dann zur längerfristigen externen Datensicherung mit SnapMirror an ein sekundäres System senden. Durch diesen Ansatz werden der Storage-Platzbedarf und die Netzwerkbandbreite minimiert, da nur geänderte Informationen gespeichert werden.
 
-Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrere Jobs angewendet werden können. In diesen Richtlinien können ein Zeitplan, die Aufbewahrung, die Replizierung und andere Funktionen definiert werden. Damit ist es weiterhin möglich, optional VM-konsistente Snapshots auszuwählen und dadurch die Fähigkeit des Hypervisors auszuschöpfen, das I/O vor dem Erstellen eines VMware Snapshots stillzulegen. Aufgrund der Performance-Auswirkungen von VMware Snapshots werden diese jedoch im Allgemeinen nicht empfohlen, es sei denn, Sie müssen das Gast-Betriebssystem stilllegen. Verwenden Sie stattdessen Snapshots für die allgemeine Sicherung und Applikationstools wie SnapCenter Plug-ins, um transaktionsorientierte Daten – beispielsweise SQL Server oder Oracle Daten – zu sichern. Diese Snapshots unterscheiden sich von VMware (Konsistenz-)Snapshots und sind für längerfristige Sicherung geeignet. Aufgrund der Performance und anderer Auswirkungen werden VMware Snapshots nur für den kurzfristigen Einsatz empfohlen. link:https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/snapshot-limitations.html["Einschränkungen Bei Snapshots"^]Weitere Informationen finden Sie unter.
+Snapshots sind eine Schlüsselfunktion von ONTAP, mit der Sie zeitpunktgenaue Kopien Ihrer Daten erstellen können. Sie sind platzsparend und schnell erstellbar – ideal für die Sicherung von VMs und Datenspeichern. Snapshots können für verschiedene Zwecke verwendet werden, einschließlich Backup, Recovery und Tests. Diese Snapshots unterscheiden sich von VMware (Konsistenz-)Snapshots und sind für längerfristige Sicherung geeignet. Die von VMware vCenter gemanagten Snapshots werden aufgrund von Performance und anderen Auswirkungen nur für den kurzfristigen Einsatz empfohlen. link:https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/snapshot-limitations.html["Einschränkungen Bei Snapshots"^]Weitere Informationen finden Sie unter.
 
-Diese Plug-ins bieten erweiterte Funktionen zur Sicherung von Datenbanken in physischen und virtuellen Umgebungen. Bei vSphere können Sie sie zur Sicherung von SQL Server oder Oracle Datenbanken heranziehen, in denen die Daten in RDM-LUNs, direkt mit dem Gastbetriebssystem verbundenen iSCSI-LUNs oder VMDK-Dateien in VMFS oder NFS-Datastores gespeichert werden. Mit den Plug-ins können unterschiedliche Typen von Datenbank-Backups angegeben, Online- oder Offline-Backups unterstützt und neben Protokolldateien auch Datenbankdateien gesichert werden. Neben Backup und Recovery unterstützen die Plug-ins auch das Klonen von Datenbanken für Entwicklungs- oder Testzwecke.
+Snapshots werden auf Volume-Ebene erstellt und können zur Sicherung aller VMs und Datenspeicher innerhalb dieses Volumes eingesetzt werden. Das bedeutet, dass Sie einen Snapshot eines gesamten Datastores erstellen können, der alle VMs in diesem Datastore umfasst.
+
+Bei NFS-Datastores können Sie VM-Dateien in Snapshots ganz einfach anzeigen, indem Sie das Verzeichnis .Snapshots durchsuchen. So können Sie schnell auf Dateien von einem Snapshot zugreifen und diese wiederherstellen, ohne dass eine bestimmte Backup-Lösung verwendet werden muss.
+
+Für VMFS-Datastores können Sie eine FlexClone des Datastore auf der Grundlage des gewünschten Snapshots erstellen. Damit können Sie einen neuen Datastore erstellen, der auf dem Snapshot basiert und für Test- oder Entwicklungszwecke verwendet werden kann. Das FlexClone verbraucht nur Speicherplatz für die nach der Snapshot-Erstellung vorgenommenen Änderungen und ist somit eine platzsparende Möglichkeit, eine Kopie des Datastore zu erstellen. Sobald die FlexClone erstellt wurde, können Sie die LUN oder den Namespace einem ESXi-Host zuordnen, wie ein normaler Datastore. So können Sie nicht nur spezifische VM-Dateien wiederherstellen, sondern schnell auch Test- oder Entwicklungsumgebungen auf Basis von Produktionsdaten erstellen, ohne die Performance der Produktionsumgebung zu beeinträchtigen.
+
+Weitere Informationen zu Snapshots finden Sie in der ONTAP-Dokumentation. Weitere Details finden Sie unter den folgenden Links: https://docs.netapp.com/us-en/ontap/data-protection/manage-local-snapshot-copies-concept.html["Lokale ONTAP Snapshot Kopien"^] https://docs.netapp.com/us-en/ontap/data-protection/manage-snapmirror-replication.html["Replizierung mit ONTAP SnapMirror"^]
+
+
+
+== SnapCenter Plug-in für VMware vSphere
+
+Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrere Jobs angewendet werden können. In diesen Richtlinien können ein Zeitplan, die Aufbewahrung, die Replizierung und andere Funktionen definiert werden. Damit ist es weiterhin möglich, optional VM-konsistente Snapshots auszuwählen und dadurch die Fähigkeit des Hypervisors auszuschöpfen, das I/O vor dem Erstellen eines VMware Snapshots stillzulegen. Aufgrund der Performance-Auswirkungen von VMware Snapshots werden diese jedoch im Allgemeinen nicht empfohlen, es sei denn, Sie müssen das Gast-Betriebssystem stilllegen. Verwenden Sie stattdessen Snapshots für die allgemeine Sicherung und Applikationstools wie SnapCenter Applikations-Plug-ins, um transaktionsorientierte Daten – beispielsweise SQL Server oder Oracle Daten – zu sichern.
+
+Diese Plug-ins bieten erweiterte Funktionen zur Sicherung von Datenbanken in physischen und virtuellen Umgebungen. Bei vSphere können Sie sie zur Sicherung von SQL Server oder Oracle Datenbanken heranziehen, in denen die Daten in RDM-LUNs, VVols oder NVMe/TCP-Namespaces und direkt mit dem Gastbetriebssystem verbundenen iSCSI-LUNs oder VMDK-Dateien in VMFS oder NFS-Datastores gespeichert werden. Mit den Plug-ins können unterschiedliche Typen von Datenbank-Backups angegeben, Online- oder Offline-Backups unterstützt und neben Protokolldateien auch Datenbankdateien gesichert werden. Neben Backup und Recovery unterstützen die Plug-ins auch das Klonen von Datenbanken für Entwicklungs- oder Testzwecke.
 
 Die folgende Abbildung zeigt ein Beispiel für die Implementierung von SnapCenter.
 
 image:vsphere_ontap_image4.png["SnapCenter Implementierung"]
 
-Falls Sie erweiterte Disaster-Recovery-Funktionen nutzen möchten, sollten Sie in Betracht ziehen, NetApp SRA für ONTAP mit VMware Site Recovery Manager zu kombinieren. Dadurch wird die Replizierung von Datastores an einen DR-Standort unterstützt. Darüber hinaus werden unterbrechungsfreie Tests in der DR-Umgebung ermöglicht, indem die replizierten Datastores geklont werden. Das Recovery nach einem Ausfall und die erneute Sicherung der Produktion nach Behebung des Ausfalls wurden durch die in SRA integrierte Automatisierung ebenfalls vereinfacht.
+Informationen zur Dimensionierung finden Sie im https://kb.netapp.com/data-mgmt/SnapCenter/SC_KBs/SCV__Sizing_Guide_for_SnapCenter_Plugin_for_VMware_vSphere["Dimensionierungsleitfaden für SnapCenter Plug-in für VMware vSphere"^]
 
-Um ein Höchstmaß an Datensicherung zu gewährleisten, ziehen Sie eine VMware vSphere Metro Storage Cluster (vMSC) Konfiguration mit NetApp MetroCluster in Betracht. VMSC ist eine von VMware zertifizierte Lösung, die synchrone Replizierung mit Array-basiertem Clustering kombiniert. So profitieren Sie von denselben Vorteilen wie ein Hochverfügbarkeits-Cluster, sind aber zum Schutz vor Standortausfällen auf separate Standorte verteilt. NetApp MetroCluster bietet kostengünstige Konfigurationen für die synchrone Replizierung mit transparentem Recovery nach dem Ausfall einer einzelnen Storage-Komponente sowie Recovery mit nur einem Befehl im Falle eines Standortausfalls. VMSC wird ausführlicher in beschrieben. https://www.netapp.com/pdf.html?item=/media/19773-tr-4128.pdf["TR-4128"^]
+
+
+== ONTAP Tools für VMware vSphere mit VMware Live Site Recovery
+
+Die ONTAP Tools für VMware vSphere (OT4VS) sind ein kostenloses Plug-in, das eine nahtlose Integration zwischen VMware vSphere und NetApp ONTAP bietet. Sie können Ihren ONTAP Storage direkt über den vSphere Web Client managen und Aufgaben wie die Bereitstellung von Storage, das Management von Replizierung und das Monitoring der Performance vereinfachen.
+
+Bessere Disaster-Recovery-Funktionen sollten Sie in Betracht ziehen, NetApp SRA für ONTAP zu verwenden, das Teil von ONTAP Tools für VMware vSphere ist, zusammen mit VMware Live Site Recovery (ehemals Site Recovery Manager). Dieses Tool unterstützt nicht nur die Replizierung von Datastores an einen Disaster-Recovery-Standort mithilfe von SnapMirror, sondern ermöglicht auch unterbrechungsfreie Tests in der DR-Umgebung, indem die replizierten Datastores geklont werden. Darüber hinaus wird das Recovery nach einem Ausfall und der erneute Schutz der Produktion nach einem Ausfall dank integrierter Automatisierungsfunktionen optimiert.
+
+
+
+== BlueXP  Disaster Recovery
+
+BlueXP  Disaster Recovery (DR) ist ein Cloud-basierter Service, der eine umfassende Lösung zum Schutz Ihrer Daten und Applikationen nach einem Ausfall bietet. Die Lösung bietet eine Reihe von Funktionen, einschließlich automatischem Failover und Failback, Recovery-Punkten für mehrere Zeitpunkte, applikationskonsistenter Disaster Recovery und Unterstützung für ONTAP Systeme vor Ort und in der Cloud. BlueXP  DR lässt sich nahtlos in ONTAP und Ihre VMware vSphere Umgebung integrieren und bietet eine einheitliche Lösung für Disaster Recovery.
+
+
+
+== VSphere Metro Storage-Cluster (vMSC) mit NetApp MetroCluster und aktiver SnapMirror-Synchronisierung
+
+Um ein Höchstmaß an Datensicherung zu gewährleisten, ziehen Sie eine VMware vSphere Metro Storage Cluster (vMSC) Konfiguration mit NetApp MetroCluster in Erwägung. VMSC ist eine von VMware zertifizierte, von NetApp unterstützte Lösung mit synchroner Replizierung, die dieselben Vorteile eines Hochverfügbarkeits-Clusters bietet, aber zum Schutz vor Standortausfällen auf separate Standorte verteilt ist. Active Sync mit ASA und AFF sowie MetroCluster mit AFF bietet kostengünstige Konfigurationen für synchrone Replizierung mit transparentem Recovery nach dem Ausfall einer einzelnen Storage-Komponente. Außerdem bietet NetApp SnapMirror Active Sync transparentes Recovery bei SnapMirror Active Sync oder Recovery mit nur einem Befehl im Falle eines Standortausfalls mit MetroCluster. VMSC wird im weiteren Details beschrieben. https://www.netapp.com/pdf.html?item=/media/19773-tr-4128.pdf["TR-4128"^]

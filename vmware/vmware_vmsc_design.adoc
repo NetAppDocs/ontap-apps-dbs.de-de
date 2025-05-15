@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: vmware/vmware_vmsc_design.html 
-keywords: VMware, Data protection, MetroCluster, SMBC, SnapMirror active sync, vMSC 
+keywords: VMware, Data protection, MetroCluster, SMBC, SMas, SnapMirror active sync, vMSC, metro storage cluster, vSphere, vCenter, business continuity, disaster recovery, ONTAP 
 summary: VMSC Design- und Implementierungsrichtlinien. 
 ---
 = VMSC Design- und Implementierungsrichtlinien
@@ -20,15 +20,19 @@ Dieses Dokument enthält Design- und Implementierungsrichtlinien für vMSC mit O
 
 == NetApp-Speicherkonfiguration
 
-Setup-Anweisungen für NetApp MetroCluster (MCC-Konfiguration) finden Sie unter https://docs.netapp.com/us-en/ontap-metrocluster/["MetroCluster-Dokumentation"]. Anweisungen für SnapMirror Active Sync (SMAS) finden Sie auch unter https://docs.netapp.com/us-en/ontap/smbc/index.html["Überblick über die Business Continuity in SnapMirror"].
+Setup-Anweisungen für NetApp MetroCluster finden Sie unter https://docs.netapp.com/us-en/ontap-metrocluster/["MetroCluster-Dokumentation"]. Anweisungen für SnapMirror Active Sync (SMAS) finden Sie auch unter https://docs.netapp.com/us-en/ontap/smbc/index.html["Überblick über die Business Continuity in SnapMirror"].
 
 Sobald Sie MetroCluster konfiguriert haben, ist die Verwaltung wie das Management einer herkömmlichen ONTAP-Umgebung. Sie können Storage Virtual Machines (SVMs) mithilfe verschiedener Tools wie Command Line Interface (CLI), System Manager oder Ansible einrichten. Sobald die SVMs konfiguriert sind, erstellen Sie logische Schnittstellen (LIFs), Volumes und LUNs (Logical Unit Numbers) auf dem Cluster, die für den normalen Betrieb verwendet werden. Diese Objekte werden automatisch über das Cluster-Peering-Netzwerk auf den anderen Cluster repliziert.
 
-Wenn Sie MetroCluster nicht nutzen, können Sie SnapMirror Active Sync verwenden, was Datastores-granulare Sicherung und aktiv/aktiv-Zugriff über diverse ONTAP Cluster in verschiedenen Ausfall-Domains hinweg bietet. SMAS verwendet Konsistenzgruppen (CGS), um die Konsistenz der Schreibreihenfolge zwischen einem oder mehreren Datastores sicherzustellen. Je nach Applikations- und Datastore-Anforderungen können Sie mehrere CGS erstellen. Konsistenzgruppen sind insbesondere für Applikationen nützlich, die eine Datensynchronisierung zwischen mehreren Datastores erfordern. SMAS unterstützt auch Raw Device Mapping (RDMs) und über das Gastsystem verbundenen Storage mit in-Guest-iSCSI-Initiatoren. Weitere Informationen zu Konsistenzgruppen finden Sie unter https://docs.netapp.com/us-en/ontap/consistency-groups/index.html["Übersicht über Konsistenzgruppen"].
+Wenn Sie nicht MetroCluster nutzen oder ONTAP Systeme haben, die nicht von MetroCluster unterstützt werden, beispielsweise ASA r2-Systeme, können Sie SnapMirror Active Sync verwenden. Dies bietet granularen Datastore-Schutz und aktiv/aktiv-Zugriff über mehrere ONTAP-Cluster in verschiedenen Ausfall-Domains hinweg. SMAS verwendet Konsistenzgruppen (CGS), um die Konsistenz der Schreibreihenfolge zwischen einem oder mehreren Datastores sicherzustellen. Je nach Applikations- und Datastore-Anforderungen können Sie mehrere CGS erstellen. Konsistenzgruppen sind insbesondere für Applikationen nützlich, die eine Datensynchronisierung zwischen mehreren Datastores erfordern. Beispielsweise Gast-LVMs, die zwischen Datastores verteilt sind. SMAS unterstützt auch Raw Device Mapping (RDMs) und über das Gastsystem verbundenen Storage mit in-Guest-iSCSI-Initiatoren. Weitere Informationen zu Konsistenzgruppen finden Sie unter https://docs.netapp.com/us-en/ontap/consistency-groups/index.html["Übersicht über Konsistenzgruppen"].
 
-ONTAP-Tools bieten jetzt eine einfache Möglichkeit, SnapMirror Active Sync für vMSC zu konfigurieren. Mit dem ONTAP Tools vCenter Plug-in können Sie aktive SnapMirror Synchronisierungsbeziehungen zwischen zwei ONTAP Clustern erstellen und managen. Das Plug-in bietet eine einfache und intuitive Benutzeroberfläche zum Erstellen und Managen von aktiven SnapMirror Synchronisierungsbeziehungen zwischen zwei ONTAP Clustern. Sie können mehr über die ONTAP Tools vCenter Plugin unter erfahren https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/index.html["ONTAP Tools für VMware vSphere"], oder direkt in springen https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/protect-cluster.html["Schützen mit Host-Cluster-Schutz"].
+Es gibt einen Unterschied beim Management einer vMSC Konfiguration mit aktiver SnapMirror Synchronisierung im Vergleich zu einer MetroCluster. Zunächst einmal ist SMAS eine reine SAN-Konfiguration. Es können keine NFS-Datastores mit aktiver SnapMirror-Synchronisierung gesichert werden. Als zweites müssen Sie Ihren ESXi-Hosts beide Kopien der LUNs zuordnen, damit sie auf die replizierten Datastores in beiden Ausfall-Domains zugreifen können. Als drittes müssen Sie eine oder mehrere Konsistenzgruppen für die Datastores erstellen, die Sie mit aktiver SnapMirror-Synchronisierung schützen möchten. Schließlich müssen Sie eine SnapMirror-Richtlinie für die von Ihnen erstellten Konsistenzgruppen erstellen. All dies ist ganz einfach mit dem „Protect Cluster“-Assistenten im vCenter Plug-in der ONTAP Tools oder durch manuelle Verwendung der ONTAP CLI oder des System Managers möglich.
 
-Es gibt einen Unterschied beim Management einer vMSC Konfiguration mit aktiver SnapMirror Synchronisierung im Vergleich zu einer MetroCluster. Zunächst einmal ist SMAS eine reine SAN-Konfiguration. Es können keine NFS-Datastores mit aktiver SnapMirror-Synchronisierung gesichert werden. Als zweites müssen Sie Ihren ESXi-Hosts beide Kopien der LUNs zuordnen, damit sie auf die replizierten Datastores in beiden Ausfall-Domains zugreifen können.
+
+
+== Verwenden des ONTAP Tools vCenter Plug-ins für SnapMirror Active Sync
+
+Das vCenter Plug-in der ONTAP Tools bietet eine einfache und intuitive Möglichkeit zur Konfiguration der SnapMirror Active Sync für vMSC. Mit dem ONTAP Tools vCenter Plug-in können Sie aktive SnapMirror Synchronisierungsbeziehungen zwischen zwei ONTAP Clustern erstellen und managen. Dieses Plug-in bietet eine benutzerfreundliche Oberfläche, über die diese Beziehungen effizient aufgebaut und verwaltet werden können. Sie können mehr über die ONTAP Tools vCenter Plugin unter erfahren https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/index.html["ONTAP Tools für VMware vSphere"], oder direkt in springen https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/protect-cluster.html["Schützen mit Host-Cluster-Schutz"].
 
 
 
@@ -76,7 +80,7 @@ image::../media/vmsc_3_4.png[Zugangskontrolle,624,479]
 image::../media/vmsc_3_5.png[Vmsc 3 5,624,336]
 
 . Aktivieren Sie den Schutz von VM-Komponenten, siehe https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-availability/GUID-F01F7EB8-FF9D-45E2-A093-5F56A788D027.html["docs.vmware.com"].
-. Die folgenden zusätzlichen vSphere HA-Einstellungen werden für vMSC mit MCC empfohlen:
+. Die folgenden zusätzlichen vSphere HA-Einstellungen werden für vMSC mit MetroCluster empfohlen:
 
 
 [cols="50%,50%"]
@@ -141,7 +145,7 @@ Weitere Informationen finden Sie unter https://www.vmware.com/docs/vmw-vmware-vs
 
 image::../media/vmsc_3_7.png[Ein Screenshot einer Computerbeschreibung wird automatisch generiert,624,545]
 
-Das Hinzufügen einer erweiterten Einstellung namens das.heartbeatDsPerHost kann die Anzahl der Heartbeat-Datenspeicher erhöhen. Verwenden Sie vier Heartbeat Datastores (HB DSS) – zwei pro Standort. Verwenden Sie die Option „aus Liste auswählen, aber Kompliment“. Dies wird benötigt, da Sie bei Ausfall eines Standorts immer noch zwei HB DSS benötigen. Diese müssen jedoch nicht durch MCC oder SnapMirror Active Sync geschützt werden.
+Das Hinzufügen einer erweiterten Einstellung namens das.heartbeatDsPerHost kann die Anzahl der Heartbeat-Datenspeicher erhöhen. Verwenden Sie vier Heartbeat Datastores (HB DSS) – zwei pro Standort. Verwenden Sie die Option „aus Liste auswählen, aber Kompliment“. Dies wird benötigt, da Sie bei Ausfall eines Standorts immer noch zwei HB DSS benötigen. Diese müssen jedoch nicht durch MetroCluster oder SnapMirror Active Sync geschützt werden.
 
 Weitere Informationen finden Sie unter https://www.vmware.com/docs/vmw-vmware-vsphere-metro-storage-cluster-recommended-practices["Empfohlene Practices für VMware vSphere Metro Storage-Cluster"]_.__
 

@@ -19,7 +19,7 @@ Es stehen mehrere Ressourcen zur Fehlerbehebung mit zusätzlichen Informationen 
 
 == NetApp Support Website
 
-Neben einer Vielzahl von Knowledgebase Artikeln zu NetApp Virtualisierungsprodukten bietet die NetApp Support-Website auch eine praktische Landing Page für das https://mysupport.netapp.com/site/products/all/details/otv/docs-tab["ONTAP Tools für VMware vSphere"] Produkt. Dieses Portal bietet Links zu Artikeln, Downloads, technischen Berichten und Diskussionen zu VMware Lösungen in der NetApp Community. Sie ist verfügbar unter:
+Zusätzlich zu einer Vielzahl von Knowledgebase-Artikeln für NetApp Virtualisierungsprodukte bietet die NetApp Support-Website auch eine praktische Landing Page für das https://mysupport.netapp.com/site/products/all/details/otv/docs-tab["ONTAP Tools für VMware vSphere"] Produkt. Dieses Portal bietet Links zu Artikeln, Downloads, technischen Berichten und Diskussionen zu VMware Lösungen in der NetApp Community. Sie ist verfügbar unter:
 
 https://mysupport.netapp.com/site/products/all/details/otv/docs-tab["NetApp Support Site_"]
 

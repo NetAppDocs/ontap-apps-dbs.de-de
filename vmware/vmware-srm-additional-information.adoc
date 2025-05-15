@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: vmware/vmware-srm-additional-information.html 
-keywords: vmware, site, recovery manager, vsrm, hybrid, cloud, additional, information 
+keywords: vmware, site, recovery manager, vsrm, hybrid, cloud, additional, information, srm, vlsr 
 summary: Sehen Sie sich die folgenden Dokumente und/oder Websites an, um mehr über die in diesem Dokument beschriebenen Informationen zu erfahren. 
 ---
 = Weitere Informationen
@@ -16,18 +16,15 @@ summary: Sehen Sie sich die folgenden Dokumente und/oder Websites an, um mehr ü
 [role="lead"]
 Sehen Sie sich die folgenden Dokumente und/oder Websites an, um mehr über die in diesem Dokument beschriebenen Informationen zu erfahren:
 
+* ONTAP-Tools für VMware vSphere 10.x-Ressourcen link:https://mysupport.netapp.com/site/products/all/details/otv10/docs-tab["https://mysupport.netapp.com/site/products/all/details/otv10/docs-tab"]
+* ONTAP-Tools für VMware vSphere 9.x-Ressourcen link:https://mysupport.netapp.com/site/products/all/details/otv/docsandkb-tab["https://mysupport.netapp.com/site/products/all/details/otv/docsandkb-tab"]
 * TR-4597: VMware vSphere für ONTAP
 link:vmware-vsphere-overview.html["https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vsphere-overview.html"]
 * TR-4400: VMware vSphere Virtual Volumes with ONTAP
 link:vmware-vvols-overview.html["https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vvols-overview.html"]
 * TR-4015 SnapMirror Configuration Best Practice Guide für ONTAP 9
 link:https://www.netapp.com/media/17229-tr4015.pdf?v=127202175503P["https://www.netapp.com/media/17229-tr4015.pdf?v=127202175503P"]
-* RBAC Benutzer-Creator für ONTAP
-link:https://mysupport.netapp.com/site/tools/tool-eula/rbac["https://mysupport.netapp.com/site/tools/tool-eula/rbac"]
-* ONTAP Tools für VMware vSphere Ressourcen
-link:https://mysupport.netapp.com/site/products/all/details/otv/docsandkb-tab["https://mysupport.netapp.com/site/products/all/details/otv/docsandkb-tab"]
-* VMware Site Recovery Manager - Dokumentation
-link:https://docs.vmware.com/en/Site-Recovery-Manager/index.html["https://docs.vmware.com/en/Site-Recovery-Manager/index.html"]
+* VMware Live Site Recovery-Dokumentation link:https://techdocs.broadcom.com/us/en/vmware-cis/live-recovery/live-site-recovery/9-0.html["https://techdocs.broadcom.com/us/en/vmware-cis/live-recovery/live-site-recovery/9-0.html"]
 
 
-Siehe link:http://mysupport.netapp.com/matrix["Interoperabilitäts-Matrix-Tool (IMT)"] Überprüfen Sie auf der NetApp Support-Website, ob die in diesem Dokument angegebenen Produktversionen und Funktionen in Ihrer IT-Umgebung unterstützt werden. Das NetApp IMT definiert die Produktkomponenten und -Versionen, die für von NetApp unterstützte Konfigurationen verwendet werden können. Die dort angezeigten Ergebnisse basieren auf der spezifischen Infrastruktur des jeweiligen Kunden bzw. auf den technischen Daten der in dieser Infrastruktur enthaltenen Komponenten.
+link:http://mysupport.netapp.com/matrix["Interoperabilitäts-Matrix-Tool (IMT)"]Überprüfen Sie auf der NetApp-Support-Website, ob die in diesem Dokument angegebenen Produktversionen und Funktionen in Ihrer IT-Umgebung unterstützt werden. Das NetApp IMT definiert die Produktkomponenten und -Versionen, die für von NetApp unterstützte Konfigurationen verwendet werden können. Die dort angezeigten Ergebnisse basieren auf der spezifischen Infrastruktur des jeweiligen Kunden bzw. auf den technischen Daten der in dieser Infrastruktur enthaltenen Komponenten.

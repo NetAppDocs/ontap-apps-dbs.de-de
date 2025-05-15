@@ -16,7 +16,8 @@ summary: Auf dieser Seite werden die Best Practices zur Implementierung einer ON
 [role="lead"]
 NetApp wurde erstmals im Jahr 2012 vorgestellt und war bereits ein früher Design-Partner von VMware bei der Entwicklung von VMware vSphere APIs for Storage Awareness (VASA), der Grundlage des Policy-basierten Storage-Managements (SPBM) für Enterprise Storage Arrays. Durch diesen Ansatz wurde das granulare VM-Storage-Management nur noch für VMFS und NFS Storage verfügbar.
 
- As a technology design partner, NetApp provided architectural input and in 2015 announced support for vVols. This new technology now enabled the automation of VM-granular and truly array-native storage provisioning through SPBM.
+Als Technology Design Partner lieferte NetApp Architektureingaben und kündigte 2015 Unterstützung für VVols an. Diese neue Technologie ermöglichte nun die Automatisierung der granularen und Array-nativen Storage-Bereitstellung über SPBM.
+
 
 
 == Virtuelle Volumes (VVols)
@@ -41,9 +42,9 @@ Bei VVols ist NetApp ONTAP eine der führenden Lösungen in der Storage-Branche,
 
 Zuvor haben wir erwähnt, dass VM-Administratoren Kapazitäten als Storage-Pools belegen können. Dies wird durch die Verwendung von Storage-Containern erreicht, die in vSphere als logische Datastores dargestellt werden.
 
-Storage-Container werden von Storage-Administratoren erstellt und gruppiert, um Storage-Ressourcen zu gruppieren, die von VM-Administratoren belegt werden können. Storage-Container können je nach verwendetem ONTAP-System unterschiedlich erstellt werden. Beim herkömmlichen ONTAP 9 Cluster werden Containern ein oder mehrere FlexVols zugewiesen, die gemeinsam den Storage-Pool bilden. Bei ASA r2-Systemen ist der gesamte Cluster der Storage-Pool.
+Storage-Container werden von Storage-Administratoren erstellt und gruppiert, um Storage-Ressourcen zu gruppieren, die von VM-Administratoren belegt werden können. Storage-Container können je nach verwendetem ONTAP-System unterschiedlich erstellt werden. Bei einem herkömmlichen ONTAP 9 Cluster werden Containern ein oder mehrere FlexVol-Volumes zugewiesen, die gemeinsam den Storage-Pool bilden. Bei ASA r2-Systemen ist der gesamte Cluster der Storage-Pool.
 
 
 NOTE: Weitere Informationen zu VMware vSphere Virtual Volumes, SPBM und ONTAP finden Sie unter link:vmware-vvols-overview.html["TR-4400: VMware vSphere Virtual Volumes with ONTAP"^].
 
- \* Depending on platform and protocol
+*Abhängig von Plattform und Protokoll

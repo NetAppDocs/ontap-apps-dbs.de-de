@@ -54,10 +54,10 @@ In diesem Anhang wird das Bereitstellen eines Hyper-V-Clusters beschrieben.
 +
 ... Nehmen Sie die LUN online, initialisieren Sie die Festplatte, erstellen Sie ein neues einfaches Volume und formatieren Sie sie mit NTFS oder ReFS.
 ... Erweitern Sie in Failover Cluster Manager den Cluster, erweitern Sie Speicher, klicken Sie mit der rechten Maustaste auf Festplatten, und klicken Sie dann auf Festplatten hinzufügen. Dadurch wird der Assistent Festplatten zu einem Cluster hinzufügen geöffnet, in dem die LUN als Festplatte angezeigt wird. Klicken Sie auf OK, um die LUN als Festplatte hinzuzufügen.
-... Nun wird die LUN mit dem Namen „Cluster Disk“ bezeichnet und unter „Disks“ als „Available Storage“ angezeigt.
+... Nun wird die LUN mit dem Namen „Cluster Disk“ und unter „Disks“ als „Available Storage“ angezeigt.
 
 
-.. Klicken Sie mit der rechten Maustaste auf die LUN (Cluster Disk) und klicken Sie auf Add to Cluster Shared Volumes. Nun wird die LUN als CSV angezeigt.
+.. Klicken Sie mit der rechten Maustaste auf die LUN („Cluster Disk“), und klicken Sie auf Add to Cluster Shared Volumes. Nun wird die LUN als CSV angezeigt.
 .. Der CSV ist von allen Hyper-V Servern des Failover-Clusters an seinem lokalen Standort C:\ClusterStorage\ gleichzeitig sichtbar und zugänglich.
 
 

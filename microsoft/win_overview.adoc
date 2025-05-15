@@ -37,7 +37,7 @@ NOTE: *Diese Dokumentation ersetzt die zuvor veröffentlichten technischen Beric
 
 
 
-ONTAP bietet NetApp Funktionen zur Steigerung der Storage-Effizienz, beispielsweise die NetApp Snapshot Technologie, Klonen, Deduplizierung, Thin Provisioning, Thin Replication, Komprimierung, Virtual Storage Tiering und vieles mehr mit verbesserter Performance und Effizienz.
+ONTAP bietet NetApp Storage-Effizienzfunktionen wie NetApp Snapshot, Klonen, Deduplizierung, Thin Provisioning, Thin Replication, Komprimierung, Virtual Storage Tiering und vieles mehr dank verbesserter Performance und Effizienz.
 
 Zusammen können Windows Server und ONTAP in großen Umgebungen betrieben werden und Datacenter-Konsolidierung und Private oder Hybrid Cloud-Implementierungen einen enormen Mehrwert bringen. Diese Kombination bietet auch effiziente unterbrechungsfreie Workloads und unterstützt nahtlose Skalierbarkeit.
 
@@ -54,4 +54,4 @@ Wir gehen in diesem Dokument von folgenden Annahmen aus:
 * Der Leser hat allgemeine Kenntnisse über das Betriebssystem Windows Server und Hyper-V.
 
 
-Eine vollständige, regelmäßig aktualisierte Matrix getesteter und unterstützter SAN- und NAS-Konfigurationen finden Sie im http://mysupport.netapp.com/matrix/["Interoperabilitäts-Matrix-Tool (IMT)"] Auf der NetApp Support-Website. Mithilfe des IMT können Sie die genauen Produkt- und Funktionsversionen ermitteln, die für Ihre spezifische Umgebung unterstützt werden. NetApp IMT definiert die Produktkomponenten und -Versionen, die mit von NetApp unterstützten Konfigurationen kompatibel sind. Die dort angezeigten Ergebnisse basieren auf der spezifischen Infrastruktur des jeweiligen Kunden bzw. auf den technischen Daten der in dieser Infrastruktur enthaltenen Komponenten.
+Eine vollständige, regelmäßig aktualisierte Matrix getesteter und unterstützter SAN- und NAS-Konfigurationen finden Sie im http://mysupport.netapp.com/matrix/["Interoperabilitäts-Matrix-Tool (IMT)"] auf der NetApp Support-Website. Mithilfe des IMT können Sie die genauen Produkt- und Funktionsversionen ermitteln, die für Ihre spezifische Umgebung unterstützt werden. NetApp IMT definiert die Produktkomponenten und -Versionen, die mit von NetApp unterstützten Konfigurationen kompatibel sind. Die dort angezeigten Ergebnisse basieren auf der spezifischen Infrastruktur des jeweiligen Kunden bzw. auf den technischen Daten der in dieser Infrastruktur enthaltenen Komponenten.

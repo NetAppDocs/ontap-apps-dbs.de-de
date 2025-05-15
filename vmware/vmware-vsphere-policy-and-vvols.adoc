@@ -18,7 +18,7 @@ VMware vSphere APIs for Storage Awareness (VASA) erleichtern einem Storage-Admin
 
 Eine genauere Betrachtung dieses Ansatzes lohnt sich für Sie, wenn Sie feststellen möchten, wie er Ihre Storage-Virtualisierungsvorgänge optimieren und Ihnen viele banale Arbeiten ersparen kann.
 
-Vor VASA konnten VM-Administratoren VM-Storage-Richtlinien definieren, mussten dann aber gemeinsam mit dem Storage-Administrator geeignete Datastores ermitteln – oft anhand der Dokumentation oder von Namenskonventionen. Mit VASA kann der Storage-Administrator eine Reihe von Storage-Funktionen definieren, darunter Performance, Tiering, Verschlüsselung und Replizierung. Ein Satz von Funktionen für ein Volume oder eine Gruppe von Volumes wird als Storage-Funktionsprofil (Storage Capability Profile, SCP) bezeichnet.
+Vor VASA konnten VM-Administratoren VM-Storage-Richtlinien definieren, mussten aber gemeinsam mit dem Storage-Administrator geeignete Datastores ermitteln – oft anhand der Dokumentation oder von Namenskonventionen. Mit VASA kann der Storage-Administrator eine Reihe von Storage-Funktionen definieren, darunter Performance, Tiering, Verschlüsselung und Replizierung. Ein Satz von Funktionen für ein Volume oder eine Gruppe von Volumes wird als Storage-Funktionsprofil (Storage Capability Profile, SCP) bezeichnet.
 
 Das SCP unterstützt die minimale und/oder maximale QoS für die Daten-VVols einer VM. Minimale QoS wird nur auf AFF Systemen unterstützt. ONTAP Tools für VMware vSphere umfassen ein Dashboard, in dem die granulare VM-Performance und logische Kapazität für VVols auf ONTAP Systemen angezeigt werden.
 

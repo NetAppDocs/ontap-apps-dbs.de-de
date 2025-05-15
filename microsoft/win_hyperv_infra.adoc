@@ -52,7 +52,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 === Best Practices in sich vereint
 
 * Wenn eine VM und die zugehörigen Daten im NetApp Storage gespeichert sind, empfiehlt NetApp, die NetApp Deduplizierung regelmäßig auf Volume-Ebene durchzuführen. Wenn identische VMs auf einer CSV- oder SMB-Freigabe gehostet werden, lassen sich erhebliche Platzeinsparungen erzielen. Die Deduplizierung wird auf dem Storage-Controller ausgeführt und das Host-System und die VM-Performance werden nicht beeinträchtigt.
-* Wenn Sie iSCSI-LUNs für Hyper-V verwenden, stellen Sie sicher, dass aktiviert ist `iSCSI Service (TCP-In) for Inbound` Und `iSCSI Service (TCP-Out) for Outbound` In den Firewall-Einstellungen auf dem Hyper-V-Host. Auf diese Weise kann iSCSI-Datenverkehr zum und vom Hyper-V-Host und dem NetApp-Controller geleitet werden.
+* Wenn Sie iSCSI-LUNs für Hyper-V verwenden, müssen Sie in den Firewall-Einstellungen auf dem Hyper-V-Host „iSCSI-Dienst (TCP-in) für Inbound“ und „iSCSI-Dienst (TCP-out) für Outbound“ aktivieren. Auf diese Weise kann iSCSI-Datenverkehr zum und vom Hyper-V-Host und dem NetApp-Controller geleitet werden.
 * NetApp empfiehlt, die Option Verwaltungs-Betriebssystem zulassen, diesen Netzwerkadapter für den virtuellen Hyper-V-Switch gemeinsam zu nutzen, zu deaktivieren. Dadurch wird ein dediziertes Netzwerk für die VMs erstellt.
 
 
@@ -60,7 +60,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 === Dinge, die Sie sich merken sollten
 
-* Die Bereitstellung einer VM mithilfe von virtuellem Fibre Channel erfordert einen N_Port ID Virtualizationâ€“enabled FC HBA. Es werden maximal vier FC-Ports unterstützt.
+* Für die Bereitstellung einer VM mithilfe von virtuellem Fibre Channel ist ein für die N_Port-ID-Virtualisierung aktivierter FC-HBA erforderlich. Es werden maximal vier FC-Ports unterstützt.
 * Wenn das Hostsystem mit mehreren FC-Ports konfiguriert und der VM vorgelegt wird, muss MPIO in der VM installiert werden, um Multipathing zu aktivieren.
 * Pass-Through-Festplatten können nicht auf dem Host bereitgestellt werden, wenn MPIO auf diesem Host verwendet wird, da Pass-Through-Festplatten MPIO nicht unterstützen.
 * Für VHD/VHDX-Dateien verwendete Festplatten sollten zur Zuweisung eine 64-KB-Formatierung verwenden.
@@ -70,7 +70,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 === Weitere Informationen
 
-* Weitere Informationen zu FC-HBAs finden Sie im http://mysupport.netapp.com/matrix/["NetApp Interoperabilitätsmatrix"].
+* Informationen zu FC-HBAs finden Sie im http://mysupport.netapp.com/matrix/["Interoperabilitäts-Matrix-Tool (IMT)"].
 * Weitere Informationen zu virtuellem Fibre Channel finden Sie unter Microsoft https://technet.microsoft.com/en-us/library/hh831413.aspx["Hyper-V Virtual Fibre Channel – Überblick"] Seite.
 
 
@@ -134,7 +134,7 @@ Informationen zu ODX finden Sie unter https://docs.netapp.com/us-en/ontap/smb-ad
 
 Failover-Cluster bieten Hochverfügbarkeit und Skalierbarkeit für Hyper-V Server. Ein Failover-Cluster ist eine Gruppe unabhängiger Hyper-V Server, die gemeinsam die Verfügbarkeit und Skalierbarkeit der VMs erhöhen.
 
-Hyper-V Cluster-Server (sogenannte Nodes) werden über das physische Netzwerk und über Cluster-Software verbunden. Diese Nodes verwenden Shared Storage zur Speicherung der VM-Dateien, darunter Konfiguration, VHD-Dateien (virtuelle Festplatte) und Snapshot-Kopien. Beim gemeinsam genutzten Storage kann es sich um eine NetApp SMB/CIFS-Freigabe oder einen CSV auf einer NetApp LUN handeln, wie unten gezeigt. Dieser Shared-Storage bietet einen konsistenten und verteilten Namespace, auf den alle Nodes im Cluster gleichzeitig zugreifen können. Wenn daher ein Node im Cluster ausfällt, stellt der andere Node Services für den Prozess Failover bereit. Failover-Cluster können mithilfe des Failover Cluster Manager Snap-ins und der Windows PowerShell Cmdlets für Failover-Clustering gemanagt werden.
+Hyper-V Cluster-Server (sogenannte Nodes) werden über das physische Netzwerk und über Cluster-Software verbunden. Diese Knoten verwenden Shared Storage zur Speicherung der VM-Dateien, einschließlich Konfiguration, VHD-Dateien (virtuelle Festplatte) und Snapshots. Beim gemeinsam genutzten Storage kann es sich um eine NetApp SMB/CIFS-Freigabe oder einen CSV auf einer NetApp LUN handeln, wie unten gezeigt. Dieser Shared-Storage bietet einen konsistenten und verteilten Namespace, auf den alle Nodes im Cluster gleichzeitig zugreifen können. Wenn daher ein Node im Cluster ausfällt, stellt der andere Node Services für den Prozess Failover bereit. Failover-Cluster können mithilfe des Failover Cluster Manager Snap-ins und der Windows PowerShell Cmdlets für Failover-Clustering gemanagt werden.
 
 
 

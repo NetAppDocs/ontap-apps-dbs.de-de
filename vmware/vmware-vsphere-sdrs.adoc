@@ -14,7 +14,7 @@ summary: Mit SnapCenter können Sie Backup-Richtlinien erstellen, die auf mehrer
 
 
 [role="lead"]
-VMware Storage Distributed Resource Scheduler (SDRS) ist eine Funktion von vSphere, die VMs auf Storage basierend auf der aktuellen I/O-Latenz und der Speicherplatznutzung platziert.
+VMware Storage Distributed Resource Scheduler (SDRS) ist eine vSphere Funktion, die VMs automatisch in einem Datastore-Cluster platziert, basierend auf der aktuellen I/O-Latenz und Speicherplatznutzung.
 
 Danach werden die VM oder VMDKs unterbrechungsfrei zwischen den Datastores in einem Datastore-Cluster (auch Pod genannt) verschoben und es wird der beste Datastore ausgewählt, in dem die VM oder die VMDKs im Datastore-Cluster platziert werden sollen. Ein Datastore-Cluster ist eine Sammlung ähnlicher Datastores, die aus Sicht des vSphere Administrators in einer einzigen Verbrauchseinheit aggregiert werden.
 
@@ -22,12 +22,25 @@ Wenn Sie SDRS mit ONTAP Tools für VMware vSphere verwenden, müssen Sie zuerst 
 
 Weitere ONTAP Best Practices für SDRS:
 
+* Verwenden Sie SDRS nicht, es sei denn, Sie haben dazu eine bestimmte Anforderung.
++
+** SDRS ist bei Verwendung von ONTAP nicht erforderlich. SDRS kennt die Storage-Effizienzfunktionen von ONTAP wie Deduplizierung und Komprimierung nicht und kann daher Entscheidungen treffen, die für Ihre Umgebung nicht optimal sind.
+** SDRS kennt die QoS-Richtlinien von ONTAP nicht und kann daher Entscheidungen treffen, die für die Performance nicht optimal sind.
+** SDRS kennt ONTAP Snapshot Kopien nicht und kann daher Entscheidungen treffen, die dazu führen, dass Snapshots exponentiell wachsen. Beispielsweise erstellt das Verschieben einer VM in einen anderen Datastore neue Dateien in dem neuen Datastore, was zu einer Vergrößerung des Snapshots führt. Dies gilt insbesondere für VMs mit großen Disks oder vielen Snapshots. Sollte die VM dann wieder zurück in den ursprünglichen Datenspeicher verschoben werden, wird der Snapshot im ursprünglichen Datenspeicher noch größer.
+
+
+
+
+Bei der Verwendung von SDRS sollten Sie die folgenden Best Practices berücksichtigen:
+
 * Alle Datastores im Cluster sollten denselben Storage-Typ (beispielsweise SAS, SATA oder SSD) verwenden. Zudem sollte es sich bei allen entweder um VMFS oder NFS-Datastores handeln und sie sollten dieselben Replizierungs- und Sicherungseinstellungen aufweisen.
 * Sie sollten SDRS eventuell im Standardmodus (manuell) verwenden. Mit diesem Ansatz können Sie die Empfehlungen prüfen und entscheiden, ob Sie sie anwenden oder nicht. Beachten Sie diese Auswirkungen von VMDK Migrationen:
 +
-** Wenn VMDKs VON SDRS zwischen Datastores verschoben werden, gehen sämtliche Speicherersparnisse durch ONTAP Klone oder Deduplizierung verloren. Sie können die Deduplizierung erneut ausführen, um diese Einsparungen zurückzugewinnen.
+** Wenn VMDKs von SDRS zwischen Datastores verschoben werden, können jegliche Speicherersparnisse durch ONTAP Klone oder Deduplizierung je nach der Deduplizierungsrate oder Komprimierung auf dem Zielsystem reduziert werden.
 ** Nachdem SDRS die VMDKs verschoben hat, empfiehlt NetApp, die Snapshots im Quell-Datastore neu zu erstellen, da der Speicherplatz andernfalls von der verschobenen VM gesperrt wird.
 ** Die Verschiebung von VMDKs zwischen Datastores im selben Aggregat bietet nur wenige Vorteile. Zudem sind andere Workloads, die das Aggregat möglicherweise teilen, FÜR SDRS nicht sichtbar.
 
 
 
+
+Weitere Informationen zu SDRS finden Sie in der VMware Dokumentation unter https://knowledge.broadcom.com/external/article/320864/storage-drs-faq.html["FAQ zu Storage DRS"^].

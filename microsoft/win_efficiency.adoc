@@ -32,7 +32,7 @@ Thin Provisioning bietet eine effiziente Möglichkeit, Storage bereitzustellen, 
 
 == Quality of Service
 
-Mit Storage QoS in Clustered ONTAP können Sie Storage-Objekte gruppieren und Durchsatzbegrenzungen in der Gruppe festlegen. Storage QoS kann verwendet werden, um den Durchsatz auf Workloads zu begrenzen und die Workload-Performance zu überwachen. Storage-Administratoren können so Workloads je nach Organisation, Applikation, Geschäftsbereich oder Produktions- oder Entwicklungsumgebung trennen.
+Mit Storage QoS in NetApp ONTAP können Sie Storage-Objekte gruppieren und Durchsatzbegrenzungen für die Gruppe festlegen. Storage QoS kann verwendet werden, um den Durchsatz auf Workloads zu begrenzen und die Workload-Performance zu überwachen. Storage-Administratoren können so Workloads je nach Organisation, Applikation, Geschäftsbereich oder Produktions- oder Entwicklungsumgebung trennen.
 
 In Enterprise-Umgebungen bietet Storage QoS folgende Vorteile:
 

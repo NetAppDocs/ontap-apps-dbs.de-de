@@ -25,7 +25,7 @@ Ein NetApp Storage Controller mit ONTAP kann folgende Workloads in einer Windows
 * Anderen Applikations-Workloads
 
 
-Darüber hinaus bietet NetApp Storage-Effizienzfunktionen wie Deduplizierung, NetApp FlexClone Kopien, NetApp Snapshot Technologie, Thin Provisioning, Komprimierung, Storage Tiering kommt bei Workloads, die auf Windows Server ausgeführt werden, erheblichen Nutzen aus.
+Zudem bieten NetApp Storage-Effizienzfunktionen wie Deduplizierung, NetApp FlexClone Kopien, NetApp Snapshot Technologie, Thin Provisioning, Komprimierung und Storage Tiering einen deutlichen Mehrwert für Workloads, die auf Windows Server ausgeführt werden.
 
 
 
@@ -33,9 +33,9 @@ Darüber hinaus bietet NetApp Storage-Effizienzfunktionen wie Deduplizierung, Ne
 
 ONTAP ist eine Management-Software, die auf einem NetApp Storage Controller ausgeführt wird. Ein als Node bezeichnet NetApp Storage Controller ist ein Hardwaregerät mit Prozessor, RAM und NVRAM. Der Node kann mit SATA-, SAS- oder SSD-Festplattenlaufwerken oder einer Kombination dieser Laufwerke verbunden werden.
 
-Mehrere Nodes werden in einem Cluster-System zusammengefasst. Die Nodes im Cluster kommunizieren kontinuierlich mit einander, um Cluster-Aktivitäten zu koordinieren. Außerdem können die Nodes Daten transparent von Nodes zu Nodes verschieben. Hierzu werden redundante Pfade zu einem dedizierten Cluster-Netzwerk mit zwei 10-Gbit-Ethernet-Switches verwendet. Die Nodes im Cluster können sich gegenseitig übernehmen, um in jedem Failover-Fall für Hochverfügbarkeit zu sorgen. Cluster werden über einen vollständigen Cluster statt pro Node verwaltet. Die Daten werden von einer oder mehreren Storage Virtual Machines (SVMs) bereitgestellt. Ein Cluster muss über mindestens eine SVM verfügen, um Daten bereitzustellen.
+Mehrere Nodes werden in einem Cluster-System zusammengefasst. Die Nodes im Cluster kommunizieren kontinuierlich mit einander, um Cluster-Aktivitäten zu koordinieren. Außerdem können die Nodes Daten mithilfe redundanter Pfade zu einem dedizierten Cluster Interconnect mit zwei 10-Gbit-Ethernet-Switches transparent von einem Node zu einem Node verschieben. Die Nodes im Cluster können sich gegenseitig übernehmen, um in jedem Failover-Fall für Hochverfügbarkeit zu sorgen. Cluster werden über einen vollständigen Cluster statt pro Node verwaltet. Die Daten werden von einer oder mehreren Storage Virtual Machines (SVMs) bereitgestellt. Ein Cluster muss über mindestens eine SVM verfügen, um Daten bereitzustellen.
 
-Die Basiseinheit eines Clusters ist der Node, und die Nodes werden dem Cluster als Teil eines Hochverfügbarkeitspaars (HA) hinzugefügt. HA-Paare ermöglichen Hochverfügbarkeit durch Kommunikation untereinander über einen HA Interconnect (getrennt vom dedizierten Cluster-Netzwerk) und durch Beibehalten redundanter Verbindungen zu den Festplatten des HA-Paars. Festplatten werden nicht von HA-Paaren gemeinsam genutzt, obwohl Shelfs Festplatten enthalten können, die zu einem der beiden Mitglieder eines HA-Paars gehören. Die folgende Abbildung zeigt die Bereitstellung von NetApp Storage in einer Windows Server-Umgebung.
+Die Basiseinheit eines Clusters ist der Node, und die Nodes werden dem Cluster als Teil eines Hochverfügbarkeitspaars (HA) hinzugefügt. HA-Paare ermöglichen Hochverfügbarkeit durch Kommunikation untereinander über einen HA Interconnect (getrennt vom dedizierten Cluster Interconnect) und durch Beibehalten redundanter Verbindungen zu den Festplatten des HA-Paars. Festplatten werden nicht von HA-Paaren gemeinsam genutzt, obwohl Shelfs Festplatten enthalten können, die zu einem der beiden Mitglieder eines HA-Paars gehören. Die folgende Abbildung zeigt die Bereitstellung von NetApp Storage in einer Windows Server-Umgebung.
 
 image:win_image1.png["Bereitstellung von NetApp Storage in einer Windows Server-Umgebung,width=624,height=479"]
 
@@ -77,7 +77,7 @@ Verwenden Sie eine der folgenden Methoden, um NetApp-Speicher von Windows Server
 
 == NetApp PowerShell Toolkit
 
-Das NetApp PowerShell Toolkit (PSTK) ist ein PowerShell Modul, das eine End-to-End-Automatisierung bietet und die Storage-Administration von ONTAP ermöglicht. Das ONTAP Modul enthält über 2,000 Cmdlets und unterstützt Sie bei der Administration von FAS, NetApp All Flash FAS (AFF), Standard-Hardware und Cloud-Ressourcen.
+Das NetApp PowerShell Toolkit (PSTK) ist ein PowerShell Modul, das eine End-to-End-Automatisierung bietet und die Storage-Administration von ONTAP ermöglicht. Das ONTAP Modul enthält über 2,000 Cmdlets und unterstützt Sie bei der Administration von NetApp AFF, FAS, Standard-Hardware und Cloud-Ressourcen.
 
 
 

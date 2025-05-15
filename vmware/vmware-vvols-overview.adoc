@@ -23,7 +23,7 @@ NOTE: Diese Dokumentation ersetzt zuvor veröffentlichte technische Berichte _TR
 Andere Dokumente wie Leitfäden und Kompatibilitätslisten werden durch Best Practices ergänzt. Sie werden basierend auf Labortests und umfassenden praktischen Erfahrungen der NetApp Ingenieure und Kunden entwickelt. Es handelt sich hierbei unter Umständen nicht nur um geeignete oder unterstützte Praktiken, sondern im Allgemeinen um die einfachsten Lösungen, die die Anforderungen der meisten Kunden erfüllen.
 
 
-TIP: Dieses Dokument wurde mit neuen VVols Funktionen aus vSphere 8.0 Update 3 und der Version ONTAP Tools 10.3 aktualisiert.
+NOTE: Dieses Dokument wurde mit neuen VVols Funktionen aus vSphere 8.0 Update 3, der Version ONTAP Tools 10.4 und den neuen NetApp ASA Systemen aktualisiert.
 
 
 

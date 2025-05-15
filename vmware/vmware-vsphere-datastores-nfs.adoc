@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: vmware/vmware-vsphere-datastores-nfs.html 
-keywords: vSphere, datastore, VMFS, FC, FCoE, NVMe/FC, iSCSI, NFS, vVols, NFSv3, NFSv4.1 
+keywords: vSphere, datastore, NFS, vVols, NFSv3, NFSv4.1 
 summary: Auf dieser Seite werden die Best Practices für die Implementierung von VMware vSphere mit ONTAP und mit NFS verbundenen Datastores beschrieben. 
 ---
 = NFS
@@ -27,6 +27,7 @@ Für die Verwendung von ONTAP NFS mit vSphere werden folgende Best Practices emp
 
 
 * Verwenden einer einzelnen logischen Schnittstelle (LIF) für jede SVM auf jedem Node im ONTAP-Cluster Die bisherigen Empfehlungen eines LIF pro Datenspeicher sind nicht mehr erforderlich. Der direkte Zugriff (LIF und Datastore auf demselben Node) ist zwar am besten, aber indirekte Zugriffe müssen sich keine Sorgen machen, da die Performance-Auswirkungen im Allgemeinen minimal sind (Mikrosekunden).
+* Wenn Sie fpolicy verwenden, sollten Sie .lck-Dateien ausschließen, da diese von vSphere zum Sperren verwendet werden, wenn eine VM eingeschaltet ist.
 * Alle aktuell unterstützten Versionen von VMware vSphere können sowohl NFS v3 als auch v4.1 verwenden. Die offizielle Unterstützung für nconnect wurde für vSphere 8.0 Update 2 für NFS v3 und Update 3 für NFS v4.1 hinzugefügt. Für NFS v4.1 unterstützt vSphere weiterhin Session-Trunking, Kerberos-Authentifizierung und Kerberos-Authentifizierung mit Integrität. Beachten Sie, dass für das Session-Trunking ONTAP 9.14.1 oder eine neuere Version erforderlich ist. Mehr über die nconnect-Funktion und wie sie die Leistung verbessert, erfahren Sie unter link:https://docs.netapp.com/us-en/netapp-solutions/virtualization/vmware-vsphere8-nfsv3-nconnect.html["NFSv3 nconnect Funktion mit NetApp und VMware"].
 
 
@@ -42,9 +43,10 @@ Für die Verwendung von ONTAP NFS mit vSphere werden folgende Best Practices emp
 * Erwähnenswert ist, dass NFSv3 und NFSv4.1 verschiedene Sperrmechanismen verwenden. NFSv3 verwendet „Client-side locking“, während in NFSv4.1 „Server-side locking“ verwendet wird. Ein ONTAP Volume kann zwar mit beiden Protokollen exportiert werden, doch ESXi kann einen Datastore nur durch ein Protokoll mounten. Dies bedeutet jedoch nicht, dass andere ESXi-Hosts nicht denselben Datastore über eine andere Version mounten können. Um Probleme zu vermeiden, ist es wichtig, die beim Mounten verwendete Protokollversion anzugeben, um sicherzustellen, dass alle Hosts dieselbe Version und somit auch denselben Sperrungsstil anwenden. Es ist entscheidend, zu vermeiden, dass NFS-Versionen über Hosts hinweg gemischt werden. Wenn möglich, verwenden Sie Hostprofile, um die Compliance zu überprüfen.
 +
 ** Da keine automatische Datastore-Konvertierung zwischen NFSv3 und NFSv4.1 stattfindet, erstellen Sie einen neuen Datastore für NFSv4.1 und migrieren Sie die VMs mithilfe von Storage vMotion zum neuen Datastore.
-** Weitere Informationen finden Sie in den Anmerkungen zur Interoperabilität von NFS v4.1 link:https://mysupport.netapp.com/matrix/["NetApp Interoperabilitäts-Matrix-Tool"^] Für bestimmte ESXi-Patch-Level, die zur Unterstützung erforderlich sind.
+** In den Tabellenhinweisen zu NFS v4.1 Interoperabilität in link:https://mysupport.netapp.com/matrix/["NetApp Interoperabilitäts-Matrix-Tool"^] finden Sie Informationen zu den spezifischen ESXi Patch-Leveln, die für die Unterstützung erforderlich sind.
 
 
+* Wie in erwähntlink:vmware/vmware-vsphere-settings.html["Einstellungen"], sollten Sie, wenn Sie vSphere CSI für Kubernetes nicht verwenden, das newSyncInterval per einstellen https://knowledge.broadcom.com/external/article/386364/reducing-excessive-vsan-cnssync-warnings.html["VMware KB 386364"^]
 * Zur Steuerung des Zugriffs durch vSphere Hosts kommen die NFS-Exportrichtlinien zur Anwendung. Sie können eine Richtlinie für mehrere Volumes (Datastores) nutzen. Bei NFS verwendet ESXi den Sicherheitsstil „sys“ (UNIX). Zur Ausführung von VMs ist dabei die Root-Mount-Option erforderlich. In ONTAP wird diese Option als Superuser bezeichnet. Wenn die Option Superuser verwendet wird, ist es nicht erforderlich, die anonyme Benutzer-ID anzugeben. Beachten Sie, dass Regeln für die Exportrichtlinie mit unterschiedlichen Werten für `-anon` `-allow-suid` die SVM-Erkennungsprobleme mit ONTAP Tools verursachen können. Die IP-Adressen sollten durch Kommas getrennt sein und keine Leerzeichen der vmkernel-Port-Adressen enthalten, durch die die Datenspeicher gemountet werden. Hier sehen Sie eine Beispielrichtlinie:
 +
 ** Access Protocol: nfs (schließt nfsv3 und NFSv4 ein)
