@@ -69,7 +69,7 @@ Alle anderen NFS-Konfigurationen auf 64 eingestellt. | Nein
 | HeartbeatTimeout NFS.HeartbeatTimeout | Alle NFS-Konfigurationen: Auf 5 einstellen. | Nein 
 
 
-| SunRPC.MaxConnPerIP | VSphere 7.0 oder höher: Auf 128 einstellen. | Nein 
+| SunRPC.MaxConnPerIP | vSphere 7.0 bis 8.0, auf 128 eingestellt.  Diese Einstellung wird in ESXi-Versionen nach 8.0 ignoriert. | Nein 
 
 
 3+| *FC/FCoE-Einstellungen* 
@@ -154,8 +154,8 @@ ONTAP-Tools legen beim Erstellen von ONTAP FlexVol Volumes und LUNs bestimmte St
 
 Obwohl NetApp derzeit nicht durch verfügbare ONTAP-Tools konfiguriert ist, empfiehlt es folgende Konfigurationsoptionen:
 
-* In hochperformanten Umgebungen oder bei Tests der Performance mit einem einzelnen LUN-Datastore sollte die Einstellung der Lastverteilung für die Round-Robin (VMW_PSP_RR) Path Selection Policy (PSP) von der standardmäßigen IOPS-Einstellung 1000 auf einen Wert 1 geändert werden. Weitere Informationen finden Sie unterlink:https://knowledge.broadcom.com/external/article?legacyId=2069356["VMware KB 2069356"^].
-* In vSphere 6.7 Update 1 hat VMware einen neuen Lastausgleichsmechanismus für das Round Robin PSP System eingeführt. Bei der Auswahl des optimalen Pfads für I/O berücksichtigt die neue Option die I/O-Bandbreite und die Pfadlatenz Sie können von einem Einsatz in Umgebungen mit nicht äquivalenter Pfadverbindung profitieren, beispielsweise bei mehr Netzwerk-Hops auf einem Pfad als auf einem anderen oder bei Verwendung eines Systems mit NetApp All-SAN-Arrays (ASA). Weitere Informationen finden Sie unter https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-storage-8-0/understanding-multipathing-and-failover-in-the-esxi-environment/viewing-and-managing-storage-paths-on-esxi-hosts.html#GUID-1940AE9E-04CF-40BE-BB71-398621F0642E-en["Standardparameter für Latenzrunde Robin ändern"^] .
+* Wenn Sie Nicht- ASA -Systeme in Hochleistungsumgebungen verwenden oder die Leistung mit einem einzelnen LUN-Datenspeicher testen, sollten Sie die Lastausgleichseinstellung der Round-Robin-Pfadauswahlrichtlinie (VMW_PSP_RR) von der IOPS-Standardeinstellung von 1000 auf den Wert 1 ändern.  Sehenlink:https://knowledge.broadcom.com/external/article?legacyId=2069356["VMware KB 2069356"^] für weitere Informationen.
+* In vSphere 6.7 Update 1 hat VMware einen neuen Latenz-Lastausgleichsmechanismus für das Round Robin PSP eingeführt.  Die Latenzoption ist jetzt auch bei Verwendung des HPP (High Performance Plugin) mit NVMe-Namespaces und mit vSphere 8.0u2 und höher, über iSCSI und FCP verbundenen LUNs verfügbar.  Die neue Option berücksichtigt die E/A-Bandbreite und die Pfadlatenz bei der Auswahl des optimalen Pfads für die E/A.  NetApp empfiehlt die Verwendung der Latenzoption in Umgebungen mit nicht äquivalenter Pfadkonnektivität, beispielsweise in Fällen, in denen auf einem Pfad mehr Netzwerk-Hops vorhanden sind als auf einem anderen, oder bei Verwendung eines NetApp ASA -Systems.  Sehen https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-storage-8-0/understanding-multipathing-and-failover-in-the-esxi-environment/viewing-and-managing-storage-paths-on-esxi-hosts.html#GUID-1940AE9E-04CF-40BE-BB71-398621F0642E-en["Standardparameter für Latenzrunde Robin ändern"^] für weitere Informationen.
 
 
 
