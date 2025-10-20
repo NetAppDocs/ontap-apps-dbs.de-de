@@ -16,7 +16,7 @@ summary: Replikationstopologien, die ONTAP mit SnapMirror und VMware VLSR und SR
 [role="lead"]
 In ONTAP 9 sind die physischen Komponenten eines Clusters für Cluster-Administratoren sichtbar, sind aber für die Applikationen und Hosts, die das Cluster nutzen, nicht direkt sichtbar. Die physischen Komponenten stellen einen Pool mit gemeinsam genutzten Ressourcen bereit, anhand dessen die logischen Clusterressourcen erstellt werden. Applikationen und Hosts greifen ausschließlich über SVMs auf Daten zu, die Volumes und LIFs enthalten.
 
-Jede NetApp SVM wird im VMware vCenter Site Recovery Manager als Array behandelt. VLSR unterstützt bestimmte Array-to-Array (oder SVM-zu-SVM) Replizierungslayouts.
+Jede NetApp SVM wird in Site Recovery Manager als eindeutiges Array behandelt. VLSR unterstützt bestimmte Array-zu-Array- (oder SVM-zu-SVM-) Replikationslayouts.
 
 Eine einzelne VM kann aus den folgenden Gründen keine Daten besitzen – Virtual Machine Disk (VMDK) oder RDM – auf mehr als einem VLSR Array:
 
@@ -43,6 +43,20 @@ image:vsrm-ontap9_image8.png["Layout der SnapMirror Beziehung"]
 image:vsrm-ontap9_image9.png["Layout der SnapMirror Beziehung"]
 
 image:vsrm-ontap9_image10.png["Layout der SnapMirror Beziehung"]
+
+
+
+== VMFS-Unterstützung mit SnapMirror Active Sync
+
+ONTAP Tools 10.3 und höher unterstützen auch den Schutz Ihrer VMFS-Datenspeicher mit SnapMirror Active Sync (SMas). Dies ermöglicht ein transparentes Failover zur Gewährleistung der Geschäftskontinuität zwischen zwei Rechenzentren (als Fehlerdomänen bezeichnet), die relativ nahe beieinander liegen. Die Notfallwiederherstellung über große Entfernungen kann dann mithilfe von SnapMirror asynchron über die ONTAP -Tools SRA mit VLSR orchestriert werden.
+
+https://docs.netapp.com/us-en/ontap/snapmirror-active-sync/["Erfahren Sie mehr über ONTAP SnapMirror Active Sync"]
+
+Datenspeicher werden in einer Konsistenzgruppe (CG) zusammengefasst und die VMs aller Datenspeicher bleiben als Mitglieder derselben CG hinsichtlich der Schreibreihenfolge konsistent.
+
+Einige Beispiele könnten sein, dass Standorte in Berlin und Hamburg durch SMas geschützt sind und dass eine dritte Standortreplik SnapMirror asynchron verwendet und durch VLSR geschützt ist. Ein weiteres Beispiel wäre der Schutz von Standorten in New York und New Jersey durch SMas sowie eines dritten Standorts in Chicago.
+
+image:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-104/media/fan-out-protection.png["SMas-Layout"]
 
 
 
