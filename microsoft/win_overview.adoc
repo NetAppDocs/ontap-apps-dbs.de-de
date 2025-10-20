@@ -25,7 +25,6 @@ NOTE: *Diese Dokumentation ersetzt die zuvor veröffentlichten technischen Beric
 * Eine softwaredefinierte Unified Architecture
 +
 ** ONTAP Select auf VMware vSphere oder KVM
-** Cloud Volumes ONTAP wird als Cloud-native Instanz ausgeführt
 
 
 * First-Party-Angebote von Hyperscale-Cloud-Providern
