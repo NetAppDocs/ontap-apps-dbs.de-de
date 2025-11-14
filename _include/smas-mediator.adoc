@@ -2,7 +2,7 @@
 :allow-uri-read: 
 
 
-Der Mediator ist nicht wirklich ein Tiebreak, obwohl das ist effektiv die Funktion, die es bietet. Er führt keine Aktionen durch. Stattdessen stellt er einen alternativen Kommunikationskanal für die Kommunikation zwischen Cluster und Cluster bereit.
+Der Mediator ist eigentlich kein Entscheider bei Stimmengleichständen, obwohl er diese Funktion faktisch übernimmt. Der Mediator hilft dabei, den Zustand der Clusterknoten zu ermitteln und unterstützt den automatischen Umschaltprozess im Falle eines Standortausfalls. Der Mediator übermittelt unter keinen Umständen Daten.
 
 image:../media/smas-mediator.png["Diagramm der aktiven Synchronisierung von SnapMirror mit dem Mediator"]
 
