@@ -14,7 +14,7 @@ summary: VMware vSphere Lösungsübersicht
 
 
 [role="lead"]
-VCenter Server Appliance (VCSA) ist das leistungsstarke, zentralisierte Managementsystem und eine zentrale Konsole für vSphere, mit der Administratoren ESXi Cluster effizient betreiben können. Sie unterstützt wichtige Funktionen wie VM-Bereitstellung, vMotion Betrieb, Hochverfügbarkeit (HA), Distributed Resource Scheduler (DRS), Tanzu Kubernetes Grid und mehr. Sie ist eine wesentliche Komponente in VMware Cloud-Umgebungen und sollte im Hinblick auf die Service-Verfügbarkeit konzipiert werden.
+Die vCenter Server Appliance (VCSA) ist ein leistungsstarkes, zentralisiertes Managementsystem und eine zentrale Benutzeroberfläche für vSphere, die es Administratoren ermöglicht, ESXi-Cluster effektiv zu betreiben. Es ermöglicht wichtige Funktionen wie die Bereitstellung virtueller Maschinen, vMotion-Operationen, Hochverfügbarkeit (HA), Distributed Resource Scheduler (DRS), VMware vSphere Kubernetes Service (VKS) und mehr. Es handelt sich um eine wesentliche Komponente in VMware-Cloud-Umgebungen, bei deren Entwicklung die Verfügbarkeit der Dienste im Vordergrund stand.
 
 
 
@@ -22,7 +22,7 @@ VCenter Server Appliance (VCSA) ist das leistungsstarke, zentralisierte Manageme
 
 Die Cluster-Technologie von VMware gruppiert ESXi Server zu Pools gemeinsam genutzter Ressourcen für virtuelle Maschinen und bietet vSphere High Availability (HA). VSphere HA bietet benutzerfreundliche Hochverfügbarkeit für Anwendungen, die in virtuellen Maschinen ausgeführt werden. Wenn die HA-Funktion auf dem Cluster aktiviert ist, hält jeder ESXi-Server die Kommunikation mit anderen Hosts aufrecht, sodass ein ESXi-Host nicht mehr reagiert oder isoliert wird. der HA-Cluster kann die Wiederherstellung der Virtual Machines, die auf diesem ESXi-Host ausgeführt wurden, zwischen den noch intakten Hosts im Cluster aushandeln. Im Falle eines Ausfalls eines Gastbetriebssystems kann vSphere HA die betroffene Virtual Machine auf demselben physischen Server neu starten. VSphere HA ermöglicht es, geplante Ausfallzeiten zu reduzieren, ungeplante Ausfallzeiten zu vermeiden und ein schnelles Recovery nach Ausfällen zu ermöglichen.
 
-VSphere HA Cluster Wiederherstellung von VMs aus ausgefallener Server.
+vSphere HA-Cluster stellt VMs von einem ausgefallenen Server wieder her.
 
 image::../media/vmsc_2_1.png[VMSC-Diagramm,624,301]
 
@@ -32,7 +32,7 @@ Es ist wichtig zu wissen, dass VMware vSphere weder über NetApp MetroCluster no
 
 == Erkennung Von Host-Ausfällen
 
-Sobald der HA-Cluster erstellt ist, nehmen alle Hosts im Cluster an der Auswahl Teil, und einer der Hosts wird zum Master. Jeder Slave führt den Netzwerk-Heartbeat zum Master aus, und der Master wiederum führt den Netzwerk-Heartbeat auf allen Slave-Hosts aus. Der Master-Host eines vSphere HA-Clusters ist für die Erkennung des Ausfalls von Slave-Hosts verantwortlich.
+Sobald der HA-Cluster erstellt ist, nehmen alle Hosts im Cluster an der Wahl teil, und einer der Hosts wird zum Master. Jeder Slave sendet einen Netzwerk-Heartbeat an den Master, und der Master sendet seinerseits einen Netzwerk-Heartbeat an alle Slave-Hosts. Der Master-Host eines vSphere HA-Clusters ist für die Erkennung des Ausfalls von Slave-Hosts zuständig.
 
 Je nach Art des erkannten Fehlers müssen die auf den Hosts ausgeführten virtuellen Maschinen möglicherweise ein Failover durchführen.
 
@@ -54,9 +54,9 @@ NetApp empfiehlt, mindestens zwei zusätzliche Isolationsadressen anzugeben, und
 
 == Antwort Der Hostisolation
 
-Die Isolationsantwort ist eine Einstellung in vSphere HA, die die Aktion bestimmt, die auf virtuellen Maschinen ausgelöst wird, wenn ein Host in einem vSphere HA-Cluster seine Verwaltungsnetzwerkverbindungen verliert, aber weiterhin ausgeführt wird. Für diese Einstellung gibt es drei Optionen: „Disabled“, „Shut Down and Restart VMs“ und „Power Off and Restart VMs“.
+Die Isolationsreaktion ist eine Einstellung in vSphere HA, die festlegt, welche Aktion auf virtuellen Maschinen ausgelöst wird, wenn ein Host in einem vSphere HA-Cluster seine Management-Netzwerkverbindungen verliert, aber weiterhin ausgeführt wird. Für diese Einstellung gibt es drei Optionen: „Deaktiviert“, „VMs herunterfahren und neu starten“ und „VMs ausschalten und neu starten“.
 
-„Herunterfahren“ ist besser als „Ausschalten“, wodurch die letzten Änderungen nicht auf Festplatte oder Transaktionen übertragen werden. Wenn virtuelle Maschinen nicht in 300 Sekunden heruntergefahren wurden, werden sie ausgeschaltet. Um die Wartezeit zu ändern, verwenden Sie die erweiterte Option das.isolationshutdowntimeout.
+„Herunterfahren“ ist besser als „Ausschalten“, da bei letzterem die zuletzt vorgenommenen Änderungen nicht auf die Festplatte geschrieben und Transaktionen nicht gespeichert werden. Wenn virtuelle Maschinen nicht innerhalb von 300 Sekunden heruntergefahren werden, werden sie ausgeschaltet. Um die Wartezeit zu ändern, verwenden Sie die erweiterte Option das.isolationshutdowntimeout.
 
 Bevor HA die Isolationsantwort initiiert, prüft es zunächst, ob der vSphere HA-Master-Agent den Datenspeicher besitzt, der die VM-Konfigurationsdateien enthält. Wenn dies nicht der Fall ist, löst der Host die Isolationsantwort nicht aus, da kein Master zum Neustart der VMs vorhanden ist. Der Host überprüft regelmäßig den Datastore-Status, um festzustellen, ob er von einem vSphere HA-Agent beansprucht wird, der die Master-Rolle besitzt.
 
@@ -77,25 +77,25 @@ Eine der Funktionsverbesserungen bei vSphere 6, relevant für HA, ist VMCP. VMCP
 
 === Permanenter Geräteverlust (PDL)
 
-PDL ist ein Zustand, der auftritt, wenn ein Speichergerät dauerhaft ausfällt oder administrativ entfernt wird und nicht zurückgegeben werden soll. Das NetApp-Speicher-Array gibt ESXi einen SCSI-Sense-Code aus, der erklärt, dass das Gerät dauerhaft verloren geht. Im Abschnitt Fehlerbedingungen und VM-Reaktion von vSphere HA können Sie konfigurieren, wie die Antwort nach dem Erkennen einer PDL-Bedingung aussehen soll.
+PDL ist ein Zustand, der eintritt, wenn ein Speichermedium dauerhaft ausfällt oder administrativ entfernt wird und voraussichtlich nicht wiederhergestellt werden kann. Das NetApp -Speicherarray sendet einen SCSI-Sense-Code an ESXi, der signalisiert, dass das Gerät dauerhaft ausgefallen ist. Im Abschnitt „Fehlerbedingungen und VM-Reaktion“ von vSphere HA können Sie konfigurieren, wie die Reaktion nach dem Erkennen einer PDL-Bedingung aussehen soll.
 
 [TIP]
 ====
-NetApp empfiehlt, die „Antwort für Datastore mit PDL“ auf „*VM ausschalten und neu starten*“ zu setzen. Wenn dieser Zustand erkannt wird, wird eine VM sofort auf einem funktionierenden Host im vSphere HA-Cluster neu gestartet.
+NetApp empfiehlt, die "Reaktion für Datenspeicher mit PDL" auf "*VMs ausschalten und neu starten*" einzustellen. Wird dieser Zustand erkannt, wird eine VM sofort auf einem fehlerfreien Host innerhalb des vSphere HA-Clusters neu gestartet.
 
 ====
 
 
 === Alle Pfade nach unten (APD)
 
-APD ist ein Zustand, der auftritt, wenn ein Speichergerät für den Host nicht mehr zugänglich ist und keine Pfade zum Array verfügbar sind. ESXi betrachtet dies als ein vorübergehendes Problem mit dem Gerät und erwartet, dass es wieder verfügbar wird.
+APD ist ein Zustand, der auftritt, wenn ein Speichermedium für den Host nicht mehr zugänglich ist und keine Pfade zum Array mehr verfügbar sind. ESXi betrachtet dies als ein vorübergehendes Problem mit dem Gerät und geht davon aus, dass es bald wieder verfügbar sein wird.
 
 Wenn eine APD-Bedingung erkannt wird, wird ein Timer gestartet. Nach 140 Sekunden wird der APD-Zustand offiziell deklariert und das Gerät als APD-Zeitabmeldung markiert. Nach Ablauf der 140 Sekunden zählt HA die Anzahl der Minuten, die in der Verzögerung für VM-Failover-APD angegeben sind. Wenn die angegebene Zeit verstrichen ist, startet HA die betroffenen virtuellen Maschinen neu. Sie können VMCP so konfigurieren, dass es bei Bedarf anders reagiert (deaktiviert, Ereignisse ausstellen oder VMs aus- und neu starten).
 
 [TIP]
 ====
 * NetApp empfiehlt, die „Antwort für Datastore mit APD“ auf „*Ausschalten und Neustart von VMs (konservativ)*“ zu konfigurieren.
-* Konservativ bezieht sich auf die Wahrscheinlichkeit, dass HA die VMs neu starten kann. Wenn sie auf Conservative gesetzt ist, startet HA nur die VM neu, die vom APD betroffen ist, wenn sie weiß, dass ein anderer Host sie neu starten kann. Im Fall von aggressive, versucht HA, die VM neu zu starten, selbst wenn sie den Status anderer Hosts nicht kennt. Dies kann dazu führen, dass VMs nicht neu gestartet werden, wenn kein Host mit Zugriff auf den Datenspeicher vorhanden ist, auf dem sich dieser befindet.
+* „Konservativ“ bezieht sich auf die Wahrscheinlichkeit, dass HA VMs neu starten kann. Bei der Einstellung „Konservativ“ startet HA die von der APD betroffene VM nur dann neu, wenn bekannt ist, dass ein anderer Host sie neu starten kann. Im Modus „Aggressiv“ versucht HA, die VM neu zu starten, selbst wenn der Status der anderen Hosts unbekannt ist. Dies kann dazu führen, dass VMs nicht neu gestartet werden, wenn kein Host Zugriff auf den Datenspeicher hat, in dem sie sich befinden.
 * Wenn der APD-Status aufgelöst wird und der Zugriff auf den Speicher wiederhergestellt wird, bevor das Timeout abgelaufen ist, startet HA die virtuelle Maschine nicht unnötig neu, es sei denn, Sie konfigurieren sie explizit dafür. Wenn eine Antwort gewünscht wird, selbst wenn sich die Umgebung von der APD-Bedingung erholt hat, sollte die Antwort für APD-Wiederherstellung nach APD-Timeout so konfiguriert werden, dass die VMs zurückgesetzt werden.
 * NetApp empfiehlt, die Antwort für die APD-Wiederherstellung nach der APD-Zeitüberschreitung auf deaktiviert zu konfigurieren.
 
@@ -111,10 +111,10 @@ VMware DRS ist eine Funktion, die die Host-Ressourcen in einem Cluster aggregier
 
 == VMware DRS Implementierung für NetApp MetroCluster
 
- To avoid cross-site traffic, NetApp recommends configuring DRS affinity rules to manage a logical separation of VMs. This will ensure that unless there is a complete site failure, HA and DRS will only use local hosts.
+ To avoid cross-site traffic, NetApp recommends configuring DRS affinity rules to manage a logical separation of VMs. This will ensure that, unless there is a complete site failure, HA and DRS will only use local hosts.
 Wenn Sie eine DRS-Affinitätsregel für Ihr Cluster erstellen, können Sie festlegen, wie vSphere diese Regel während eines Failover einer virtuellen Maschine anwendet.
 
-Es gibt zwei Arten von Regeln, die Sie vSphere HA-Failover-Verhalten angeben können:
+Es gibt zwei Arten von Regeln, die Sie für das Failover-Verhalten von vSphere HA festlegen können:
 
 * VM-Anti-Affinitätsregeln zwingen bestimmte Virtual Machines dazu, bei Failover-Aktionen getrennt zu bleiben.
 * VM-Host-Affinitätsregeln platzieren angegebene Virtual Machines während Failover-Aktionen auf einem bestimmten Host oder einem Mitglied einer definierten Gruppe von Hosts.
@@ -132,7 +132,7 @@ image::../media/vmsc_2_2.png[VM Host-Gruppen und Affinitätsregeln,528,369]
 
 NetApp empfiehlt die Implementierung der „sollte“-Regeln statt der „müssen“-Regeln, da im Falle eines Ausfalls von vSphere HA gegen diese verstoßen wird. Die Verwendung von „Must“-Regeln kann zu Serviceausfällen führen.
 
-Die Verfügbarkeit von Services sollte immer Vorrang vor der Leistung haben. Wenn ein vollständiges Rechenzentrum ausfällt, müssen die „muss“-Regeln Hosts aus der VM-Host-Affinitätsgruppe auswählen. Wenn das Rechenzentrum nicht verfügbar ist, werden die virtuellen Maschinen nicht neu gestartet.
+Die Verfügbarkeit von Dienstleistungen sollte stets Vorrang vor der Leistung haben. Im Falle eines vollständigen Ausfalls des Rechenzentrums müssen die "Muss"-Regeln Hosts aus der VM-Hostaffinitätsgruppe auswählen, und wenn das Rechenzentrum nicht verfügbar ist, werden die virtuellen Maschinen nicht neu gestartet.
 
 
 
@@ -150,7 +150,7 @@ Storage DRS verwendet Storage vMotion, um die virtuellen Maschinen auf verschied
 
 * Storage DRS wird in der Regel nicht für die Verwendung mit ONTAP Storage-Systemen benötigt oder empfohlen.
 * ONTAP bietet seine eigenen Storage-Effizienzfunktionen wie Deduplizierung, Komprimierung und Data-Compaction, die von Storage DRS beeinflusst werden können.
-* Wenn Sie ONTAP-Snapshots verwenden, würde Storage vMotion die VM-Kopie im Snapshot zurücklassen, wodurch möglicherweise die Speicherauslastung erhöht wird und sich auf Backup-Anwendungen wie NetApp SnapCenter auswirken könnte, die VMs und ihre ONTAP-Snapshots nachverfolgen.
+* Wenn Sie ONTAP Snapshots verwenden, würde Storage vMotion die Kopie der VM im Snapshot zurücklassen, was möglicherweise die Speicherauslastung erhöht und sich auf Backup-Anwendungen wie NetApp SnapCenter auswirken kann, die VMs und ihre ONTAP Snapshots verfolgen.
 
 
 ====
