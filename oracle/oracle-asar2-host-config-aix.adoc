@@ -1,0 +1,78 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-host-config-aix.html 
+keywords: oracle, database, ASA r2, ontap, aix, cio 
+summary: Oracle-Datenbanken mit AIX auf ASA r2 
+searchtitle: Oracle-Datenbanken mit IBM AIX auf ASA r2 
+---
+= AIX
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Konfigurationsthemen für Oracle-Datenbanken auf IBM AIX mit ASA r2 ONTAP.
+
+[NOTE]
+====
+AIX wird mit NetApp ASA r2 für das Hosting von Oracle-Datenbanken unterstützt, vorausgesetzt:
+
+* Sie haben Oracle für gleichzeitige E/A-Operationen korrekt konfiguriert.
+* Sie verwenden unterstützte SAN-Protokolle (FC/iSCSI/NVMe).
+* Sie verwenden ONTAP 9.16.x oder höher auf ASA r2.
+
+
+====
+
+
+== Gleichzeitige I/O-Vorgänge
+
+Um auf IBM AIX mit ASA r2 eine optimale Leistung zu erzielen, ist die Verwendung von paralleler E/A erforderlich. Ohne gleichzeitige E/A-Operationen sind Leistungseinschränkungen wahrscheinlich, da AIX serialisierte, atomare E/A-Operationen durchführt, was einen erheblichen Mehraufwand verursacht.
+
+Ursprünglich empfahl NetApp die Verwendung von `cio` Die Mount-Option erzwingt gleichzeitige E/A-Operationen im Dateisystem, aber dieses Verfahren hatte Nachteile und ist nicht mehr erforderlich. Seit der Einführung von AIX 5.2 und Oracle 10gR1 kann Oracle auf AIX einzelne Dateien für gleichzeitige E/A öffnen, anstatt gleichzeitige E/A auf dem gesamten Dateisystem zu erzwingen.
+
+Die beste Methode für die Aktivierung gleichzeitiger I/O ist, die festzulegen `init.ora` Parameter `filesystemio_options` Bis `setall`. Auf diese Weise kann Oracle spezifische Dateien zur Verwendung mit gleichzeitigen I/O-Vorgängen öffnen
+
+Die Verwendung von cio als Mount-Option erzwingt die Nutzung von gleichzeitiger E/A, was negative Folgen haben kann. Beispielsweise deaktiviert das Erzwingen von gleichzeitigen E/A-Vorgängen das Vorlesen auf Dateisystemen, was die Leistung bei E/A-Vorgängen außerhalb der Oracle-Datenbanksoftware beeinträchtigen kann, etwa beim Kopieren von Dateien und beim Durchführen von Bandsicherungen. Darüber hinaus sind Produkte wie Oracle GoldenGate und SAP BR*Tools mit bestimmten Versionen von Oracle nicht kompatibel, wenn die Option „cio mount“ verwendet wird.
+
+[TIP]
+====
+*NetApp empfiehlt* Folgendes:
+
+* Verwenden Sie das nicht `cio` Mount-Option auf Filesystem-Ebene. Aktivieren Sie stattdessen Concurrent I/O über `filesystemio_options=setall`.
+* Verwenden Sie ausschließlich `cio` Mount-Option, falls die Einstellung nicht möglich ist `filesystemio_options=setall`Die
+
+
+====
+
+NOTE: Da ASA r2 NAS nicht unterstützt, müssen alle Oracle-Bereitstellungen auf AIX Blockprotokolle verwenden.
+
+
+
+== Mount-Optionen für AIX jfs/jfs2
+
+In der folgenden Tabelle sind die AIX jfs/jfs2-Mount-Optionen aufgeführt.
+
+|===
+| Dateityp | Mount-Optionen 
+
+
+| AdR-Startseite | Standardwerte 
+
+
+| Kontrolldateien | Standardwerte 
+
+
+| Datendateien | Standardwerte 
+
+
+| Redo-Protokolle | Standardwerte 
+
+
+| ORACLE_HOME | Standardwerte 
+|===
+Vor der Verwendung von AIX `hdisk` Geräte in jeder Umgebung, einschließlich Datenbanken, überprüfen den Parameter `queue_depth`Die Dieser Parameter gibt nicht die HBA-Warteschlangenlänge an, sondern bezieht sich auf die SCSI-Warteschlangenlänge des einzelnen Geräts. `hdisk device`Die Je nachdem, wie die ASA r2 LUNs konfiguriert sind, ist der Wert für `queue_depth` könnte für eine gute Leistung zu niedrig sein. Tests haben gezeigt, dass der optimale Wert bei 64 liegt.

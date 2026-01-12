@@ -1,0 +1,76 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-network-config-ethernet.html 
+keywords: ethernet, jumbo frames, MTU, TCP/IP, flow control, oracle, ASA r2 
+summary: Oracle- und TCP/IP- und Ethernet-Konfiguration auf ASA r2-Systemen 
+searchtitle: TCP/IP- und Ethernet-Konfiguration für Oracle-Datenbanken mit ASA r2 
+---
+= TCP/IP- und ethernet-Konfiguration
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Viele Oracle on ASA r2 ONTAP Kunden verwenden Ethernet, das Netzwerkprotokoll von iSCSI und NVMe/TCP.
+
+
+
+== Einstellungen für das Host-Betriebssystem
+
+Die Dokumentation der meisten Anwendungsanbieter enthält bestimmte TCP- und ethernet-Einstellungen, die sicherstellen sollen, dass die Anwendung optimal funktioniert. Diese Einstellungen reichen in der Regel aus, um auch eine optimale IP-basierte Speicherleistung zu erzielen.
+
+
+
+== Ethernet-Flusskontrolle
+
+Mit dieser Technologie kann ein Client verlangen, dass ein Sender die Datenübertragung vorübergehend stoppt. Dies geschieht normalerweise, weil der Empfänger eingehende Daten nicht schnell genug verarbeiten kann. Die Anforderung, dass ein Sender die Übertragung abbricht, war zu einem Zeitpunkt weniger störend, als dass ein Empfänger Pakete verwirft, weil die Puffer voll waren. Dies ist bei den heute in Betriebssystemen verwendeten TCP-Stacks nicht mehr der Fall. Tatsächlich verursacht die Flusskontrolle mehr Probleme als sie löst.
+
+Leistungsprobleme, die durch die Ethernet-Flusssteuerung verursacht werden, haben in den letzten Jahren zugenommen. Der Grund dafür ist, dass die Ethernet-Flusssteuerung auf der physischen Ebene ausgeführt wird. Wenn eine Netzwerkkonfiguration es einem Host-Betriebssystem ermöglicht, eine Ethernet-Datenflusssteuerungsanforderung an ein Storage-System zu senden, führt dies zu einer I/O-Pause für alle verbundenen Clients. Da immer mehr Clients von einem einzelnen Storage Controller bedient werden, steigt die Wahrscheinlichkeit, dass ein oder mehrere dieser Clients Flow Control-Anfragen senden. Das Problem ist bei Kundenstandorten mit umfassender Betriebssystemvirtualisierung häufig aufgetreten.
+
+Eine NIC auf einem NetApp-System sollte keine Anfragen zur Flusskontrolle empfangen. Die Methode, mit der dieses Ergebnis erzielt wird, hängt vom Hersteller des Netzwerk-Switches ab. In den meisten Fällen kann die Flusssteuerung auf einem Ethernet-Switch eingestellt werden `receive desired` Oder `receive on`, Das bedeutet, dass eine Durchflussregelanforderung nicht an den Speichercontroller weitergeleitet wird. In anderen Fällen lässt die Netzwerkverbindung auf dem Storage Controller möglicherweise die Deaktivierung der Flusssteuerung nicht zu. In diesen Fällen müssen die Clients so konfiguriert werden, dass sie keine Flow-Control-Anforderungen senden, entweder indem sie auf die NIC-Konfiguration auf dem Host-Server selbst oder auf die Switch-Ports wechseln, mit denen der Host-Server verbunden ist.
+
+Bei ASA r2-Systemen, die ausschließlich für SAN ausgelegt sind, gelten die Überlegungen zur Ethernet-Flusskontrolle primär für iSCSI- und NVMe/TCP-Datenverkehr.
+
+
+TIP: * NetApp empfiehlt* sicherzustellen, dass NetApp ASA r2 Storage-Controller keine Ethernet-Flow-Control-Pakete empfangen. Dies kann im Allgemeinen durch die Konfiguration der Switch-Ports, an die der Controller angeschlossen ist, erfolgen. Bei einigen Switch-Hardware gibt es jedoch Einschränkungen, die möglicherweise clientseitige Änderungen erfordern.
+
+
+
+== MTU-Größen
+
+Der Einsatz von Jumbo Frames hat gezeigt, dass sich die Performance in 1-GB-Netzwerken durch Reduzierung des CPU- und Netzwerk-Overheads verbessert. Die Vorteile sind jedoch in der Regel nicht signifikant.
+
+
+TIP: *NetApp empfiehlt*, wenn möglich Jumbo Frames zu implementieren, sowohl um potenzielle Leistungsvorteile zu realisieren als auch um die Lösung zukunftssicher zu machen.
+
+Bei ASA r2-Systemen, die ausschließlich für SAN ausgelegt sind, gelten Jumbo-Frames nur für Ethernet-basierte SAN-Protokolle (iSCSI und NVMe/TCP).
+
+Die Verwendung von Jumbo Frames in einem 10-Gbit-Netzwerk ist fast zwingend erforderlich. Der Grund dafür ist, dass die meisten 10-GB-Implementierungen vor Erreichen der 10-GB-Marke ohne Jumbo-Frames eine Grenze von Paketen pro Sekunde erreichen. Die Verwendung von Jumbo Frames verbessert die Effizienz bei der TCP/IP-Verarbeitung, da Betriebssystem, Server, NICs und Speichersystem weniger, aber größere Pakete verarbeiten können. Die Leistungsverbesserung variiert von NIC zu NIC, ist jedoch signifikant.
+
+Bei Jumbo-Frame-Implementierungen besteht die allgemeine, aber falsche Annahme, dass alle verbundenen Geräte Jumbo-Frames unterstützen müssen und dass die MTU-Größe End-to-End entsprechen muss Stattdessen verhandeln die beiden Netzwerkendpunkte beim Herstellen einer Verbindung die höchste für beide Seiten akzeptable Frame-Größe. In einer typischen Umgebung ist ein Netzwerk-Switch auf eine MTU-Größe von 9216, der NetApp-Controller auf 9000 und die Clients auf 9000 und 1514 eingestellt. Clients, die eine MTU von 9000 unterstützen, können Jumbo-Frames verwenden, und Clients, die nur 1514 unterstützen, können einen niedrigeren Wert aushandeln.
+
+Probleme mit dieser Anordnung sind in einer komplett geschalteten Umgebung selten. Achten Sie jedoch in einer gerouteten Umgebung darauf, dass kein Zwischenrouter gezwungen ist, Jumbo-Frames zu fragmentieren.
+
+[TIP]
+====
+* NetApp empfiehlt* für ASA r2 SAN-Umgebungen die folgende Konfiguration:
+
+* Jumbo-Frames sind bei 1GbE zwar wünschenswert, aber nicht erforderlich.
+* Für maximale Leistung bei 10GbE und schnellerem iSCSI- und NVMe/TCP-Datenverkehr werden Jumbo-Frames benötigt.
+
+
+====
+
+
+== TCP-Parameter
+
+Drei Einstellungen sind oft falsch konfiguriert: TCP-Zeitstempel, selektive Bestätigung (SACK) und TCP-Fenster-Skalierung. Viele veraltete Dokumente im Internet empfehlen, einen oder mehrere dieser Parameter zu deaktivieren, um die Leistung zu verbessern. Vor vielen Jahren war diese Empfehlung verdienlich, als die CPU-Kapazitäten wesentlich geringer waren und der Overhead für die TCP-Verarbeitung, wenn möglich, reduziert werden konnte.
+
+Bei modernen Betriebssystemen führt die Deaktivierung dieser TCP-Funktionen jedoch in der Regel nicht zu nachweisbaren Vorteilen und kann gleichzeitig die Leistung beeinträchtigen. In virtualisierten Netzwerkumgebungen sind Performance-Schäden besonders wahrscheinlich, da diese Funktionen für eine effiziente Handhabung von Paketverlusten und Änderungen der Netzwerkqualität erforderlich sind.
+
+
+TIP: *NetApp empfiehlt*, TCP-Zeitstempel, SACK und TCP-Fenster-Skalierung auf dem Host zu aktivieren, und alle drei dieser Parameter sollten in jedem aktuellen Betriebssystem standardmäßig aktiviert sein.

@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-storage-san-config-asru.html 
+keywords: ontap, thin provisioning, oracle, ASRU, ASA r2 
+summary: ASM Reclamation Utility mit ONTAP Zero-Block-Erkennung auf ASA r2 
+searchtitle: 'ASM Reclamation Utility (ASRU) mit ONTAP auf ASA r2' 
+---
+= ASM-Rückgewinnungsdienstprogramm (ASRU)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP auf ASA r2 entfernt effizient Nullblöcke, die auf eine LUN (Speichereinheit) geschrieben wurden, wenn die Inline-Komprimierung aktiviert ist. Dienstprogramme wie das Oracle ASM Reclamation Utility (ASRU) funktionieren, indem sie ungenutzte ASM-Extents mit Nullen überschreiben.
+
+Dies ermöglicht es Datenbankadministratoren, Speicherplatz auf dem Speichersystem freizugeben, nachdem Daten gelöscht wurden. ONTAP fängt die Nullen ab und gibt den Speicherplatz der LUN frei. Der Rückgewinnungsprozess ist extrem schnell, da keine Daten im Speichersystem geschrieben werden.
+
+Aus der Datenbankperspektive enthält die ASM-Datenträgergruppe Nullen, und das Lesen dieser Bereiche der LUNs würde zu einem Strom von Nullen führen, ONTAP speichert die Nullen jedoch nicht auf Laufwerken. Stattdessen werden einfache Metadatenänderungen vorgenommen, die intern die Bereiche, in denen der Wert auf Null gesetzt wurde, als leer von Daten markieren.
+
+Aus ähnlichen Gründen sind Performance-Tests mit gelöschten Daten nicht gültig, da Blöcke mit Nullen tatsächlich nicht als Schreibvorgänge innerhalb des Storage-Arrays verarbeitet werden.
+
+Wichtige ASRU-Überlegungen mit ASA r2 ONTAP:
+
+* Funktioniert bei SAN-Workloads genauso wie AFF/ FAS , da ASA r2 nur blockbasiert arbeitet.
+* Gilt für LUNs und NVMe-Namespaces, die innerhalb von SAZs bereitgestellt werden.
+* Es existieren keine FlexVol Volumes, aber das Verhalten bei der Nullblock-Rückgewinnung ist identisch.
+
+
+
+NOTE: Stellen Sie bei der Verwendung von ASRU sicher, dass alle von Oracle empfohlenen Patches installiert sind.

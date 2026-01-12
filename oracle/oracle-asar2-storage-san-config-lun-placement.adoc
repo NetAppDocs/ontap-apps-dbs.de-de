@@ -1,0 +1,96 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-storage-san-config-lun-placement.html 
+keywords: SAN, ASM, LVM, oracle, LUN, ASA r2 
+summary: Oracle- und ONTAP LUN-Platzierung mit ASA r2 
+searchtitle: Platzierung von Oracle-Datenbank-LUNs mit ASA r2 
+---
+= LUN-Platzierung
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Die optimale Platzierung von Datenbank-LUNs innerhalb von ASA r2-Systemen hängt in erster Linie davon ab, wie die verschiedenen ONTAP Funktionen genutzt werden.
+
+In ASA r2-Systemen werden Speichereinheiten (LUNs oder NVMe-Namespaces) aus einer vereinfachten Speicherschicht namens Storage Availability Zones (SAZs) erstellt, die als gemeinsame Speicherpools für ein HA-Paar fungieren.
+
+
+NOTE: Pro HA-Paar gibt es typischerweise nur eine Storage Availability Zone (SAZ).
+
+
+
+== Speicherverfügbarkeitszonen (SAZ)
+
+In ASA r2-Systemen sind Volumes weiterhin vorhanden, werden aber automatisch erstellt, wenn Speichereinheiten angelegt werden. Speichereinheiten (LUNs oder NVMe-Namespaces) werden direkt in den automatisch erstellten Volumes in Storage Availability Zones (SAZs) bereitgestellt. Dieses Design macht eine manuelle Volumenverwaltung überflüssig und ermöglicht eine direktere und effizientere Bereitstellung für Block-Workloads wie Oracle-Datenbanken.
+
+
+
+== SAZs und Lagereinheiten
+
+Zusammengehörige Speichereinheiten (LUNs oder NVMe-Namensräume) befinden sich normalerweise innerhalb einer einzigen Storage Availability Zone (SAZ). Eine Datenbank, die beispielsweise 10 Speichereinheiten (LUNs) benötigt, würde typischerweise alle 10 Einheiten aus Gründen der Einfachheit und Leistungsfähigkeit in derselben SAZ platzieren.
+
+[NOTE]
+====
+* Die Verwendung eines 1:1-Verhältnisses von Speichereinheiten zu Datenträgern, d. h. eine Speichereinheit (LUN) pro Datenträger, ist das Standardverhalten von ASA r2.
+* Falls im ASA r2-System mehr als ein HA-Paar vorhanden ist, können die Speichereinheiten (LUNs) für eine bestimmte Datenbank auf mehrere SAZs verteilt werden, um die Controller-Auslastung und -Leistung zu optimieren.
+
+
+====
+
+NOTE: Im Kontext von FC SAN bezieht sich die Speichereinheit hier auf eine LUN.
+
+
+
+== Konsistenzgruppen (CGs), LUNs und Snapshots
+
+In ASA r2 werden Snapshot-Richtlinien und -Zeitpläne auf der Ebene der Konsistenzgruppe angewendet. Dabei handelt es sich um ein logisches Konstrukt, das mehrere LUNs oder NVMe-Namespaces zum Zweck des koordinierten Datenschutzes gruppiert. Ein Datensatz, der aus 10 LUNs besteht, benötigt nur eine einzige Snapshot-Richtlinie, wenn diese LUNs Teil derselben Konsistenzgruppe sind.
+
+Konsistenzgruppen gewährleisten atomare Snapshot-Operationen über alle einbezogenen LUNs hinweg. Beispielsweise kann eine Datenbank, die sich auf 10 LUNs befindet, oder eine VMware-basierte Anwendungsumgebung, die aus 10 verschiedenen Betriebssystemen besteht, als ein einziges, konsistentes Objekt geschützt werden, wenn die zugrunde liegenden LUNs in derselben Konsistenzgruppe gruppiert sind. Werden sie in verschiedenen Konsistenzgruppen platziert, können Snapshots perfekt synchronisiert sein oder auch dann nicht, wenn sie gleichzeitig geplant werden.
+
+In einigen Fällen muss ein zusammengehöriger Satz von LUNs aufgrund von Wiederherstellungsanforderungen möglicherweise in zwei verschiedene Konsistenzgruppen aufgeteilt werden. Eine Datenbank könnte beispielsweise vier LUNs für Datendateien und zwei LUNs für Protokolle haben. In diesem Fall wäre eine Datendatei-Konsistenzgruppe mit 4 LUNs und eine Protokoll-Konsistenzgruppe mit 2 LUNs möglicherweise die beste Option. Der Grund dafür ist die unabhängige Wiederherstellbarkeit: Die Datendatei-Konsistenzgruppe könnte selektiv auf einen früheren Zustand zurückgesetzt werden, was bedeutet, dass alle vier LUNs auf den Zustand des Snapshots zurückgesetzt würden, während die Protokoll-Konsistenzgruppe mit ihren kritischen Daten unberührt bliebe.
+
+
+
+== CGs, LUNs und SnapMirror
+
+SnapMirror Richtlinien und -Operationen werden, wie Snapshot-Operationen, auf der Konsistenzgruppe und nicht auf der LUN ausgeführt.
+
+Durch die Zusammenlegung verwandter LUNs in einer einzigen Konsistenzgruppe können Sie eine einzige SnapMirror Beziehung erstellen und alle enthaltenen Daten mit einem einzigen Update aktualisieren. Wie bei Snapshots handelt es sich auch bei der Aktualisierung um eine atomare Operation. Das SnapMirror Zielsystem würde garantiert eine exakte, zeitpunktbezogene Replik der Quell-LUNs enthalten. Wenn die LUNs über mehrere Konsistenzgruppen verteilt sind, können die Replikate untereinander konsistent sein oder auch nicht.
+
+[NOTE]
+====
+Die SnapMirror Replikation auf ASA r2-Systemen weist folgende Einschränkungen auf:
+
+* Die synchrone Replikation von SnapMirror wird nicht unterstützt.
+* SnapMirror Active Sync wird nur zwischen zwei ASA r2-Systemen unterstützt.
+* SnapMirror unterstützt die asynchrone Replikation nur zwischen zwei ASA r2-Systemen.
+* Die asynchrone Replikation von SnapMirror wird zwischen einem ASA r2-System und einem ASA, AFF oder FAS System oder der Cloud nicht unterstützt.
+
+
+Erfahren Sie mehr über https://docs.netapp.com/us-en/asa-r2/data-protection/pre-defined-protection-policies.html["SnapMirror Replikationsrichtlinien werden auf ASA r2-Systemen unterstützt"]Die
+
+====
+
+
+== CGs, LUNs und QoS
+
+QoS kann zwar selektiv auf einzelne LUNs angewendet werden, in der Regel ist es jedoch einfacher, es auf der Ebene der Konsistenzgruppe festzulegen. Beispielsweise könnten alle von den Gästen auf einem bestimmten ESX-Server verwendeten LUNs in einer einzigen Konsistenzgruppe zusammengefasst werden, und anschließend könnte eine adaptive QoS-Richtlinie von ONTAP angewendet werden. Das Ergebnis ist ein sich selbst skalierender IOPS-pro-TiB-Grenzwert, der für alle LUNs gilt.
+
+Wenn beispielsweise eine Datenbank 100.000 IOPS benötigt und 10 LUNs belegt, wäre es einfacher, ein einzelnes Limit von 100.000 IOPS für eine einzelne Konsistenzgruppe festzulegen, als 10 einzelne Limits von jeweils 10.000 IOPS, eines für jede LUN.
+
+
+
+== Mehrere CG-Layouts
+
+Es gibt Fälle, in denen die Verteilung von LUNs auf mehrere Konsistenzgruppen von Vorteil sein kann. Der Hauptgrund ist die Controller-Striping-Funktion. Beispielsweise könnte ein HA ASA r2-Speichersystem eine einzelne Oracle-Datenbank hosten, bei der das volle Verarbeitungs- und Caching-Potenzial jedes Controllers benötigt wird. In diesem Fall wäre ein typisches Design, die Hälfte der LUNs in einer einzigen Konsistenzgruppe auf Controller 1 und die andere Hälfte der LUNs in einer einzigen Konsistenzgruppe auf Controller 2 zu platzieren.
+
+In ähnlicher Weise kann in Umgebungen mit vielen Datenbanken durch die Verteilung von LUNs auf mehrere Konsistenzgruppen eine ausgewogene Controller-Auslastung sichergestellt werden. Ein HA-System, das beispielsweise 100 Datenbanken mit jeweils 10 LUNs hostet, könnte pro Datenbank 5 LUNs einer Konsistenzgruppe auf Controller 1 und 5 LUNs einer Konsistenzgruppe auf Controller 2 zuweisen. Dies gewährleistet eine symmetrische Auslastung bei der Bereitstellung zusätzlicher Datenbanken.
+
+Keines dieser Beispiele beinhaltet jedoch ein LUN-zu-Konsistenzgruppen-Verhältnis von 1:1. Ziel bleibt es, die Verwaltbarkeit zu optimieren, indem zusammengehörige LUNs logisch in Konsistenzgruppen zusammengefasst werden.
+
+Ein Beispiel, bei dem ein Verhältnis von 1:1 zwischen LUN und Konsistenzgruppe sinnvoll ist, sind containerisierte Workloads. Hierbei repräsentiert jede LUN möglicherweise einen einzelnen Workload, der separate Snapshot- und Replikationsrichtlinien erfordert und daher individuell verwaltet werden muss. In solchen Fällen kann ein Verhältnis von 1:1 optimal sein.

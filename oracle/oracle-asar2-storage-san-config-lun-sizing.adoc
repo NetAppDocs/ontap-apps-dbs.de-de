@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-storage-san-config-lun-sizing.html 
+keywords: SAN, ASM, LVM, oracle, lun, sizing, count, ASA r2 
+summary: Richtlinien zur Dimensionierung und Anzahl von LUNs in Oracle-Datenbanken mit ASA r2 
+searchtitle: Oracle-Datenbank-LUN-Dimensionierung und LUN-Anzahl mit ASA r2 
+---
+= LUN-Dimensionierung und LUN-Anzahl
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Die Auswahl der optimalen LUN-Größe und der Anzahl der zu verwendenden LUNs ist für optimale Performance und einfaches Management der Oracle-Datenbanken von entscheidender Bedeutung.
+
+Eine LUN ist ein virtualisiertes Objekt auf ONTAP , das sich über alle Laufwerke in der hostenden Storage Availability Zone (SAZ) auf ASA r2-Systemen erstreckt. Daher wird die Leistungsfähigkeit der LUN nicht durch ihre Größe beeinträchtigt, da die LUN unabhängig von der gewählten Größe das volle Leistungspotenzial der SAZ ausschöpft.
+
+Aus praktischen Gründen möchten Kunden möglicherweise eine LUN einer bestimmten Größe verwenden. Wenn beispielsweise eine Datenbank auf einer LVM oder einer Oracle ASM-Datenträgergruppe erstellt wird, die aus zwei LUNs mit jeweils 1 TB besteht, muss diese Datenträgergruppe in Schritten von 1 TB erweitert werden. Es könnte besser sein, die Datenträgergruppe aus acht LUNs mit jeweils 500 GB zu erstellen, damit die Datenträgergruppe in kleineren Schritten erhöht werden kann.
+
+Die Praxis, eine universelle Standard-LUN-Größe zu etablieren, wird davon abgeraten, da dies die Managebarkeit erschweren kann. Beispielsweise funktioniert eine standardmäßige LUN-Größe von 100 GB gut, wenn eine Datenbank oder ein Datastore im Bereich von 1 TB bis 2 TB liegt, jedoch erfordert eine Datenbank oder ein Datenspeicher mit einer Größe von 20 TB 200 LUNs. Das bedeutet, dass der Server-Neustart länger dauert, mehr Objekte in den verschiedenen Benutzeroberflächen zu verwalten sind und Produkte wie SnapCenter eine Erkennung für viele Objekte durchführen müssen. Derartige Probleme werden durch die Verwendung von weniger und größeren LUNs vermieden.
+
+* ASA r2-Überlegungen:*
+
+* Die maximale LUN-Größe für ASA r2 beträgt 128 TB, was den Einsatz von weniger, aber größeren LUNs ohne Leistungseinbußen ermöglicht.
+* ASA r2 verwendet Storage Availability Zones (SAZ) anstelle von Aggregaten, dies ändert jedoch nichts an der Logik zur LUN-Dimensionierung für Oracle-Workloads.
+* Thin Provisioning ist standardmäßig aktiviert; die Größenänderung von LUNs erfolgt unterbrechungsfrei und erfordert keine Offline-Schaltung.
+
+
+
+
+== LUN-Anzahl
+
+Anders als die LUN-Größe wirkt sich die Anzahl der LUNs auf die Performance aus. Die Applikations-Performance hängt häufig von der Fähigkeit ab, parallelen I/O über die SCSI-Schicht auszuführen. Dadurch bieten zwei LUNs eine bessere Performance als eine einzelne LUN. Die Verwendung einer LVM wie Veritas VxVM, Linux LVM2 oder Oracle ASM ist die einfachste Methode, um die Parallelität zu erhöhen.
+
+Bei ASA r2 bleiben die Prinzipien für die LUN-Anzahl die gleichen wie bei AFF/ FAS , da ONTAP parallele E/A plattformübergreifend ähnlich handhabt. Die SAN-only-Architektur und die aktiv-aktiven symmetrischen Pfade der ASA r2 gewährleisten jedoch eine konsistente Leistung über alle LUNs hinweg.
+
+NetApp Kunden konnten im Allgemeinen nur einen minimalen Nutzen aus der Erhöhung der Anzahl von LUNs über sechzehn hinaus verzeichnen, obwohl sich bei den Tests mit 100 % SSD-Umgebungen mit sehr hoher zufälliger I/O-Last weitere Verbesserungen auf bis zu 64 LUNs gezeigt haben.
+
+[TIP]
+====
+*NetApp empfiehlt* Folgendes:
+
+Im Allgemeinen reichen vier bis sechzehn LUNs aus, um die E/A-Anforderungen einer beliebigen Oracle-Datenbank-Workload zu erfüllen. Weniger als vier LUNs könnten aufgrund von Einschränkungen bei den Host-SCSI-Implementierungen zu Leistungseinschränkungen führen. Eine Erhöhung auf mehr als sechzehn LUNs führt nur in Extremfällen (z. B. bei sehr hohen zufälligen E/A-SSD-Workloads) zu einer Leistungsverbesserung.
+
+====

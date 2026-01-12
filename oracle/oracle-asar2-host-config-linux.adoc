@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-host-config-linux.html 
+keywords: oracle, database, ASA r2, ontap, linux, nfs, xfs, ext4, slot tables 
+summary: Oracle-Datenbanken mit Linux auf ASA r2 
+searchtitle: Oracle-Datenbanken mit Linux auf ASA r2 
+---
+= Linux
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Konfigurationsthemen speziell für das Linux-Betriebssystem mit ASA r2 ONTAP.
+
+[NOTE]
+====
+Linux (Oracle Linux, RHEL, SUSE) wird mit ASA r2 für Oracle-Datenbanken unterstützt. Verwenden Sie SAN-Protokolle, konfigurieren Sie Multipathing korrekt und wenden Sie die Best Practices von Oracle für ASM und I/O-Tuning an.
+
+====
+
+
+== I/O-Planer
+
+Der Linux-Kernel ermöglicht eine Steuerung auf niedriger Ebene über die Art und Weise, wie I/O-Vorgänge zum Blockieren von Geräten geplant werden. Die Standardeinstellungen auf verschiedenen Linux-Distribution variieren erheblich. Tests zeigen, dass Deadline in der Regel die besten Ergebnisse bietet, aber gelegentlich NOOP war etwas besser. Der Unterschied in der Performance ist minimal, aber testen Sie beide Optionen, wenn es erforderlich ist, um die maximal mögliche Performance aus einer Datenbankkonfiguration zu extrahieren. CFQ ist in vielen Konfigurationen der Standard und hat bei Datenbank-Workloads erhebliche Performance-Probleme gezeigt.
+
+Anweisungen zur Konfiguration des I/O-Planers finden Sie in der entsprechenden Dokumentation des Linux-Anbieters.
+
+
+
+== Multipathing
+
+Einige Kunden sind während der Netzwerkunterbrechung auf Abstürze gestoßen, weil der Multipath-Daemon auf ihrem System nicht ausgeführt wurde. Bei aktuellen Versionen von Linux können der Installationsprozess des Betriebssystems und des Multipathing-Daemons diese Betriebssysteme für dieses Problem anfällig machen. Die Pakete sind ordnungsgemäß installiert, aber nach einem Neustart nicht für den automatischen Start konfiguriert.
+
+Die Standardkonfiguration für den Multipath-Daemon unter RHEL 9.7 könnte beispielsweise wie folgt aussehen:
+
+....
+[root@host1 ~]# systemctl list-unit-files --type=service | grep multipathd
+multipathd.service                      disabled
+....
+Dies kann mit den folgenden Befehlen korrigiert werden:
+
+....
+[root@host1 ~]# systemctl enable multipathd.service
+[root@host1 ~]# systemctl list-unit-files --type=service | grep multipathd
+multipathd.service                      enabled
+....
+
+
+== Warteschlangentiefe
+
+Um E/A-Engpässe zu vermeiden, sollte für SAN-Geräte eine geeignete Warteschlangenlänge eingestellt werden. Die Standard-Warteschlangenlänge unter Linux ist oft auf 128 eingestellt, was bei Oracle-Datenbanken zu Leistungsproblemen führen kann. Eine zu hohe Warteschlangenlänge kann zu übermäßiger E/A-Warteschlangenbildung führen, was wiederum die Latenz erhöht und den Durchsatz verringert. Wenn der Wert zu niedrig eingestellt ist, kann dies die Anzahl der ausstehenden E/A-Anforderungen begrenzen und somit die Gesamtleistung verringern. Eine Warteschlangenlänge von 64 ist oft ein guter Ausgangspunkt für Oracle-Datenbank-Workloads auf ASA r2, muss aber je nach spezifischen Workload-Charakteristika und Leistungstests angepasst werden.
+
+
+
+== ASM Spiegelung
+
+ASM-Spiegelung erfordert möglicherweise Änderungen an den Linux Multipath-Einstellungen, damit ASM ein Problem erkennen und zu einer alternativen Ausfallgruppe wechseln kann. Die meisten ASM-Konfigurationen auf ONTAP verwenden externe Redundanz. Das bedeutet, dass Datensicherung durch das externe Array bereitgestellt wird und ASM keine Daten spiegelt. Einige Standorte verwenden ASM mit normaler Redundanz, um normalerweise zwei-Wege-Spiegelung über verschiedene Standorte hinweg bereitzustellen.
+
+Bei ASA r2-Systemen, die Active-Active Multipathing unterstützen, sollten diese Multipath-Einstellungen angepasst werden. Da alle Pfade aktiv und lastverteilt sind, ist eine unbegrenzte Warteschlangenbildung nicht erforderlich. Stattdessen sollten Multipath-Parameter die Leistung und ein schnelles Failback priorisieren. Dieses Verhalten ist für die ASM-Spiegelung wichtig, da ASM einen E/A-Fehler empfangen muss, um die E/A auf einer alternativen LUN erneut zu versuchen. Wenn E/A-Vorgänge unbegrenzt in der Warteschlange stehen, kann ASM kein Failover auslösen.
+
+Legen Sie die folgenden Parameter in Linux fest `multipath.conf` Datei für ASM-LUNs, die mit ASM-Spiegelung verwendet werden:
+
+....
+polling_interval 5
+no_path_retry 24
+failback immediate
+path_grouping_policy multibus
+path_selector "service-time 0"
+....
+Mit diesen Einstellungen wird ein Timeout von 120 Sekunden für ASM-Geräte erstellt. Das Timeout wird als berechnet `polling_interval` * `no_path_retry` Sekunden lang. Der genaue Wert muss unter Umständen angepasst werden, aber ein Timeout von 120 Sekunden sollte für die meisten Anwendungen ausreichen. Insbesondere sollten in 120 Sekunden eine Controller-Übernahme oder -Rückgabe möglich sein, ohne dass ein I/O-Fehler auftritt, der dazu führen würde, dass die Fehlergruppe offline geschaltet wird.
+
+A niedriger `no_path_retry` Value kann die für ASM erforderliche Zeit zum Wechsel zu einer alternativen Ausfallgruppe verkürzen. Dies erhöht jedoch auch das Risiko eines unerwünschten Failovers während Wartungsaktivitäten wie beispielsweise einem Controller-Takeover. Das Risiko kann durch eine sorgfältige Überwachung des ASM-Spiegelungsstatus verringert werden. Wenn ein unerwünschtes Failover auftritt, können die Spiegelungen schnell neu synchronisiert werden, wenn die Resynchronisierung relativ schnell durchgeführt wird. Weitere Informationen finden Sie in der Oracle-Dokumentation zu ASM Fast Mirror Resync für die verwendete Version der Oracle-Software.
+
+
+
+== Mount-Optionen für Linux xfs, ext3 und ext4
+
+
+TIP: * NetApp empfiehlt* die Verwendung der Standard-Mount-Optionen. Achten Sie auf die korrekte Ausrichtung beim Erstellen von Dateisystemen auf LUNs.

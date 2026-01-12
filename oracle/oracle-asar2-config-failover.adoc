@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-config-failover.html 
+keywords: failover, takeover, ASA r2, oracle 
+summary: Um sicherzustellen, dass der Betrieb der Oracle-Datenbank durch diese Vorgänge nicht beeinträchtigt wird, ist ein Verständnis der Speicherübernahmefunktion erforderlich. Darüber hinaus können die bei einer Übernahme verwendeten Argumente die Datenintegrität beeinträchtigen, wenn sie falsch verwendet werden. 
+searchtitle: Oracle-Datenbanken und ONTAP Controller-Failover in ASA r2 
+---
+= ONTAP Failover
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Kenntnisse über Speicherübernahmefunktionen sind erforderlich, um sicherzustellen, dass der Betrieb der Oracle-Datenbank während dieser Vorgänge nicht unterbrochen wird. Darüber hinaus können die bei Übernahmen verwendeten Argumente die Datenintegrität beeinträchtigen, wenn sie falsch eingesetzt werden.
+
+Unter normalen Bedingungen werden eingehende Schreibvorgänge an einen bestimmten Controller synchron an seinen HA-Partner gespiegelt. In einer ASA r2-Umgebung mit SnapMirror Active Sync (SM-as) werden Schreibvorgänge auch auf einen Remote-Controller am sekundären Standort gespiegelt. Solange ein Schreibvorgang nicht an allen Speicherorten in nichtflüchtigen Medien gespeichert ist, wird er der Host-Anwendung nicht bestätigt.
+
+Das Medium, in dem die Schreibdaten gespeichert werden, wird als nichtflüchtiger Speicher (NVMEM) bezeichnet. Manchmal wird es auch als nichtflüchtiger Direktzugriffsspeicher (NVRAM) bezeichnet und kann eher als Schreibjournal denn als Cache betrachtet werden. Im Normalbetrieb werden keine Daten aus dem NVMEM gelesen; es dient lediglich dem Schutz der Daten im Falle eines Software- oder Hardwareausfalls. Beim Schreiben von Daten auf Laufwerke werden die Daten aus dem System-RAM und nicht aus dem NVMEM übertragen.
+
+Bei einer Übernahmeoperation übernimmt ein Knoten in einem HA-Paar die Operationen von seinem Partner. Bei ASA r2 ist ein Switchover nicht möglich, da MetroCluster nicht unterstützt wird; stattdessen bietet SnapMirror Active Sync Redundanz auf Standortebene. Die Übernahme des Speichers während routinemäßiger Wartungsarbeiten sollte transparent erfolgen, abgesehen von einer kurzen Unterbrechung des Betriebs aufgrund von Änderungen der Netzwerkpfade. Netzwerktechnik kann komplex sein, und Fehler passieren leicht. Deshalb empfiehlt NetApp dringend, Übernahmevorgänge gründlich zu testen, bevor ein Speichersystem in Produktion genommen wird. Nur so kann sichergestellt werden, dass alle Netzwerkpfade korrekt konfiguriert sind. In einer SAN-Umgebung überprüfen Sie den Pfadstatus mit dem Befehl `sanlun lun show -p` oder die systemeigenen Multipathing-Tools des Betriebssystems, um sicherzustellen, dass alle erwarteten Pfade verfügbar sind. ASA r2-Systeme bieten alle aktiven optimierten Pfade für LUNs, und Kunden, die NVMe-Namespaces verwenden, sollten auf OS-native Tools zurückgreifen, da NVMe-Pfade nicht von sanlun abgedeckt werden.
+
+Bei der Durchführung einer Zwangsübernahme ist Vorsicht geboten. Eine erzwungene Änderung der Speicherkonfiguration bedeutet, dass der Zustand des Controllers, dem die Laufwerke gehören, ignoriert wird und der alternative Knoten die Kontrolle über die Laufwerke zwangsweise übernimmt. Eine fehlerhafte erzwungene Übernahme kann zu Datenverlust oder -beschädigung führen, da bei einer erzwungenen Übernahme der Inhalt von NVMEM verworfen werden kann. Nach Abschluss der Übernahme bedeutet der Verlust dieser Daten, dass die auf den Laufwerken gespeicherten Daten aus Sicht der Datenbank möglicherweise in einen etwas älteren Zustand zurückfallen.
+
+Eine erzwungene Übernahme mit einem normalen HA-Paar sollte nur selten erforderlich sein. In nahezu allen Fehlerszenarien schaltet sich ein Knoten ab und informiert den Partner, sodass ein automatisches Failover erfolgt. Es gibt einige Sonderfälle, wie zum Beispiel einen rollierenden Ausfall, bei dem die Verbindung zwischen den Knoten unterbrochen wird und anschließend ein Controller ausfällt, in denen eine erzwungene Übernahme erforderlich ist. In einer solchen Situation geht die Spiegelung zwischen den Knoten vor dem Ausfall des Controllers verloren, was bedeutet, dass der verbleibende Controller keine Kopie der laufenden Schreibvorgänge mehr besitzt. Die Übernahme muss dann erzwungen werden, was bedeutet, dass möglicherweise Daten verloren gehen.
+
+[TIP]
+====
+NetApp empfiehlt folgende Vorsichtsmaßnahmen:
+
+* Achten Sie unbedingt darauf, nicht versehentlich eine Übernahme zu erzwingen. Normalerweise sollte ein erzwungener Eingriff nicht erforderlich sein, und ein erzwungener Eingriff kann zu Datenverlust führen.
+* Falls eine erzwungene Übernahme erforderlich ist, stellen Sie sicher, dass die Anwendungen heruntergefahren, alle Dateisysteme ausgehängt und die Volume-Gruppen des Logical Volume Manager (LVM) deaktiviert werden. ASM-Diskgruppen müssen ausgehängt werden.
+* Im Falle eines Ausfalls auf Standortebene bei Verwendung von SM-as wird auf dem verbleibenden Cluster ein automatisches, ungeplantes Failover mithilfe des ONTAP Mediators eingeleitet, was zu einer kurzen E/A-Pause führt. Anschließend werden die Datenbankübergänge vom verbleibenden Cluster aus fortgesetzt. Weitere Informationen finden Sie unter https://docs.netapp.com/us-en/asa-r2/data-protection/configure-snapmirror-active-sync.html["SnapMirror Active Sync auf ASA r2-Systemen"] für detaillierte Konfigurationsschritte.
+
+
+====

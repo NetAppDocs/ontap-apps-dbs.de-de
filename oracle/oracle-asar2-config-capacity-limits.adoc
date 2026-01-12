@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-config-capacity-limits.html 
+keywords: capacity, ASA r2, oracle 
+summary: Datenbanken und ASA r2 ONTAP -Speicherkapazität und freier Speicherplatz auf ASA r2 
+searchtitle: Oracle-Datenbanken und Speicherkapazitätsmanagement auf ASA r2 
+---
+= Kapazitätsmanagement
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Für das Management von Datenbanken oder anderen Enterprise-Applikationen mit vorhersehbarem, leicht verwaltbarem, hochperformantem Enterprise-Storage ist auf den Laufwerken freier Speicherplatz für das Daten- und Metadaten-Management erforderlich. Die Menge des freien Speicherplatzes hängt vom Typ des verwendeten Laufwerks und von den Geschäftsprozessen ab.
+
+ASA r2 verwendet Storage Availability Zones (SAZ) anstelle von Aggregaten, aber das Prinzip bleibt dasselbe: Freier Speicherplatz umfasst jegliche physische Kapazität, die nicht von tatsächlichen Daten, Snapshots oder System-Overhead verbraucht wird. Auch Thin Provisioning muss berücksichtigt werden – logische Zuweisungen spiegeln nicht die tatsächliche physische Nutzung wider.
+
+Die NetApp Empfehlungen für ASA r2-Speichersysteme, die für Unternehmensanwendungen verwendet werden, lauten wie folgt:
+
+
+
+== SSD-Pools in ASA r2-Systemen
+
+
+TIP: * NetApp empfiehlt*, in ASA r2-Umgebungen mindestens 10 % freien physischen Speicherplatz vorzuhalten. Diese Richtlinie gilt für SSD-basierte Speicherpools, die von ASA r2-Systemen verwendet werden, und umfasst den gesamten ungenutzten Speicherplatz innerhalb der SAZ und der Speichereinheiten. Logischer Speicherplatz ist unwichtig; der Fokus liegt auf dem tatsächlich verfügbaren freien physischen Speicherplatz für die Datenspeicherung.
+
+Während ASA r2 eine hohe Auslastung ohne Leistungseinbußen aufrechterhalten kann, erhöht der Betrieb nahe der Vollauslastung das Risiko von Platzmangel und den administrativen Aufwand bei der Speichererweiterung. Eine Auslastung von über 90 % beeinträchtigt möglicherweise nicht die Leistung, kann aber die Verwaltung erschweren und die Bereitstellung zusätzlicher Laufwerke verzögern.
+
+ASA r2-Systeme unterstützen Speichereinheiten bis zu 128 TB und SAZ-Größen bis zu 2 PB pro HA-Paar, wobei ONTAP die Kapazität automatisch über die Knoten verteilt. Die Überwachung der Auslastung auf Cluster-, SAZ- und Speichereinheitsebene ist unerlässlich, um ausreichend freien Speicherplatz für Snapshots, Thin-Provisioning-Workloads und zukünftiges Wachstum zu gewährleisten. Wenn die Kapazität kritische Schwellenwerte erreicht (ca. 90 % Auslastung), sollten zusätzliche SSDs in Gruppen (mindestens sechs Laufwerke) hinzugefügt werden, um Leistung und Ausfallsicherheit zu gewährleisten.

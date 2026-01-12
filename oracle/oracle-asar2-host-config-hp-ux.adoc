@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-host-config-hp-ux.html 
+keywords: oracle, database, ASA r2, ontap, hp-ux 
+summary: Oracle-Datenbanken mit HP-UX auf ASA r2 
+searchtitle: Oracle-Datenbanken mit HP-UX auf ASA r2 
+---
+= HP-UX ERHÄLTLICH
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Konfigurationsthemen für Oracle-Datenbanken auf HP-UX mit ASA r2 ONTAP.
+
+[NOTE]
+====
+HP-UX wird mit NetApp ASA r2 für das Hosting von Oracle-Datenbanken unterstützt, vorausgesetzt:
+
+* Die ONTAP Version muss 9.16.x oder höher sein.
+* Verwenden Sie SAN-Protokolle (FC/iSCSI/NVMe). NAS wird auf ASA r2 nicht unterstützt.
+* Wenden Sie die für HP-UX spezifischen Best Practices für die Montage und I/O-Optimierung an.
+
+
+====
+
+
+== HP-UX VxFS-Mount-Optionen
+
+Verwenden Sie die folgenden Mount-Optionen für Dateisysteme, auf denen Oracle-Binärdateien gehostet werden:
+
+....
+delaylog,nodatainlog
+....
+Verwenden Sie die folgenden Mount-Optionen für Dateisysteme mit Datendateien, Wiederherstellungsprotokollen, Archivprotokollen und Steuerdateien, bei denen die Version von HP-UX keine gleichzeitigen I/O unterstützt:
+
+....
+nodatainlog,mincache=direct,convosync=direct
+....
+Wenn gleichzeitige I/O-Vorgänge unterstützt werden (VxFS 5.0.1 und höher oder mit der ServiceGuard Storage Management Suite), verwenden Sie diese Mount-Optionen für Dateisysteme, die Datendateien, Wiederherstellungsprotokolle, Archivprotokolle und Steuerdateien enthalten:
+
+....
+delaylog,cio
+....
+
+NOTE: Der Parameter `db_file_multiblock_read_count` Insbesondere in VxFS-Umgebungen kritisch ist. Oracle empfiehlt, dass dieser Parameter in Oracle 10g R1 und höher nicht festgelegt wird, sofern nicht ausdrücklich anders angegeben. Der Standardwert bei einer Oracle 8 KB Blockgröße ist 128. Wenn der Wert dieses Parameters auf 16 oder weniger erzwungen wird, entfernen Sie den `convosync=direct` Mount-Option, da dadurch die sequenzielle I/O-Performance beeinträchtigt werden kann. Dieser Schritt schädigt andere Aspekte der Leistung und sollte nur erfolgen, wenn der Wert von `db_file_multiblock_read_count` Muss vom Standardwert geändert werden.

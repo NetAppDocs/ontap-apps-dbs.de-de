@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-network-config-fc.html 
+keywords: SAN, zoning, ASA r2 
+summary: FC-Netzwerkkonfiguration für Oracle-Datenbanken mit ASA r2 
+searchtitle: FC-SAN-Konfiguration für Oracle-Datenbanken mit ASA r2 
+---
+= FC SAN-Konfiguration
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Bei der Konfiguration von FC SAN für Oracle-Datenbanken auf ASA r2-Systemen geht es in erster Linie darum, die gängigen Best Practices für SAN zu befolgen.
+
+ASA r2 ist für reine SAN-Workloads optimiert, daher bleiben die Prinzipien die gleichen wie bei AFF/ FAS, wobei der Fokus auf Leistung, Ausfallsicherheit und Einfachheit liegt. Dies umfasst typische Planungsmaßnahmen wie die Sicherstellung einer ausreichenden Bandbreite im SAN zwischen Host und Speichersystem, die Überprüfung, ob alle SAN-Pfade zwischen allen erforderlichen Geräten vorhanden sind, die Verwendung der vom FC-Switch-Hersteller geforderten FC-Port-Einstellungen, die Vermeidung von ISL-Konflikten und die Verwendung einer ordnungsgemäßen SAN-Fabric-Überwachung.
+
+
+
+== Zoning
+
+Eine FC-Zone sollte nie mehr als einen Initiator enthalten. Eine solche Anordnung mag zunächst zu funktionieren scheinen, doch Crosstalk zwischen Initiatoren beeinträchtigt letztendlich die Performance und Stabilität.
+
+Multitarget-Zonen werden allgemein als sicher angesehen, obwohl in seltenen Fällen das Verhalten von FC-Zielports unterschiedlicher Anbieter Probleme verursacht hat. Es ist beispielsweise zu vermeiden, die Ziel-Ports von einem NetApp und einem nicht-NetApp Storage-Array in derselben Zone zu integrieren. Darüber hinaus besteht mit noch größerer Wahrscheinlichkeit die Gefahr, dass ein NetApp Storage-System und ein Bandgerät in dieselbe Zone platziert werden.
+
+[NOTE]
+====
+* ASA r2 verwendet Storage Availability Zones anstelle von Aggregaten, dies ändert jedoch nichts an den FC-Zonierungsprinzipien.
+* Multipathing (MPIO) bleibt der primäre Ausfallsicherheitsmechanismus; allerdings sind bei ASA r2-Systemen, die symmetrisches Active-Active-Multipathing unterstützen, alle Pfade zu einer LUN aktiv und werden gleichzeitig für E/A genutzt.
+
+
+====

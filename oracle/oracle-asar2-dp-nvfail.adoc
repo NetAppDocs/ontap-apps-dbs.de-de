@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-dp-nvfail.html 
+keywords: oracle, nvfail, ASA r2 
+summary: NVFAIL zum Schutz von Oracle-Datenbanken auf ASA r2 konfigurieren 
+searchtitle: Oracle-Datenbanken und NVFAIL auf ASA r2 
+---
+= NV-FEHLER
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NVFAIL ist eine ONTAP Funktion, die die Datenintegrität bei katastrophalen Ausfallszenarien gewährleistet.
+
+Diese Funktionalität ist auch auf ASA r2-Systemen anwendbar, obwohl ASA r2 eine vereinfachte SAN-Architektur verwendet (SAZs und Speichereinheiten anstelle von Volumes).
+
+Datenbanken sind bei Speicherausfallereignissen anfällig für Datenbeschädigung, da sie große interne Caches verwalten. Wenn ein katastrophales Ereignis ein erzwungenes ONTAP Failover erfordert, unabhängig vom Zustand der Gesamtkonfiguration, kann dies dazu führen, dass zuvor vorgenommene Änderungen effektiv verworfen werden. Der Inhalt des Speicherarrays springt zeitlich zurück, und der Zustand des Datenbankcaches spiegelt nicht mehr den Zustand der Daten auf der Festplatte wider. Diese Inkonsistenz führt zu Datenbeschädigung.
+
+Caching kann auf Anwendungs- oder Serverebene erfolgen. Beispielsweise speichert eine Oracle Real Application Cluster (RAC)-Konfiguration mit Servern, die sowohl an einem primären als auch an einem Remote-Standort aktiv sind, Daten im Oracle SGA zwischen. Ein erzwungener Failover-Vorgang, der zu Datenverlusten führen würde, würde die Datenbank der Gefahr einer Beschädigung aussetzen, da die im SGA gespeicherten Blöcke möglicherweise nicht mit den Blöcken auf der Festplatte übereinstimmen.
+
+Eine weniger offensichtliche Anwendung des Caching findet sich auf der Ebene des Betriebssystem-Dateisystems. Ein auf LUNs basierendes Cluster-Dateisystem, das sich am primären Standort befindet, könnte auf Servern am entfernten Standort eingebunden werden, und auch hier könnten Daten zwischengespeichert werden. Ein Ausfall des NVRAM oder eine erzwungene Übernahme in diesen Situationen könnten zu einer Beschädigung des Dateisystems führen.
+
+ONTAP schützt Datenbanken und Betriebssysteme vor diesem Szenario mithilfe von NVFAIL und den zugehörigen Einstellungen, die dem Host signalisieren, zwischengespeicherte Daten zu invalidieren und die betroffenen Dateisysteme nach einem Failover neu einzubinden. Dieser Mechanismus gilt für ASA r2 LUNs und Namespaces genauso wie für AFF/ FAS.
+
+[NOTE]
+====
+Wichtige Überlegungen gemäß ASA r2:
+
+* NVFAIL arbeitet auf LUN-Ebene (Speichereinheit), nicht auf SAZ-Ebene.
+* Bei Oracle-Datenbanken sollte NVFAIL auf allen LUNs aktiviert werden, die kritische Komponenten (Datendateien, Redo-Logs, Kontrolldateien) hosten.
+* MetroCluster wird auf ASA r2 nicht unterstützt, daher ist NVFAIL hauptsächlich für lokale HA-Failover-Szenarien relevant.
+* NFS wird auf ASA r2 nicht unterstützt, daher gelten die NVFAIL-Überlegungen nur für SAN-basierte Workloads (FC/iSCSI/NVMe).
+
+
+====

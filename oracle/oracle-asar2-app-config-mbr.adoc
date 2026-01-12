@@ -1,0 +1,29 @@
+---
+permalink: oracle/oracle-asar2-app-config-mbr.html 
+sidebar: sidebar 
+keywords: oracle, database, ASA r2, ontap, db_file_multiblock_read_count, multiblock 
+summary: Oracle-Datenbankparameter - db_file_multiblock_read_count mit ASA r2 
+searchtitle: Oracle-Datenbankparameter - db_file_multiblock_read_count mit ASA r2 
+---
+= db_File_Multiblock_read_count
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Der `db_file_multiblock_read_count` Der Parameter steuert die maximale Anzahl von Oracle-Datenbankblöcken, die Oracle während sequenzieller I/O-Vorgänge als Einzelvorgang liest
+
+Im Vergleich zu den AFF/ FAS -Systemen gibt es keine Änderungen bei den Empfehlungen. Das ONTAP Verhalten und die Best Practices von Oracle bleiben auf den Plattformen ASA r2, AFF und FAS identisch.
+
+Dieser Parameter wirkt sich jedoch weder auf die Anzahl der Blöcke aus, die Oracle während aller Lesevorgänge liest, noch auf zufälligen I/O. Nur die Blockgröße sequenzieller I/O ist betroffen.
+
+Oracle empfiehlt dem Benutzer, diesen Parameter nicht festzulegen. Dadurch kann die Datenbanksoftware automatisch den optimalen Wert einstellen. Das bedeutet im Allgemeinen, dass dieser Parameter auf einen Wert gesetzt wird, der eine I/O-Größe von 1 MB ergibt. Zum Beispiel würde ein Lesevorgang von 1 MB mit 8-KB-Blöcken 128 Blöcke erfordern, und der Standardwert für diesen Parameter wäre daher 128.
+
+Bei den meisten von NetApp an Kundenstandorten festgestellten Performance-Problemen bei Datenbanken handelt es sich um eine falsche Einstellung für diesen Parameter. Es gab triftige Gründe, diesen Wert mit den Oracle-Versionen 8 und 9 zu ändern. Daher kann der Parameter in vorhanden sein, ohne dass dies bekannt ist `init.ora` Dateien, da die Datenbank auf Oracle 10 und höher aktualisiert wurde. Eine ältere Einstellung von 8 oder 16 beeinträchtigt im Vergleich zu einem Standardwert von 128 erheblich die sequenzielle I/O-Performance.
+
+
+TIP: *NetApp empfiehlt* die Einstellung `db_file_multiblock_read_count` Der Parameter darf nicht im vorhanden sein `init.ora` Datei: NetApp hat noch nie eine Situation erlebt, in der sich durch die Änderung dieses Parameters die Performance verbesserte. In vielen Fällen wurde jedoch der sequenzielle I/O-Durchsatz deutlich beeinträchtigt.

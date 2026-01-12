@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-network-config-lifs.html 
+keywords: LIF, multipath, multipathing, ASA r2, oracle 
+summary: Logisches Schnittstellendesign für Oracle-Datenbanken mit ASA r2 
+searchtitle: Logisches Schnittstellendesign für Oracle-Datenbanken mit ASA r2 
+---
+= Logische Schnittstellen
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Oracle Datenbanken benötigen Zugriff auf den Storage. Logische Schnittstellen (LIFs) sind die Netzwerk-Rohrleitungen, die eine Storage Virtual Machine (SVM) mit dem Netzwerk und damit der Datenbank verbinden. Ein angemessenes LIF-Design ist erforderlich, um sicherzustellen, dass für jeden Datenbank-Workload ausreichend Bandbreite vorhanden ist. Das Failover führt nicht zu einem Verlust von Storage-Services.
+
+Dieser Abschnitt bietet einen Überblick über die wichtigsten LIF-Designprinzipien für ASA r2-Systeme, die für reine SAN-Umgebungen optimiert sind. Eine ausführlichere Dokumentation finden Sie unter link:https://docs.netapp.com/us-en/ontap/network-management/index.html["Dokumentation zum ONTAP-Netzwerkmanagement"]Die Wie bei anderen Aspekten der Datenbankarchitektur hängen die besten Optionen für die Gestaltung von Storage Virtual Machines (SVM, in der CLI als vserver bezeichnet) und Logical Interfaces (LIF) stark von den Skalierungsanforderungen und den Geschäftsbedürfnissen ab.
+
+Berücksichtigen Sie bei der Entwicklung einer LIF-Strategie die folgenden primären Themen:
+
+* *Leistung.* Ist die Netzwerkbandbreite für Oracle-Workloads ausreichend?
+* *Ausfallsicherheit.* gibt es Single Points of Failure im Design?
+* *Verwaltbarkeit.* kann das Netzwerk unterbrechungsfrei skaliert werden?
+
+
+Diese Themen beziehen sich auf die End-to-End-Lösung, vom Host über die Switches bis zum Speichersystem.
+
+
+
+== LIF-Typen
+
+Es gibt mehrere LIF-Typen. link:https://docs.netapp.com/us-en/ontap/networking/lif_compatibility_with_port_types.html["ONTAP-Dokumentation zu LIF-Typen"] Stellen Sie umfassendere Informationen zu diesem Thema bereit, LIFs können jedoch aus funktionaler Sicht in die folgenden Gruppen unterteilt werden:
+
+* *Cluster- und Node-Management-LIFs.* LIFs, die zum Verwalten des Storage-Clusters verwendet werden.
+* *SVM-Management-LIFs.* Schnittstellen, die den Zugriff auf eine SVM über die REST-API oder ONTAPI (auch bekannt als ZAPI) für Funktionen wie Snapshot-Erstellung oder Volume-Anpassung erlauben. Produkte wie SnapManager für Oracle (SMO) müssen Zugriff auf eine SVM-Management-LIF haben.
+* *Daten-LIFs.* Schnittstellen nur für SAN-Protokolle: FC, iSCSI, NVMe/FC, NVMe/TCP. NAS-Protokolle (NFS, SMB/CIFS) werden auf ASA r2-Systemen nicht unterstützt.
+
+
+
+NOTE: Es ist nicht möglich, eine Schnittstelle sowohl für iSCSI (oder NVMe/TCP) als auch für Management-Datenverkehr zu konfigurieren, obwohl beide ein IP-Protokoll verwenden. In iSCSI- oder NVMe/TCP-Umgebungen ist ein separates Management-LIF erforderlich. Zur Gewährleistung von Ausfallsicherheit und Leistung konfigurieren Sie mehrere SAN-Daten-LIFs pro Protokoll und Knoten und verteilen Sie diese auf verschiedene physische Ports und Fabrics. Im Gegensatz zu AFF/ FAS -Systemen erlaubt ASA r2 keinen NFS- oder SMB-Datenverkehr, daher gibt es keine Möglichkeit, eine NAS-Daten-LIF für die Verwaltung umzufunktionieren.
+
+
+
+== Design von SAN LIF
+
+Das LIF-Design in einer SAN-Umgebung ist aus einem Grund relativ einfach: Multipathing. Alle modernen SAN-Implementierungen ermöglichen es einem Client, über mehrere unabhängige Netzwerkpfade auf Daten zuzugreifen und den optimalen Pfad oder die besten Pfade für den Zugriff auszuwählen. So lässt sich die Performance in Bezug auf LIF-Design einfacher bewältigen, da SAN-Clients automatisch den I/O-Lastausgleich über die besten verfügbaren Pfade durchführen.
+
+Wenn ein Pfad nicht mehr verfügbar ist, wählt der Client automatisch einen anderen Pfad aus. Das daraus resultierende einfache Design macht SAN LIFs im Allgemeinen einfacher zu managen. Das bedeutet nicht, dass eine SAN-Umgebung immer einfacher zu managen ist, da viele andere Aspekte des SAN-Storage viel komplizierter sind als NFS. Es bedeutet schlichtweg, dass das LIF-Design von SAN einfacher ist.
+
+
+
+=== Leistung
+
+Der wichtigste Faktor für die Leistungsfähigkeit von LIF in einer SAN-Umgebung ist die Bandbreite. Beispielsweise ermöglicht ein ASA r2-Cluster mit zwei Knoten und zwei 32-Gb-FC-Ports pro Knoten eine Bandbreite von bis zu 64 Gb zu/von jedem Knoten. Stellen Sie für NVMe/TCP oder iSCSI ebenfalls sicher, dass für Oracle-Workloads ausreichend 25GbE- oder 100GbE-Konnektivität vorhanden ist.
+
+
+
+=== Ausfallsicherheit
+
+SAN-LIFs funktionieren nicht auf die gleiche Weise wie NAS-LIFs. ASA r2-Systeme nutzen Host-Multipathing (MPIO/ALUA) für Ausfallsicherheit. Wenn ein SAN LIF aufgrund eines Controller-Failovers nicht verfügbar ist, erkennt die Multipathing-Software des Clients den Verlust eines Pfades und leitet die E/A auf einen alternativen Pfad um. ASA r2 kann nach einer kurzen Verzögerung eine LIF-Verschiebung durchführen, um die volle Pfadverfügbarkeit wiederherzustellen. Dies unterbricht jedoch nicht die E/A, da auf dem Partnerknoten bereits aktive Pfade vorhanden sind. Der Failover-Prozess dient dazu, den Hostzugriff auf alle definierten Ports wiederherzustellen.
+
+
+
+=== Managebarkeit
+
+Eine Migration einer LIF in einer SAN-Umgebung ist nicht erforderlich, wenn Volumes innerhalb des HA-Paares verschoben werden. Das liegt daran, dass ONTAP nach Abschluss der Volume-Verschiebung eine Benachrichtigung an das SAN über eine Pfadänderung sendet und die SAN-Clients diese automatisch neu optimieren. Die Migration von LIF zu SAN ist in erster Linie mit größeren physischen Hardwareänderungen verbunden. Wenn beispielsweise ein Upgrade der Controller ohne Betriebsunterbrechung erforderlich ist, wird ein SAN LIF auf die neue Hardware migriert. Falls sich ein FC-Port als fehlerhaft erweist, kann ein LIF auf einen ungenutzten Port migriert werden.
+
+
+
+=== Designempfehlungen
+
+NetApp gibt für ASA r2 SAN-Umgebungen folgende Empfehlungen:
+
+* Erstellen Sie nicht mehr Pfade, als erforderlich sind. Eine übermäßige Anzahl von Pfaden erschwert das gesamte Management und kann zu Problemen mit dem Pfad-Failover auf einigen Hosts führen. Darüber hinaus weisen einige Hosts unerwartete Pfadeinschränkungen für Konfigurationen wie das Booten von SAN auf.
+* Nur sehr wenige Konfigurationen sollten mehr als vier Pfade zu einem LUN erfordern. Der Wert von mehr als zwei Nodes, um LUNs bekannt zu machen, ist beschränkt, da das Aggregat, das eine LUN hostet, nicht zugänglich ist, wenn der Node, der Eigentümer der LUN und dessen HA-Partner ausfällt. In solch einem Szenario ist es nicht hilfreich, Pfade auf anderen Nodes als dem primären HA-Paar zu erstellen.
+* Obwohl die Anzahl der sichtbaren LUN-Pfade durch Auswählen der in FC-Zonen enthaltenen Ports gemanagt werden kann, ist es im Allgemeinen einfacher, alle potenziellen Zielpunkte in die FC-Zone aufzunehmen und die LUN-Sichtbarkeit auf ONTAP-Ebene zu kontrollieren.
+* Nutzen Sie die Funktion „Selective LUN Mapping“ (SLM), die standardmäßig aktiviert ist. Mit SLM wird jede neue LUN automatisch von dem Knoten, dem das zugrunde liegende Aggregat gehört, und dem HA-Partner des Knotens angekündigt. Durch diese Anordnung entfällt die Notwendigkeit, Portgruppen zu erstellen oder Zonen zu konfigurieren, um die Portzugänglichkeit einzuschränken. Jede LUN ist auf der minimalen Anzahl von Knoten verfügbar, die für optimale Leistung und Ausfallsicherheit erforderlich sind.
+* Falls eine LUN außerhalb der beiden Controller migriert werden muss, können die zusätzlichen Knoten mit der `lun mapping add-reporting-nodes` Befehl, damit die LUNs auf den neuen Knoten bekanntgegeben werden. Dadurch werden zusätzliche SAN-Pfade zu den LUNs für die LUN-Migration erstellt. Allerdings muss der Host eine Erkennungsoperation durchführen, um die neuen Pfade nutzen zu können.
+* Seien Sie nicht übermäßig besorgt über indirekten Verkehr. Es empfiehlt sich, in einer sehr I/O-intensiven Umgebung, in der jede Mikrosekunde von großer Latenz ist, indirekten Verkehr zu vermeiden, aber der sichtbare Performance-Effekt ist bei typischen Workloads zu vernachlässigen.
+

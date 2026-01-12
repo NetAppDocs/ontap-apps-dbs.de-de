@@ -1,0 +1,24 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-host-config-windows.html 
+keywords: oracle, database, ASA r2, ontap, windows 
+summary: Oracle-Datenbanken mit Microsoft Windows auf ASA r2 
+searchtitle: Oracle-Datenbanken mit Microsoft Windows auf ASA r2 
+---
+= Microsoft Windows
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Konfigurationsthemen für Oracle-Datenbanken unter Microsoft Windows mit ASA r2 ONTAP.
+
+
+
+== San
+
+Stellen Sie für eine optimale Komprimierungseffizienz sicher, dass das NTFS-Dateisystem eine Zuweisungseinheit mit 8 KB oder mehr verwendet. Die Verwendung einer 4-KB-Zuweisungseinheit, die im Allgemeinen die Standardeinstellung ist, wirkt sich negativ auf die Komprimierungseffizienz aus.

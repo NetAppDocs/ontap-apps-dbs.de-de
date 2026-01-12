@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-storage-san-config-lun-resizing.html 
+keywords: SAN, ASM, LVM, oracle, LUN, ASA r2 
+summary: Größenänderung von LUNs und LVMs mit Oracle-Datenbanken auf ASA r2 
+searchtitle: Größenänderung von Oracle-Datenbank-LUNs und LVMs mit ASA r2 
+---
+= LUN-Größe und LVM-Größe
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Wenn ein SAN-basiertes Dateisystem oder eine Oracle ASM-Disk-Gruppe auf ASA r2 ihre Kapazitätsgrenze erreicht, gibt es zwei Möglichkeiten, den verfügbaren Speicherplatz zu erhöhen:
+
+* Vergrößern Sie die Größe der vorhandenen LUNs (Speichereinheiten).
+* Fügen Sie einer vorhandenen ASM-Datenträgergruppe oder LVM-Volumegruppe eine neue LUN hinzu und vergrößern Sie das enthaltene logische Volume.
+
+
+Obwohl die Größenänderung von LUNs auf ASA r2 unterstützt wird, ist es im Allgemeinen besser, einen Logical Volume Manager (LVM) wie Oracle ASM zu verwenden. Einer der Hauptgründe für die Existenz von LVMs ist die Vermeidung der Notwendigkeit häufiger LUN-Größenänderungen. Bei einem LVM werden mehrere LUNs zu einem virtuellen Speicherpool zusammengefasst. Aus diesem Pool erstellte logische Volumes können problemlos in ihrer Größe angepasst werden, ohne die zugrunde liegende Speicherkonfiguration zu beeinträchtigen.
+
+Weitere Vorteile der Verwendung von LVM oder ASM sind:
+
+* Leistungsoptimierung: Verteilt die E/A auf mehrere LUNs und reduziert so Hotspots.
+* Flexibilität: Neue LUNs hinzufügen, ohne bestehende Workloads zu unterbrechen.
+* Transparente Migration: ASM oder LVM können Extents ohne Host-Ausfallzeit auf neue LUNs verschieben, um Lastausgleich oder Tiering zu ermöglichen.
+
+
+[NOTE]
+====
+Wichtige Überlegungen gemäß ASA r2:
+
+* Die Größenänderung der LUNs erfolgt auf Ebene der Speichereinheit innerhalb einer Storage VM (SVM) unter Verwendung der Kapazität der Storage Availability Zone (SAZ).
+* Für Oracle ist es Best Practice, LUNs zu ASM-Disk-Gruppen hinzuzufügen, anstatt bestehende LUNs zu vergrößern oder zu verkleinern, um Striping und Parallelität zu erhalten.
+
+
+====

@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: /oracle/oracle-asar2-config-raid.html 
+keywords: oracle, ASA r2, raid, mirroring 
+summary: RAID und Oracle-Datenbanken mit ASA r2 
+searchtitle: RAID- und Oracle-Datenbanken mit ASA r2 
+---
+= RAID
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+RAID bezeichnet die Verwendung von Paritäts-basierter Redundanz zum Schutz von Daten vor Festplattenausfällen. ASA r2 nutzt die gleichen ONTAP RAID-Technologien wie AFF und FAS -Systeme und gewährleistet so einen robusten Schutz vor dem Ausfall mehrerer Festplatten.
+
+ONTAP führt die RAID-Konfiguration für ASA r2-Systeme automatisch durch. Dies ist ein Kernbestandteil der vereinfachten Speicherverwaltung, die mit der ASA r2-Persönlichkeit eingeführt wurde.
+
+Wichtige Details zur automatischen RAID-Konfiguration auf ASA r2 sind:
+
+* Storage Availability Zones (SAZ): Anstatt herkömmliche Aggregate und RAID-Gruppen manuell zu verwalten, verwendet ASA r2 Storage Availability Zones (SAZs). Hierbei handelt es sich um gemeinsam genutzte, RAID-geschützte Festplattenpools für ein HA-Paar, bei dem beide Knoten vollen Zugriff auf denselben Speicher haben.
+* Automatische Platzierung: Wenn eine Speichereinheit (LUN oder NVMe-Namespace) erstellt wird, erstellt ONTAP automatisch ein Volume innerhalb der SAZ und platziert es für eine optimale Leistungs- und Kapazitätsbalance.
+* Keine manuelle Aggregatverwaltung: Herkömmliche Aggregat- und RAID-Gruppenverwaltungsbefehle werden auf ASA r2 nicht unterstützt. Dadurch entfällt für Administratoren die Notwendigkeit, RAID-Gruppengrößen, Paritätsplatten oder Knotenzuweisungen manuell zu planen.
+* Vereinfachte Bereitstellung: Die Bereitstellung erfolgt über den System Manager oder vereinfachte CLI-Befehle, die sich auf die Speichereinheiten und nicht auf das zugrunde liegende physische RAID-Layout konzentrieren.
+* Workload-Neuverteilung: Ab der Version 2025 (ONTAP 9.17.1) gleicht ONTAP die Workloads zwischen den Knoten im HA-Paar automatisch neu aus, um sicherzustellen, dass Leistung und Speicherplatznutzung ohne manuelles Eingreifen im Gleichgewicht bleiben.
+
+
+ASA r2 verwendet automatisch die Standard-RAID-Technologien von ONTAP: RAID DP für die meisten Konfigurationen und RAID-TEC für sehr große SSD-Pools. Dadurch entfällt die Notwendigkeit einer manuellen RAID-Auswahl. Diese auf Parität basierenden RAID-Level bieten eine bessere Speichereffizienz und Zuverlässigkeit als die Spiegelung, die in älteren Oracle-Best Practices oft empfohlen wird, aber für ASA r2 nicht relevant ist. ONTAP umgeht den bei RAID üblichen Schreibverlust durch die WAFL Integration und gewährleistet so eine optimale Leistung für Oracle-Workloads wie Redo-Logging und zufällige Datendateischreibvorgänge. In Kombination mit automatisiertem RAID-Management und Storage Availability Zones bietet ASA r2 hohe Verfügbarkeit und Schutz auf Enterprise-Niveau für Oracle-Datenbanken.

@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-config-qos.html 
+keywords: qos, bandwidth, minimum, guaranteed, adaptive, ASA r2, oracle 
+summary: Oracle-Datenbank-Performancemanagement mit ONTAP QoS auf ASA r2 
+searchtitle: Oracle-Datenbank-Performancemanagement mit ONTAP QoS auf ASA r2 
+---
+= Leistungsmanagement mit ONTAP QoS auf ASA r2-Systemen
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Für die sichere und effiziente Verwaltung mehrerer Oracle-Datenbanken auf ASA r2 ist eine effektive QoS-Strategie erforderlich. Dies ist besonders wichtig, da ASA r2-Systeme All-Flash-SAN-Plattformen sind, die für extrem hohe Leistung und Workload-Konsolidierung entwickelt wurden.
+
+Bereits eine relativ geringe Anzahl von SSDs kann selbst die leistungsstärksten Controller auslasten, daher sind QoS-Steuerungen unerlässlich, um eine vorhersehbare Leistung über verschiedene Arbeitslasten hinweg zu gewährleisten. Zum Vergleich: ASA r2-Systeme wie die ASA A1K oder A90 erreichen Hunderttausende bis über eine Million IOPS bei Latenzzeiten im Submillisekundenbereich. Nur sehr wenige einzelne Arbeitslasten würden dieses Leistungsniveau ausschöpfen, daher erfordert die volle Auslastung typischerweise das Hosting mehrerer Datenbanken oder Anwendungen. Um dies sicher zu gewährleisten, sind QoS-Richtlinien erforderlich, um Ressourcenkonflikte zu vermeiden.
+
+ONTAP QoS auf ASA r2 funktioniert genauso wie auf AFF/ FAS -Systemen, mit zwei primären Steuerungsarten: IOPS und Bandbreite. QoS-Steuerungen können auf SVMs und LUNs angewendet werden.
+
+
+
+== IOPS QoS
+
+IOPS-basierte QoS begrenzt die Gesamt-IOPS für eine gegebene Ressource. In ASA r2 können QoS-Richtlinien auf SVM-Ebene und auf einzelne Speicherobjekte wie LUNs angewendet werden. Wenn eine Arbeitslast ihr IOPS-Limit erreicht, werden zusätzliche E/A-Anforderungen in eine Warteschlange für Tokens gestellt, was zu Latenz führt. Dies ist ein erwartbares Verhalten und verhindert, dass eine einzelne Arbeitslast die Systemressourcen monopolisiert.
+
+
+NOTE: Bei der Anwendung von QoS-Kontrollen auf Datenbank-Transaktions-/Redo-Log-Daten ist Vorsicht geboten. Diese Arbeitslasten treten stoßweise auf, und ein QoS-Limit, das für die durchschnittliche Aktivität angemessen erscheint, kann für Spitzenlasten zu niedrig sein und zu erheblichen Leistungsproblemen führen. Im Allgemeinen sollten Redo- und Archivierungsprotokollierung nicht durch QoS eingeschränkt werden.
+
+
+
+== Bandbreiten QoS
+
+Bandbreitenbasierte QoS begrenzt den Durchsatz in Mbit/s. Dies ist nützlich, wenn Arbeitslasten große Blocklese- oder Schreibvorgänge durchführen, wie z. B. vollständige Tabellenscans oder Sicherungsvorgänge, die eine erhebliche Bandbreite, aber relativ wenige IOPS verbrauchen. Durch die Kombination von IOPS- und Bandbreitenbegrenzungen lässt sich eine feinere Steuerung erreichen.
+
+
+
+== Minimum/garantierte QoS
+
+Mindest-QoS-Richtlinien reservieren Leistung für kritische Arbeitslasten. In einer gemischten Umgebung mit Produktions- und Entwicklungsdatenbanken sollte beispielsweise für Entwicklungs-Workloads die maximale QoS und für Produktions-Workloads die minimale QoS angewendet werden, um eine vorhersehbare Leistung zu gewährleisten.
+
+
+
+== Anpassungsfähige QoS
+
+Adaptive QoS passt die Grenzwerte basierend auf der Größe des Speicherobjekts an. Obwohl es selten für Datenbanken verwendet wird (da die Größe nicht mit den Leistungsanforderungen korreliert), kann es für Virtualisierungs-Workloads nützlich sein, bei denen die Leistungsanforderungen mit der Kapazität skalieren.

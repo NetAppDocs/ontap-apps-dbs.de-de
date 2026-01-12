@@ -1,0 +1,114 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-asar2-config-efficiency.html 
+keywords: oracle, efficiency, compression, compaction, deduplication, ASA r2 
+summary: Oracle-Datenbanken und Speichereffizienz mit ASA r2 
+searchtitle: Oracle-Datenbanken und ONTAP Effizienzfunktionen mit ASA r2 
+---
+= Effizienz
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Die Funktionen zur Speicherplatzoptimierung von ONTAP werden vollständig unterstützt und für ASA r2-Systeme optimiert. In fast allen Fällen ist es am besten, die Standardeinstellungen beizubehalten und alle Effizienzfunktionen zu aktivieren.
+
+Bei ASA r2-Systemen handelt es sich um All-Flash-SAN-Plattformen, daher sind Effizienztechnologien wie Komprimierung, Verdichtung und Deduplizierung entscheidend für die Maximierung der nutzbaren Kapazität und die Senkung der Kosten.
+
+
+
+== Komprimierung
+
+Die Komprimierung reduziert den Speicherplatzbedarf durch die Kodierung von Mustern in den Daten. Bei SSD-basierten ASA r2-Systemen führt die Komprimierung zu erheblichen Einsparungen, da Flash-Speicher die Notwendigkeit einer Überdimensionierung für die Leistung überflüssig macht. Die adaptive Komprimierung von ONTAP ist standardmäßig aktiviert und wurde gründlich mit Unternehmens-Workloads, einschließlich Oracle-Datenbanken, getestet, ohne dass messbare Auswirkungen auf die Leistung festgestellt wurden – selbst in Umgebungen, in denen die Latenz im Mikrosekundenbereich gemessen wird. In einigen Fällen verbessert sich die Leistung, weil komprimierte Daten weniger Cache-Speicherplatz belegen.
+
+
+NOTE: Bei ASA r2-Systemen wird keine temperaturabhängige Speichereffizienz (TSSE) angewendet. Bei ASA r2-Systemen basiert die Komprimierung nicht auf der Unterscheidung zwischen häufig abgerufenen (Hot Data) und selten abgerufenen (Cold Data). Die Komprimierung beginnt, ohne darauf zu warten, dass die Daten kalt werden.
+
+
+
+== Anpassungsfähige Komprimierung
+
+Die adaptive Komprimierung verwendet standardmäßig eine Blockgröße von 8 KB, was der Blockgröße entspricht, die üblicherweise von relationalen Datenbanken verwendet wird. Größere Blockgrößen (16 KB oder 32 KB) können die Effizienz für sequentielle Daten wie Transaktionsprotokolle oder Backups verbessern, sollten aber bei aktiven Datenbanken mit Vorsicht eingesetzt werden, um den Overhead beim Überschreiben zu vermeiden.
+
+
+NOTE: Die Blockgröße kann für ruhende Dateien wie Protokolle oder Sicherungskopien auf bis zu 32 KB erhöht werden. Bevor Sie die Standardeinstellungen ändern, konsultieren Sie die NetApp Anleitung.
+
+
+CAUTION: Verwenden Sie für Streaming-Backups keine 32-KB-Komprimierung mit Deduplizierung. Verwenden Sie eine 8-KB-Komprimierung, um die Effizienz der Deduplizierung aufrechtzuerhalten.
+
+
+
+== Kompressionsausrichtung
+
+Die Ausrichtung der Komprimierung ist bei zufälligen Überschreibungen wichtig. Stellen Sie sicher, dass der LUN-Typ, der Partitionsoffset (Vielfaches von 8 KB) und die Dateisystemblockgröße an die Datenbankblockgröße angepasst sind. Sequenzielle Daten wie Backups oder Protokolle erfordern keine Ausrichtungsüberlegungen.
+
+
+
+== Data-Compaction
+
+Die Kompaktierung ergänzt die Komprimierung, indem sie es ermöglicht, dass mehrere komprimierte Blöcke denselben physischen Block teilen. Wenn beispielsweise ein 8-KB-Block auf 1 KB komprimiert wird, stellt die Komprimierung sicher, dass der verbleibende Speicherplatz nicht verschwendet wird. Diese Funktion ist integriert und führt nicht zu Leistungseinbußen.
+
+
+
+== Deduplizierung
+
+Durch die Deduplizierung werden doppelte Datenblöcke aus verschiedenen Datensätzen entfernt. Während Oracle-Datenbanken aufgrund eindeutiger Blockheader und -trailer typischerweise nur minimale Einsparungen bei der Deduplizierung erzielen, kann die ONTAP Deduplizierung dennoch Speicherplatz aus Nullblöcken und sich wiederholenden Mustern zurückgewinnen.
+
+
+
+== Effizienz und Thin Provisioning
+
+ASA r2-Systeme verwenden standardmäßig Thin Provisioning. Effizienzfunktionen ergänzen Thin Provisioning, um die nutzbare Kapazität zu maximieren.
+
+
+NOTE: Speichereinheiten werden auf ASA r2-Speichersystemen immer dünn bereitgestellt. Thick Provisioning wird nicht unterstützt.
+
+
+
+== QuickAssist-Technologie (QAT)
+
+Auf NetApp ASA r2-Plattformen sorgt die Intel QuickAssist Technology (QAT) für eine hardwarebeschleunigte Effizienzsteigerung, die sich deutlich von der softwarebasierten Temperature-Sensitive Storage Efficiency (TSSE) ohne QAT unterscheidet.
+
+*QAT mit Hardwarebeschleunigung:*
+
+* Entlastet die CPU-Kerne von Komprimierungs- und Verschlüsselungsaufgaben.
+* Ermöglicht die sofortige, effiziente Verarbeitung sowohl von häufig abgerufenen als auch von selten abgerufenen Daten.
+* Reduziert die CPU-Auslastung erheblich.
+* Bietet höheren Durchsatz und geringere Latenz.
+* Verbessert die Skalierbarkeit für leistungssensible Vorgänge wie TLS- und VPN-Verschlüsselung.
+
+
+*TSSE ohne QAT:*
+
+* Setzt für einen effizienten Betrieb auf CPU-gesteuerte Prozesse.
+* Die Effizienz wird erst nach einer Verzögerung auf kalte Daten angewendet.
+* Verbraucht mehr CPU-Ressourcen.
+* Schränkt die Gesamtleistung im Vergleich zu QAT-beschleunigten Systemen ein.
+
+
+Moderne ASA r2-Systeme bieten daher eine schnellere, hardwarebeschleunigte Effizienz und eine bessere Systemauslastung als ältere TSSE-Plattformen.
+
+
+
+== Bewährte Verfahren zur Effizienzsteigerung für ASA r2
+
+*NetApp empfiehlt* Folgendes:
+
+
+
+=== ASA r2 Standardeinstellungen
+
+Auf ONTAP Systemen, die auf ASA r2-Systemen laufen, erstellte Speichereinheiten werden Thin Provisioning mit allen standardmäßig aktivierten Inline-Effizienzfunktionen, einschließlich Komprimierung, Kompaktierung und Deduplizierung, durchgeführt. Obwohl Oracle-Datenbanken im Allgemeinen nicht wesentlich von der Deduplizierung profitieren und nicht komprimierbare Daten enthalten können, sind diese Standardeinstellungen für fast alle Arbeitslasten angemessen. ONTAP ist so konzipiert, dass es alle Arten von Daten und E/A-Mustern effizient verarbeitet, unabhängig davon, ob dadurch Kosteneinsparungen erzielt werden. Standardeinstellungen sollten nur dann geändert werden, wenn die Gründe dafür vollständig verstanden werden und ein klarer Vorteil durch die Abweichung besteht.
+
+
+
+=== Allgemeine Empfehlungen
+
+* Komprimierung für verschlüsselte oder anwendungskomprimierte Daten deaktivieren: Wenn Dateien bereits auf Anwendungsebene komprimiert oder verschlüsselt sind, deaktivieren Sie die Komprimierung, um die Leistung zu optimieren und einen effizienteren Betrieb auf anderen Speichereinheiten zu ermöglichen.
+* Vermeiden Sie die Kombination von großen Komprimierungsblöcken mit Deduplizierung: Verwenden Sie für Datenbanksicherungen nicht sowohl 32-KB-Komprimierung als auch Deduplizierung. Für Streaming-Backups sollte eine 8-KB-Komprimierung verwendet werden, um die Effizienz der Deduplizierung aufrechtzuerhalten.
+* Effizienzsteigerungen überwachen: Nutzen Sie die ONTAP Tools (System Manager, Active IQ), um die tatsächlichen Platzeinsparungen zu verfolgen und die Richtlinien gegebenenfalls anzupassen.
+
