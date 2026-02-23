@@ -5,7 +5,7 @@ keywords: PostgreSQL,database,postgres
 summary: PostgreSQL Datensicherung 
 searchtitle: Native PostgreSQL Datensicherung 
 ---
-= Nativer Ddta-Schutz
+= Native Datensicherung
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
