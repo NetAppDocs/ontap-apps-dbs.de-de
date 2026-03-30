@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-vsphere-datastores-fp.html 
+keywords: vSphere, datastore, FabricPool 
+summary: Diese Seite beschreibt die Best Practices für die Implementierung von FabricPool für VMware-Datenspeicher. 
+---
+= FabricPool for VMware-Datenspeicher
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Die Speicherung virtueller Maschinen erfolgt von den Gastbetriebssystem- und Hypervisor-Ebenen bis hinunter zu ONTAP, wo FabricPool Tiering und WAFL für Leistungs-, Effizienz- und Kostenoptimierung sorgen.
+
+Ab der ONTAP 9.6-Version unterstützt FabricPool virtualisierte Workloads, einschließlich VMware-Datenspeichern. Sie können nun kalte Blöcke von FlexVol-Volumes, die VMware-Datenspeichern zugrunde liegen (VM-Vorlagen, ausgeschaltete VMs, Snapshots, Backups usw.), in den Objektspeicher auslagern, während heiße Daten lokal verbleiben.
+
+Allerdings gibt es einige Nuancen, derer Sie sich bewusst sein müssen.
+
+image:vmware-vsphere-datastores-fp-1.png["alt=Hypervisor-Speicher-Stack mit FabricPool,width=525,height=500"]
+
+
+
+== Rechen- und virtuelle Festplattenschichten
+
+Das Gastbetriebssystem läuft auf virtuellen Festplattenformaten wie VMDK, QCOW2 oder VHDX, die die Rechen- und Blockgeräteschichten erzeugen, die für Anwendungen und Benutzer zugänglich sind.
+
+Es ist wichtig zu beachten, dass das Gastbetriebssystem virtuelle Festplatten als Blockgeräte betrachtet; daher müssen Timeouts für Blockgeräte im Gastsystem bei der Planung der Fehlertoleranz während unterbrechungsfreier Upgrades, Hardwareausfälle oder anderer ungeplanter Ereignisse berücksichtigt werden.
+
+
+TIP: Nach dem link:https://www.netapp.com/pdf.html?item=/media/17239-tr-4598.pdf["FabricPool Best Practices"]sollten Sie FlexVol-Volumes, die Datenspeicher virtueller Maschinen hosten, als SAN-Speicher behandeln, selbst wenn NAS-Protokolle verwendet werden, da die virtuellen Festplattendateien in Bezug auf die Gastbetriebssysteme blockbasiert sind. Daher empfiehlt NetApp die Verwendung der Snapshot-only-Tiering-Richtlinie. Die Auto-Richtlinie kann für nicht kritische Daten verwendet werden, aber beachten Sie, dass eine Trennung von der Cloud-Tier dazu führen kann, dass Maschinen abstürzen oder in einen schreibgeschützten Zustand wechseln.
+
+
+
+== Hypervisor-Rolle
+
+Der Hypervisor vermittelt zwischen den laufenden virtuellen Maschinen und physischen Ressourcen wie CPU, Arbeitsspeicher und Speicher. Im NAS-Anwendungsfall bindet der Hypervisor die NAS-Freigabe ein und stellt die virtuellen Festplattendateien den virtuellen Maschinen als Blockgeräte zur Verfügung.
+
+Der Hypervisor-Dateisystempfad beinhaltet VM-Speicher über iSCSI/FCP-verbundene LUNs oder NVMe-Namespaces, die mit hypervisorspezifischen Dateisystemen wie VMFS, NTFS, EXT4 etc. formatiert sind.
+
+Der NAS-Dateisystempfad ermöglicht direkten Zugriff auf Dateiebene über NFS- oder SMB-Protokolle auf ONTAP Volumes für virtuellen Maschinenspeicher.
+
+Beide Pfade laufen auf der WAFL-Schicht von ONTAP zusammen und ermöglichen konsistente Datendienste wie Snapshots und Metadatenmanagement.
+
+
+
+== FabricPool Tiering-Integration
+
+FabricPool verwaltet intelligent die Datenplatzierung zwischen leistungsstarkem lokalem Speicher und kostengünstigeren Cloud-Objekt-Tiers.
+
+FabricPool verschiebt Daten automatisch zwischen lokalem Hochleistungsspeicher und skalierbarem Cloud-Objektspeicher, basierend auf der FabricPool-Tiering-Richtlinie, die auf den Datensatz angewendet wird.
+
+Die FabricPool-Integration von ONTAP ermöglicht eine effiziente Datenplatzierung in hybriden Cloud-Umgebungen, ohne die Leistung bei lokalen Lesezugriffen zu beeinträchtigen.
+
+
+
+== Speichereffizienz und Management
+
+Es ist wichtig, die Funktionsweise von FabricPool zu verstehen, bevor Sie sie aktivieren. Eine korrekte Konfiguration hilft Ihnen, die Leistung zu verbessern, das Risiko zu reduzieren und den TCO zu optimieren, indem Sie die richtigen Daten in der richtigen Ebene speichern.
+
+Die SAN/NVMe- und NAS-Dateiprotokollpfade laufen auf der WAFL-Schicht zusammen. Das WAFL-Dateisystem gewährleistet Metadatenkonsistenz, unterstützt Snapshots, Klonen und optimiert Schreibvorgänge für SSD, HDD und Objektspeichermedien.

@@ -2,7 +2,7 @@
 section: vmware
 title: VMware
 entries:
-- title: VMware vSphere mit ONTAP –
+- title: VMware vSphere mit ONTAP Best Practices Guide
   entries:
   - title: Überblick
     url: "/vmware/vmware-vsphere-overview.html"
@@ -24,6 +24,8 @@ entries:
       url: "/vmware/vmware-vsphere-datastores-nfs.html"
     - title: FlexGroup Volumes
       url: "/vmware/vmware-vsphere-datastores-fg.html"
+    - title: FabricPool for VMware-Datenspeicher
+      url: "/vmware/vmware-vsphere-datastores-fp.html"
   - title: Netzwerkkonfiguration
     url: "/vmware/vmware-vsphere-network.html"
   - title: Klonen
