@@ -2,8 +2,8 @@
 sidebar: sidebar 
 permalink: oracle/oracle-dp-snaprestore.html 
 keywords: ontap, snaprestore 
-summary: Schnelles Recovery von Oracle Database mit SnapRestore 
-searchtitle: Schnelles Recovery von Oracle Database mit SnapRestore 
+summary: Schnelle Oracle Datenbank-Recovery mit Snapshots 
+searchtitle: Schnelle Oracle Datenbank-Recovery mit Snapshots 
 ---
 = SnapRestore
 :hardbreaks:
@@ -15,27 +15,31 @@ searchtitle: Schnelles Recovery von Oracle Database mit SnapRestore
 
 
 [role="lead"]
-Die schnelle Datenwiederherstellung in ONTAP anhand eines Snapshots wird durch die NetApp SnapRestore Technologie ermöglicht.
+Die schnelle Datenwiederherstellung in ONTAP aus einem Snapshot wird durch die NetApp SnapRestore Technologie ermöglicht, die es erlaubt, den Zustand eines AFF-Volumes oder einer ASA LUN sofort wiederherzustellen.
 
 Wenn ein kritischer Datensatz nicht verfügbar ist, laufen die geschäftskritischen Prozesse ab. Tapes können beschädigt werden und selbst Restores aus festplattenbasierten Backups können die Übertragung über das Netzwerk verlangsamen. SnapRestore vermeidet diese Probleme durch eine nahezu sofortige Wiederherstellung der Datensätze. Selbst Datenbanken im Petabyte-Bereich lassen sich in wenigen Minuten vollständig wiederherstellen.
 
-Es gibt zwei Arten von SnapRestore: Datei-/LUN-basiert und Volume-basiert.
-
-* Einzelne Dateien oder LUNs lassen sich innerhalb von Sekunden wiederherstellen, egal ob es sich um eine 2-TB-LUN oder eine 4-KB-Datei handelt.
-* Der Container von Dateien oder LUNs kann innerhalb von Sekunden wiederhergestellt werden, egal ob es sich um 10 GB oder 100 TB an Daten handelt.
-
-
-Ein „Container mit Dateien oder LUNs“ würde sich normalerweise auf ein FlexVol Volume beziehen. Beispielsweise können Sie 10 LUNs aufweisen, aus denen sich eine LVM-Festplattengruppe in einem einzelnen Volume befindet. Alternativ kann ein Volume die NFS-Home-Verzeichnisse von 1000 Benutzern speichern. Anstatt für jede einzelne Datei oder jedes LUN einen Wiederherstellungsvorgang auszuführen, können Sie das gesamte Volume als einzelnen Vorgang wiederherstellen. Der Prozess funktioniert auch mit horizontal skalierbaren Containern, die mehrere Volumes enthalten, wie z. B. eine FlexGroup oder eine ONTAP-Konsistenzgruppe.
-
-Der Grund, warum SnapRestore so schnell und effizient arbeitet, liegt in der Natur eines Snapshots, der im Wesentlichen eine parallele schreibgeschützte Ansicht der Inhalte eines Volumes zu einem bestimmten Zeitpunkt ist. Aktive Blöcke sind die realen Blöcke, die geändert werden können, während der Snapshot eine schreibgeschützte Ansicht des Status der Blöcke ist, die die Dateien und LUNs zum Zeitpunkt der Snapshot-Erstellung ausmachen.
-
-ONTAP erlaubt nur schreibgeschützten Zugriff auf Snapshot-Daten, die Daten können jedoch mit SnapRestore reaktiviert werden. Der Snapshot wird als Lese-/Schreibansicht der Daten wieder aktiviert und gibt die Daten in ihren vorherigen Zustand zurück. SnapRestore kann auf Volume- oder Dateiebene betrieben werden. Die Technologie ist im Wesentlichen die gleiche mit ein paar geringfügigen Unterschiede im Verhalten.
+Obwohl die Basistechnologie auf AFF und ASA Plattformen dieselbe ist, werden sie etwas unterschiedlich eingesetzt.
 
 
 
-== Volume SnapRestore
+== AFF-Übersicht
 
-Volume-basierte SnapRestore stellt das gesamte Datenvolumen in einen früheren Zustand zurück. Dieser Vorgang erfordert keine Datenverschiebung, d. h., der Wiederherstellungsprozess erfolgt im Wesentlichen unmittelbar, obwohl die Verarbeitung der API- oder CLI-Vorgänge einige Sekunden dauern kann. Die Wiederherstellung von 1 GB Daten ist nicht komplizierter und zeitaufwändiger als die Wiederherstellung von 1 PB Daten. Diese Funktion ist der Hauptgrund dafür, dass viele Enterprise-Kunden zu ONTAP Storage-Systemen migrieren. Die RTO wird in Sekunden für selbst größte Datensätze gemessen.
+Es gibt zwei Formen von SnapRestore auf einem AFF System – dateibasiert und volumenbasiert:
+
+* Einzelne AFF Dateien, LUNs und Namensräume sowie einzelne ASA LUNs und Namensräume können in Sekunden wiederhergestellt werden, egal ob es sich um eine 2TB LUN oder eine 4KB Datei handelt.
+* Der gesamte Inhalt eines AFF-Volumes kann in Sekundenschnelle wiederhergestellt werden, egal ob es sich um 10GB oder 100TB Daten handelt.
+
+
+Der Grund, warum SnapRestore so schnell und effizient funktioniert, liegt in der Natur eines Snapshots, der im Wesentlichen eine parallele, schreibgeschützte Ansicht des Inhalts eines Volumes, einer LUN oder eines Namespace zu einem bestimmten Zeitpunkt darstellt. Die aktiven Blöcke sind die realen Blöcke, die geändert werden können, während der Snapshot eine schreibgeschützte Ansicht des Zustands der Blöcke ist, aus denen die Dateien und LUNs zum Zeitpunkt der Snapshot-Erstellung bestehen.
+
+ONTAP erlaubt nur Lesezugriff auf Snapshot-Daten, aber die Daten können mit SnapRestore reaktiviert werden. Der Snapshot wird als Lese-/Schreibansicht der Daten wieder aktiviert, wodurch die Daten in ihren vorherigen Zustand zurückversetzt werden. SnapRestore kann auf Volume-, Datei-, LUN- oder Namespace-Ebene arbeiten. Die Technologie ist im Wesentlichen dieselbe, mit einigen geringfügigen Unterschieden im Verhalten.
+
+
+
+=== AFF Volume SnapRestore
+
+Die volumenbasierte SnapRestore stellt den Inhalt eines gesamten Volumes auf einen früheren Zustand zurück. Dieser Vorgang erfordert keine Datenverschiebung, wodurch der Wiederherstellungsprozess im Wesentlichen sofort erfolgt, obwohl die API- oder CLI-Operation einige Sekunden zur Verarbeitung benötigen kann. Die Wiederherstellung von 1GB Daten ist nicht komplizierter oder zeitaufwändiger als die Wiederherstellung von 1PB Daten. Diese Fähigkeit ist der Hauptgrund, warum viele Unternehmenskunden auf ONTAP Storage-Systeme migrieren. Sie ermöglicht eine RTO im Sekundenbereich selbst für die größten Datensätze.
 
 Ein Nachteil von Volume-basierten SnapRestore ist die Tatsache, dass Änderungen innerhalb eines Volumes im Laufe der Zeit kumuliert werden. Daher sind jeder Snapshot und die Daten der aktiven Datei von den bis zu diesem Zeitpunkt vorgenommenen Änderungen abhängig. Das Zurücksetzen eines Volumes in einen früheren Zustand bedeutet, dass alle nachfolgenden Änderungen, die an den Daten vorgenommen wurden, verworfen werden. Weniger offensichtlich ist jedoch, dass dies nachträglich erstellte Snapshots einschließt. Das ist nicht immer wünschenswert.
 
@@ -50,8 +54,14 @@ Es gibt eine Reihe von Optionen, um diese Einschränkung zu beheben:
 
 
 
-== File SnapRestore
+=== AFF Datei SnapRestore
 
-Bei File-basierten SnapRestore handelt es sich um einen granulareren Snapshot-basierten Wiederherstellungsprozess. Anstatt den Status eines gesamten Volume zurückzusetzen, wird der Status einer einzelnen Datei oder LUN zurückgesetzt. Es müssen keine Snapshots gelöscht werden. Durch diesen Vorgang wird auch keine Abhängigkeit von einem vorherigen Snapshot erzeugt. Die Datei oder LUN ist im aktiven Volume sofort verfügbar.
+Die dateibasierte SnapRestore ist ein detaillierteres, snapshotbasiertes Wiederherstellungsverfahren, das bei AFF-Volumes zum Einsatz kommt. Anstatt den Zustand eines gesamten Volumes wiederherzustellen, wird der Zustand einer einzelnen Datei, LUN oder eines Namespaces zurückgesetzt. Es müssen keine Snapshots gelöscht werden, noch entsteht durch diesen Vorgang eine Abhängigkeit von einem vorherigen Snapshot. Die Datei oder LUN steht im aktiven Volume sofort zur Verfügung.
 
-Bei einem SnapRestore Restore einer Datei oder eines LUN sind keine Datenverschiebungen erforderlich. Einige interne Metadaten-Updates sind jedoch erforderlich, um abzubilden, dass die zugrunde liegenden Blöcke in einer Datei oder einem LUN jetzt sowohl in einem Snapshot als auch in dem aktiven Volume vorhanden sind. Die Performance sollte sich nicht auswirken, doch bei diesem Prozess wird die Erstellung von Snapshots blockiert, bis dieser abgeschlossen ist. Die Verarbeitungsrate beträgt ca. 5 Gbit/s (18 TB/Stunde), basierend auf der Gesamtgröße der wiederhergestellten Dateien.
+Für die SnapRestore-Wiederherstellung einer Datei oder LUN ist keine Datenverschiebung erforderlich. Allerdings sind einige interne Metadatenaktualisierungen erforderlich, um dem Umstand Rechnung zu tragen, dass die zugrunde liegenden Blöcke der wiederhergestellten Daten nun sowohl in einem Snapshot als auch im aktiven Volume vorhanden sind. Es sollte keine Auswirkungen auf die Leistung geben, jedoch blockiert dieser Prozess die Erstellung von Snapshots, bis er abgeschlossen ist. Die Verarbeitungsrate beträgt etwa 5 GB/s (18 TB/Stunde) basierend auf der Gesamtgröße der wiederhergestellten Dateien.
+
+
+
+== ASA LUN-/Namensraum-Wiederherstellung
+
+Die Wiederherstellung von Daten auf ASA ist ähnlich wie bei AFF SnapRestore. Die Daten werden einfach auf einen früheren Zustand zurückgesetzt. Der Vorgang ist nahezu sofort abgeschlossen und erfordert keine Datenverschiebung. Es gelten jedoch dieselben Einschränkungen, einschließlich der Anforderung, dass die Wiederherstellung eines Snapshots zum Löschen nachfolgend gelöschter Snapshots führt. Wenn dies problematisch ist, gibt es zwei Optionen. Erstens kann eine LUN/ein Namespace aus einem früheren Snapshot geklont werden, während das Quellvolume unverändert bleibt. Dies ist ein sofortiger und speichereffizienter Prozess. Im Wesentlichen wird eine Lese-/Schreibkopie des schreibgeschützten Zeigers auf die Blöcke in einem Snapshot erstellt. Eine zweite Option ist über die REST-API möglich, die dieselbe Einzeldatei SnapRestore Logik wie bei AFF Systemen verwendet. Das Ergebnis ist eine sofortige Wiederherstellung einer LUN/eines Namespace mithilfe der Daten aus einem Snapshot, wobei alle Snapshots erhalten bleiben.

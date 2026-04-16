@@ -33,7 +33,7 @@ Die Datenbank-Wiederherstellungs-/Transaktionsprotokollierung erzeugt normalerwe
 
 Die Protokollierung führt einen sequenziellen Schreibvorgang der Protokolldatei mit unterschiedlich großen Schreibvorgängen durch. Ein Protokollschreibvorgang, der sich nicht an 4-KB-Grenzen ausrichtet, verursacht normalerweise keine Performance-Probleme, da der nächste Protokollschreibvorgang den Block abgeschlossen hat. Das Ergebnis: ONTAP ist in der Lage, fast alle Schreibvorgänge als komplette 4-KB-Blöcke zu verarbeiten, obwohl die Daten in einigen 4-KB-Blöcken in zwei separaten Operationen geschrieben wurden.
 
-Überprüfen Sie die Ausrichtung mithilfe von Dienstprogrammen wie `sio` Oder `dd` Sie können I/O mit einer definierten Blockgröße generieren. Die I/O-Ausrichtungsstatistiken auf dem Storage-System können mit dem angezeigt werden `stats` Befehl. Siehe link:../notes/wafl_alignment_verification.html["Überprüfung der WAFL-Ausrichtung"] Finden Sie weitere Informationen.
+Überprüfen Sie die Ausrichtung mithilfe von Dienstprogrammen wie  `sio` oder  `dd`, die E/A bei einer definierten Blockgröße erzeugen können. Die E/A-Ausrichtungsstatistiken auf dem Speichersystem können mit dem  `stats` Befehl angezeigt werden. Siehe link:../oracle/oracle-notes-wafl-alignment-verification.html["Überprüfung der WAFL-Ausrichtung"] für weitere Informationen.
 
 Die Ausrichtung in Solaris-Umgebungen ist komplizierter. Siehe http://support.netapp.com/documentation/productlibrary/index.html?productID=61343["ONTAP SAN-Host-Konfiguration"^] Finden Sie weitere Informationen.
 

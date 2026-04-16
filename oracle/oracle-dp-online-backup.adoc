@@ -29,13 +29,13 @@ Einige große Kunden haben einen einfacheren Ansatz verfolgt, indem sie einfache
 
 == Datenlayout
 
-Am einfachsten ist es, Datendateien in einem oder mehreren dedizierten Volumes zu isolieren. Sie müssen durch einen anderen Dateityp nicht kontaminiert sein. Dadurch soll sichergestellt werden, dass die Datendatei-Volumes über einen SnapRestore-Vorgang schnell wiederhergestellt werden können, ohne dass ein wichtiges Wiederherstellungsprotokoll, eine Steuerdatei oder ein Archivprotokoll zerstört werden.
+Das einfachste Storage-Layout besteht darin, Datenbankdateien in einem oder mehreren dedizierten Volumes, LUNs oder NVMe-Namespaces zu isolieren. Die Speicherressourcen müssen frei von jeglichen anderen Dateitypen sein. Dies stellt sicher, dass die Datenbankdateien durch einen SnapRestore-Vorgang schnell wiederhergestellt werden können, ohne ein wichtiges Wiederherstellungsprotokoll, eine Kontrolldatei oder ein Archiv-Log zu zerstören.
 
-SAN hat ähnliche Anforderungen für die Isolation von Datendateien in dedizierten Volumes. Bei einem Betriebssystem wie Microsoft Windows kann ein einzelnes Volume mehrere Datendatei-LUNs mit jeweils einem NTFS-Filesystem enthalten. Bei anderen Betriebssystemen gibt es in der Regel einen logischen Volume Manager. Mit Oracle ASM wäre es beispielsweise am einfachsten, die LUNs einer ASM-Laufwerksgruppe auf ein einzelnes Volume zu beschränken, das als Einheit gesichert und wiederhergestellt werden kann. Wenn aus Gründen der Performance oder des Kapazitätsmanagements zusätzliche Volumes erforderlich sind, vereinfacht sich das Management durch die Erstellung einer zusätzlichen Festplattengruppe auf dem neuen Volume.
+SAN stellt ähnliche Anforderungen an die Isolation von Datendateien innerhalb dedizierter Ressourcen. Bei einem Betriebssystem wie Microsoft Windows mit AFF Storage kann ein einzelnes Volume mehrere Datendatei-LUNs enthalten, die jeweils ein NTFS-Dateisystem verwenden. Bei anderen Betriebssystemen gibt es in der Regel einen logischen Volume-Manager. Beispielsweise wäre bei Oracle ASM die einfachste Option, die LUNs einer ASM Festplattengruppe auf ein einzelnes Volume zu beschränken, das als Einheit gesichert und wiederhergestellt werden kann. Wenn zusätzliche Volumes aus Performance- oder Kapazitätsmanagement-Gründen erforderlich sind, vereinfacht die Erstellung einer zusätzlichen Festplattengruppe auf dem neuen Volume die Verwaltung.
 
-Wenn diese Richtlinien befolgt werden, können Snapshots direkt auf dem Speichersystem geplant werden, ohne dass ein Snapshot einer Konsistenzgruppe erforderlich ist. Der Grund hierfür liegt darin, dass für Oracle-Backups keine Datendateien gleichzeitig gesichert werden müssen. Das Online-Backup-Verfahren wurde entwickelt, damit Datendateien weiterhin aktualisiert werden können, da sie im Laufe der Stunden langsam auf Tape gestreamt werden.
+ASA verfügt nicht über die Abstraktion auf Volume-Ebene, die auf einem AFF-System mehrere LUNs hosten kann. Stattdessen verwendet ASA Konsistenzgruppen. In vielen Fällen kann eine einzelne LUN oder ein NVMe-Namespace die Verwaltungs- und Leistungsanforderungen für eine Datenbank erfüllen. Wenn mehrere LUNs oder Namespaces benötigt werden, können zusätzliche Ressourcen hinzugefügt und als Konsistenzgruppe zusammengefasst werden, die dann den Datenfile-Container bildet.
 
-Eine Komplikation entsteht in Situationen wie der Verwendung einer ASM-Datenträgergruppe, die auf Volumes verteilt ist. In diesen Fällen muss ein cg-Snapshot ausgeführt werden, um sicherzustellen, dass die ASM-Metadaten über alle zusammengehörigen Volumes hinweg konsistent sind.
+Wenn diese Richtlinien befolgt werden, können Snapshots direkt auf dem Speichersystem geplant werden.
 
 *Achtung:* Überprüfen Sie, dass der ASM `spfile` Und `passwd` Die Dateien befinden sich nicht in der Festplattengruppe, in der die Datendateien gehostet werden. Dies beeinträchtigt die Fähigkeit, Datendateien und nur Datendateien selektiv wiederherzustellen.
 
@@ -46,7 +46,7 @@ Eine Komplikation entsteht in Situationen wie der Verwendung einer ASM-Datenträ
 Dieses Verfahren kann manuell oder über eine Anwendung wie SnapCenter gesteuert werden. Das Grundverfahren ist wie folgt:
 
 . Fahren Sie die Datenbank herunter.
-. Stellen Sie die Datendatei-Volumes unmittelbar vor dem gewünschten Wiederherstellungspunkt auf den Snapshot wieder her.
+. Stellen Sie die Datendatei-NFS-Volumes auf den Snapshot unmittelbar vor dem gewünschten Wiederherstellungspunkt wieder her.
 . Geben Sie Archivprotokolle bis zum gewünschten Punkt wieder.
 . Wiederholen Sie die aktuellen Wiederherstellungsprotokolle, wenn eine vollständige Wiederherstellung gewünscht wird.
 
@@ -63,10 +63,10 @@ Dieses Verfahren kann manuell oder über eine Anwendung wie SnapCenter gesteuert
 
 . Fahren Sie die Datenbank herunter.
 . Legen Sie die Festplattengruppe(n), die die Datendateien hosten, still. Die Vorgehensweise hängt vom gewählten Logical Volume Manager ab. Bei ASM muss die Datenträgergruppe demontieren. Bei Linux müssen die Dateisysteme demontiert und die logischen Volumes und Volume-Gruppen deaktiviert werden. Ziel ist es, alle Aktualisierungen auf der Zieldatentengruppe zu stoppen, die wiederhergestellt werden sollen.
-. Stellen Sie die Datendatei-Datenträgergruppen auf dem Snapshot unmittelbar vor dem gewünschten Wiederherstellungspunkt wieder her.
+. Stellen Sie die LUNs, die die Festplattengruppen der Datendateien hosten, auf den Snapshot unmittelbar vor dem gewünschten Wiederherstellungspunkt wieder her.
 . Reaktivieren Sie die neu wiederhergestellten Datenträgergruppen.
 . Geben Sie Archivprotokolle bis zum gewünschten Punkt wieder.
 . Wiederholen Sie alle Wiederherstellungsprotokolle, wenn eine vollständige Wiederherstellung gewünscht wird.
 
 
-Bei diesem Verfahren wird davon ausgegangen, dass die gewünschten Archivprotokolle noch im aktiven Dateisystem vorhanden sind. Wenn dies nicht der Fall ist, müssen die Archivprotokolle wiederhergestellt werden, indem die Archivprotokoll-LUNs offline geschaltet und eine Wiederherstellung durchgeführt wird. Dies ist ebenfalls ein Beispiel, bei dem sich Archivprotokolle in dedizierte Volumes aufteilen lassen. Wenn die Archivprotokolle eine Volume-Gruppe mit Wiederherstellungsprotokollen gemeinsam nutzen, müssen die Wiederherstellungsprotokolle vor der Wiederherstellung des gesamten LUN-Satzes an eine andere Stelle kopiert werden. Dieser Schritt verhindert den Verlust dieser letzten aufgezeichneten Transaktionen.
+Dieses Verfahren setzt voraus, dass die gewünschten Archivprotokolle noch im aktiven Dateisystem vorhanden sind. Wenn dies nicht der Fall ist, müssen die Archivprotokolle wiederhergestellt werden, indem die Archivprotokoll-LUNs/Namespaces vollständig offline genommen und eine Wiederherstellung durchgeführt wird (oder indem ein Klon eines vorherigen Snapshots erstellt wird, was aufgrund der Erstellung doppelter UUIDs oder LVM-Namen auf demselben Host schwierig sein kann). Dies ist auch ein Beispiel dafür, wie sinnvoll es ist, Archivprotokolle in dedizierten Speicherressourcen zu speichern. Wenn die Archivprotokolle eine Volume-Gruppe mit Redo-Logs teilen, müssen die Redo-Logs vor der Wiederherstellung des gesamten LUN-Satzes an einen anderen Ort kopiert werden. Dieser Schritt verhindert den Verlust der zuletzt aufgezeichneten Transaktionen.

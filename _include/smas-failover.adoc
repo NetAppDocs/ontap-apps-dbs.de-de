@@ -4,7 +4,7 @@
 
 SnapMirror Active Sync unterstützt zwei Arten von Storage Failover-Operationen: Geplant und ungeplant, welche jeweils auf ein geringfügig unterschiedliches Verfahren funktionieren. Ein geplantes Failover wird manuell vom Administrator initiiert, um eine schnelle Umschaltung auf einen Remote-Standort zu ermöglichen, während der ungeplante Failover automatisch vom Mediator am dritten Standort initiiert wird. Der primäre Zweck eines geplanten Failovers ist die Durchführung inkrementeller Patches und Upgrades, Durchführung von Disaster-Recovery-Tests oder die Einführung einer formellen Richtlinie für den Wechsel zwischen Standorten während des ganzen Jahres, um die volle aktive Synchronisierungsfunktion zu belegen.
 
-Die Diagramme zeigen die Vorgänge während des normalen Failover und Failback-Vorgangs an. Zur einfachen Illustration zeigen sie eine replizierte LUN. In einer tatsächlichen Konfiguration mit SnapMirror für aktive Synchronisierung basiert die Replizierung auf Volumes, bei denen jedes Volume eine oder mehrere LUNs enthält. Zur Vereinfachung des Bilds wurde jedoch die Volume-Ebene entfernt.
+Die Diagramme veranschaulichen die Vorgänge im Normalbetrieb, bei einem Failover und einem Failback. Zur Vereinfachung wird eine replizierte LUN dargestellt. In einer realen SnapMirror active sync-Konfiguration basiert die Replikation auf AFF-Volumes, wobei jedes Volume eine oder mehrere LUNs enthält, aber um die Darstellung zu vereinfachen, wurde die Volume-Ebene entfernt.
 
 
 

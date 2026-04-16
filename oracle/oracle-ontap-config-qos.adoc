@@ -19,9 +19,9 @@ Für die sichere und effiziente Verwaltung mehrerer Oracle Datenbanken ist eine 
 
 Insbesondere die zunehmende Verbreitung von All-Flash-Storage ermöglicht die Konsolidierung von Workloads. Storage-Arrays mit rotierenden Medien unterstützten in der Regel nur eine begrenzte Anzahl I/O-intensiver Workloads, da die IOPS-Funktionen einer älteren Rotationslaufwerkstechnologie begrenzt sind. Ein oder zwei hochaktive Datenbanken würden die zugrunde liegenden Laufwerke lange sättigen, bevor die Storage-Controller ihre Grenzen erreichten. Das hat sich geändert. Die Performance-Fähigkeit einer relativ kleinen Anzahl von SSD-Laufwerken kann sogar die leistungsstärksten Storage-Controller auslasten. So können Sie alle Funktionen der Controller nutzen, ohne die Gefahr eines plötzlichen Performance-Einbruchs aufgrund von Latenzspitzen der rotierenden Medien befürchten zu müssen.
 
-Ein einfaches HA-AFF A800 System mit zwei Nodes kann bis zu eine Million zufällige IOPS verarbeiten, bevor die Latenz auf über eine Millisekunde steigt. Für sehr wenige einzelne Workloads wird erwartet, dass sie ein solches Niveau erreichen. Die vollständige Nutzung dieses AFF A800 System-Arrays beinhaltet das Hosting mehrerer Workloads. Für eine sichere Durchführung sind QoS-Kontrollen erforderlich, um die Vorhersehbarkeit zu gewährleisten.
+Als Referenzbeispiel ist ein älteres HA AFF A800-System mit zwei Knoten in der Lage, bis zu einer Million zufälliger IOPS zu verarbeiten, bevor die Latenz über eine Millisekunde steigt. Sehr wenige einzelne Workloads würden voraussichtlich solche Werte erreichen. Um dieses AFF A800-Systemarray vollständig auszunutzen, müssen mehrere Workloads gehostet werden, und um dies sicher und mit Vorhersagbarkeit zu tun, sind QoS-Steuerungen erforderlich.
 
-ONTAP bietet zwei Arten von Quality of Service (QoS): IOPS und Bandbreite. QoS-Steuerungen können auf SVMs, Volumes, LUNs und Dateien angewendet werden.
+Es gibt zwei Arten von Quality of Service (QoS) in ONTAP: IOPS und Bandbreite. QoS-Steuerungen können auf AFF SVMs, AFF Volumes, AFF Dateien sowie AFF/ASA LUNs und Namespaces angewendet werden.
 
 
 

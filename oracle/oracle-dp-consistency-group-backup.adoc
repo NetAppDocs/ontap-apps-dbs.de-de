@@ -10,15 +10,15 @@ searchtitle: Backups der Konsistenzgruppe in der Oracle Datenbank
 
 
 [role="lead"]
-Für die einfachste mögliche Sicherung platzieren Sie einfach die gesamte Oracle-Datenbank in einem einzigen ONTAP-Volume
+Für eine möglichst einfache Datensicherung platzieren Sie einfach die gesamte Oracle Datenbank in einem einzigen ONTAP Volume, einer LUN oder einem NVMe-Namespace.
 
-Der Schutz von Datendateien, Archivprotokollen, Wiederherstellungsprotokollen und Steuerdateien mit einem einzelnen Snapshot ist eine gültige Backup-, Restore- und Replizierungsmethode.  Das RPO ist jedoch auf den Punkt des Backups selbst beschränkt. Er eignet sich für einen RPO von einer Stunde oder länger. Wenn eine Datenbank mehrere Volumes umfasst, sind cg-Snapshots mit einem der zuvor beschriebenen Tools erforderlich.
+Das Sichern von Datenbankdateien, Archivprotokollen, Wiederherstellungsprotokollen und Kontrolldateien mit einem einzelnen Snapshot ist eine gültige Methode für Backup, Wiederherstellung und Replikation. Der RPO ist jedoch auf den Zeitpunkt des Backups selbst beschränkt. Es ist geeignet für einen RPO von einer Stunde oder mehr. Wenn sich eine Datenbank über AFF Volumes oder ASA Speichereinheiten erstreckt, sind Konsistenzgruppen erforderlich, die mit einem der zuvor beschriebenen Tools erstellt werden.
 
-Beispielsweise kann sich die gesamte Datenbank in einem einzigen Volume mit dem folgenden Snapshot-Zeitplan befinden:
+Als Beispiel kann die gesamte Datenbank in einem einzigen AFF Volume mit folgendem Snapshot-Zeitplan liegen:
 
 * 72 stündliche Snapshots
 * 30 nächtliche Schnappschüsse
 * 12 monatliche Snapshots
 
 
-Dadurch wird ein RPO von einer Stunde für den festgelegten Zeitraum von 72 Stunden sowie zusätzliche nächtliche und monatliche Backups erzielt. Mehrere Datenbanken oder Applikationsdateien können auch in das einzelne Volume oder den Satz von cg-Snapshots aufgenommen werden, um konsistente Backups in einer größeren Umgebung zu ermöglichen.
+Dies ermöglicht einen RPO von einer Stunde über den rollierenden Zeitraum der vorangegangenen 72 Stunden, zuzüglich zusätzlicher nächtlicher und monatlicher Backups. Mehrere Datenbanken oder Anwendungsdateien können auch in einem einzelnen Volume oder einem Satz von Konsistenzgruppen-Snapshots enthalten sein, um konsistente Backups in einer größeren Umgebung zu gewährleisten.

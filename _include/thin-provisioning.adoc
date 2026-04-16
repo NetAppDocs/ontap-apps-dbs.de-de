@@ -24,7 +24,10 @@ Siehe link:https://docs.netapp.com/us-en/ontap/volumes/index.html["Dokumentation
 
 Die fraktionale Reserve bezieht sich auf das Verhalten einer LUN in einem Volume in Bezug auf die Platzeffizienz. Wenn die Option `fractional-reserve` Ist auf 100 % festgelegt, können alle Daten im Volume mit jedem Datenmuster 100 % Umsatz verzeichnen, ohne Speicherplatz auf dem Volume zu belegen.
 
-Betrachten Sie beispielsweise eine Datenbank auf einer einzigen 250 GB LUN und einem Volume mit 1 TB. Wenn ein Snapshot erstellt wird, würde sofort eine zusätzliche 250GB an Speicherplatz auf dem Volume reserviert werden, um zu garantieren, dass auf dem Volume aus irgendeinem Grund nicht mehr genügend Speicherplatz verfügbar ist. Die Verwendung von fraktionalen Reserven ist im Allgemeinen aufwändig, da es äußerst unwahrscheinlich ist, dass jedes Byte im Datenbank-Volume überschrieben werden müsste. Es gibt keinen Grund, Platz für ein Ereignis zu reservieren, das nie passiert. Wenn ein Kunde jedoch den Speicherplatzverbrauch in einem Storage-System nicht überwachen kann und sicher sein muss, dass der Platz nie knapp wird, wären für die Nutzung von Snapshots 100 % fraktionale Reservierungen erforderlich.
+Betrachten wir beispielsweise eine Datenbank auf einem einzelnen 250-GB-LUN in einem 1-TB-Volume auf einem AFF-System. Die Erstellung eines Snapshots würde sofort die Reservierung zusätzlicher 250 GB Speicherplatz im Volume zur Folge haben, um sicherzustellen, dass das Volume aus keinem Grund keinen Speicherplatz mehr hat. Die Verwendung von Teilreservierungen ist im Allgemeinen ineffizient, da es äußerst unwahrscheinlich ist, dass jedes Byte im Datenbank-Volume überschrieben werden muss. Es gibt keinen Grund, Speicherplatz für ein Ereignis zu reservieren, das nie eintritt. Kann ein Kunde jedoch die Speichernutzung in einem Speichersystem nicht überwachen und muss absolut sicher sein, dass der Speicherplatz nie ausgeht, sind 100%ige Teilreservierungen erforderlich, um Snapshots zu verwenden.
+
+
+TIP: Die Volumenabstraktion ist nur auf ASA bei SAN nicht vorhanden, und daher verwendet diese Plattform keine fraktionellen Reserven.
 
 
 
@@ -32,7 +35,7 @@ Betrachten Sie beispielsweise eine Datenbank auf einer einzigen 250 GB LUN und e
 
 Komprimierung und Deduplizierung sind beide Formen von Thin Provisioning. Beispielsweise kann ein 50 TB Platzbedarf für Daten auf 30 TB komprimiert werden, was zu Einsparungen von 20 TB führt. Um die Komprimierung nutzen zu können, müssen einige dieser 20 TB für andere Daten verwendet werden. Alternativ muss das Storage-System mit weniger als 50 TB erworben werden. Das Ergebnis sind Speicherung von mehr Daten als technisch auf dem Speichersystem verfügbar ist. Aus Sicht der Daten gibt es 50 TB an Daten, obwohl diese auf den Laufwerken nur 30 TB belegen.
 
-Es besteht immer die Möglichkeit, dass sich die Komprimierbarkeit eines Datensatzes ändert. Dies würde zu einem erhöhten Verbrauch an echtem Speicherplatz führen. Dieser Anstieg des Verbrauchs bedeutet, dass die Komprimierung wie bei anderen Thin Provisioning-Methoden zur Überwachung und Nutzung gemanagt werden muss `volume-autogrow` Und `snapshot-autodelete`.
+Es besteht stets die Möglichkeit, dass sich die Komprimierbarkeit eines Datensatzes ändert, was zu einem erhöhten Speicherverbrauch führen würde. Dieser erhöhte Verbrauch bedeutet, dass die Komprimierung wie bei anderen Formen des Thin Provisioning hinsichtlich Überwachung und, auf einem AFF System, mithilfe von  `volume-autogrow` und  `snapshot-autodelete` verwaltet werden muss.
 
 Die Komprimierung und Deduplizierung werden im Abschnitt Link:efficiency.html ausführlicher behandelt
 
@@ -54,7 +57,7 @@ Obwohl diese Situation verwirrend erscheinen mag, ist es unwahrscheinlich, dass 
 
 [TIP]
 ====
-*NetApp empfiehlt* die folgenden Reservekonfigurationen:
+*NetApp empfiehlt* die folgenden Reservekonfigurationen mit AFF und FAS-Plattformen:
 
 * Einstellen `fractional-reserve` Auf 0, wenn die grundlegende Kapazitätsüberwachung zusammen mit eingerichtet ist `volume-autogrow` Und `snapshot-autodelete`.
 * Einstellen `fractional-reserve` Zu 100, wenn es keine Überwachungsfähigkeit gibt oder wenn es unmöglich ist, unter keinen Umständen Raum abzulassen.

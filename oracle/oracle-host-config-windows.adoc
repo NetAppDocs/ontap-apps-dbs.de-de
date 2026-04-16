@@ -16,7 +16,7 @@ Konfigurationsthemen für Oracle Database unter Microsoft Windows mit ONTAP..
 
 == NFS
 
-Oracle unterstützt den Einsatz von Microsoft Windows mit dem direkten NFS-Client. Diese Funktion eröffnet neue Möglichkeiten für das Management von NFS. Hierzu zählen beispielsweise die Möglichkeit, Dateien über verschiedene Umgebungen hinweg anzuzeigen, Volumes dynamisch zu skalieren und das kostengünstigere IP-Protokoll zu nutzen. Informationen zur Installation und Konfiguration einer Datenbank unter Microsoft Windows unter Verwendung von DNFS finden Sie in der offiziellen Oracle-Dokumentation. Es gibt keine speziellen Best Practices.
+Oracle unterstützt die Verwendung von Microsoft Windows mit dem direkten NFS-Client. Diese Funktion bietet einen Weg zu den Managementvorteilen von NFS, einschließlich der Möglichkeit, Dateien über verschiedene Umgebungen hinweg anzuzeigen, NFS-Volumes dynamisch zu vergrößern und ein kostengünstigeres IP-Protokoll zu nutzen. Siehe die offizielle Oracle-Dokumentation für Informationen zur Installation und Konfiguration einer Datenbank unter Microsoft Windows mit DNFS. Es gibt keine speziellen Best Practices.
 
 
 

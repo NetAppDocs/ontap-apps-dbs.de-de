@@ -125,7 +125,7 @@ Führen Sie zum Konfigurieren einer LUN die folgenden Schritte aus:
 .. Neustart. Dieser Schritt ist erforderlich, damit alle Änderungen im gesamten System erkannt werden.
 
 
-. Partitionieren Sie die LUNs und stellen Sie sicher, dass sie ordnungsgemäß ausgerichtet sind. Anweisungen zum direkten Testen und Bestätigen der Ausrichtung finden Sie in Anhang B „Überprüfung der WAFL-Ausrichtung“.
+. Partitionieren Sie die LUNs und überprüfen Sie deren korrekte Ausrichtung. Siehe link:oracle-notes-wafl-alignment-verification.html["WAFL Ausrichtung"] für Anweisungen zum direkten Testen und Bestätigen der Ausrichtung.
 
 
 

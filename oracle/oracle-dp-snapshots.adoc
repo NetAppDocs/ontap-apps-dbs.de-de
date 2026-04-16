@@ -18,17 +18,18 @@ Die wichtigsten Werte sind:
 * *Effizienz.* Snapshots benötigen zum Zeitpunkt der Erstellung keinen Platz. Der Speicherplatz wird nur dann verbraucht, wenn Daten geändert werden.
 * *Verwaltbarkeit.* Eine auf Snapshots basierende Backup-Strategie lässt sich einfach konfigurieren und verwalten, da Snapshots ein nativer Teil des Storage-Betriebssystems sind. Wenn das Speichersystem eingeschaltet ist, kann es Backups erstellen.
 * *Skalierbarkeit.* bis zu 1024 Backups eines einzigen Dateicontainers und LUNs können beibehalten werden. Bei komplexen Datensätzen können diverse Daten-Container durch einen einzelnen, konsistenten Satz von Snapshots gesichert werden.
-* Die Performance bleibt davon unberührt, ob ein Volume 1024 Snapshots enthält oder keine.
+* Die Performance bleibt unberührt, egal ob die Daten durch 1024 Snapshots oder keine geschützt werden.
 
 
 Viele Storage-Anbieter liefern zwar Snapshot-Technologie, doch ist die Snapshot Technologie bei ONTAP einzigartig und bietet in Enterprise-Applikations- und Datenbankumgebungen deutliche Vorteile:
 
 * Snapshot Kopien sind Teil des zugrunde liegenden Write-Anywhere-Dateilayouts (WAFL). Es handelt sich nicht um ein Add-on oder eine externe Technologie. Dies vereinfacht das Management, da das Storage-System das Backup-System ist.
 * Snapshot-Kopien beeinträchtigen die Performance nicht. Ausnahmen bilden Edge-Fälle, in denen so viele Daten in Snapshots gespeichert werden, dass sich das zugrunde liegende Storage-System füllt.
-* Der Begriff „Konsistenzgruppe“ wird häufig verwendet, um eine Gruppierung von Storage-Objekten zu referenzieren, die als konsistente Sammlung von Daten gemanagt werden. Ein Snapshot eines bestimmten ONTAP Volumes stellt ein Konsistenzgruppenbackup dar.
+* Der Begriff „Konsistenzgruppe“ bezeichnet häufig eine Gruppierung von Speicherobjekten, die als konsistente Datensammlung verwaltet werden. Ein Snapshot eines bestimmten AFF Volumes stellt ein Konsistenzgruppen-Backup dar.
+* Darüber hinaus können mehrere AFF-Volumes oder ASA-LUNs/Namespaces problemlos zu einer Konsistenzgruppe zusammengefasst werden, wobei die Datenschutzrichtlinien als eine Einheit angewendet werden.
 
 
-ONTAP Snapshots lassen sich auch besser skalieren als bei Technologien von Mitbewerbern. Kunden können ohne Beeinträchtigung der Performance 5, 50 oder 500 Snapshots speichern. Derzeit sind in einem Volume maximal 1024 Snapshots zulässig. Wenn eine zusätzliche Snapshot-Aufbewahrung erforderlich ist, gibt es Optionen, die Snapshots an zusätzliche Volumes zu übergeben.
+ONTAP Snapshots skalieren zudem besser als konkurrierende Technologien. Kunden können 5, 50 oder 500 Snapshots speichern, ohne die Performance zu beeinträchtigen. Die maximale Anzahl an Snapshots, die derzeit in einem AFF Volume oder ASA LUN/Namespace zulässig ist, beträgt 1024. Wenn zusätzliche Snapshot-Aufbewahrung erforderlich ist, gibt es Optionen, Snapshots zu kaskadieren.
 
 Daher ist die Sicherung eines auf ONTAP gehosteten Datensatzes einfach und hochskalierbar. Backups erfordern keine Verschiebung von Daten. Daher kann eine Backup-Strategie auf die Bedürfnisse des Unternehmens zugeschnitten werden und nicht auf die Beschränkungen der Netzwerkübertragungsraten, der großen Anzahl von Bandlaufwerken oder der Bereiche, in denen Festplatten bereitgestellt werden.
 
@@ -66,33 +67,35 @@ Das Wort „konsistent“ in „anwendungskonsistent“ ist oft eine Fehlbezeich
 
 Der Begriff „Konsistenzgruppe“ bezieht sich auf die Fähigkeit eines Speicherarrays, mehrere Speicherressourcen als ein einziges Image zu verwalten. Beispielsweise kann eine Datenbank aus 10 LUNs bestehen. Das Array muss in der Lage sein, diese 10 LUNs konsistent zu sichern, wiederherzustellen und zu replizieren. Eine Wiederherstellung ist nicht möglich, wenn die Images der LUNs zum Zeitpunkt des Backups nicht konsistent waren. Die Replikation dieser 10 LUNs erfordert, dass alle Replikate perfekt miteinander synchronisiert sind.
 
-Der Begriff „Konsistenzgruppe“ wird nicht oft verwendet, wenn es um ONTAP geht, da Konsistenz immer eine Grundfunktion der Volume- und Aggregat-Architektur in ONTAP war. Viele andere Storage Arrays managen LUNs oder File-Systeme als einzelne Einheiten. Sie könnten aus Datenschutzgründen optional als „Konsistenzgruppe“ konfiguriert werden, dies ist jedoch ein zusätzlicher Schritt in der Konfiguration.
+ONTAP konnte schon immer konsistente lokale und replizierte Datenabbilder erstellen. Obwohl die verschiedenen Volumes auf einem ONTAP AFF/FAS-System üblicherweise nicht formal als Konsistenzgruppe bezeichnet werden, sind sie genau das. Ein Snapshot dieses Volumes ist ein Konsistenzgruppen-Abbild, die Wiederherstellung dieses Snapshots ist eine Konsistenzgruppen-Wiederherstellung, und sowohl SnapMirror als auch SnapVault bieten Konsistenzgruppen-Replikation.
 
-ONTAP war schon immer in der Lage, konsistente lokale und replizierte Images von Daten zu erfassen. Auch wenn die verschiedenen Volumes auf einem ONTAP-System normalerweise nicht formal als Konsistenzgruppe beschrieben werden, so sind sie doch das. Ein Snapshot dieses Volumes ist ein Konsistenzgruppenabbild, die Wiederherstellung dieses Snapshots ist eine Wiederherstellung der Konsistenzgruppe, und sowohl SnapMirror als auch SnapVault bieten Konsistenzgruppenreplikation.
+AFF-Systeme umfassen auch einen umfassenderen Typ von Konsistenzgruppe. Mehrere Volumes können als eine Konsistenzgruppe (CG) innerhalb von ONTAP definiert werden. Snapshots, Klone und Replikation lassen sich dann auf CG-Ebene konfigurieren. Dies vereinfacht Datenschutzstrategien, da Richtlinien für Datensätze und nicht nur für einzelne Volumes oder LUNs festgelegt werden können. Auch in ASA-Systemen existieren Konsistenzgruppen (CGs). Mehrere LUNs oder Namespaces können zu einer Konsistenzgruppe (CG) zusammengefasst werden, und diese CG kann dann durch Snapshots geschützt, repliziert, wiederhergestellt oder geklont werden.
 
 
 
 == Snapshots von Konsistenzgruppen
 
-Konsistenzgruppen-Snapshots (cg-Snapshots) sind eine Erweiterung der grundlegenden ONTAP-Snapshot-Technologie. Bei einem standardmäßigen Snapshot-Vorgang wird ein konsistentes Image aller Daten innerhalb eines einzelnen Volumes erstellt. In manchen Fällen ist es jedoch erforderlich, einen konsistenten Satz von Snapshots über mehrere Volumes und sogar über mehrere Storage-Systeme hinweg zu erstellen. Das Ergebnis ist ein Satz von Snapshots, die auf die gleiche Weise wie ein Snapshot von nur einem einzelnen Volume verwendet werden können. Sie können für die lokale Datenwiederherstellung verwendet, für Disaster Recovery-Zwecke repliziert oder als einheitliche konsistente Einheit geklont werden.
+Consistency group (CG)-Snapshots sind eine Erweiterung der grundlegenden ONTAP Snapshot Technologie. Ein Standard-Snapshot-Vorgang erstellt ein konsistentes Abbild aller Daten innerhalb eines einzelnen AFF/FAS-Volumes oder ASA LUN/Namespace, aber manchmal ist es notwendig, einen konsistenten Satz von Snapshots über mehrere Speicherressourcen und sogar über mehrere Speichersysteme hinweg zu erstellen. Das Ergebnis ist ein Satz von Snapshots, der auf die gleiche Weise verwendet werden kann wie ein Snapshot eines einzelnen Volumes. Sie können für die lokale Datenwiederherstellung verwendet, für Zwecke der Notfallwiederherstellung repliziert oder als eine einzige konsistente Einheit geklont werden.
 
-Die größte Verwendung von cg-Snapshots ist eine Datenbankumgebung mit einer Größe von ca. 1 PB und 12 Controllern. Die cg-Snapshots, die auf diesem System erstellt wurden, werden für Backups, Wiederherstellungen und Klonvorgänge verwendet.
+CG-Snapshots skalieren hervorragend. Der größte bekannte Einsatz eines CG-Snapshots betrifft eine Datenbankumgebung mit ca. 1PB Größe, die sich über 12 Controller erstreckt. Die auf diesem System erstellten CG-Snapshots wurden für Backup, Recovery und Klonen verwendet.
 
-Wenn ein Datensatz über mehrere Volumes verteilt und die Schreibreihenfolge beibehalten werden muss, wird meist automatisch ein cg-Snapshot von der ausgewählten Managementsoftware verwendet. Es besteht in solchen Fällen nicht die Notwendigkeit, die technischen Details von cg-Snapshots zu verstehen. Allerdings gibt es Situationen, in denen komplizierte Datensicherungsanforderungen eine detaillierte Kontrolle über den Datenschutz- und Replizierungsprozess erfordern. Einige Optionen sind Automatisierungs-Workflows oder der Einsatz benutzerdefinierter Skripte, um cg-Snapshot-APIs aufzurufen. Das Verständnis der besten Option und der Rolle von cg-Snapshot erfordert eine detailliertere Erläuterung der Technologie.
+Meistens kann, wenn sich ein Datensatz über AFF Volumes oder ASA LUNs/Namespaces erstreckt und die Schreibreihenfolge erhalten bleiben muss, einfach eine ONTAP Konsistenzgruppe definiert werden, und die Gruppe von Volumes, LUNs oder Namespaces kann nativ verwaltet werden, um Snapshots zu erstellen. Wenn Management-Software verwendet wird, sollte sie den Bedarf an Konsistenzgruppen-Snapshots erkennen und die erforderlichen APIs aufrufen.
 
-Die Erstellung eines Satzes von cg-Snapshots erfolgt in zwei Schritten:
+In solchen Fällen ist es nicht notwendig, die technischen Details von CG snapshot zu verstehen. Es gibt jedoch Situationen, in denen komplexe Anforderungen an den Datenschutz eine detaillierte Kontrolle über den Datenschutz- und Replikationsprozess erfordern. Automatisierungs-Workflows oder die Verwendung benutzerdefinierter Skripte zum Aufrufen der CG snapshot APIs sind einige der Optionen. Das Verständnis der besten Option und der Rolle von CG snapshots erfordert eine detailliertere Erklärung der Technologie.
 
-. Erstellung von Write Fencing auf allen Ziel-Volumes
-. Erstellen Sie Snapshots dieser Volumes im abgetrennten Zustand.
+Die Erstellung eines Satzes von Konsistenzgruppen-Snapshots ist ein zweistufiger Prozess:
+
+. Richten Sie Schreibschutz auf allen Ziel AFF Volumes oder ASA LUNs/Namespaces ein.
+. Erstellen Sie Snapshots dieser Volumes, LUNs oder Namespaces im abgeschotteten Zustand.
 
 
-Schreibzaun wird seriell hergestellt. Das bedeutet, dass bei der Einrichtung des Fencing-Prozesses über mehrere Volumes hinweg die I/O-Schreibvorgänge auf dem ersten Volume in der Sequenz eingefroren werden, da sie weiterhin auf Volumes übertragen werden, die später angezeigt werden. Dies mag anfänglich möglicherweise gegen die Vorgabe verstoßen, die Schreibreihenfolge zu erhalten, gilt aber nur für I/O-Vorgänge, die asynchron auf dem Host ausgegeben werden und nicht von anderen Schreibvorgängen abhängen.
+Die Schreibsperre wird sequenziell eingerichtet. Das bedeutet, dass während der Einrichtung der Sperre über mehrere Speicherziele hinweg die Schreib-E/A für das erste Objekt in der Sequenz eingefroren wird, während sie weiterhin für Ziele eingefroren bleibt, die später in der Liste erscheinen. Dies mag zunächst den Anschein erwecken, als verletze es die Anforderung, die Schreibreihenfolge beizubehalten, aber dies gilt nur für E/A, die asynchron auf dem Host ausgeführt werden und nicht von anderen Schreibvorgängen abhängen.
 
 Beispielsweise kann eine Datenbank eine Vielzahl asynchroner Datendatei-Updates ausgeben und dem Betriebssystem ermöglichen, die I/O-Vorgänge neu zu ordnen und sie gemäß seiner eigenen Scheduler-Konfiguration abzuschließen. Die Reihenfolge dieser E/A-Typen kann nicht garantiert werden, da die Anwendung und das Betriebssystem bereits die Anforderung zur Wahrung der Schreibreihenfolge freigegeben haben.
 
-Als Zählerbeispiel sind die meisten Datenbankprotokollierungsaktivitäten synchron. Die Datenbank fährt erst mit weiteren Protokollschreibvorgängen fort, nachdem der I/O-Vorgang bestätigt wurde und die Reihenfolge dieser Schreibvorgänge erhalten bleiben muss. Wenn ein Protokoll-I/O auf einem Volume mit Fencing ankommt, wird dies nicht bestätigt, und die Applikation blockiert weitere Schreibvorgänge. Ebenso ist der I/O der Filesystem-Metadaten in der Regel synchron. Beispielsweise darf ein Dateilösch nicht verloren gehen. Wenn ein Betriebssystem mit einem xfs-Dateisystem eine Datei und den I/O gelöscht hat, der die xfs-Dateisystemmetadaten aktualisiert hat, um den Verweis auf diese Datei zu entfernen, der auf einem umzäunten Volume gelandet ist, wird die Dateisystemaktivität angehalten. Dies garantiert die Integrität des Dateisystems während cg-Snapshot-Vorgängen.
+Als Gegenbeispiel ist der Großteil der Datenbank-Protokollierung synchron. Die Datenbank führt keine weiteren Protokollschreibvorgänge durch, bis die E/A bestätigt wurde, und die Reihenfolge dieser Schreibvorgänge muss erhalten bleiben. Trifft eine Protokoll-E/A auf einem geschützten LUN ein, wird sie nicht bestätigt und die Anwendung blockiert weitere Schreibvorgänge. Ebenso ist die Metadaten-E/A des Dateisystems üblicherweise synchron. Beispielsweise darf ein Löschvorgang nicht verloren gehen. Wenn ein Betriebssystem mit einem xfs-Dateisystem eine Datei löscht und die E/A, die die xfs-Dateisystem-Metadaten aktualisiert, um den Verweis auf diese Datei zu entfernen, auf einem geschützten LUN landet, wird die Dateisystemaktivität angehalten. Dies gewährleistet die Integrität des Dateisystems während CG-Operationen.
 
-Nach der Einrichtung von Write Fencing über die Ziel-Volumes hinweg sind sie für die Snapshot-Erstellung bereit. Die Snapshots müssen nicht genau zur gleichen Zeit erstellt werden, da der Zustand der Volumes aus einer abhängigen Schreibweise eingefroren wird. Um sich vor einem Fehler in der Anwendung zu schützen, die cg-Snapshots erstellt, enthält das anfängliche Write Fencing ein konfigurierbares Timeout, bei dem ONTAP die Fencing automatisch freigibt und die Schreibverarbeitung nach einer definierten Anzahl von Sekunden wieder aufnimmt. Wenn alle Snapshots erstellt werden, bevor die Zeitüberschreitung abgelaufen ist, dann ist der resultierende Snapshot-Satz eine gültige Konsistenzgruppe.
+Nachdem die Schreibsperre für die Ziele eingerichtet wurde, sind sie bereit für die Snapshot-Erstellung. Die Snapshots müssen nicht exakt gleichzeitig erstellt werden, da der Zustand der Ziele aus Sicht abhängiger Schreibvorgänge eingefroren ist. Um gegen einen Fehler in der Anwendung, die die Konsistenzgruppen-Snapshots erstellt, zu schützen, beinhaltet die anfängliche Schreibsperre eine konfigurierbare Zeitüberschreitung, bei der ONTAP die Sperre nach einer definierten Anzahl von Sekunden automatisch aufhebt und die Schreibverarbeitung fortsetzt. Werden alle Snapshots vor Ablauf der Zeitüberschreitung erstellt, bilden die resultierenden Snapshots eine gültige Konsistenzgruppe.
 
 
 
@@ -109,20 +112,20 @@ Einige Schreibvorgänge müssen auf der Festplatte vorhanden sein, bevor die Dat
 Es gibt zwei primäre Ansätze bei Snapshot-basierten Backups:
 
 * Absturzkonsistente Backups
-* Snapshot geschützte Hot-Backups
+* Snapshot-geschützte Online-Backups
 
 
-Ein absturzkonsistentes Backup einer Datenbank bezieht sich auf die Erfassung der gesamten Datenbankstruktur, einschließlich Datendateien, Wiederherstellungsprotokolle und Kontrolldateien zu einem bestimmten Zeitpunkt. Wenn die Datenbank in einem einzigen Volume gespeichert wird, ist der Vorgang einfach. Ein Snapshot kann jederzeit erstellt werden. Wenn eine Datenbank in mehreren Volumes gespeichert ist, muss ein Snapshot einer Konsistenzgruppe (CG) erstellt werden. Für das Erstellen von Snapshots von Konsistenzgruppen stehen verschiedene Optionen zur Verfügung, darunter NetApp SnapCenter-Software, native Funktionen von ONTAP-Konsistenzgruppen und vom Benutzer verwaltete Skripts.
+Ein absturzkonsistenter Backup einer Datenbank bezieht sich auf die Erfassung der gesamten Datenbankstruktur, einschließlich Datenbankdateien, Wiederherstellungsprotokollen und Steuerdateien, zu einem einzigen, zeitpunktgenauen Zeitpunkt. Wenn die Datenbank in einem einzelnen Volume, einer LUN oder einem Namespace gespeichert ist, ist der Vorgang einfach; ein Snapshot kann jederzeit erstellt werden. Wenn eine Datenbank sich über AFF Volumes oder ASA LUNs/Namespaces erstreckt, muss ein Konsistenzgruppen-(CG-)Snapshot erstellt werden. Für die Erstellung von CG-Snapshots gibt es mehrere Optionen, darunter NetApp SnapCenter software, native ONTAP Konsistenzgruppenfunktionen und benutzerverwaltete Skripte.
 
-Absturzkonsistente Snapshot Backups werden in erster Linie verwendet, wenn die Recovery eines bestimmten Backup ausreichend ist. Archivprotokolle können unter bestimmten Umständen eingesetzt werden. Wenn jedoch eine granularere zeitpunktgenaue Recovery erforderlich ist, ist ein Online-Backup vorzuziehen.
+Absturzkonsistente Snapshot-Backups werden hauptsächlich dann eingesetzt, wenn eine zeitpunktgenaue Wiederherstellung zum Zeitpunkt des Backups ausreicht. Archivprotokolle können unter bestimmten Umständen verwendet werden, aber wenn eine granularere zeitpunktgenaue Wiederherstellung erforderlich ist, ist ein Online-Backup vorzuziehen.
 
 Das grundlegende Verfahren für ein Snapshot-basiertes Online-Backup ist wie folgt:
 
 . Platzieren Sie die Datenbank in `backup` Modus.
-. Erstellen Sie einen Snapshot aller Volumes, die Datendateien hosten.
+. Erstellen Sie einen Snapshot aller Speicherressourcen (NFS-Exporte, LUNs oder NVMe-Namespaces), die Datendateien hosten.
 . Beenden `backup` Modus.
 . Führen Sie den Befehl aus `alter system archive log current` So erzwingen Sie die Protokollarchivierung.
-. Erstellen Sie Snapshots aller Volumes, die die Archivprotokolle hosten.
+. Erstellen Sie Snapshots aller Speicherressourcen, die die Archivprotokolle hosten.
 
 
 Dieses Verfahren ergibt einen Satz von Snapshots, die Datendateien im Backup-Modus enthalten, und die kritischen Archivprotokolle, die im Backup-Modus generiert wurden. Dies sind die beiden Anforderungen für das Recovery einer Datenbank. Dateien wie Kontrolldateien sollten ebenfalls aus Gründen der Bequemlichkeit geschützt werden, aber die einzige absolute Anforderung ist die Sicherung von Datendateien und Archivprotokollen.
@@ -133,21 +136,24 @@ Auch wenn unterschiedliche Kunden möglicherweise sehr unterschiedliche Strategi
 
 == Snapshot-basierte Recovery
 
-Beim Entwurf von Volume-Layouts für Oracle-Datenbanken ist die erste Entscheidung, ob die Volume-basierte VBSR-Technologie (NetApp SnapRestore) verwendet wird.
+Bei der Entwicklung von Storage-Layouts für Oracle-Datenbanken ist die erste Entscheidung, ob die volumenbasierte NetApp SnapRestore (VBSR) Technologie verwendet werden soll, die die zugrunde liegende Technologie für die Wiederherstellung von AFF Volumes und ASA LUNs/Namespaces ist.
 
-Mit Volume-basierten SnapRestore kann ein Volume fast sofort auf einen früheren Zeitpunkt zurückgesetzt werden. Da alle Daten auf dem Volume zurückgesetzt werden, ist VBSR möglicherweise nicht für alle Anwendungsfälle geeignet. Wenn beispielsweise eine gesamte Datenbank, einschließlich Datendateien, Wiederherstellungs- und Archivprotokolle, auf einem einzelnen Volume gespeichert ist und dieses Volume mit VBSR wiederhergestellt wird, gehen Daten verloren, da das neuere Archivprotokoll und die Wiederherstellungsdaten verworfen werden.
+VBSR ermöglicht die nahezu sofortige Wiederherstellung von Daten auf einen früheren Zeitpunkt. Da alle Daten auf dem wiederhergestellten Datenträger verloren gehen, ist VBSR möglicherweise nicht für alle Anwendungsfälle geeignet. Wenn beispielsweise eine gesamte Datenbank, einschließlich Datenbankdateien, Wiederherstellungsprotokollen und Archivprotokollen, auf einem einzelnen AFF Volume gespeichert ist und dieses Volume mit VBSR wiederhergestellt wird, gehen Daten verloren, da die neueren Archivprotokolle und Wiederherstellungsprotokolldaten verworfen werden. Dasselbe gilt für ASA Daten. Wenn die gesamte Datenbank in einer einzelnen ASA Konsistenzgruppe gespeichert war und diese Konsistenzgruppe auf einen früheren Zustand wiederhergestellt wurde, gehen einige der späteren Archivprotokolle und Wiederherstellungsprotokolldaten verloren.
 
-VBSR ist für die Wiederherstellung nicht erforderlich. Viele Datenbanken können mithilfe von dateibasiertem Single-File SnapRestore (SFSR) oder einfach durch Kopieren von Dateien aus dem Snapshot zurück in das aktive Dateisystem wiederhergestellt werden.
+VBSR ist für die Wiederherstellung nicht erforderlich. Viele Datenbanken können mithilfe der dateibasierten Einzeldatei SnapRestore (Einzeldatei SnapRestore) oder durch einfaches Klonen von Dateien aus dem Snapshot zurück in das aktive Dateisystem wiederhergestellt werden.
 
-VBSR wird bevorzugt, wenn eine Datenbank sehr groß ist oder wenn sie so schnell wie möglich wiederhergestellt werden muss, und die Verwendung von VBSR erfordert die Isolierung der Datendateien. In einer NFS-Umgebung müssen die Datendateien einer bestimmten Datenbank in dedizierten Volumes gespeichert werden, die nicht durch andere Dateitypen kontaminiert sind. In einer SAN-Umgebung müssen Datendateien in dedizierten LUNs auf dedizierten Volumes gespeichert werden. Wenn ein Volume-Manager verwendet wird (einschließlich Oracle Automatic Storage Management [ASM]), muss die Festplattengruppe auch für Datendateien reserviert sein.
+VBSR ist die bevorzugte Methode, wenn eine Datenbank sehr groß ist oder so schnell wie möglich wiederhergestellt werden muss, und die Verwendung von VBSR erfordert die Isolation der Datendateien. In einer NFS-Umgebung müssen die Datendateien einer bestimmten Datenbank in dedizierten Volumes gespeichert werden, die nicht durch andere Dateitypen verunreinigt sind. In einer SAN-Umgebung müssen Datendateien in dedizierten LUNs oder Namespaces gespeichert werden. Wird ein Volume-Manager verwendet (einschließlich Oracle Automatic Storage Management [ASM]), muss die Festplattengruppe ebenfalls ausschließlich für Datendateien reserviert sein.
 
-Werden Datendateien auf diese Weise isoliert, können sie in einen früheren Zustand zurückgesetzt werden, ohne andere Filesysteme zu beschädigen.
+Durch die Isolierung von Datendateien auf diese Weise können diese in einen früheren Zustand zurückversetzt werden, ohne andere Dateisysteme zu beschädigen.
 
 
 
-== Snapshot Reserve
+== AFF Snapshot-Reserve
 
-Für jedes Volume mit Oracle-Daten in einer SAN-Umgebung die `percent-snapshot-space` Sollte auf null gesetzt werden, da das Reservieren von Speicherplatz für einen Snapshot in einer LUN-Umgebung nicht nützlich ist. Wenn die fraktionale Reserve auf 100 eingestellt ist, benötigt ein Snapshot eines Volumes mit LUNs genug freien Platz im Volumen, ausgenommen die Snapshot-Reserve, um 100% Umsatz aller Daten aufzunehmen. Wenn die fraktionale Reserve auf einen niedrigeren Wert eingestellt ist, dann ist entsprechend weniger freier Speicherplatz erforderlich, schließt jedoch immer die Snapshot Reserve aus. Das bedeutet, dass der Speicherplatz der Snapshot-Reserve in einer LUN-Umgebung verschwendet wird.
+Für jedes Volume mit Oracle-Daten in einer AFF SAN-Umgebung sollte der  `percent-snapshot-space` auf Null gesetzt werden, da die Reservierung von Speicherplatz für einen Snapshot in einer LUN-Umgebung nicht sinnvoll ist. Wenn die anteilige Reserve auf 100 gesetzt ist, benötigt ein Snapshot eines Volumes mit LUNs genügend freien Speicherplatz im Volume, ohne die Snapshot-Reserve, um einen 100%igen Austausch aller Daten aufzunehmen. Wenn die anteilige Reserve auf einen niedrigeren Wert gesetzt ist, wird entsprechend weniger freier Speicherplatz benötigt, aber die Snapshot-Reserve wird immer ausgeschlossen. Das bedeutet, dass der Speicherplatz für die Snapshot-Reserve in einer LUN-Umgebung verschwendet wird.
+
+
+NOTE: Die Snapshot-Reserve gilt nicht für ASA Storage.
 
 In einer NFS-Umgebung gibt es zwei Optionen:
 

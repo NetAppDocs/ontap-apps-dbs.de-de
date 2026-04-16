@@ -35,7 +35,7 @@ Weitere Informationen zu Snapshots finden Sie im link:https://docs.netapp.com/us
 
 == Manipulationssichere Snapshots
 
-Ab ONTAP 9.12.1 sind Snapshots nicht nur schreibgeschützt, sondern können auch vor versehentlichem oder absichtlichem Löschen geschützt werden. Diese Funktion wird als manipulationssichere Snapshots bezeichnet. Über die Snapshot-Richtlinie kann eine Aufbewahrungsfrist festgelegt und durchgesetzt werden. Die resultierenden Snapshots können erst gelöscht werden, wenn sie ihr Ablaufdatum erreicht haben. Es gibt keine administrativen oder Support Center-Überschreibungen.
+Bereits ab ONTAP 9.12.1 sind Snapshots nicht nur schreibgeschützt, sondern können auch vor versehentlichem oder absichtlichem Löschen geschützt werden. Die Funktion heißt manipulationssichere Snapshots. Eine Aufbewahrungsfrist kann festgelegt und über die Snapshot-Richtlinie durchgesetzt werden. Die resultierenden Snapshots können erst gelöscht werden, wenn sie ihr Ablaufdatum erreicht haben. Es gibt keine administrativen oder Support-Center-Überschreibungen.
 
 So wird sichergestellt, dass ein Eindringling, ein böswilliger Insider oder sogar ein Ransomware-Angriff die Backups nicht kompromittieren kann, selbst wenn er zum Zugriff auf das ONTAP-System selbst geführt hat. In Verbindung mit häufigen Snapshot-Zeitplänen ist das Ergebnis eine äußerst leistungsstarke Datensicherheit mit einem sehr niedrigen RPO.
 

@@ -15,7 +15,7 @@ searchtitle: Tools für das Management und die Automatisierung von Oracle Datenb
 
 
 [role="lead"]
-Der Hauptnutzen von ONTAP in einer Oracle Datenbankumgebung ergibt sich aus den zentralen ONTAP Technologien wie sofortige Snapshot Kopien, einfache SnapMirror Replizierung und die effiziente Erstellung von FlexClone Volumes.
+Der Hauptnutzen von ONTAP in einer Oracle Datenbankumgebung ergibt sich aus den Kerntechnologien von ONTAP, wie z. B. sofortigen Snapshot-Kopien, einfacher SnapMirror-Replikation und effizienter Erstellung geklonter Volumes, LUNs und Namespaces.
 
 In manchen Fällen erfüllt eine einfache Konfiguration dieser Kernfunktionen direkt in ONTAP die Anforderungen, für kompliziertere Anforderungen ist jedoch eine Orchestrierungsschicht erforderlich.
 

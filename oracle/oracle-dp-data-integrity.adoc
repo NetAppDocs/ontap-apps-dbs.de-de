@@ -102,9 +102,9 @@ ONTAP lässt kein Failover zu, wenn die Daten nicht synchron sind, es sei denn, 
 
 Datenbanken sind besonders anfällig für Beschädigungen, wenn ein Failover erzwungen wird, da Datenbanken große interne Daten-Caches auf der Festplatte aufbewahren. Wenn ein erzwungenes Failover auftritt, werden zuvor bestätigte Änderungen effektiv verworfen. Der Inhalt des Storage Arrays springt effektiv zurück in die Zeit, und der Zustand des Datenbank-Cache entspricht nicht mehr dem Status der Daten auf der Festplatte.
 
-Um Daten aus dieser Situation zu schützen, können mit ONTAP Volumes für speziellen Schutz vor NVRAM-Ausfällen konfiguriert werden. Wenn dieser Schutzmechanismus ausgelöst wird, gelangt ein Volume in den Status „NVFAIL“. Dieser Status führt zu I/O-Fehlern, die dazu führen, dass Applikationen heruntergefahren werden, sodass keine veralteten Daten verwendet werden. Daten sollten nicht verloren gehen, da alle bestätigten Schreibvorgänge auf dem Speicher-Array vorhanden sein sollten.
+Um Daten in solchen Situationen zu schützen, ermöglicht ONTAP die Konfiguration von Volumes, LUNs oder NVMe-Namespaces für einen speziellen Schutz vor NVRAM-Ausfällen. Wird dieser Schutzmechanismus ausgelöst, wechseln die Speicherressourcen in den Zustand NVFAIL. Dies führt zu E/A-Fehlern, die ein Herunterfahren der Anwendung bewirken, damit keine veralteten Daten verwendet werden. Daten sollten nicht verloren gehen, da jeder bestätigte Schreibvorgang im Storage-Array vorhanden sein sollte.
 
-Als Nächstes muss ein Administrator die Hosts vollständig herunterfahren, bevor die LUNs und Volumes manuell wieder online geschaltet werden. Obwohl diese Schritte etwas Arbeit erfordern können, ist dieser Ansatz der sicherste Weg, um die Datenintegrität zu gewährleisten. Nicht alle Daten erfordern diesen Schutz. Daher kann ein NVFAIL-Verhalten auf Volume-Basis konfiguriert werden.
+Üblicherweise fährt ein Administrator die Hosts anschließend vollständig herunter, bevor er die LUNs, Namespaces oder NFS-Volumes manuell wieder online schaltet. Obwohl dieser Vorgang etwas Aufwand erfordert, ist er die sicherste Methode, um die Datenintegrität zu gewährleisten. Nicht alle Daten benötigen diesen Schutz, weshalb das Verhalten von NVFAIL granular konfiguriert werden kann.
 
 
 
