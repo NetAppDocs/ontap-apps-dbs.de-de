@@ -85,7 +85,7 @@ Die minimale und/oder maximale QoS kann problemlos auf einzelnen VMs oder VMDKs 
 Wenn Sie das Storage-Funktionsprofil für den vVol Container erstellen, geben Sie unter der Performance-Funktion einen IOPS-Wert für max und/oder min an und verweisen dann mit der Storage-Richtlinie der VM auf dieses Storage-Funktionsprofil. Verwenden Sie diese Richtlinie beim Erstellen der VM oder beim Anwenden der Richtlinie auf eine vorhandene VM.
 
 
-NOTE: VVols erfordert die Verwendung von ONTAP Tools für VMware vSphere, die als VASA Provider für ONTAP fungiert. Weitere Informationen zu VVols finden Sie unter link:/vmware/vmware-vvols-overview.html["VMware vSphere Virtual Volumes (VVols) mit ONTAP"]Best Practices.
+NOTE: vVols erfordert die Verwendung von ONTAP tools for VMware vSphere, das als VASA Provider für ONTAP fungiert. Siehe link:vmware-vvols-overview.html["VMware vSphere Virtual Volumes (VVols) mit ONTAP"] für vVols Best Practices.
 
 
 

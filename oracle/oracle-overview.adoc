@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: oracle/oracle-overview.html 
 keywords: oracle, database, ontap, TR-3633 
-summary: 'ONTAP wurde für Oracle Datenbanken entwickelt. Erfahren Sie, wie:' 
+summary: ONTAP ist für Oracle Datenbanken konzipiert. 
 ---
 = Oracle-Datenbanken auf ONTAP
 :allow-uri-read: 

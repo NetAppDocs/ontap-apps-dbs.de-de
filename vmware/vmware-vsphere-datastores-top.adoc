@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: vmware/vmware-vsphere-datastores-top.html 
-keywords: vSphere, datastore, VMFS, FC, NVMe/FC, NVMe/TCP, iSCSI, NFS, vVols 
+keywords: vSphere, datastore, VMFS, FC, NVMe-FC, NVMe-TCP, iSCSI, NFS, vVols 
 summary: Auf dieser Seite werden die Best Practices zur Implementierung einer ONTAP Storage-Lösung in einer VMware vSphere Umgebung beschrieben. 
 ---
 = Übersicht über vSphere Datastore- und Protokollfunktionen

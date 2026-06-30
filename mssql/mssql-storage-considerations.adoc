@@ -28,11 +28,11 @@ Wenn Sie eine neue Datenbank erstellen, empfiehlt Microsoft, getrennte Laufwerke
 
 
 
-== Aggregate
+== AFF Aggregate
 
-Aggregate sind die Storage-Container der niedrigsten Ebene für NetApp Storage-Konfigurationen. Im Internet gibt es eine ältere Dokumentation, die die Trennung von E/A auf verschiedene Sätze zugrunde liegender Laufwerke empfiehlt. Dies wird bei ONTAP nicht empfohlen. NetApp hat verschiedene I/O-Workload-Merkmalstests mit gemeinsam genutzten und dedizierten Aggregaten mit getrennten Datendateien und Transaktions-Log-Dateien durchgeführt. Tests zeigen, dass ein großes Aggregat mit mehr RAID-Gruppen und -Laufwerken die Storage Performance optimiert und verbessert und Administratoren aus zwei Gründen einfacher zu managen sind:
+Aggregate sind die unterste Speicherebene für AFF-Speicherkonfigurationen. Im Internet findet sich vereinzelt ältere Dokumentation, die empfiehlt, die E/A auf verschiedene Gruppen von Laufwerken zu verteilen. Dies wird mit ONTAP nicht empfohlen. NetApp hat verschiedene Tests zur Charakterisierung der I/O-Last mit gemeinsam genutzten und dedizierten Aggregaten durchgeführt, wobei Datendateien und Transaktionsprotokolldateien getrennt waren. Die Tests zeigen, dass ein großes Aggregat mit mehreren RAID-Gruppen und Laufwerken die Speicherleistung optimiert und verbessert und aus zwei Gründen für Administratoren einfacher zu verwalten ist:
 
-* Ein großes Aggregat macht die I/O-Funktionen aller Laufwerke für alle Dateien verfügbar.
+* Ein großes Aggregat/SA macht die E/A-Fähigkeiten aller Laufwerke für alle Dateien verfügbar.
 * Ein großes Aggregat ermöglicht die effizienteste Nutzung von Festplattenspeicher.
 
 

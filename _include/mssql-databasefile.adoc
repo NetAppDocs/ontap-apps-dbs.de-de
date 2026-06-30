@@ -4,7 +4,7 @@
 
 
 
-=== Datenbankdateien & Dateigruppe
+== Datenbankdateien & Dateigruppe
 
 Jede Datenbank besteht aus einer oder mehreren Datendateien und einer oder mehreren Transaktions-Log-Dateien. Das Transaktionsprotokoll speichert die Informationen über Datenbanktransaktionen und alle von jeder Sitzung vorgenommenen Datenänderungen. Jedes Mal, wenn die Daten geändert werden, speichert SQL Server genügend Informationen im Transaktionsprotokoll, um die Aktion rückgängig zu machen (Rollback) oder zu wiederholen (Replay). Ein SQL Server-Transaktionsprotokoll ist ein integraler Bestandteil des Rufs von SQL Server für Datenintegrität und Robustheit. Das Transaktionsprotokoll ist für die Atomizität, Konsistenz, Isolation und Strapazierfähigkeit (ACID) von SQL Server von entscheidender Bedeutung. SQL Server schreibt in das Transaktionsprotokoll, sobald eine Änderung an der Datenseite erfolgt. Jede DML-Anweisung (Data Manipulation Language) (z. B. SELECT, Insert, Update oder delete) ist eine vollständige Transaktion, und das Transaktionsprotokoll stellt sicher, dass der gesamte Set-basierte Vorgang durchgeführt wird, um die Atomizität der Transaktion sicherzustellen.
 
@@ -23,7 +23,7 @@ TIP: *NetApp empfiehlt* die Verwendung der primären Dateigruppe für alles ande
 
 
 
-=== Initialisierung der Datenbankinstanzdatei
+== Initialisierung der Datenbankinstanzdatei
 
 Sie können die ursprüngliche Dateigröße und die automatischen Wachstumsparameter angeben, wenn Sie die Datenbank erstellen oder neue Dateien zu einer vorhandenen Datenbank hinzufügen. SQL Server verwendet einen proportionalen Füllalgorithmus bei der Auswahl der Datendatei, in die Daten geschrieben werden sollen. Es schreibt eine Datenmenge proportional zum verfügbaren freien Speicherplatz in den Dateien. Je mehr Speicherplatz in der Datei verfügbar ist, desto mehr Schreibvorgänge werden verarbeitet.
 

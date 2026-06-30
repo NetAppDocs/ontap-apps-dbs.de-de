@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: vmware/vmware-vsphere-network.html 
-keywords: vSphere, datastore, VMFS, FC, FCoE, NVMe/FC, iSCSI, NFS, vVols 
+keywords: vSphere, datastore, VMFS, FC, FCoE, NVMe-FC, iSCSI, NFS, vVols 
 summary: Auf dieser Seite werden die Best Practices zur Implementierung einer ONTAP Storage-Lösung in einer VMware vSphere Umgebung beschrieben. 
 ---
 = Netzwerkkonfiguration
@@ -82,7 +82,15 @@ Empfohlene Best Practices finden Sie in link:vmware-vsphere-datastores-nfs.html[
 
 == Direkte Netzwerkverbindung
 
-Storage-Administratoren ziehen es manchmal vor, ihre Infrastruktur zu vereinfachen, indem sie Netzwerk-Switches von der Konfiguration entfernen. Dies kann in einigen Szenarien unterstützt werden. Allerdings gibt es einige Einschränkungen und Einschränkungen, die zu beachten sind.
+Virtualisierungsadministratoren bevorzugen es mitunter, ihre Infrastrukturen zu vereinfachen, indem sie Netzwerk-Switches aus der Konfiguration entfernen. Dies ermöglicht die Erstellung einer stärker in sich geschlossenen Lösung mit weniger Komponenten und geringerem Platzbedarf im Rack. Es bestehen einige wichtige Einschränkungen, die vom verwendeten Protokoll abhängen.
+
+
+
+=== Fibre Channel
+
+Ab ONTAP 9.19.1 wird Direct-Connect FC sowohl mit herkömmlichem FC-SAN (SCSI) als auch mit NVMe/FC mit ausgewählten FC-Adaptern für Speichersysteme unterstützt. Die HBAs stellen eine standardmäßige Punkt-zu-Punkt-FC-Verbindung her.
+
+Vor ONTAP 9.19.1 erfordern ONTAP Speichersysteme NPIV, was bedeutet, dass das Speichersystem mit einem FC Switch verbunden sein muss, der ebenfalls NPIV unterstützt.
 
 
 
@@ -98,12 +106,6 @@ Direct-Connected NFS Storage kann genutzt werden, aber mit einer erheblichen Ein
 
 Der Grund, warum ein unterbrechungsfreier Failover mit direkt verbundenem NFS-Storage kompliziert ist, ist das Routing auf dem lokalen Betriebssystem. Angenommen, ein Host hat eine IP-Adresse von 192.168.1.1/24 und ist direkt mit einem ONTAP-Controller mit einer IP-Adresse von 192.168.1.50/24 verbunden. Während eines Failovers kann diese 192.168.1.50-Adresse ein Failover auf den anderen Controller durchführen, und sie wird für den Host verfügbar sein. Wie erkennt der Host jedoch sein Vorhandensein? Die ursprüngliche 192.168.1.1-Adresse ist noch auf der Host-NIC vorhanden, die keine Verbindung mehr zu einem Betriebssystem herstellt. Der für 192.168.1.50 bestimmte Datenverkehr würde weiterhin an einen nicht funktionsfähigen Netzwerkport gesendet.
 
-Die zweite BS-NIC könnte als 19 konfiguriert werden 2.168.1.2 und wäre in der Lage, mit der Failed Over 192.168.1.50-Adresse zu kommunizieren, aber die lokalen Routing-Tabellen würden standardmäßig eine *und nur eine*-Adresse verwenden, um mit dem Subnetz 192.168.1.0/24 zu kommunizieren. Ein Sysadmin könnte ein Skript-Framework erstellen, das eine fehlerhafte Netzwerkverbindung erkennt und die lokalen Routing-Tabellen ändert oder Schnittstellen hoch- und herunterfahren würde. Das genaue Verfahren hängt vom verwendeten Betriebssystem ab.
+Die zweite OS-NIC könnte als 192.168.1.2 konfiguriert werden und wäre in der Lage, mit der übergewechselten Adresse 192.168.1.50 zu kommunizieren, aber die lokalen Routingtabellen hätten standardmäßig die Vorgabe, eine *und nur eine* Adresse für die Kommunikation mit dem Subnetz 192.168.1.0/24 zu verwenden. Ein Systemadministrator könnte ein Skripting-Framework erstellen, das einen Ausfall der Netzwerkverbindung erkennt und die lokalen Routingtabellen anpasst oder Schnittstellen aktiviert und deaktiviert. Das genaue Verfahren würde vom verwendeten Betriebssystem abhängen.
 
-In der Praxis haben NetApp-Kunden NFS direkt verbunden, aber normalerweise nur für Workloads, bei denen IO-Pausen während Failover akzeptabel sind. Wenn harte Mounts verwendet werden, sollte es während solcher Pausen keine IO-Fehler geben. Die E/A-Vorgänge sollten so lange anhalten, bis Dienste wiederhergestellt werden, entweder durch ein Failback oder durch einen manuellen Eingriff, um IP-Adressen zwischen NICs auf dem Host zu verschieben.
-
-
-
-=== FC Direct Connect
-
-Es ist nicht möglich, einen Host direkt über das FC-Protokoll mit einem ONTAP Storage-System zu verbinden. Der Grund dafür ist die Verwendung von NPIV. Der WWN, der einen ONTAP FC-Port mit dem FC-Netzwerk identifiziert, verwendet eine Art Virtualisierung, die als NPIV bezeichnet wird. Jedes Gerät, das an ein ONTAP-System angeschlossen ist, muss einen NPIV-WWN erkennen können. Es gibt derzeit keine HBA-Anbieter, die einen HBA anbieten, der auf einem Host installiert werden kann, der ein NPIV-Ziel unterstützen könnte.
+In der Praxis haben NetApp-Kunden NFS direkt verbunden, aber normalerweise nur für Workloads, bei denen IO-Pausen während Failover akzeptabel sind. Wenn harte Mounts verwendet werden, sollte es während solcher Pausen keine IO-Fehler geben. Die E/A-Vorgänge sollten so lange hängen bleiben, bis Dienste wiederhergestellt werden, entweder durch ein Failback oder durch einen manuellen Eingriff, um IP-Adressen zwischen NICs auf dem Host zu verschieben.
