@@ -18,10 +18,12 @@ ONTAP SVMs unterstützen die Blockprotokolle iSCSI und FC. Wenn eine SVM mit dem
 
 
 
+[[provisioning-netapp-lun-on-windows-server]]
 == Bereitstellung von NetApp-LUNs auf Windows Server
 
 
 
+[[prerequisites]]
 === Voraussetzungen
 
 Der Einsatz von NetApp Storage in SAN-Umgebungen in Windows Server hat folgende Anforderungen:
@@ -36,6 +38,7 @@ Der Einsatz von NetApp Storage in SAN-Umgebungen in Windows Server hat folgende 
 
 
 
+[[deployment]]
 === Einsatz
 
 . Erstellen einer neuen SVM mit aktivierter Blockprotokoll-iSCSI und/oder FC Eine neue SVM kann mit einer der folgenden Methoden erstellt werden:
@@ -77,6 +80,7 @@ Der IQN für iSCSI auf Windows Server kann auch in der Konfiguration der iSCSI-I
 
 
 
+[[host-integration]]
 === Host-Integration
 
 Windows Server verwendet Asymmetrical Logical Unit Access (ALUA) Extension MPIO, um direkte und indirekte Pfade zu LUNs zu ermitteln. Obwohl jede LIF, die einer SVM gehört, Lese-/Schreibanforderungen für ihre LUNs akzeptiert, sind tatsächlich nur einer der Cluster-Nodes Eigentümer der Festplatten, die diese LUN zu einem beliebigen Zeitpunkt sichern. Dadurch werden die verfügbaren Pfade zu einer LUN in zwei Typen unterteilt, direkt oder indirekt, wie in der folgenden Abbildung dargestellt.
@@ -89,12 +93,14 @@ image:win_image3.png["Mehrere Pfade in einer SAN-Umgebung,width=624,height=232"]
 
 
 
+[[mpio]]
 === MPIO
 
 ONTAP bietet hochverfügbaren Storage, bei dem mehrere Pfade vom Storage Controller zum Windows Server existieren können. Multipathing ist die Fähigkeit, mehrere Datenpfade von einem Server zu einem Storage-Array zu haben. Multipathing schützt vor Hardware-Ausfällen (Kabelschnitte, Switch- und Host Bus Adapter- [HBA]-Ausfall usw.) und kann durch die Verwendung der aggregierten Performance mehrerer Verbindungen höhere Performance-Grenzwerte bieten. Wenn ein Pfad oder eine Verbindung nicht mehr verfügbar ist, verschiebt die Multipathing-Software die Last automatisch auf einen der anderen verfügbaren Pfade. Die MPIO-Funktion kombiniert mehrere physische Pfade zum Storage als einen einzigen logischen Pfad, der für den Datenzugriff verwendet wird, um Storage Resiliency und Load Balancing zu ermöglichen. Um diese Funktion verwenden zu können, muss die MPIO-Funktion auf Windows Server aktiviert sein.
 
 
 
+[[enable-mpio]]
 === Aktivieren Sie MPIO
 
 Führen Sie die folgenden Schritte aus, um MPIO auf Windows Server zu aktivieren:
@@ -109,6 +115,7 @@ Führen Sie die folgenden Schritte aus, um MPIO auf Windows Server zu aktivieren
 
 
 
+[[configure-mpio]]
 === Konfigurieren Sie MPIO
 
 Wenn Sie das iSCSI-Protokoll verwenden, müssen Sie Windows Server anweisen, Multipath-Unterstützung auf iSCSI-Geräte in den MPIO-Eigenschaften anzuwenden.
@@ -126,6 +133,7 @@ Führen Sie die folgenden Schritte aus, um MPIO auf Windows Server zu konfigurie
 
 
 
+[[configure-iscsi]]
 === Konfigurieren Sie iSCSI
 
 Führen Sie die folgenden Schritte aus, um iSCSI-Blockspeicher auf Windows Server zu erkennen:
@@ -151,6 +159,7 @@ Führen Sie die folgenden Schritte aus, um iSCSI-Blockspeicher auf Windows Serve
 
 
 
+[[detect-block-storage]]
 === Block-Storage erkennen
 
 Führen Sie die folgenden Schritte aus, um iSCSI- oder FC-Blockspeicher auf Windows Server zu erkennen:
@@ -162,6 +171,7 @@ Führen Sie die folgenden Schritte aus, um iSCSI- oder FC-Blockspeicher auf Wind
 
 
 
+[[best-practices]]
 === Best Practices in sich vereint
 
 * NetApp empfiehlt die Aktivierung von Thin Provisioning auf den Volumes, auf denen die LUNs gehostet werden.
@@ -172,16 +182,19 @@ Führen Sie die folgenden Schritte aus, um iSCSI- oder FC-Blockspeicher auf Wind
 
 
 
+[[provisioning-netapp-luns-on-nano-server]]
 == Bereitstellung von NetApp-LUNs auf dem Nano Server
 
 
 
+[[prerequisites]]
 === Voraussetzungen
 
 Zusätzlich zu den im vorherigen Abschnitt genannten Voraussetzungen muss die Speicherrolle von der Nano-Server-Seite aus aktiviert werden. Beispielsweise muss Nano Server mit der Option -Storage bereitgestellt werden. Informationen zum Bereitstellen von Nano Server finden Sie im Abschnitt „link:win_deploy_nano.html["Stellen Sie Nano Server Bereit."]„
 
 
 
+[[deployment]]
 === Einsatz
 
 Gehen Sie wie folgt vor, um NetApp-LUNs auf einem Nano-Server bereitzustellen:
@@ -298,12 +311,14 @@ Format-Volume -DriveLetter <DriveLetter> -FileSystem <FAT32 or NTFS or REFS>
 
 
 
+[[boot-from-san]]
 == Booten über das SAN
 
 Ein physischer Host (Server) oder eine Hyper-V-VM kann das Windows-Serverbetriebssystem direkt von einer NetApp-LUN starten, anstatt von der internen Festplatte. Beim Ansatz „vom SAN booten“ befindet sich das BS-Image, von dem aus gebootet werden soll, auf einer NetApp-LUN, die mit einem physischen Host oder einer physischen VM verbunden ist. Bei einem physischen Host ist der HBA des physischen Hosts so konfiguriert, dass er die NetApp-LUN zum Booten verwendet. Bei einer VM wird die NetApp-LUN zum Booten als Pass-Through-Disk angehängt.
 
 
 
+[[netapp-flexclone-approach]]
 === NetApp FlexClone
 
 Mithilfe der NetApp FlexClone Technologie können Boot-LUNs mit einem Betriebssystem-Image sofort geklont und mit den Servern und VMs verbunden werden, um schnell saubere Betriebssystem-Images zu liefern, wie in der folgenden Abbildung dargestellt.
@@ -312,6 +327,7 @@ image:win_image4.png["Booten von LUNs mit NetApp FlexClone,width=561,height=357"
 
 
 
+[[boot-from-san-for-physical-host]]
 === Booten vom SAN für physischen Host
 
 
@@ -345,6 +361,7 @@ So konfigurieren Sie das Booten von SAN für einen physischen Host:
 
 
 
+[[boot-from-san-for-virtual-machine]]
 === Starten Sie von SAN für die virtuelle Maschine
 
 Gehen Sie wie folgt vor, um das Booten über das SAN für eine VM zu konfigurieren:
@@ -370,6 +387,7 @@ Gehen Sie wie folgt vor, um das Booten über das SAN für eine VM zu konfigurier
 
 
 
+[[best-practices]]
 === Best Practices in sich vereint
 
 * Stellen Sie sicher, dass die LUNs offline sind. Andernfalls kann die Festplatte nicht als Pass-Through-Disk zu einer VM hinzugefügt werden.

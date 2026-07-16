@@ -16,6 +16,7 @@ Herkömmliche erweiterte RAC-Cluster stützten sich auf ASM-Spiegelung für Date
 
 
 
+[[replication]]
 == Replizierung
 
 Sie sind für das Verständnis der RAC-Funktionalität auf SnapMirror Active Sync von zentraler Bedeutung, wenn Storage als einheitlicher Satz von LUNs angezeigt wird, die auf gespiegelter Storage gehostet werden. Beispiel:
@@ -26,12 +27,14 @@ Es gibt keine primäre Kopie oder gespiegelte Kopie. Logisch gesehen, es gibt nu
 
 
 
+[[storage-configuration]]
 == Storage-Konfiguration
 
 In dieser Beispielkonfiguration sind die ASM-Festplatten so konfiguriert, wie sie in jeder RAC-Konfiguration mit einem einzigen Standort auf Enterprise Storage vorhanden wären. Da das Speichersystem Datenschutz bietet, würde ASM externe Redundanz verwendet werden.
 
 
 
+[[uniform-vs-nonuninform-access]]
 == Einheitlicher oder uninformierten Zugriff
 
 Die wichtigste Überlegung bei Oracle RAC on SnapMirror Active Sync ist, ob ein einheitlicher oder nicht einheitlicher Zugriff verwendet werden soll.
@@ -42,6 +45,7 @@ Keine Option wird ausdrücklich empfohlen oder abgeraten. Einige Kunden verfüge
 
 
 
+[[nonuniform-access]]
 == Uneinheitlicher Zugriff
 
 Ein uneinheitlicher Zugriff ist aus SAN-Sicht einfacher zu konfigurieren.
@@ -52,6 +56,7 @@ Der größte Nachteil des link:oracle-dr-smas-nonuniform.html["Uneinheitlicher Z
 
 
 
+[[uniform-access]]
 == Einheitlicher Zugriff
 
 Für einen einheitlichen Zugriff muss das SAN standortübergreifend erweitert werden. Der Hauptvorteil besteht darin, dass der Verlust eines Storage-Systems nicht zum Verlust einer Datenbankinstanz führt. Stattdessen würde dies zu einer Änderung des Multipathing führen, in der Pfade derzeit verwendet werden.
@@ -63,6 +68,7 @@ NOTE: In den Diagrammen unten sind auch aktive, aber nicht optimierte Pfade vorh
 
 
 
+[[aff-with-proximity-settings]]
 === AFF mit Annäherungseinstellungen
 
 Bei erheblichen Latenzzeiten zwischen den Standorten können AFF Systeme mit Host-Näherungseinstellungen konfiguriert werden. So kann jedes Speichersystem erkennen, welche Hosts lokal und welche Remote sind, und Pfadprioritäten entsprechend zuweisen.
@@ -73,6 +79,7 @@ Im normalen Betrieb würde jede Oracle-Instanz bevorzugt die lokalen aktiven/opt
 
 
 
+[[asa-aff-without-proximity-settings]]
 === ASA / AFF ohne Näherungseinstellungen
 
 Falls keine nennenswerte Latenz zwischen den Standorten erforderlich ist, können AFF Systeme ohne Host-Näherungseinstellungen konfiguriert oder ASA verwendet werden.

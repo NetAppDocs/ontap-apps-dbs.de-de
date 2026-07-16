@@ -15,12 +15,14 @@ Diese Architektur bietet den besten Performance- und Kapazitätsausgleich im Clu
 
 
 
+[[six-node-architecture]]
 == Architektur mit sechs Nodes
 
 image:epic-6node.png["Epic 6-Node-Architektur"]
 
 
 
+[[six-node-workload-placement]]
 == Workload-Platzierung mit sechs Nodes
 
 image:epic-6node-design.png["Epic 6 Node-Platzierung"]

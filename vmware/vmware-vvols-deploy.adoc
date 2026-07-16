@@ -19,6 +19,7 @@ Die Bereitstellung von VVols Datastores umfasst mehrere Schritte. Die ASA r2-Sys
 
 
 
+[[preparing-to-create-vvols-datastores-with-ontap-tools]]
 == Vorbereiten der Erstellung von VVols-Datenspeichern mit ONTAP Tools
 
 Sie können die ersten beiden Schritte des Implementierungsprozesses überspringen, wenn Sie bereits ONTAP Tools zum Managen, Automatisieren und Berichten über Ihren vorhandenen VMFS- oder herkömmlichen NFS-basierten Storage nutzen. Darüber hinaus können Sie sich bei der Bereitstellung und Konfiguration von ONTAP-Tools mit diesem vollständigen link:vmware-vvols-checklist.html["Checkliste"]Bericht informieren.
@@ -80,6 +81,7 @@ NOTE: Der Grund dafür, dass der gesamte Cluster in der ONTAP Tools Manager-Benu
 
 
 
+[[creating-vvols-datastores-with-ontap-tools]]
 == Erstellen von VVols Datastores mit ONTAP Tools
 
 Klicken Sie mit der rechten Maustaste auf den Host, das Cluster oder das Datacenter, auf dem Sie den VVols-Datastore erstellen möchten, und wählen Sie dann _ONTAP Tools_ > _Provisioning Datastore_ aus.
@@ -142,12 +144,14 @@ image:vvols-deploy-9.png["Rolle=„Daumen“ „Assistent für Datastore-Bereits
 
 
 
+[[migrating-vms-from-traditional-datastores-to-vvols]]
 == Migration von VMs von herkömmlichen Datastores auf VVols
 
 Die Migration von VMs von herkömmlichen Datastores in einen VVols Datastore ist nicht komplizierter als das Verschieben von VMs zwischen herkömmlichen Datastores. Wählen Sie einfach die VM(s) aus, dann Migrate aus der Liste der Aktionen und dann einen Migrationstyp von _change Storage only_ aus. Wählen Sie bei der entsprechenden Aufforderung eine VM-Storage-Richtlinie aus, die Ihrem VVols-Datastore entspricht. Vorgänge für Migrationskopien können für SAN VMFS zu VVols Migrationen mit vSphere 6.0 und höher verlagert werden, jedoch nicht von NAS VMDKs zu VVols.
 
 
 
+[[managing-vms-with-policies]]
 == Verwalten von VMs mithilfe von Richtlinien
 
 Um die Speicherbereitstellung mit richtlinienbasierter Verwaltung zu automatisieren, müssen Sie VM-Speicherrichtlinien erstellen, die den gewünschten Speicherkapazitäten zugeordnet sind.
@@ -157,6 +161,7 @@ NOTE: ONTAP-Tools ab Version 10.0 verwenden keine Speicherfähigkeitsprofile meh
 
 
 
+[[creating-vm-storage-policies]]
 === Erstellen von VM-Storage-Richtlinien
 
 VM-Speicherrichtlinien werden in vSphere verwendet, um optionale Funktionen wie Storage I/O Control oder vSphere Encryption zu verwalten. Sie werden auch zusammen mit vVols verwendet, um der VM bestimmte Speicherfunktionen zuzuweisen. Verwenden Sie den Speichertyp "NetApp.clustered.Data.ONTAP ONTAP". Unter link:vmware-vvols-ontap.html#Best Practices[example network configuration using vVols over NFS v3] finden Sie ein Beispiel hierfür mit dem ONTAP Tools VASA Provider. Regeln für den Speicher „NetApp.clustered.Data. ONTAP.VP.VASA10“ sind mit Datenspeichern zu verwenden, die nicht auf vVols basieren.

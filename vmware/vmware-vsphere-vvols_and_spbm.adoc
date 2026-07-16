@@ -20,6 +20,7 @@ Als Technology Design Partner lieferte NetApp Architektureingaben und kündigte 
 
 
 
+[[virtual-volumes-vvols]]
 == Virtuelle Volumes (VVols)
 
 VVols sind eine revolutionäre Storage-Architektur, die das granulare Storage-Management von VMs ermöglicht. Dadurch lässt sich Storage nicht nur pro VM (einschließlich VM-Metadaten) managen, sondern sogar pro VMDK. VVols sind eine Kernkomponente der Strategie des Software Defined Data Center (SDDC), die die Grundlage von VMware Cloud Foundation (VCF) bildet und eine effizientere und skalierbarere Storage-Architektur für virtualisierte Umgebungen bietet.
@@ -28,6 +29,7 @@ VVols ermöglichen VMs die Storage-Nutzung pro VM, da jedes VM Storage-Objekt in
 
 
 
+[[storage-policy-based-management-spbm]]
 == Storage Policy Based Management (SPBM)
 
 SPBM bietet ein Framework, das als Abstraktionsebene zwischen den für Ihre Virtualisierungsumgebung verfügbaren Storage-Services und den über Richtlinien bereitgestellten Storage-Elementen dient. Storage-Architekten können mit diesem Ansatz Storage-Pools mit unterschiedlichen Funktionen entwerfen. Diese Pools können von VM-Administratoren problemlos genutzt werden. Administratoren können dann die Workload-Anforderungen der Virtual Machine an die bereitgestellten Storage-Pools anpassen. Dieser Ansatz vereinfacht das Storage-Management und ermöglicht eine effizientere Nutzung der Storage-Ressourcen.
@@ -36,6 +38,7 @@ SPBM ist eine zentrale Komponente von VVols und bietet ein richtlinienbasiertes 
 
 
 
+[[netapp-ontap-and-vvols]]
 == NetApp ONTAP und VVols
 
 Bei VVols ist NetApp ONTAP eine der führenden Lösungen in der Storage-Branche, da es Hunderttausende VVols in einem einzigen Cluster unterstützt*. Im Gegensatz dazu unterstützen Anbieter von Enterprise-Arrays und kleineren Flash-Arrays nur wenige Tausend VVols pro Array. ONTAP bietet eine skalierbare und effiziente Storage-Lösung für VMware vSphere Umgebungen, die VVols mit einer umfassenden Auswahl an Storage-Services unterstützt, darunter Datendeduplizierung, Komprimierung, Thin Provisioning und Datensicherung. SPBM ermöglicht die nahtlose Integration mit VMware vSphere Umgebungen.

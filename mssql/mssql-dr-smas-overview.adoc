@@ -22,6 +22,7 @@ SQL-Server-Hosts greifen über Fibre Channel(FC)- oder iSCSI-LUNs auf Speicher z
 
 
 
+[[architecture-of-snapmirror-active-sync-with-symmetric-activeactive]]
 == Architektur der SnapMirror Active Sync mit symmetrischer aktiv/aktiv-Lösung
 
 image:../media/mssql-smas-architecture.png["Architektur der aktiven Synchronisierung von SnapMirror"]

@@ -16,6 +16,7 @@ Viele Applikationsdatensätze sind nach Datum geordnet. Solche Daten sind im All
 
 
 
+[[policies]]
 == Richtlinien
 
 Um einen dateibasierten Tiering-Ansatz zu implementieren, müssen Sie über Dateien verfügen, die geschrieben und nicht nachträglich geändert werden. Der `tiering-minimum-cooling-days` Richtlinien sollten so hoch eingestellt werden, dass Dateien, die Sie möglicherweise benötigen, auf der Performance-Tier verbleiben. Ein Datensatz, für den die letzten 60 Tage Daten mit optimaler Performance benötigt werden, erfordert beispielsweise die Einstellung `tiering-minimum-cooling-days` Bis 60. Ähnliche Ergebnisse lassen sich auch anhand der Dateizugriffsmuster erzielen. Wenn beispielsweise die Daten der letzten 90 Tage benötigt werden und die Applikation auf diese 90-Tage-Zeitspanne zugreift, verbleiben die Daten in der Performance-Tier. Durch Einstellen der `tiering-minimum-cooling-days` Zeitraum bis 2, erhalten Sie prompt Tiering, nachdem die Daten weniger aktiv werden.

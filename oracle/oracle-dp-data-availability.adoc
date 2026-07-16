@@ -19,6 +19,7 @@ ONTAP wurde für eine maximale Verfügbarkeit von Oracle-Datenbanken konzipiert.
 
 
 
+[[ha-pairs]]
 == HA-Paare
 
 Die Basiseinheit der Hochverfügbarkeit ist das HA-Paar. Jedes Paar enthält redundante Links, um die Replikation von Daten in NVRAM zu unterstützen. NVRAM ist kein Schreib-Cache. Der RAM im Controller dient als Schreib-Cache. Der Zweck von NVRAM besteht darin, Daten vorübergehend zu protokollieren, um Schutz vor unerwarteten Systemausfällen zu bieten. In dieser Hinsicht ähnelt es einem Datenbank-Redo-Protokoll.
@@ -29,6 +30,7 @@ Wenn ein Controller abrupt ausfällt, sind in NVRAM wahrscheinlich noch nicht ge
 
 
 
+[[takeover-and-giveback]]
 == Takeover und Giveback
 
 Takeover und Giveback beziehen sich auf den Prozess, bei dem die Verantwortung für Storage-Ressourcen zwischen Nodes in einem HA-Paar übertragen wird. Takeover und Giveback sind zweierlei Aspekte:
@@ -48,6 +50,7 @@ Der zweite Aspekt von Takeover und Giveback ist die Übertragung der Eigentumsre
 
 
 
+[[takeover-time]]
 == Takeover-Zeit
 
 Host I/O durchläuft zwar eine kurze I/O-Pause bei Takeover- und Giveback-Vorgängen, jedoch sollte in einer korrekt konfigurierten Umgebung keine Applikationsunterbrechung auftreten. Der eigentliche Transitionsprozess, bei dem I/O verzögert wird, wird in der Regel in Sekunden gemessen. Der Host benötigt jedoch möglicherweise zusätzliche Zeit, um die Änderung der Datenpfade zu erkennen und die I/O-Vorgänge erneut auszuführen.

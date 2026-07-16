@@ -14,6 +14,7 @@ Die vorgestellten Skripte werden als Beispiele für das Skript verschiedener Bet
 
 
 
+[[database-shutdown]]
 == Datenbank wird heruntergefahren
 
 Das folgende Perl-Skript nimmt ein einziges Argument der Oracle SID und fährt eine Datenbank herunter. Sie kann als Oracle-Benutzer oder als root ausgeführt werden.
@@ -57,6 +58,7 @@ exit 1;}
 ....
 
 
+[[database-startup]]
 == Starten der Datenbank
 
 Das folgende Perl-Skript nimmt ein einziges Argument der Oracle SID und fährt eine Datenbank herunter. Sie kann als Oracle-Benutzer oder als root ausgeführt werden.
@@ -100,6 +102,7 @@ exit 1;}
 ....
 
 
+[[convert-file-system-to-read-only]]
 == Konvertieren Sie das Dateisystem in schreibgeschützt
 
 Das folgende Skript nimmt ein Dateisystemargument an und versucht, es als schreibgeschützt zu entfernen und wieder zu mounten. Dies ist bei Migrationsprozessen sinnvoll, bei denen ein Dateisystem für die Datenreplikation verfügbar gehalten werden muss und dennoch vor versehentlichen Schäden geschützt werden muss.
@@ -123,6 +126,7 @@ print @out;
 ....
 
 
+[[replace-file-system]]
 == Ersetzen Sie das Dateisystem
 
 Das folgende Skriptbeispiel wird verwendet, um ein Dateisystem durch ein anderes zu ersetzen. Da die Datei `/etc/fstab `bearbeitet wird, muss sie als root ausgeführt werden. Es akzeptiert ein einzelnes kommagetrenntes Argument des alten und des neuen Dateisystems.
@@ -227,6 +231,7 @@ cluster01:/vol_newlogs /logs nfs rw,bg,vers=3,rsize=65536,wsize=65536 0 0
 
 
 
+[[automated-database-migration]]
 == Automatisierte Datenbankmigration
 
 Dieses Beispiel zeigt, wie Skripts zum Herunterfahren, Starten und Ersetzen von Dateisystemen genutzt werden können, um eine Migration vollständig zu automatisieren.
@@ -280,6 +285,7 @@ print @out;
 ....
 
 
+[[display-file-locations]]
 == Dateispeicherorte anzeigen
 
 Dieses Skript sammelt eine Reihe wichtiger Datenbankparameter und druckt sie in einem leicht lesbaren Format aus. Dieses Skript kann bei der Überprüfung von Datenlayouts nützlich sein. Darüber hinaus kann das Skript für andere Zwecke geändert werden.
@@ -354,6 +360,7 @@ print "\n";
 ....
 
 
+[[asm-migration-cleanup]]
 == Bereinigung der ASM-Migration
 
 ....
@@ -416,6 +423,7 @@ print "\n";
 ....
 
 
+[[asm-to-file-system-name-conversion]]
 == Namenskonvertierung von ASM in Dateisystem
 
 ....
@@ -462,6 +470,7 @@ end;
 ....
 
 
+[[replay-logs-on-database]]
 == Wiedergabe von Protokollen in der Datenbank
 
 Dieses Skript akzeptiert ein einzelnes Argument einer Oracle SID für eine Datenbank, die sich im Mount-Modus befindet, und versucht, alle derzeit verfügbaren Archivprotokolle wiederzugeben.
@@ -498,6 +507,7 @@ print @out;
 ....
 
 
+[[replay-logs-on-standby-database]]
 == Wiedergabe von Protokollen in der Standby-Datenbank
 
 Dieses Skript ist identisch mit dem vorhergehenden Skript, außer dass es für eine Standby-Datenbank konzipiert ist.

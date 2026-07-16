@@ -14,6 +14,7 @@ Konfigurationsthemen für das Solaris-Betriebssystem.
 
 
 
+[[solaris-nfs-mount-options]]
 == Solaris NFS-Mount-Optionen
 
 In der folgenden Tabelle sind die Solaris NFS-Mount-Optionen für eine einzelne Instanz aufgeführt.
@@ -74,18 +75,21 @@ Der Grund `actimeo=0` Ist für die gemeinsame Nutzung erforderlich `ORACLE_HOME`
 
 
 
+[[solaris-ufs-mount-options]]
 == Solaris UFS-Mount-Optionen
 
 NetApp empfiehlt nachdrücklich die Verwendung der Mount-Option für die Protokollierung, damit die Datenintegrität im Fall eines Solaris Host-Absturzes oder der Unterbrechung der FC-Konnektivität erhalten bleibt. Die Mount-Option für die Protokollierung behält außerdem die Benutzerfreundlichkeit von Snapshot Backups bei.
 
 
 
+[[solaris-zfs]]
 == Solaris ZFS
 
 Solaris ZFS muss sorgfältig installiert und konfiguriert werden, um eine optimale Leistung zu erzielen.
 
 
 
+[[mvector]]
 === Mvektor
 
 Solaris 11 beinhaltete eine Änderung bei der Verarbeitung großer I/O-Vorgänge, die zu schwerwiegenden Leistungsproblemen auf SAN-Speicher-Arrays führen können. Das Problem ist dokumentiert NetApp Tracking Fehlerbericht 630173, "Solaris 11 ZFS Leistungsregression."
@@ -106,12 +110,14 @@ Wenn unerwartete Probleme durch diese Änderung auftreten, kann sie einfach rüc
 ....
 
 
+[[kernel]]
 == Kernel
 
 Eine zuverlässige ZFS-Performance erfordert einen Solaris-Kernel, der gegen Probleme bei der LUN-Ausrichtung gepatcht ist. Der Fix wurde mit Patch 147440-19 in Solaris 10 und SRU 10.5 für Solaris 11 eingeführt. Verwenden Sie nur Solaris 10 und höher mit ZFS.
 
 
 
+[[lun-configuration]]
 == LUN-Konfiguration
 
 Führen Sie zum Konfigurieren einer LUN die folgenden Schritte aus:
@@ -130,6 +136,7 @@ Führen Sie zum Konfigurieren einer LUN die folgenden Schritte aus:
 
 
 
+[[zpools]]
 === Zpools
 
 Ein zpool sollte erst nach den Schritten im erstellt werden link:oracle-host-config-solaris.html#lun-configuration["LUN-Konfiguration"] Durchgeführt werden. Wenn das Verfahren nicht korrekt durchgeführt wird, kann es durch die I/O-Ausrichtung zu einer ernsthaften Verschlechterung der Performance kommen. Eine optimale Performance auf ONTAP erfordert, dass der I/O an einer 4-KB-Grenze auf einem Laufwerk ausgerichtet ist. Die auf einem zpool erstellten Dateisysteme verwenden eine effektive Blockgröße, die über einen Parameter mit dem Namen gesteuert wird `ashift`, Die durch Ausführen des Befehls angezeigt werden kann `zdb -C`.
@@ -140,6 +147,7 @@ Der Wert von `ashift` Der Standardwert ist 9. Dies bedeutet 2^9 oder 512 Byte. F
 
 
 
+[[zpools-and-solaris-ldoms]]
 === Zpools und Solaris LDOMs
 
 Solaris LDOMs stellen eine zusätzliche Anforderung dar, um sicherzustellen, dass die I/O-Ausrichtung korrekt ist. Obwohl eine LUN möglicherweise ordnungsgemäß als 4K-Gerät erkannt wird, erbt ein virtuelles vdsk-Gerät auf einem LDOM die Konfiguration nicht von der I/O-Domäne. Die vdsk auf Basis dieser LUN wird standardmäßig auf einen 512-Byte-Block zurückgesetzt.
@@ -215,12 +223,14 @@ block-size-list="1:8192","2:8192","3:8192","4:8192","5:8192","6:8192";
 
 
 
+[[zfs-intent-log-zil]]
 === ZFS-Absichtsprotokoll (ZIL)
 
 Im Allgemeinen gibt es keinen Grund, das ZFS Intent Log (ZIL) auf einem anderen Gerät zu finden. Das Protokoll kann Speicherplatz mit dem Hauptpool teilen. Die primäre Verwendung eines separaten ZIL ist, wenn physische Laufwerke verwendet werden, denen die Schreib-Cache-Funktionen in modernen Speicher-Arrays fehlen.
 
 
 
+[[logbias]]
 === Logbias
 
 Stellen Sie die ein `logbias` Parameter auf ZFS-Dateisystemen, auf denen Oracle-Daten gehostet werden.
@@ -234,18 +244,21 @@ Bei Verwendung eines modernen Storage Array mit eigener Caching-Funktion ist die
 
 
 
+[[direct-io]]
 === Direkter I/O
 
 Viele Applikationen, darunter auch Oracle Produkte, können den Host-Puffer-Cache umgehen, indem sie direkten I/O aktivieren Diese Strategie funktioniert bei ZFS-Dateisystemen nicht wie erwartet. Obwohl der Host-Puffer-Cache umgangen wird, speichert ZFS selbst weiterhin Daten im Cache. Dies kann zu irreführenden Ergebnissen führen, wenn Tools wie fio oder sio für Performance-Tests verwendet werden, da schwer vorherzusagen ist, ob I/O das Storage-System erreicht oder ob es lokal im BS zwischengespeichert wird. Diese Aktion macht es auch sehr schwierig, solche synthetischen Tests zu verwenden, um ZFS-Leistung mit anderen Dateisystemen zu vergleichen. In der Praxis gibt es bei echten Benutzer-Workloads kaum bis keine Unterschiede in der Filesystem-Performance.
 
 
 
+[[multiple-zpools]]
 === Mehrere zpools
 
 Snapshot-basierte Backups, Wiederherstellungen, Klone und Archivierung von ZFS-basierten Daten müssen auf der Ebene von zpool durchgeführt werden und erfordern in der Regel mehrere zpools. Ein zpool ist analog zu einer LVM-Plattengruppe und sollte mit denselben Regeln konfiguriert werden. Beispielsweise ist eine Datenbank wahrscheinlich am besten mit den Datendateien in ausgelegt `zpool1` Und die Archivprotokolle, Kontrolldateien und Wiederherstellungsprotokolle befinden sich auf `zpool2`. Dieser Ansatz ermöglicht ein Standard-Hot Backup, bei dem sich die Datenbank im Hot Backup-Modus befindet, gefolgt von einem Snapshot von `zpool1`. Die Datenbank wird dann aus dem Hot Backup-Modus entfernt, das Protokollarchiv wird erzwungen und ein Snapshot von `zpool2` Wird erstellt. Ein Wiederherstellungsvorgang erfordert das Abhängen der zfs-Dateisysteme und den vollständigen Offlining des zpool nach einer SnapRestore-Wiederherstellung. Der zpool kann dann wieder online gebracht werden und die Datenbank wiederhergestellt werden.
 
 
 
+[[filesystemiooptions]]
 === Filesystemio_options
 
 Der Oracle-Parameter `filesystemio_options` Funktioniert anders mit ZFS. Wenn `setall` Oder `directio` Wird verwendet, Schreibvorgänge sind synchron und umgehen den BS-Puffer-Cache, aber Lesevorgänge werden von ZFS gepuffert. Diese Aktion führt zu Schwierigkeiten bei der Performance-Analyse, da I/O manchmal vom ZFS-Cache abgefangen und gewartet wird. Dadurch werden die Speicherlatenz und der gesamte I/O geringer als möglicherweise angezeigt.

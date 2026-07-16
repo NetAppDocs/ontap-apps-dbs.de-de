@@ -47,6 +47,7 @@ vserver1 800DT$HuVWBo /vol/new_lvm/LUN9 completed
 ....
 
 
+[[delete-import-relationships]]
 == Importbeziehungen löschen
 
 Löschen Sie nach Abschluss des Migrationsprozesses die Migrationsbeziehung. Anschließend wird die I/O ausschließlich von den Laufwerken auf ONTAP bedient.
@@ -60,6 +61,7 @@ Cluster01::*> lun import delete -vserver vserver1 -path /vol/new_lvm/LUN9
 ....
 
 
+[[deregister-foreign-luns]]
 == Registrierung ausländischer LUNs aufheben
 
 Ändern Sie schließlich die Festplatte, um die zu entfernen `is-foreign` Bezeichnung.

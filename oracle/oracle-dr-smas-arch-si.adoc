@@ -16,6 +16,7 @@ image:smas-oracle-si-nonuniform.png["Oracle SI mit uneinheitlichem Zugriff"]
 
 
 
+[[failover-with-a-preconfigured-os]]
 == Failover mit einem vorkonfigurierten Betriebssystem
 
 SnapMirror Active Sync liefert eine synchrone Kopie der Daten am Disaster Recovery-Standort. Für die Verfügbarkeit dieser Daten sind jedoch ein Betriebssystem und die zugehörigen Applikationen erforderlich. Eine grundlegende Automatisierung kann die Failover-Zeit der gesamten Umgebung deutlich verbessern. Clusterware Produkte wie Pacemaker werden häufig eingesetzt, um über die Standorte hinweg einen Cluster zu erstellen, in vielen Fällen ist der Failover-Prozess mit einfachen Skripten angesteuert.
@@ -34,6 +35,7 @@ Die eigentliche Aktivierung ist einfach. Befehle wie die LUN-Erkennung erfordern
 
 
 
+[[failover-with-a-virtualized-os]]
 == Failover mit einem virtualisierten Betriebssystem
 
 Der Failover von Datenbankumgebungen kann auf das Betriebssystem selbst erweitert werden. In der Theorie kann dieses Failover mit Boot-LUNs durchgeführt werden, meistens erfolgt es jedoch mit einem virtualisierten Betriebssystem. Das Verfahren ähnelt den folgenden Schritten:
@@ -48,6 +50,7 @@ Beispielsweise kann ein ESX Cluster mehrere Standorte umfassen. Bei einem Notfal
 
 
 
+[[storage-failure-protection]]
 == Schutz vor Storage-Ausfällen
 
 Das Diagramm oben zeigt die Verwendung von link:oracle-dr-smas-nonuniform.html["Uneinheitlicher Zugriff"], wo das SAN nicht über Standorte verteilt ist. Dies ist unter Umständen einfacher zu konfigurieren und ist angesichts der aktuellen SAN-Funktionen in einigen Fällen die einzige Option, was aber auch bedeutet, dass ein Ausfall des primären Storage-Systems einen Datenbankausfall bis zum Failover der Applikation zur Folge hätte.

@@ -13,6 +13,7 @@ Die meisten All-Flash-Arrays können die für Epic-Workloads erforderliche Perfo
 
 
 
+[[quality-of-service-qos]]
 == Servicequalität (QoS)
 
 NetApp empfiehlt die Verwendung von QoS. QoS hat den Vorteil, alle Epic-Workloads zu konsolidieren. Sämtliche Storage-Protokolle und -Pools können auf weniger Hardware ausgeführt werden. Es müssen keine separaten Storage-Pools mehr verwendet werden.

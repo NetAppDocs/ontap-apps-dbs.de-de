@@ -4,6 +4,7 @@
 
 
 
+[[deduplication]]
 == Deduplizierung
 
 Deduplizierung ist die Entfernung von Blockduplikaten aus einem Datensatz. Wenn beispielsweise derselbe 4-KB-Block in 10 verschiedenen Dateien vorhanden war, leitet die Deduplizierung diesen 4-KB-Block innerhalb aller 10 Dateien auf denselben physischen 4-KB-Block um. Im Ergebnis würde sich die Effizienz dieser Daten um 10:1 verbessern.

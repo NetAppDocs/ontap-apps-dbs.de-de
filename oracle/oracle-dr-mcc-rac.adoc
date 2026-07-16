@@ -21,12 +21,14 @@ NOTE: Wenn Boot-LUNs, einschließlich virtualisierter Boot-Festplatten, mit Orac
 
 
 
+[[two-site-configuration]]
 == Konfiguration an zwei Standorten
 
 Eine erweiterte RAC-Konfiguration mit zwei Standorten kann aktiv/aktiv-Datenbankservices bereitstellen, die viele, aber nicht alle Ausfallszenarien unterbrechungsfrei überstehen.
 
 
 
+[[rac-voting-files]]
 === RAC-Abstimmungsdateien
 
 Die erste Überlegung bei der Implementierung von Extended RAC auf MetroCluster sollte das Quorum-Management sein. Oracle RAC verfügt über zwei Mechanismen zur Verwaltung des Quorums: Disk Heartbeat und Netzwerk Heartbeat. Der Disk Heartbeat überwacht den Speicherzugriff mithilfe der Abstimmungsdateien. Bei einer RAC-Konfiguration an einem Standort ist eine einzelne Abstimmressource ausreichend, solange das zugrunde liegende Storage-System HA-Funktionen bietet.
@@ -47,6 +49,7 @@ ASM-Diskgruppen haben drei Optionen für Redundanz `external`, `normal`, und `hi
 
 
 
+[[rac-network-heartbeat]]
 === RAC-Netzwerk-Heartbeat
 
 Der Heartbeat des Oracle RAC-Netzwerks überwacht die Erreichbarkeit des Knotens über den Cluster-Interconnect hinweg. Damit ein Node im Cluster verbleiben kann, muss er sich mit mehr als der Hälfte der anderen Nodes in Verbindung setzen können. In einer Architektur mit zwei Standorten werden folgende Auswahlmöglichkeiten für die Anzahl der RAC-Knoten erstellt:
@@ -120,6 +123,7 @@ Da es nur zwei Standorte gibt, ist es nicht möglich, eine automatisierte extern
 
 
 
+[[three-site-configurations]]
 == Konfigurationen mit drei Standorten
 
 Ein erweiterter RAC-Cluster lässt sich mit drei Standorten viel einfacher erstellen. Die beiden Standorte, die jeweils die Hälfte des MetroCluster Systems hosten, unterstützen auch die Datenbank-Workloads, während der dritte Standort als Tiebreaker für die Datenbank und das MetroCluster System dient. Die Oracle Tiebreaker-Konfiguration kann so einfach sein, als ob ein Mitglied der ASM-Diskgroup, die für die Abstimmung an einem dritten Standort verwendet wird, platziert werden könnte, und kann auch eine Betriebsinstanz am dritten Standort enthalten, um sicherzustellen, dass es eine ungerade Anzahl von Knoten im RAC-Cluster gibt.

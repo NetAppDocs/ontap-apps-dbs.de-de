@@ -17,6 +17,7 @@ Es geht nicht um den Rahmen dieses Dokuments, um die breite Palette von Funktion
 
 
 
+[[intersystems-iris]]
 == InterSystems Iris
 
 InterSystems Iris ist die Datenbank, die von der Epic-Anwendung verwendet wird. In dieser Datenbank ist der Datenserver der Zugriffspunkt für dauerhaft gespeicherte Daten. Der Anwendungsserver verwaltet Datenbankabfragen und stellt Datenanfragen an den Datenserver. In den meisten Epic-Softwareumgebungen reicht die Verwendung der SMP-Architektur (symmetrischer Multiprozessor) in einem einzelnen Datenbankserver aus, um die Datenbankanforderungen von Epic-Applikationen zu erfüllen. In großen Implementierungen kann ein verteiltes Modell mit dem Enterprise Caché Protocol (ECP) von InterSystems unterstützt werden.
@@ -33,6 +34,7 @@ Die aktualisierte Iris-Datenbank hat viele Vorteile:
 
 
 
+[[cach-database-servers-and-storage-usage]]
 == Caché Datenbankserver und Storage-Verwendung
 
 * *Produktion* in Epic-Softwareumgebungen wird eine einzelne patientenorientierte Datenbank bereitgestellt. In den Hardwareanforderungen von Epic wird der physische Server, der den primären Lese-/Schreib-Iris-Datenserver hostet, als Produktionsserver bezeichnet. Dieser Server erfordert hochperformanten All-Flash-Storage für Dateien, die zur primären Datenbankinstanz gehören. Für Hochverfügbarkeit unterstützt Epic die Verwendung eines Failover-Datenbankserver, der Zugriff auf dieselben Dateien hat. Iris nutzt Epic Mirror zur Replizierung zu schreibgeschützten Berichten, zur Disaster Recovery und zur Unterstützung schreibgeschützter Kopien. Aus Gründen der Business Continuity kann jeder Datenbanktyp in den Lese-/Schreibmodus umgeschaltet werden.
@@ -66,6 +68,7 @@ Die Storage-Anforderungen all dieser Workloads, Pools, NAS- und SAN-Protokolle k
 
 
 
+[[operational-database-workloads]]
 == Operative Datenbank-Workloads
 
 Jeder Epic-Datenbankserver führt I/O für die folgenden Dateitypen aus:

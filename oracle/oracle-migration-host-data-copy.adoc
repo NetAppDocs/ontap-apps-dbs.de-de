@@ -25,6 +25,7 @@ Wenn das für einen Kopiervorgang erforderliche Herunterfahren nicht wünschensw
 
 
 
+[[filesystem-to-filesystem-copying]]
 == Dateisystem wird kopiert
 
 Der Nutzen einer einfachen Kopieroperation sollte nicht unterschätzt werden. Dieser Vorgang erfordert während des Kopierprozesses Ausfallzeiten, ist jedoch äußerst zuverlässig und erfordert keine besondere Expertise in Bezug auf Betriebssysteme, Datenbanken oder Speichersysteme. Darüber hinaus ist es sehr sicher, weil es die ursprünglichen Daten nicht beeinträchtigt. In der Regel ändert ein Systemadministrator die Quelldateisysteme, die schreibgeschützt gemountet werden, und startet dann einen Server neu, um zu gewährleisten, dass die aktuellen Daten nicht beschädigt werden können. Der Kopiervorgang kann mithilfe eines Skripts durchgeführt werden, um sicherzustellen, dass er so schnell wie möglich ohne das Risiko eines Benutzerfehlers ausgeführt wird. Da der I/O-Typ eine einfache, sequenzielle Datenübertragung ist, ist er eine äußerst effiziente Bandbreitennutzung.
@@ -33,6 +34,7 @@ Das folgende Beispiel zeigt eine Möglichkeit für eine sichere und schnelle Mig
 
 
 
+[[environment]]
 === Umgebung
 
 Die zu migrierende Umgebung ist wie folgt:
@@ -68,6 +70,7 @@ Die Beispielskripte automatisieren die folgenden Vorgänge:
 
 
 
+[[procedure]]
 === Verfahren
 
 . Fahren Sie die Datenbank herunter.
@@ -201,6 +204,7 @@ NTAP started
 
 
 
+[[fully-automated-cutover]]
 === Vollständig automatisierte Umstellung
 
 Dieses Beispielskript akzeptiert Argumente der Datenbank-SID gefolgt von gemeinsam getrennten Paaren von Dateisystemen. Für das oben abgebildete Beispiel wird der Befehl wie folgt ausgegeben:
@@ -323,6 +327,7 @@ NTAP started
 ....
 
 
+[[oracle-asm-spfile-and-passwd-migration]]
 == Oracle ASM SPFile- und Passthwd-Migration
 
 Eine Schwierigkeit beim Abschluss der ASM-Migration sind die ASM-spezifische SPFile- und die Passwort-Datei. Standardmäßig werden diese kritischen Metadatendateien auf der ersten definierten ASM-Laufwerksgruppe erstellt. Wenn eine bestimmte ASM-Datenträgergruppe evakuiert und entfernt werden muss, müssen die SPFile- und Passwortdatei, die diese ASM-Instanz regelt, verschoben werden.
@@ -333,6 +338,7 @@ Wenn diese Datenträgergruppe auch die ASM-Datei spfile/passwd enthält, kann di
 
 
 
+[[environment]]
 === Umgebung
 
 . Datenbank-SID = TOAST
@@ -343,6 +349,7 @@ Wenn diese Datenträgergruppe auch die ASM-Datei spfile/passwd enthält, kann di
 
 
 
+[[asm-spfilepasswd-file-locations]]
 === Speicherorte für ASM-SPfile/passwd-Dateien
 
 Die Verlagerung dieser Dateien kann ohne Unterbrechungen erfolgen. Aus Sicherheitsgründen empfiehlt NetApp jedoch, die Datenbankumgebung herunterzufahren, damit Sie sicher sein können, dass die Dateien verschoben wurden und die Konfiguration ordnungsgemäß aktualisiert wird. Dieses Verfahren muss wiederholt werden, wenn mehrere ASM-Instanzen auf einem Server vorhanden sind.
@@ -390,6 +397,7 @@ Beide Dateien befinden sich an der Basis des `+DATA` Festplattengruppe.
 
 
 
+[[copy-files]]
 === Dateien kopieren
 
 Kopieren Sie die Dateien mit dem in die neue ASM-Datenträgergruppe `spcopy` Und `pwcopy` Befehle. Wenn die neue Laufwerksgruppe vor kurzem erstellt wurde und derzeit leer ist, muss sie möglicherweise zuerst gemountet werden.
@@ -454,6 +462,7 @@ ASMCMD> rm +DATA/orapwasm
 ....
 
 
+[[oracle-asm-to-asm-copy]]
 == Kopie von Oracle ASM zu ASM
 
 Oracle ASM ist im Grunde ein schlankes kombiniertes Volume-Manager- und Dateisystem. Da das Dateisystem nicht sofort sichtbar ist, muss RMAN für Kopiervorgänge verwendet werden. Ein auf Kopien basierender Migrationsprozess ist zwar sicher und einfach, kann jedoch mit Unterbrechungen verbunden sein. Die Unterbrechung kann minimiert, aber nicht vollständig beseitigt werden.
@@ -466,6 +475,7 @@ Dieses Verfahren ist eine von vielen Optionen, die RMAN einbeziehen. Er ermögli
 
 
 
+[[copy-database]]
 === Datenbank kopieren
 
 Oracle RMAN erstellt eine vollständige Kopie der Quelldatenbank der Ebene 0, die sich derzeit in der ASM-Datenträgergruppe befindet `+DATA` An den neuen Standort am `+NEWDATA`.
@@ -497,6 +507,7 @@ Finished backup at 06-DEC-15
 ....
 
 
+[[force-archive-log-switch]]
 === Schalter für Archivprotokoll erzwingen
 
 Sie müssen einen Schalter für das Archivprotokoll erzwingen, um sicherzustellen, dass die Archivprotokolle alle Daten enthalten, die erforderlich sind, um die Kopie vollständig konsistent zu machen. Ohne diesen Befehl können Schlüsseldaten in den Wiederherstellungsprotokollen weiterhin vorhanden sein.
@@ -507,6 +518,7 @@ sql statement: alter system archive log current
 ....
 
 
+[[shut-down-source-database]]
 === Quelldatenbank herunterfahren
 
 Die Unterbrechung beginnt in diesem Schritt, weil die Datenbank heruntergefahren und in einen schreibgeschützten Modus mit eingeschränktem Zugriff versetzt wird. Um die Quelldatenbank herunterzufahren, führen Sie die folgenden Befehle aus:
@@ -529,6 +541,7 @@ Redo Buffers                   5455872 bytes
 ....
 
 
+[[controlfile-backup]]
 === Backup von Controlfile
 
 Sie müssen die controlfile sichern, falls Sie die Migration abbrechen und zum ursprünglichen Speicherort zurückkehren müssen. Eine Kopie der Backup-Steuerdatei ist nicht 100% erforderlich, aber es macht den Prozess des Rücksetzens der Datenbank-Speicherorte zurück an den ursprünglichen Speicherort einfacher.
@@ -546,6 +559,7 @@ Finished backup at 06-DEC-15
 ....
 
 
+[[parameter-updates]]
 === Parameteraktualisierungen
 
 Der aktuelle spfile enthält Verweise auf die Steuerdateien an ihren aktuellen Speicherorten innerhalb der alten ASM-Datenträgergruppe. Es muss bearbeitet werden, was leicht durch das Bearbeiten einer Zwischenversion von pfile erfolgt.
@@ -619,6 +633,7 @@ Redo Buffers                   5455872 bytes
 ....
 
 
+[[restore-controlfile]]
 === Kontrolldatei wiederherstellen
 
 Die von RMAN erstellte Backup-Controldatei kann auch direkt an dem im neuen spfile angegebenen Speicherort wiederhergestellt werden.
@@ -649,6 +664,7 @@ control_files                        string      +NEWLOGS/TOAST/CONTROLFILE/cur
 ....
 
 
+[[log-replay]]
 === Protokollwiedergabe
 
 Die Datenbank verwendet derzeit die Datendateien am alten Speicherort. Bevor die Kopie verwendet werden kann, müssen sie synchronisiert werden. Die Zeit während des ersten Kopiervorgangs ist verstrichen, und die Änderungen wurden hauptsächlich in den Archivprotokollen protokolliert. Diese Änderungen werden wie folgt repliziert:
@@ -702,6 +718,7 @@ Finished recover at 06-DEC-15
 
 
 
+[[activation]]
 === Aktivierung
 
 Die wiederhergestellte Steuerdatei verweist weiterhin auf die Datendateien am ursprünglichen Speicherort und enthält auch die Pfadinformationen für die kopierten Datendateien.
@@ -760,6 +777,7 @@ renamed tempfile 1 to +NEWDATA in control file
 
 
 
+[[redo-log-migration]]
 === Migration des Wiederherstellungsprotokolls
 
 Der Migrationsprozess ist fast abgeschlossen, aber die Wiederherstellungsprotokolle befinden sich immer noch in der ursprünglichen ASM-Laufwerksgruppe. Wiederherstellungsprotokolle können nicht direkt verschoben werden. Stattdessen wird ein neuer Satz von Wiederherstellungsprotokollen erstellt und der Konfiguration hinzugefügt, gefolgt von einem Drop der alten Protokolle.
@@ -869,12 +887,14 @@ ASMCMD>
 
 
 
+[[oracle-asm-to-file-system-copy]]
 == Kopie von Oracle ASM auf das Dateisystem
 
 Das Verfahren zum Kopieren von Oracle ASM in ein Dateisystem ähnelt dem Verfahren zum Kopieren von ASM zu ASM mit ähnlichen Vorteilen und Einschränkungen. Der Hauptunterschied ist die Syntax der verschiedenen Befehle und Konfigurationsparameter bei der Verwendung eines sichtbaren Dateisystems im Gegensatz zu einer ASM-Datenträgergruppe.
 
 
 
+[[copy-database]]
 === Datenbank kopieren
 
 Oracle RMAN wird verwendet, um eine (vollständige) Kopie der Quelldatenbank zu erstellen, die sich derzeit in der ASM-Datenträgergruppe befindet `+DATA` An den neuen Standort am `/oradata`.
@@ -916,6 +936,7 @@ Finished backup at 13-MAY-16
 ....
 
 
+[[force-archive-log-switch]]
 === Schalter für Archivprotokoll erzwingen
 
 Der Wechsel des Archivprotokolls muss erzwungen werden, um sicherzustellen, dass die Archivprotokolle alle erforderlichen Daten enthalten, damit die Kopie vollständig konsistent ist. Ohne diesen Befehl können Schlüsseldaten in den Wiederherstellungsprotokollen weiterhin vorhanden sein. Um einen Archivprotokollschalter zu erzwingen, führen Sie den folgenden Befehl aus:
@@ -926,6 +947,7 @@ sql statement: alter system archive log current
 ....
 
 
+[[shut-down-source-database]]
 === Quelldatenbank herunterfahren
 
 Die Unterbrechung beginnt in diesem Schritt, weil die Datenbank heruntergefahren und in einen schreibgeschützten Modus mit eingeschränktem Zugriff versetzt wird. Um die Quelldatenbank herunterzufahren, führen Sie die folgenden Befehle aus:
@@ -948,6 +970,7 @@ Redo Buffers                5455872 bytes
 ....
 
 
+[[controlfile-backup]]
 === Backup von Controlfile
 
 Sichern Sie controlfiles, falls Sie die Migration abbrechen und zum ursprünglichen Speicherort zurückkehren müssen. Eine Kopie der Backup-Steuerdatei ist nicht 100% erforderlich, aber es macht den Prozess des Rücksetzens der Datenbank-Speicherorte zurück an den ursprünglichen Speicherort einfacher.
@@ -964,6 +987,7 @@ Finished backup at 08-DEC-15
 ....
 
 
+[[parameter-updates]]
 === Parameteraktualisierungen
 
 ....
@@ -1038,6 +1062,7 @@ Redo Buffers                   5455872 bytes
 ....
 
 
+[[restore-controlfile]]
 === Kontrolldatei wiederherstellen
 
 Auf dem Pfad wurde eine Sicherungscontroldatei erstellt `/tmp/TOAST.ctrl` Früher im Verfahren. Der neue spfile definiert die Speicherorte der controlfile als /`logfs/TOAST/ctrl/ctrlfile1.ctrl` Und `/logfs/TOAST/redo/ctrlfile2.ctrl`. Diese Dateien sind jedoch noch nicht vorhanden.
@@ -1076,6 +1101,7 @@ control_files                        string      /logs/TOAST/arch/control01.ctl
 
 
 
+[[log-replay]]
 === Protokollwiedergabe
 
 Die Datenbank verwendet derzeit die Datendateien am alten Speicherort. Bevor die Kopie verwendet werden kann, müssen die Datendateien synchronisiert werden. Die Zeit während des ersten Kopiervorgangs ist verstrichen, und Änderungen wurden hauptsächlich in den Archivprotokollen protokolliert. Diese Änderungen werden in den folgenden beiden Schritten repliziert.
@@ -1124,6 +1150,7 @@ RMAN-06497: WARNING: control file is not current, control file AUTOBACKUP skippe
 
 
 
+[[activation]]
 === Aktivierung
 
 Die wiederhergestellte Steuerdatei verweist weiterhin auf die Datendateien am ursprünglichen Speicherort und enthält auch die Pfadinformationen für die kopierten Datendateien.
@@ -1177,6 +1204,7 @@ renamed tempfile 1 to /oradata/TOAST/temp01.dbf in control file
 
 
 
+[[redo-log-migration]]
 === Migration des Wiederherstellungsprotokolls
 
 Der Migrationsprozess ist fast abgeschlossen, aber die Wiederherstellungsprotokolle befinden sich immer noch in der ursprünglichen ASM-Laufwerksgruppe. Wiederherstellungsprotokolle können nicht direkt verschoben werden. Stattdessen wird ein neuer Satz von Wiederherstellungsprotokollen erstellt und der Konfiguration hinzugefügt, gefolgt von einem Drop der alten Protokolle.
@@ -1283,6 +1311,7 @@ ASMCMD>
 
 
 
+[[data-file-cleanup-procedure]]
 === Bereinigung der Datendatei
 
 Der Migrationsprozess kann je nach Verwendung von Oracle RMAN zu Datendateien mit langer oder kryptischer Syntax führen. Im hier gezeigten Beispiel wurde das Backup mit dem Dateiformat von durchgeführt `/oradata/TOAST/%U`. `%U` Gibt an, dass RMAN für jede Datendatei einen eindeutigen Standardnamen erstellen sollte. Das Ergebnis ist ähnlich wie im folgenden Text dargestellt. Die traditionellen Namen der Datendateien sind in die Namen eingebettet. Dies kann mithilfe des in dargestellten skriptgesteuerten Ansatzes bereinigt werden link:oracle-migration-sample-scripts.html#asm-migration-cleanup["Bereinigung der ASM-Migration"].
@@ -1304,6 +1333,7 @@ alter database open;
 ....
 
 
+[[oracle-asm-rebalance]]
 == Oracle ASM-Ausgleich
 
 Wie bereits erläutert, kann eine Oracle ASM-Festplattengruppe mithilfe des Ausgleichs transparent auf ein neues Storage-System migriert werden. Zusammenfassend ist zu sagen, dass beim Ausbalancieren der vorhandenen LUN-Gruppe LUNs gleicher Größe hinzugefügt werden müssen, gefolgt von einem Drop-Vorgang der vorherigen LUN. Oracle ASM verlagert die zugrunde liegenden Daten automatisch in einem optimalen Layout auf neuen Speicher und gibt dann die alten LUNs nach Abschluss frei.
@@ -1312,6 +1342,7 @@ Der Migrationsprozess nutzt effiziente sequenzielle I/O-Vorgänge und führt im 
 
 
 
+[[identify-data-to-be-migrated]]
 === Identifizieren Sie die zu migrierenden Daten
 
 ....
@@ -1325,6 +1356,7 @@ SQL> select group_number||' '||name from v$asm_diskgroup;
 ....
 
 
+[[create-new-luns]]
 === Erstellen neuer LUNs
 
 Erstellen Sie neue LUNs gleicher Größe und legen Sie die Mitgliedschaft für Benutzer und Gruppen nach Bedarf fest. Die LUNs sollten als angezeigt werden `CANDIDATE` Festplatten.
@@ -1342,6 +1374,7 @@ NEWDATA_0001 1 10240 /dev/mapper/3600a098038303537762b47594c315862 MEMBER
 ....
 
 
+[[add-new-luns]]
 === Neue LUNS hinzufügen
 
 Während die Add- und Drop-Vorgänge zusammen ausgeführt werden können, ist es in der Regel einfacher, neue LUNs in zwei Schritten hinzuzufügen. Fügen Sie zunächst die neuen LUNs der Festplattengruppe hinzu. Dieser Schritt führt dazu, dass die Hälfte der Extents von den aktuellen ASM-LUNs auf die neuen LUNs migriert wird.
@@ -1360,6 +1393,7 @@ Diskgroup altered.
 ....
 
 
+[[monitor-operation]]
 === Überwachen Sie den Betrieb
 
 Ein Ausgleichsoperation kann auf verschiedene Weise überwacht und verwaltet werden. Für dieses Beispiel haben wir den folgenden Befehl verwendet.
@@ -1379,6 +1413,7 @@ no rows selected
 ....
 
 
+[[drop-old-luns]]
 === Alte LUNs ablegen
 
 Die Migration ist nun zur Hälfte abgeschlossen. Einige grundlegende Performance-Tests stellen sicher, dass die Umgebung sich in einem ordnungsgemäßen Zustand befindet. Nach Bestätigung können die verbleibenden Daten durch Löschen der alten LUNs verschoben werden. Beachten Sie, dass dies nicht zur sofortigen Freigabe der LUNs führt. Der Drop-Vorgang signalisiert Oracle ASM, die Extents zuerst zu verschieben und dann die LUN freizugeben.
@@ -1396,6 +1431,7 @@ Diskgroup altered.
 ....
 
 
+[[monitor-operation]]
 === Überwachen Sie den Betrieb
 
 Der Ausgleichsoperation kann auf verschiedene Weise überwacht und verwaltet werden. Für dieses Beispiel haben wir den folgenden Befehl verwendet:
@@ -1415,6 +1451,7 @@ no rows selected
 ....
 
 
+[[remove-old-luns]]
 === Entfernen Sie alte LUNs
 
 Bevor Sie die alten LUNs aus der Laufwerksgruppe entfernen, sollten Sie den Header-Status einer letzten Prüfung entnehmen. Nachdem eine LUN aus ASM freigegeben wurde, wird kein Name mehr aufgeführt, und der Kopfzeilenstatus wird als aufgeführt `FORMER`. Dies bedeutet, dass diese LUNs sicher aus dem System entfernt werden können.
@@ -1435,6 +1472,7 @@ NEWDATA_0006 1 10240 /dev/mapper/3600a098038303537762b47594c315858 MEMBER
 ....
 
 
+[[lvm-migration]]
 == LVM-Migration
 
 Das hier vorgestellte Verfahren zeigt die Prinzipien einer LVM-basierten Migration einer Volume-Gruppe namens `datavg`. Die Beispiele stammen aus Linux LVM, die Prinzipien gelten jedoch gleichermaßen für AIX, HP-UX und VxVM. Die genauen Befehle können variieren.

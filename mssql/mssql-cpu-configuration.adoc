@@ -18,6 +18,7 @@ Die SQL Server-Performance weist mehrere Abhängigkeiten von der CPU- und Kernko
 
 
 
+[[hyper-threading]]
 == Hyper-Threading
 
 Hyper-Threading bezieht sich entweder auf die Implementierung von simultanem Multithreading (SMT), wodurch die Parallelisierung von Berechnungen auf x86-Prozessoren verbessert wird. SMT ist sowohl für Intel als auch für AMD Prozessoren verfügbar.
@@ -28,6 +29,7 @@ Der Nachteil hierbei ist, dass jede SQL Server-Version ihre eigenen Einschränku
 
 
 
+[[cores-and-licensing]]
 == Kerne und Lizenzierung
 
 Es gibt zwei Optionen für die Lizenzierung von SQL Server. Die erste wird als Server + Client Access License (CAL)-Modell bezeichnet; die zweite ist das pro Prozessor-Core-Modell. Obwohl Sie mit der Server + CAL-Strategie auf alle in SQL Server verfügbaren Produktfunktionen zugreifen können, gibt es eine Hardwaregrenze von 20 CPU-Kernen pro Sockel. Selbst wenn Sie SQL Server Enterprise Edition + CAL für einen Server mit mehr als 20 CPU-Kernen pro Socket verwenden, kann die Anwendung nicht alle diese Kerne gleichzeitig auf dieser Instanz verwenden.
@@ -40,6 +42,7 @@ Um alle CPUs zu verwenden, sollten Sie daher die Prozessorkern-Lizenz verwenden.
 
 
 
+[[cpu-affinity]]
 == CPU-Affinität
 
 Es ist unwahrscheinlich, dass Sie die Standardeinstellungen für die Prozessoraffinität ändern müssen, es sei denn, Sie stoßen auf Leistungsprobleme, aber es lohnt sich immer noch zu verstehen, was sie sind und wie sie funktionieren.
@@ -56,6 +59,7 @@ Die Affinity I/O-Maskenoption bindet SQL Server-Festplatten-I/O an eine Teilmeng
 
 
 
+[[max-degree-of-parallelism-maxdop]]
 == Max. Parallelitätsgrad (MAXDOP)
 
 Standardmäßig verwendet SQL Server während der Abfrageausführung alle verfügbaren CPUs, wenn die Prozessorkern-Lizenz ausgewählt wurde.
@@ -67,6 +71,7 @@ TIP: *NetApp empfiehlt* für DSS wie Data Warehouses, beginnen Sie mit `MAXDOP` 
 
 
 
+[[max-worker-threads]]
 == Max. Worker-Threads
 
 Die Option Max. Worker-Threads hilft, die Leistung zu optimieren, wenn eine große Anzahl von Clients mit SQL Server verbunden ist.
@@ -81,6 +86,7 @@ image:../media/mssql-max-worker-threads.png["MAX. Worker-Threads"]
 
 
 
+[[configuring-max-worker-threads-using-sql-server-management-studio]]
 === Konfigurieren von max Worker-Threads mit SQL Server Management Studio
 
 Das folgende Beispiel zeigt, wie Sie die Option Max. Work Threads mit T-SQL konfigurieren.

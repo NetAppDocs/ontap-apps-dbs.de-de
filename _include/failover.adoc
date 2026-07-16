@@ -27,6 +27,7 @@ Dieselbe Logik gilt auch für eine MetroCluster-Umschaltung. Unter normalen Bedi
 ====
 
 
+[[metrocluster-and-multiple-aggregates]]
 == MetroCluster und mehrere Aggregate
 
 MetroCluster ist eine Technologie für die synchrone Replizierung, die bei einer Unterbrechung der Verbindung zum asynchronen Modus wechselt. Dies ist die häufigste Anforderung von Kunden, da durch die garantierte synchrone Replizierung eine Unterbrechung der Standortkonnektivität zu einem vollständigen Stillstand der Datenbank-I/O führt und die Datenbank außer Betrieb genommen wird.

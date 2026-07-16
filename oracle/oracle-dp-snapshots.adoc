@@ -35,6 +35,7 @@ Daher ist die Sicherung eines auf ONTAP gehosteten Datensatzes einfach und hochs
 
 
 
+[[is-a-snapshot-a-backup]]
 == Ist ein Snapshot eine Sicherung?
 
 Eine häufig gestellte Frage zur Verwendung von Snapshots als Datensicherungsstrategie ist die Tatsache, dass sich die „echten“ Daten und Snapshot-Daten auf denselben Laufwerken befinden. Der Verlust dieser Laufwerke würde sowohl zum Verlust der Primärdaten als auch des Backups führen.
@@ -45,6 +46,7 @@ Lokale Snapshots sollten jedoch nie die einzige Backup-Strategie sein. Deshalb b
 
 
 
+[[snapshot-based-backups]]
 == Snapshot basierte Backups
 
 Für die Sicherung Ihrer Daten gibt es viele Optionen für den Einsatz von ONTAP Snapshots. Snapshots bilden die Basis vieler anderer ONTAP Funktionen wie Replizierung, Disaster Recovery und Klonen. Eine vollständige Beschreibung der Snapshot-Technologie geht über den Umfang dieses Dokuments hinaus. Die folgenden Abschnitte bieten jedoch einen allgemeinen Überblick.
@@ -63,6 +65,7 @@ Das Wort „konsistent“ in „anwendungskonsistent“ ist oft eine Fehlbezeich
 
 
 
+[[consistency-groups]]
 == Konsistenzgruppen
 
 Der Begriff „Konsistenzgruppe“ bezieht sich auf die Fähigkeit eines Speicherarrays, mehrere Speicherressourcen als ein einziges Image zu verwalten. Beispielsweise kann eine Datenbank aus 10 LUNs bestehen. Das Array muss in der Lage sein, diese 10 LUNs konsistent zu sichern, wiederherzustellen und zu replizieren. Eine Wiederherstellung ist nicht möglich, wenn die Images der LUNs zum Zeitpunkt des Backups nicht konsistent waren. Die Replikation dieser 10 LUNs erfordert, dass alle Replikate perfekt miteinander synchronisiert sind.
@@ -73,6 +76,7 @@ AFF-Systeme umfassen auch einen umfassenderen Typ von Konsistenzgruppe. Mehrere 
 
 
 
+[[consistency-group-snapshots]]
 == Snapshots von Konsistenzgruppen
 
 Consistency group (CG)-Snapshots sind eine Erweiterung der grundlegenden ONTAP Snapshot Technologie. Ein Standard-Snapshot-Vorgang erstellt ein konsistentes Abbild aller Daten innerhalb eines einzelnen AFF/FAS-Volumes oder ASA LUN/Namespace, aber manchmal ist es notwendig, einen konsistenten Satz von Snapshots über mehrere Speicherressourcen und sogar über mehrere Speichersysteme hinweg zu erstellen. Das Ergebnis ist ein Satz von Snapshots, der auf die gleiche Weise verwendet werden kann wie ein Snapshot eines einzelnen Volumes. Sie können für die lokale Datenwiederherstellung verwendet, für Zwecke der Notfallwiederherstellung repliziert oder als eine einzige konsistente Einheit geklont werden.
@@ -99,6 +103,7 @@ Nachdem die Schreibsperre für die Ziele eingerichtet wurde, sind sie bereit fü
 
 
 
+[[dependent-write-order]]
 === Abhängige Schreibreihenfolge
 
 Aus technischer Sicht ist der Schlüssel zu einer Konsistenzgruppe die Aufrechterhaltung der Schreibreihenfolge und insbesondere der abhängigen Schreibreihenfolge. Beispielsweise wird eine Datenbank, die in 10 LUNs schreibt, gleichzeitig auf alle geschrieben. Viele Schreibvorgänge werden asynchron ausgegeben. Dies bedeutet, dass die Reihenfolge ihrer Fertigstellung unwichtig ist und die Reihenfolge ihrer Fertigstellung je nach Betriebssystem und Netzwerkverhalten variiert.
@@ -107,6 +112,7 @@ Einige Schreibvorgänge müssen auf der Festplatte vorhanden sein, bevor die Dat
 
 
 
+[[strategies]]
 == Strategien
 
 Es gibt zwei primäre Ansätze bei Snapshot-basierten Backups:
@@ -134,6 +140,7 @@ Auch wenn unterschiedliche Kunden möglicherweise sehr unterschiedliche Strategi
 
 
 
+[[snapshot-based-recovery]]
 == Snapshot-basierte Recovery
 
 Bei der Entwicklung von Storage-Layouts für Oracle-Datenbanken ist die erste Entscheidung, ob die volumenbasierte NetApp SnapRestore (VBSR) Technologie verwendet werden soll, die die zugrunde liegende Technologie für die Wiederherstellung von AFF Volumes und ASA LUNs/Namespaces ist.
@@ -148,6 +155,7 @@ Durch die Isolierung von Datendateien auf diese Weise können diese in einen fr�
 
 
 
+[[aff-snapshot-reserve]]
 == AFF Snapshot-Reserve
 
 Für jedes Volume mit Oracle-Daten in einer AFF SAN-Umgebung sollte der  `percent-snapshot-space` auf Null gesetzt werden, da die Reservierung von Speicherplatz für einen Snapshot in einer LUN-Umgebung nicht sinnvoll ist. Wenn die anteilige Reserve auf 100 gesetzt ist, benötigt ein Snapshot eines Volumes mit LUNs genügend freien Speicherplatz im Volume, ohne die Snapshot-Reserve, um einen 100%igen Austausch aller Daten aufzunehmen. Wenn die anteilige Reserve auf einen niedrigeren Wert gesetzt ist, wird entsprechend weniger freier Speicherplatz benötigt, aber die Snapshot-Reserve wird immer ausgeschlossen. Das bedeutet, dass der Speicherplatz für die Snapshot-Reserve in einer LUN-Umgebung verschwendet wird.
@@ -171,6 +179,7 @@ Es gibt keine klare Präferenz zwischen Option 1 und Option 2 unter den Endbenut
 
 
 
+[[ontap-and-third-party-snapshots]]
 == Snapshots von ONTAP und Drittanbietern
 
 Oracle Doc ID 604683.1 erläutert die Anforderungen für die Snapshot-Unterstützung von Drittanbietern und die verschiedenen verfügbaren Optionen für Backup- und Wiederherstellungsvorgänge.

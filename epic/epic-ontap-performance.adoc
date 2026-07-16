@@ -24,6 +24,7 @@ Seit dem Jahr 2020 müssen alle Epic ODB Workloads auf All-Flash-Storage laufen.
 
 
 
+[[nvme]]
 == NVMe
 
 Wenn die Performance oberste Priorität hat, unterstützt NetApp auch NVMe/FC, das FC-SAN-Protokoll der nächsten Generation.

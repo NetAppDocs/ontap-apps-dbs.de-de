@@ -30,6 +30,7 @@ Sie müssen nicht warten, bis der Migrationsprozess abgeschlossen ist. Sobald di
 
 
 
+[[shut-down-database]]
 == Datenbank herunterfahren
 
 Der erste Schritt bei der Stilllegung der Umgebung in diesem Beispiel ist das Herunterfahren der Datenbank.
@@ -53,6 +54,7 @@ SQL>
 ....
 
 
+[[shut-down-grid-services]]
 == Netzdienste herunterfahren
 
 Zu den migrierten SAN-basierten Dateisystemen gehören auch die Oracle ASM-Services. Um die zugrunde liegenden LUNs stilllegen zu können, müssen die Dateisysteme getrennt werden. Dies bedeutet wiederum, dass alle Prozesse mit offenen Dateien auf diesem Dateisystem angehalten werden.
@@ -76,6 +78,7 @@ CRS-4133: Oracle High Availability Services has been stopped.
 ....
 
 
+[[dismount-file-systems]]
 == Entfernen Sie Dateisysteme
 
 Wenn alle Prozesse heruntergefahren werden, ist der umount-Vorgang erfolgreich. Wenn die Berechtigung verweigert wird, muss es einen Prozess mit einer Sperre auf dem Dateisystem geben. Der `fuser` Der Befehl kann bei der Identifizierung dieser Prozesse helfen.
@@ -86,6 +89,7 @@ Wenn alle Prozesse heruntergefahren werden, ist der umount-Vorgang erfolgreich. 
 ....
 
 
+[[deactivate-volume-groups]]
 == Deaktivieren Sie Volume-Gruppen
 
 Nachdem alle Dateisysteme in einer bestimmten Volume-Gruppe getrennt wurden, kann die Volume-Gruppe deaktiviert werden.
@@ -97,12 +101,14 @@ Nachdem alle Dateisysteme in einer bestimmten Volume-Gruppe getrennt wurden, kan
 ....
 
 
+[[fc-network-changes]]
 == Änderungen am FC-Netzwerk
 
 Die FC-Zonen können jetzt aktualisiert werden, um den gesamten Zugriff vom Host auf das fremde Array zu entfernen und den Zugriff auf ONTAP zu ermöglichen.
 
 
 
+[[start-import-process]]
 == Importvorgang starten
 
 Um die LUN-Importprozesse zu starten, führen Sie den aus `lun import start` Befehl.
@@ -117,6 +123,7 @@ Cluster01::lun import*>
 ....
 
 
+[[monitor-import-progress]]
 == Überwachen Sie den Importfortschritt
 
 Der Importvorgang kann mit dem überwacht werden `lun import show` Befehl. Wie unten dargestellt, läuft der Import aller 20 LUNs, was bedeutet, dass die Daten jetzt über ONTAP zugänglich sind, obwohl der Kopiervorgang noch fortschreitet.
@@ -153,6 +160,7 @@ Wenn Sie eine Online-Migration benötigen, fahren Sie mit der Neuerkennung der L
 
 
 
+[[scan-for-scsi-device-changes]]
 == Nach SCSI-Geräteänderungen suchen
 
 In den meisten Fällen besteht die einfachste Möglichkeit, neue LUNs neu zu ermitteln, darin, den Host neu zu starten. Dadurch werden alte veraltete Geräte automatisch entfernt, alle neuen LUNs ordnungsgemäß erkannt und verbundene Geräte wie Multipathing-Geräte erstellt. Das Beispiel zeigt einen vollständig online-Prozess zu Demonstrationszwecken.
@@ -203,6 +211,7 @@ OLD: Host: scsi9 Channel: 00 Id: 01 Lun: 19
 ....
 
 
+[[check-for-multipath-devices]]
 == Überprüfen Sie auf Multipath-Geräte
 
 Der LUN-Erkennungsprozess löst auch die Wiederherstellung von Multipath-Geräten aus, der Linux-Multipathing-Treiber hat jedoch bekanntermaßen gelegentlich Probleme. Die Ausgabe von `multipath - ll` Sollte überprüft werden, um sicherzustellen, dass die Ausgabe wie erwartet aussieht. Die folgende Ausgabe zeigt beispielsweise Multipath-Geräte, die mit einem verknüpft sind `NETAPP` Anbieterzeichenfolge. Jedes Gerät verfügt über vier Pfade, wobei zwei mit einer Priorität von 50 und zwei mit einer Priorität von 10. Obwohl die genaue Ausgabe mit verschiedenen Versionen von Linux variieren kann, sieht diese Ausgabe wie erwartet aus.
@@ -248,6 +257,7 @@ size=10G features='4 queue_if_no_path pg_init_retries 50 retain_attached_hw_hand
 ....
 
 
+[[reactivate-lvm-volume-group]]
 == Reaktivieren Sie die LVM-Volume-Gruppe
 
 Wenn die LVM-LUNs ordnungsgemäß erkannt wurden, wird das angezeigt `vgchange --activate y` Befehl sollte erfolgreich sein. Dies ist ein gutes Beispiel für den Nutzen eines logischen Volume-Managers. Eine Änderung des WWN einer LUN oder auch einer Seriennummer ist unwichtig, da die Metadaten der Volume-Gruppe auf die LUN selbst geschrieben werden.
@@ -262,6 +272,7 @@ Das Betriebssystem hat die LUNs gescannt und eine kleine Menge an auf die LUN ge
 ....
 
 
+[[remount-file-systems]]
 == Dateisysteme neu einbinden
 
 Nachdem die Volume-Gruppe wieder aktiviert wurde, können die Dateisysteme mit allen ursprünglichen Daten gemountet werden. Wie bereits erwähnt, sind die Dateisysteme voll funktionsfähig, selbst wenn die Datenreplikation in der Back-Gruppe weiterhin aktiv ist.
@@ -286,6 +297,7 @@ tmpfs                             13179736         0  13179736   0% /run/user/0
 ....
 
 
+[[rescan-for-asm-devices]]
 == Neuscannen für ASM-Geräte
 
 Die ASMlib-Geräte sollten beim erneuten Scannen der SCSI-Geräte neu erkannt worden sein. Die Wiedererkennung kann online überprüft werden, indem ASMlib neu gestartet und anschließend die Datenträger gescannt werden.
@@ -322,6 +334,7 @@ Instantiating disk "ASM9"
 ....
 
 
+[[restart-grid-services]]
 == Starten Sie die Grid-Services neu
 
 Da die LVM- und ASM-Geräte jetzt online und verfügbar sind, können die Grid-Dienste neu gestartet werden.
@@ -332,6 +345,7 @@ Da die LVM- und ASM-Geräte jetzt online und verfügbar sind, können die Grid-D
 ....
 
 
+[[restart-database]]
 == Datenbank neu starten
 
 Nach dem Neustart der Netzdienste kann die Datenbank gestartet werden. Möglicherweise müssen Sie einige Minuten warten, bis die ASM-Dienste vollständig verfügbar sind, bevor Sie versuchen, die Datenbank zu starten.

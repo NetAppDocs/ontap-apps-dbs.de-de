@@ -20,6 +20,7 @@ Weitere Informationen zu den in diesem Dokument beschriebenen Daten finden Sie i
 
 
 
+[[epic-customer-guidance-documents]]
 == Epic Customer Guidance Dokumente
 
 Epic bietet Kunden die folgenden Dokumente zur Anleitung zu Servern, Storage und Netzwerk. In diesem technischen Bericht wird auf diese Dokumente Bezug genommen.

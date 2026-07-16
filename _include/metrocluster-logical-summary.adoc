@@ -4,6 +4,7 @@
 
 
 
+[[site-failure-protection-nvram-and-metrocluster]]
 == Schutz vor Standortausfällen: NVRAM und MetroCluster
 
 MetroCluster erweitert die NVRAM-Datensicherung auf folgende Weise:
@@ -15,6 +16,7 @@ MetroCluster erweitert die NVRAM-Datensicherung auf folgende Weise:
 
 
 
+[[site-and-shelf-failure-protection-syncmirror-and-plexes]]
 == Schutz vor Standort- und Shelf-Ausfällen: SyncMirror und Plexe
 
 SyncMirror ist eine Spiegelungstechnologie, die RAID DP oder RAID-TEC verbessert, aber nicht ersetzt. Es spiegelt den Inhalt von zwei unabhängigen RAID-Gruppen. Die logische Konfiguration ist wie folgt:
@@ -32,6 +34,7 @@ Normalerweise wird SyncMirror für die Remote-Spiegelung bei MetroCluster System
 
 
 
+[[redundancy-failure-nvfail]]
 == Redundanzfehler: NVFAIL
 
 Wie zuvor bereits erläutert, wird ein Schreibvorgang erst bestätigt, wenn er in lokalem NVRAM und NVRAM auf mindestens einem anderen Controller angemeldet wurde. Dieser Ansatz stellt sicher, dass ein Hardware-Ausfall oder ein Stromausfall nicht zum Verlust der aktiven I/O führen Wenn der lokale NVRAM ausfällt oder die Verbindung zu anderen Nodes ausfällt, werden die Daten nicht mehr gespiegelt.
@@ -50,6 +53,7 @@ Um dies zu verhindern, können Volumes mit ONTAP für speziellen Schutz vor NVRA
 
 
 
+[[ha-pairs-and-metrocluster]]
 === HA-Paare und MetroCluster
 
 MetroCluster ist in zwei Konfigurationen erhältlich: Zwei Nodes und ein HA-Paar. Die Konfiguration mit zwei Nodes verhält sich in Bezug auf NVRAM wie ein HA-Paar. Im Falle eines plötzlichen Ausfalls kann der Partner-Node NVRAM-Daten wiedergeben, um die Laufwerke konsistent zu machen und sicherzustellen, dass keine bestätigten Schreibvorgänge verloren gegangen sind.
@@ -60,12 +64,14 @@ Ein wichtiger Aspekt von MetroCluster ist, dass die Remote Nodes unter normalen 
 
 
 
+[[switchover-and-switchback]]
 == Umschaltung und Switchback
 
 Die Begriffe Switchover und Switchback beziehen sich auf den Prozess, bei dem Volumes zwischen Remote Controllern in einer MetroCluster Konfiguration migriert werden. Dieser Vorgang gilt nur für die Remote-Knoten. Wenn MetroCluster in einer Konfiguration mit vier Volumes zum Einsatz kommt, entspricht das lokale Node Failover dem zuvor beschriebenen Takeover- und Giveback-Prozess.
 
 
 
+[[planned-switchover-and-switchback]]
 === Geplante Umschaltung und Umschaltung
 
 Ein geplanter Switchover oder Switchback ähnelt einer Übernahme oder einem Giveback zwischen Nodes. Der Prozess umfasst mehrere Schritte und scheint möglicherweise mehrere Minuten zu erfordern. Aber was wirklich geschieht, ist eine mehrstufige Übertragung der Storage- und Netzwerkressourcen. Der Moment, in dem Kontrolltransfers schneller erfolgen, als der vollständige Befehl ausgeführt werden muss.
@@ -74,6 +80,7 @@ Der Hauptunterschied zwischen Takeover/Giveback und Switchover/Switchback besteh
 
 
 
+[[syncmirror-timeouts]]
 === SyncMirror-Timeouts
 
 Bei SyncMirror handelt es sich um eine ONTAP-Spiegelungstechnologie, die Schutz vor Shelf-Ausfällen bietet. Wenn Shelfs über eine Entfernung voneinander getrennt sind, führt dies zu einer Remote-Datensicherung.
@@ -88,6 +95,7 @@ Bemerkenswert ist, dass in vielen Fällen diese Art universeller Domino-Modus-Re
 
 
 
+[[automatic-unattended-switchover-with-fabric-attached-metrocluster]]
 === Automatische, unbeaufsichtigte Umschaltung mit Fabric Attached MetroCluster
 
 AUSO (Automatic unbeaufsichtigter Switchover) ist eine Fabric Attached MetroCluster Funktion, die eine Form standortübergreifender Hochverfügbarkeit bietet. Wie zuvor erläutert, gibt es bei MetroCluster zwei Typen: Einen einzigen Controller an jedem Standort oder ein HA-Paar an jedem Standort. Der Hauptvorteil der HA-Option besteht darin, dass bei geplanter oder ungeplanter Controller-Abschaltung alle I/O-Vorgänge weiterhin lokal ausgeführt werden können. Der Vorteil der Single-Node-Option liegt in der Reduzierung der Kosten, der Komplexität und der Infrastruktur.
@@ -104,6 +112,7 @@ Ein MetroCluster System kann eine automatische Umschaltung nur sicher durchführ
 
 
 
+[[metrocluster-tiebreaker-with-fabric-attached-metrocluster]]
 === MetroCluster Tiebreaker mit Fabric Attached MetroCluster
 
 Die link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_configure_mediator.html["NetApp MetroCluster Tiebreaker"^] Software kann an einem dritten Standort ausgeführt werden, um den Zustand der MetroCluster Umgebung zu überwachen, Benachrichtigungen zu senden und in einer Notfallsituation optional ein Switchover zu erzwingen. Eine vollständige Beschreibung des Tiebreaker finden Sie auf dem link:http://mysupport.netapp.com["NetApp Support Website"^], aber der primäre Zweck des MetroCluster Tiebreaker ist das Erkennen von Standortausfällen. Außerdem muss zwischen Standortausfällen und Verbindungsverlust unterschieden werden. So sollte beispielsweise keine Umschaltung erfolgen, da der primäre Standort nicht erreichbar war. Aus diesem Grund überwacht Tiebreaker auch die Fähigkeit des Remote-Standorts, mit dem primären Standort in Kontakt zu treten.
@@ -130,6 +139,7 @@ Darüber hinaus geht die MCTB möglicherweise nicht bei einem rollierenden Notfa
 
 
 
+[[ontap-mediator-with-metrocluster-ip]]
 === ONTAP Mediator mit MetroCluster IP
 
 Der ONTAP Mediator wird mit MetroCluster IP und bestimmten anderen ONTAP-Lösungen verwendet. Es fungiert als herkömmlicher Tiebreaker Service, ähnlich wie die oben beschriebene MetroCluster Tiebreaker Software, verfügt aber auch über eine wichtige Funktion zum automatisierten, unbeaufsichtigten Switchover.
@@ -140,6 +150,7 @@ Im Gegensatz dazu leitet die MetroCluster IP Architektur alle I/O ausschließlic
 
 
 
+[[virtual-third-site-with-clusterlion]]
 === Virtueller dritter Standort mit ClusterLion
 
 ClusterLion ist eine fortschrittliche MetroCluster Monitoring-Appliance, die als virtueller dritter Standort fungiert. Dieser Ansatz ermöglicht die sichere Implementierung von MetroCluster in einer Konfiguration mit zwei Standorten und einer vollständig automatisierten Umschaltfunktion. Des Weiteren kann ClusterLion zusätzliche Überwachung auf Netzwerkebene durchführen und Vorgänge nach der Umschaltung ausführen. Die vollständige Dokumentation ist bei ProLion erhältlich.

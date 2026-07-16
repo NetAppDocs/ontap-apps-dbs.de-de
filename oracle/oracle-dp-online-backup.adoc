@@ -27,6 +27,7 @@ Einige große Kunden haben einen einfacheren Ansatz verfolgt, indem sie einfache
 
 
 
+[[data-layout]]
 == Datenlayout
 
 Das einfachste Storage-Layout besteht darin, Datenbankdateien in einem oder mehreren dedizierten Volumes, LUNs oder NVMe-Namespaces zu isolieren. Die Speicherressourcen müssen frei von jeglichen anderen Dateitypen sein. Dies stellt sicher, dass die Datenbankdateien durch einen SnapRestore-Vorgang schnell wiederhergestellt werden können, ohne ein wichtiges Wiederherstellungsprotokoll, eine Kontrolldatei oder ein Archiv-Log zu zerstören.
@@ -41,6 +42,7 @@ Wenn diese Richtlinien befolgt werden, können Snapshots direkt auf dem Speicher
 
 
 
+[[local-recovery-procedurenfs]]
 == Verfahren zur lokalen Wiederherstellung – NFS
 
 Dieses Verfahren kann manuell oder über eine Anwendung wie SnapCenter gesteuert werden. Das Grundverfahren ist wie folgt:
@@ -57,6 +59,7 @@ Außerdem können Datendateien bei kleineren Datenbanken von einem Endbenutzer d
 
 
 
+[[local-recovery-proceduresan]]
 == Verfahren zur lokalen Wiederherstellung – SAN
 
 Dieses Verfahren kann manuell oder über eine Anwendung wie SnapCenter gesteuert werden. Das Grundverfahren ist wie folgt:

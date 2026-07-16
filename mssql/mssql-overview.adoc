@@ -37,6 +37,7 @@ Informationen zur Kompatibilität der NetApp-Produkte finden Sie unter link:http
 
 
 
+[[microsoft-sql-server-workloads]]
 == Microsoft SQL Server-Workloads
 
 Vor der Bereitstellung von SQL Server müssen Sie die Workload-Anforderungen der von Ihren SQL Server-Datenbankinstanzen unterstützten Applikationen kennen. Jede Applikation hat unterschiedliche Anforderungen an Kapazität, Performance und Verfügbarkeit. Daher sollte jede Datenbank für eine optimale Unterstützung dieser Anforderungen entworfen werden. Viele Unternehmen klassifizieren Datenbanken in mehrere Management-Tiers unter Verwendung von Anwendungsanforderungen zur Definition von SLAs. SQL Server-Workloads werden häufig wie unten beschrieben kategorisiert:

@@ -14,6 +14,7 @@ ONTAP verwendet intern eine variable Blockgröße, d. h. Oracle Datenbanken kön
 
 
 
+[[datafile-block-sizes]]
 == Blockgrößen der Datendatei
 
 Einige Betriebssysteme bieten eine Auswahl an Filesystem-Blockgrößen. Bei Filesystemen, die Oracle Datendateien unterstützen, sollte die Blockgröße bei Verwendung der Komprimierung 8 KB betragen. Wenn keine Komprimierung erforderlich ist, kann eine Blockgröße von 8 KB oder 4 KB verwendet werden.
@@ -24,6 +25,7 @@ Dateisysteme, die Redo-Protokolle unterstützen, müssen eine Blockgröße verwe
 
 
 
+[[redo-block-sizes]]
 == Wiederholen Sie die Blockgrößen
 
 Bei sehr hohen Wiederherstellungsraten ist es möglich, dass 4-KB-Blockgrößen die Performance verbessern, da hohe Wiederherstellungsraten es ermöglichen, I/O in weniger und effizienteren Operationen auszuführen. Wenn Redo-Raten größer als 50 Mbit/s sind, sollten Sie eine 4-KB-Blockgröße testen.

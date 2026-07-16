@@ -22,6 +22,7 @@ FabricPool löst diese Probleme mit einer einzigen Lösung mit integriertem Tier
 
 
 
+[[policies]]
 == Richtlinien
 
 Verwenden Sie A `tiering-minimum-cooling-days` Eine Richtlinie von wenigen Tagen führt zur Aufbewahrung von Blöcken in den kürzlich erstellten Dateien (die Dateien sind, die in naher Zukunft am wahrscheinlichsten erforderlich sind) auf der Performance-Tier. Die Datenblöcke aus älteren Dateien werden dann auf die Kapazitäts-Tier verschoben.

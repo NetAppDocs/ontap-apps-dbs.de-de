@@ -18,6 +18,7 @@ Die MySQL-Dokumentation empfiehlt, NFSv4 für NAS-Bereitstellungen zu verwenden.
 
 
 
+[[ontap-nfs-transfer-sizes]]
 == ONTAP NFS-Übertragungsgrößen
 
 Standardmäßig beschränkt ONTAP die NFS-I/O-Größe auf 64K. Zufällige IO mit einer MySQL-Datenbank verwendet eine viel kleinere Blockgröße, die weit unter dem 64K Maximum liegt. I/O mit großen Blöcken wird in der Regel parallelisiert, sodass die 64K-Maximalgröße ebenfalls keine Einschränkung darstellt.

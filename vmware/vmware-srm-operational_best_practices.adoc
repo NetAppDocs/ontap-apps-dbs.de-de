@@ -18,6 +18,7 @@ In den folgenden Abschnitten werden die betrieblichen Best Practices für VMware
 
 
 
+[[datastores-and-protocols]]
 == Datenspeicher und Protokolle
 
 * Wenn möglich, verwenden Sie immer ONTAP Tools, um Datenspeicher und Volumes bereitzustellen. Damit stellen wir sicher, dass Volumes, Verbindungspfade, LUNs, Initiatorgruppen, Exportrichtlinien Und andere Einstellungen sind kompatibel konfiguriert.
@@ -39,6 +40,7 @@ snap autodelete modify -volume -commitment try
 
 
 
+[[about-array-pairs]]
 == Allgemeines zu Array-Paaren
 
 Für jedes Array-Paar wird ein Array-Manager erstellt. Zusammen mit SRM und ONTAP Tools erfolgt die Kopplung jedes Arrays mit dem Umfang einer SVM, auch wenn Cluster-Anmeldedaten verwendet werden. So können Sie DR-Workflows zwischen Mandanten segmentieren, basierend auf den ihnen zugewiesenen SVMs. Sie können mehrere Array-Manager für ein bestimmtes Cluster erstellen und diese asymmetrisch sein. Sie können Fan-out oder Fan-in zwischen verschiedenen ONTAP 9 Clustern. So können beispielsweise SVM-A und SVM-B auf Cluster-1 und damit auf SVM-C auf Cluster-2, SVM-D auf Cluster-3 oder umgekehrt genutzt werden.
@@ -49,6 +51,7 @@ image:vsrm-ontap9_image6.jpg["Cluster"]
 
 
 
+[[about-replication-groups]]
 == Allgemeines zu Replikationsgruppen
 
 Replikationsgruppen enthalten logische Sammlungen von virtuellen Maschinen, die zusammen wiederhergestellt werden. Da die ONTAP SnapMirror Replizierung auf Volume-Ebene stattfindet, befinden sich alle VMs in einem Volume in derselben Replizierungsgruppe.
@@ -59,12 +62,14 @@ Eine letzte Überlegung für Replikationsgruppen besteht darin, dass jede von Na
 
 
 
+[[about-protection-groups]]
 == Allgemeines zu Schutzgruppen
 
 Sicherungsgruppen definieren VMs und Datastores in Gruppen, die am geschützten Standort zusammen wiederhergestellt werden. Am geschützten Standort befinden sich die VMs, die in einer Schutzgruppe konfiguriert sind, im normalen Steady-State-Betrieb. Es ist wichtig zu beachten, dass eine Schutzgruppe nicht mehrere Array-Manager umfassen kann, obwohl SRM möglicherweise mehrere Array-Manager für eine Schutzgruppe anzeigt. Aus diesem Grund sollten Sie VM-Dateien nicht über Datastores auf unterschiedlichen SVMs verteilen.
 
 
 
+[[about-recovery-plans]]
 == Recovery-Pläne sprechen
 
 Recovery-Pläne legen fest, welche Schutzgruppen im gleichen Prozess wiederhergestellt werden. Mehrere Sicherungsgruppen können im selben Recovery-Plan konfiguriert werden. Um darüber hinaus mehr Optionen für die Ausführung von Recovery-Plänen zu aktivieren, kann eine einzige Sicherungsgruppe in mehreren Recovery-Plänen enthalten sein.
@@ -77,6 +82,7 @@ NetApp empfiehlt besonders, mit Ihren Applikationsteams zusammenarbeiten zu müs
 
 
 
+[[test-failover]]
 == Testen Sie den Failover
 
 Als Best Practice empfiehlt es sich, immer dann ein Test-Failover durchzuführen, wenn an der Konfiguration des geschützten VM-Storage Änderungen vorgenommen werden. Dadurch wird sichergestellt, dass Sie bei einem Notfall darauf vertrauen können, dass Site Recovery Manager Services innerhalb des erwarteten RTO-Ziels wiederherstellen kann.
@@ -89,6 +95,7 @@ Nachdem der Test validiert und nicht mehr erforderlich ist, führen Sie eine Ber
 
 
 
+[[failover-considerations]]
 == Überlegungen zum Failover
 
 Wenn es um Failover an einem Standort zusätzlich zur in diesem Leitfaden beschriebenen Reihenfolge geht, müssen noch einige weitere Aspekte berücksichtigt werden.
@@ -103,12 +110,14 @@ Um SRM so zu konfigurieren, dass verschiedene Netzwerkeinstellungen auf mehrere 
 
 
 
+[[reprotect]]
 == Schützen
 
 Nach einem Recovery wird der Recovery-Standort zum neuen Produktionsstandort. Da der Recovery-Vorgang die SnapMirror Replizierung ausbrach, ist der neue Produktionsstandort nicht vor zukünftigen Ausfällen geschützt. Als Best Practice wird empfohlen, den neuen Produktionsstandort unmittelbar nach dem Recovery auf einen anderen Standort zu schützen. Wenn der ursprüngliche Produktionsstandort betriebsbereit ist, kann der VMware Administrator den ursprünglichen Produktionsstandort als neuen Recovery-Standort zum Schutz des neuen Produktionsstandorts verwenden und damit die Richtung des Schutzes umkehren. Repschutz ist nur bei nicht-katastrophalen Ausfällen verfügbar. Daher müssen die ursprünglichen vCenter Server, ESXi Server, SRM Server und entsprechenden Datenbanken irgendwann wiederhergestellt werden können. Falls diese nicht verfügbar sind, müssen eine neue Schutzgruppe und ein neuer Recovery-Plan erstellt werden.
 
 
 
+[[failback]]
 == Failback
 
 Ein Failback-Vorgang ist im Grunde ein Failover in eine andere Richtung als zuvor. Als Best Practice überprüfen Sie, ob der ursprüngliche Standort wieder zu akzeptablen Funktionsstufen zurückkehrt, bevor Sie ein Failback durchführen, oder, anders ausgedrückt, ein Failover zum ursprünglichen Standort durchführen. Falls der ursprüngliche Standort weiterhin kompromittiert wird, sollten Sie ein Failback verzögern, bis der Ausfall ausreichend behoben ist.
@@ -117,6 +126,7 @@ Eine weitere Failback Best Practice besteht darin, immer einen Test-Failover aus
 
 
 
+[[reprotecting-the-original-site]]
 == Wiederherstellung der Originalseite
 
 Nach dem Failback sollten Sie mit allen Stakeholdern bestätigen, dass ihre Dienste wieder in den Normalzustand gebracht wurden, bevor Sie erneut den Schutz erneut ausführen,

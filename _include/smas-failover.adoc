@@ -8,6 +8,7 @@ Die Diagramme veranschaulichen die Vorgänge im Normalbetrieb, bei einem Failove
 
 
 
+[[normal-operation]]
 == Normaler Betrieb
 
 Im normalen Betrieb kann auf eine LUN entweder über das lokale oder Remote-Replikat zugegriffen werden. Die rote Linie zeigt den optimierten Pfad an, wie von ALUA angekündigt, und das Ergebnis sollte sein, dass IO bevorzugt über diesen Pfad gesendet wird.
@@ -18,6 +19,7 @@ image:../media/smas-failover-1.png["SnapMirror Active Sync Normalbetrieb"]
 
 
 
+[[failure]]
 == Ausfall
 
 Wenn die aktive gespiegelte Kopie aufgrund eines geplanten oder ungeplanten Failover nicht mehr verfügbar ist, ist sie offensichtlich nicht mehr nutzbar. Das Remote-System verfügt jedoch über ein synchrones Replikat, und es sind bereits SAN-Pfade zum Remote-Standort vorhanden. Das Remote-System kann E/A für diese LUN bedienen.
@@ -26,6 +28,7 @@ image:../media/smas-failover-2.png["Fehler bei der aktiven SnapMirror-Synchronis
 
 
 
+[[failover]]
 == Failover
 
 Durch Failover wird die Remote-Kopie zur aktiven Kopie. Die Pfade werden von „aktiv“ in „aktiv/optimiert“ geändert und I/O-Vorgänge werden weiterhin ohne Datenverlust verarbeitet.
@@ -34,6 +37,7 @@ image:../media/smas-failover-3.png["SnapMirror-Failover für aktive Synchronisie
 
 
 
+[[repair]]
 == Reparieren
 
 Sobald das Quellsystem wieder einsatzbereit ist, kann die SnapMirror Active Sync Replizierung neu synchronisieren, aber in die andere Richtung ausführen. Die Konfiguration ist jetzt im Wesentlichen dieselbe wie der Startpunkt, mit Ausnahme, dass die Active-Mirror-Standorte gespiegelt wurden.
@@ -42,6 +46,7 @@ image:../media/smas-failover-4.png["SnapMirror Active Sync Reparatur"]
 
 
 
+[[failback]]
 == Failback
 
 Auf Wunsch kann ein Administrator ein Failback durchführen und die aktive Kopie der LUN(s) zurück auf die ursprünglichen Controller verschieben.

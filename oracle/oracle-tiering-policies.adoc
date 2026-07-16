@@ -19,6 +19,7 @@ In ONTAP stehen vier Richtlinien zur Verfügung, die steuern, wie Oracle-Daten a
 
 
 
+[[snapshot-only]]
 == Nur Snapshot
 
 Der `snapshot-only` `tiering-policy` Gilt nur für Blöcke, die nicht mit dem aktiven Dateisystem gemeinsam genutzt werden. Im Wesentlichen führt dies zum Tiering von Datenbank-Backups. Blöcke eignen sich als Tiering-Kandidaten, nachdem ein Snapshot erstellt wurde und der Block dann überschrieben wird. Das Ergebnis ist ein Block, der nur innerhalb des Snapshots vorhanden ist. Die Verzögerung vor einem `snapshot-only` Der Block wird als cool betrachtet und wird vom gesteuert `tiering-minimum-cooling-days` Einstellung für die Lautstärke. Der Bereich ab ONTAP 9.8 liegt zwischen 2 und 183 Tagen.
@@ -27,6 +28,7 @@ Viele Datensätze verfügen über niedrige Änderungsraten, wodurch diese Richtl
 
 
 
+[[auto]]
 == Automatisch
 
 Der `auto` die Tiering-Richtlinie erweitert das Tiering sowohl auf Snapshot-spezifische Blöcke als auch auf Blöcke innerhalb des aktiven File-Systems. Die Verzögerung, bevor ein Block als cool betrachtet wird, wird vom gesteuert `tiering-minimum-cooling-days` Einstellung für die Lautstärke. Der Bereich ab ONTAP 9.8 liegt zwischen 2 und 183 Tagen.
@@ -35,6 +37,7 @@ Dieser Ansatz ermöglicht Tiering-Optionen, die mit dem nicht verfügbar sind `s
 
 
 
+[[none]]
 == Keine
 
 Der `none` die tiering-Richtlinie verhindert, dass zusätzliche Blöcke von der Storage-Ebene aus verschoben werden, doch alle Daten, die sich noch in der Kapazitäts-Tier befinden, bleiben bis sie gelesen werden. Wenn der Block dann gelesen wird, wird er zurückgezogen und auf die Performance-Tier platziert.
@@ -43,6 +46,7 @@ Der Hauptgrund für die Verwendung des `none` mittels tiering-Richtlinie soll ve
 
 
 
+[[all]]
 == Alle
 
 Der `all` Die tiering-Richtlinie ersetzt die `backup` Richtlinie ab ONTAP 9.6. Der `backup` Richtlinie gilt nur für Datensicherungs-Volumes, d. h. ein Ziel für SnapMirror oder NetApp SnapVault. Der `all` Richtlinienfunktionen identisch, aber nicht beschränkt auf Datensicherungs-Volumes

@@ -36,6 +36,7 @@ Da sich die meisten Datenbankkunden nun für All-Flash-Arrays entscheiden, sind 
 
 
 
+[[oracle-automatic-workload-repository-and-benchmarking]]
 == Oracle Automatic Workload Repository und Benchmarking
 
 Der Goldstandard für die Performance-Vergleiche mit Oracle ist ein Oracle Automatic Workload Repository (AWR) Bericht.
@@ -51,6 +52,7 @@ NOTE: Wenn AWR-Berichte nicht verfügbar sind, sind Oracle Statspack-Berichte ei
 
 
 
+[[oracle-awr-and-troubleshooting]]
 == Oracle AWR und Fehlerbehebung
 
 Ein AWR-Bericht ist auch das wichtigste Werkzeug zur Analyse eines Leistungsproblems.
@@ -69,6 +71,7 @@ Beachten Sie bei der Bereitstellung von AWR-Daten die folgenden Anforderungen:
 
 
 
+[[calibrateio]]
 == Kalibrieren_io
 
 Der `calibrate_io` Der Befehl sollte niemals zum Testen, Vergleichen oder Vergleichen von Storage-Systemen verwendet werden. Wie in der Oracle-Dokumentation beschrieben, werden mit diesem Verfahren die I/O-Funktionen des Speichers kalibriert.
@@ -77,24 +80,28 @@ Kalibrierung ist nicht dasselbe wie Benchmarking. Mit diesem Befehl können Sie 
 
 
 
+[[slob2]]
 == SLOB2
 
 SLOB2, der Silly Little Oracle Benchmark, ist zum bevorzugten Tool für die Bewertung der Datenbank-Performance geworden. Es wurde von Kevin Closson entwickelt und ist verfügbar unter link:https://kevinclosson.net/slob/["https://kevinclosson.net/slob/"^]. Die Installation und Konfiguration dauert nur wenige Minuten und mithilfe einer echten Oracle-Datenbank lassen sich I/O-Muster auf einem benutzerdefinierbaren Tablespace generieren. Es ist eine der wenigen verfügbaren Testoptionen, die die Auslastung eines All-Flash-Arrays mit I/O-Vorgängen ermöglichen Er eignet sich auch zur Generierung von deutlich niedrigeren I/O-Werten, um Storage-Workloads zu simulieren, die zwar niedrige IOPS, aber latenzempfindlich sind.
 
 
 
+[[swingbench]]
 == Wechselbank
 
 SwingBench kann zum Testen der Datenbank-Performance nützlich sein, aber es ist extrem schwierig, SwingBench auf eine Art und Weise zu verwenden, die den Storage belastet. Bei NetApp gab es noch keine Tests von Swingbench, die genug I/O ergaben, um auf jedem AFF Array eine erhebliche Belastung zu sein. In begrenzten Fällen kann der Order Entry Test (OET) verwendet werden, um die Storage-Systeme unter Latenzsicht zu bewerten. Dies kann in Situationen nützlich sein, in denen eine Datenbank eine bekannte Latenzabhängigkeit für bestimmte Abfragen hat. Achten Sie unbedingt darauf, dass Host und Netzwerk ordnungsgemäß konfiguriert sind, um die Latenzpotenziale eines All-Flash-Arrays auszuschöpfen.
 
 
 
+[[hammerdb]]
 == HammerDB
 
 HammerDB ist ein Datenbank-Test-Tool, das unter anderem TPC-C- und TPC-H-Benchmarks simuliert. Es kann eine Menge Zeit dauern, bis ein ausreichend großer Datensatz für die ordnungsgemäße Ausführung eines Tests erstellt wurde. Er kann aber ein effektives Tool zur Performance-Evaluierung für OLTP- und Data Warehouse-Applikationen sein.
 
 
 
+[[orion]]
 == Orion
 
 Das Oracle Orion Tool wurde häufig mit Oracle 9 verwendet, wurde jedoch nicht gewartet, um die Kompatibilität mit Änderungen in verschiedenen Host-Betriebssystemen zu gewährleisten. Er wird aufgrund der Inkompatibilitäten mit der Betriebssystem- und Storage-Konfiguration selten mit Oracle 10 oder Oracle 11 verwendet.

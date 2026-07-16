@@ -23,6 +23,7 @@ Diese drei Anforderungen werden in den folgenden Abschnitten erläutert.
 
 
 
+[[network-corruption-checksums]]
 == Netzwerkkorruption: Prüfsummen
 
 Die grundlegendste Stufe des Datenschutzes ist die Prüfsumme, die einen speziellen Fehler erkennenden Code ist, der neben den Daten gespeichert wird. Eine Beschädigung der Daten bei der Netzwerkübertragung wird mit Hilfe einer Prüfsumme und in einigen Fällen mehreren Prüfsummen erkannt.
@@ -31,12 +32,14 @@ Ein FC-Frame enthält beispielsweise eine Form der Prüfsumme, die als zyklische
 
 
 
+[[drive-corruption-checksums]]
 == Laufwerkbeschädigungen: Prüfsummen
 
 Mit Prüfsummen wird auch die Integrität der auf Laufwerken gespeicherten Daten überprüft. Auf Laufwerke geschriebene Datenblöcke werden mit einer Prüfsummenfunktion gespeichert, die eine unvorhersehbare Anzahl ergibt, die mit den Originaldaten verknüpft ist. Wenn Daten vom Laufwerk gelesen werden, wird die Prüfsumme neu berechnet und mit der gespeicherten Prüfsumme verglichen. Wenn sie nicht übereinstimmt, sind die Daten beschädigt und müssen von der RAID-Schicht wiederhergestellt werden.
 
 
 
+[[data-corruption-lost-writes]]
 == Datenbeschädigung: Verlorene Schreibvorgänge
 
 Eine der schwierigsten Arten von Korruption ist ein verlorenes oder falsch geschaltenes Schreiben. Wenn ein Schreibvorgang bestätigt wird, muss er an der richtigen Stelle auf das Medium geschrieben werden. Datenbeschädigungen lassen sich mithilfe einer einfachen Prüfsumme, die mit den Daten gespeichert wurde, relativ einfach erkennen. Wenn der Schreibvorgang jedoch einfach verloren geht, dann könnte die vorherige Version der Daten noch existieren und die Prüfsumme wäre korrekt. Wenn der Schreibvorgang an einem falschen physischen Speicherort platziert wird, ist die zugehörige Prüfsumme erneut für die gespeicherten Daten gültig, auch wenn der Schreibvorgang andere Daten zerstört hat.
@@ -55,6 +58,7 @@ Verloren gegangene und falsch verlegte Schreibvorgänge sind äußerst selten, d
 
 
 
+[[drive-failures-raid-raid-dp-and-raid-tec]]
 == Laufwerksausfälle: RAID, RAID DP und RAID-TEC
 
 Wenn ein Datenblock auf einem Laufwerk erkannt wird, dass er beschädigt ist oder das gesamte Laufwerk ausfällt und nicht verfügbar ist, müssen die Daten wiederhergestellt werden. Dies wird in ONTAP mithilfe von Paritätslaufwerken durchgeführt. Die Daten werden auf mehreren Datenlaufwerken verteilt und anschließend Paritätsdaten generiert. Diese wird getrennt von den Originaldaten gespeichert.
@@ -75,6 +79,7 @@ Zusammengefasst bieten RAID DP und RAID-TEC im Vergleich zu RAID 10 viel mehr nu
 
 
 
+[[hardware-failure-protection-nvram]]
 == Schutz vor Hardware-Ausfällen: NVRAM
 
 Jedes Storage-Array für Datenbank-Workloads muss Schreibvorgänge so schnell wie möglich durchführen. Darüber hinaus muss ein Schreibvorgang vor einem Verlust durch unerwartete Ereignisse, wie z. B. einen Stromausfall, geschützt werden. Das bedeutet, dass jeder Schreibvorgang sicher an mindestens zwei Orten gespeichert werden muss.
@@ -92,6 +97,7 @@ Bei einem Controller-Ausfall übernimmt der Partner-Controller die erforderliche
 
 
 
+[[hardware-failure-protection-nvfail]]
 == Schutz vor Hardware-Ausfällen: NVFAIL
 
 Wie zuvor bereits erläutert, wird ein Schreibvorgang erst bestätigt, wenn er in lokalem NVRAM und NVRAM auf mindestens einem anderen Controller angemeldet wurde. Dieser Ansatz stellt sicher, dass ein Hardware-Ausfall oder ein Stromausfall nicht zum Verlust der aktiven I/O führen Wenn der lokale NVRAM ausfällt oder die Verbindung zum HA-Partner ausfällt, werden diese aktiven Daten nicht mehr gespiegelt.
@@ -108,6 +114,7 @@ Um Daten in solchen Situationen zu schützen, ermöglicht ONTAP die Konfiguratio
 
 
 
+[[site-and-shelf-failure-protection-syncmirror-and-plexes]]
 == Schutz vor Standort- und Shelf-Ausfällen: SyncMirror und Plexe
 
 SyncMirror ist eine Spiegelungstechnologie, die RAID DP oder RAID-TEC verbessert, aber nicht ersetzt. Es spiegelt den Inhalt von zwei unabhängigen RAID-Gruppen. Die logische Konfiguration ist wie folgt:
@@ -125,6 +132,7 @@ Normalerweise wird SyncMirror für die Remote-Spiegelung bei MetroCluster System
 
 
 
+[[checksums]]
 == Prüfsummen
 
 Das Thema Prüfsummen ist von besonderem Interesse für DBAs, die es gewohnt sind, Oracle RMAN Streaming Backups zu Snapshot-basierten Backups zu verwenden. Eine Funktion von RMAN besteht darin, dass es während der Backups Integritätsprüfungen durchführt. Auch wenn dieses Feature einen gewissen Wert bietet, ist der Hauptvorteil für eine Datenbank, die nicht in einem modernen Storage-Array verwendet wird. Wenn physische Laufwerke für eine Oracle-Datenbank verwendet werden, ist es fast sicher, dass eine Beschädigung irgendwann auftritt, wenn die Laufwerke altern, ein Problem, das durch Array-basierte Prüfsummen in echten Storage-Arrays behoben wird.

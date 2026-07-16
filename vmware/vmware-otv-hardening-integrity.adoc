@@ -24,6 +24,7 @@ Prüfsummen werden auf den Download-Seiten der OTV-Installationspakete zur Verf�
 
 
 
+[[verifying-the-signature-of-the-ontap-tools-ova]]
 == Überprüfen der Signatur der ONTAP-Tools OVA
 
 Das vApp-Installationspaket wird in Form eines Tarballs geliefert. Dieser Tarball enthält Zwischen- und Root-Zertifikate für das virtuelle Gerät sowie eine README-Datei und ein OVA-Paket. Die README-Datei führt Benutzer dazu, wie die Integrität des vApp OVA-Pakets überprüft wird.
@@ -32,6 +33,7 @@ Kunden müssen auch das bereitgestellte Root- und Intermediate-Zertifikat auf vC
 
 
 
+[[uploading-the-trusted-root-certificate-to-vcenter]]
 === Hochladen des vertrauenswürdigen Stammzertifikats in vCenter
 
 . Melden Sie sich mit dem VMware vSphere Client beim vCenter Server an.
@@ -49,6 +51,7 @@ image:vmware-otv-hardening-trusted-publisher.png["Vertrauenswürdiges Zertifikat
 
 
 
+[[verifying-the-signature-of-the-ontap-tools-iso-and-sra-tar-gz]]
 == Überprüfen der Signatur der ONTAP-Tools ISO und SRA tar.gz
 
 NetApp teilt sein Code Signing-Zertifikat mit Kunden auf der Produkt-Download-Seite, zusammen mit den Produkt-Zip-Dateien für OTV-ISO und SRA.tgz.

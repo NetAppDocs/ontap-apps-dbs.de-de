@@ -42,6 +42,7 @@ Zusammen können Windows Server und ONTAP in großen Umgebungen betrieben werden
 
 
 
+[[intended-audience]]
 == Zielgruppe
 
 Dieses Dokument richtet sich an System- und Storage-Architekten, die NetApp Storage-Lösungen für Windows Server entwerfen.

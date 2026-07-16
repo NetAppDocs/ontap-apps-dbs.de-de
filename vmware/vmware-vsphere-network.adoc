@@ -64,6 +64,7 @@ Die folgende Tabelle enthält eine Zusammenfassung der Netzwerkkonfigurationsele
 
 
 
+[[san-fc-nvmefc-iscsi-nvmetcp-rdm]]
 == SAN (FC, NVMe/FC, iSCSI, NVMe/TCP), RDM
 
 ONTAP bietet Block-Storage der Enterprise-Klasse für VMware vSphere unter Verwendung des traditionellen iSCSI- und Fibre-Channel-Protokolls (FCP) sowie des hocheffizienten und performanten NVMe-of (Next-Generation Block-Protokoll), das sowohl NVMe/FC als auch NVMe/TCP unterstützt.
@@ -72,6 +73,7 @@ Detaillierte Best Practices zur Implementierung von Blockprotokollen für VM-Sto
 
 
 
+[[nfs]]
 == NFS
 
 Bei vSphere können Kunden mithilfe von NFS-Arrays der Enterprise-Klasse gleichzeitigen Zugriff auf Datastores auf allen Nodes in einem ESXi Cluster ermöglichen. Wie im  Abschnitt erwähntlink:vmware-vsphere-datastores-top.html["Datenspeicher"], gibt es bei der Verwendung von NFS mit vSphere einige Vorteile im Hinblick auf Benutzerfreundlichkeit, Storage-Effizienz und Sichtbarkeit.
@@ -80,26 +82,28 @@ Empfohlene Best Practices finden Sie in link:vmware-vsphere-datastores-nfs.html[
 
 
 
+[[direct-connect-networking]]
 == Direkte Netzwerkverbindung
 
 Virtualisierungsadministratoren bevorzugen es mitunter, ihre Infrastrukturen zu vereinfachen, indem sie Netzwerk-Switches aus der Konfiguration entfernen. Dies ermöglicht die Erstellung einer stärker in sich geschlossenen Lösung mit weniger Komponenten und geringerem Platzbedarf im Rack. Es bestehen einige wichtige Einschränkungen, die vom verwendeten Protokoll abhängen.
 
 
 
+[[fiber-channel]]
 === Fibre Channel
 
-Ab ONTAP 9.19.1 wird Direct-Connect FC sowohl mit herkömmlichem FC-SAN (SCSI) als auch mit NVMe/FC mit ausgewählten FC-Adaptern für Speichersysteme unterstützt. Die HBAs stellen eine standardmäßige Punkt-zu-Punkt-FC-Verbindung her.
-
-Vor ONTAP 9.19.1 erfordern ONTAP Speichersysteme NPIV, was bedeutet, dass das Speichersystem mit einem FC Switch verbunden sein muss, der ebenfalls NPIV unterstützt.
+Ab ONTAP 9.19.1 wird Direct-Connect FC sowohl mit herkömmlichem FC-SAN (SCSI) als auch mit NVMe/FC mit ausgewählten FC-Adaptern für Speichersysteme unterstützt. Die HBAs stellen eine standardmäßige Punkt-zu-Punkt-FC-Verbindung her. Vor ONTAP 9.19.1 erfordern ONTAP Speichersysteme NPIV, was bedeutet, dass das Speichersystem mit einem FC Switch verbunden sein muss, der ebenfalls NPIV unterstützt.
 
 
 
+[[iscsi-and-nvmetcp]]
 === ISCSI und NVMe/TCP
 
 Ein Host, der iSCSI oder NVMe/TCP verwendet, kann direkt mit einem Storage-System verbunden werden und ordnungsgemäß ausgeführt werden. Der Grund dafür ist Pathing. Direkte Verbindungen zu zwei verschiedenen Storage Controllern ergeben zwei unabhängige Pfade für den Datenfluss. Der Verlust von Pfad, Port oder Controller verhindert nicht, dass der andere Pfad verwendet wird.
 
 
 
+[[nfs]]
 === NFS
 
 Direct-Connected NFS Storage kann genutzt werden, aber mit einer erheblichen Einschränkung - Failover funktioniert nicht ohne einen erheblichen Scripting-Aufwand, der in der Verantwortung des Kunden liegt.

@@ -32,6 +32,7 @@ Eine einzelne VM kann aus den folgenden Gründen keine Daten besitzen – Virtua
 |===
 
 
+[[supported-snapmirror-layouts]]
 == Unterstützte SnapMirror Layouts
 
 Die folgenden Abbildungen zeigen die Szenarien des SnapMirror Beziehungs-Layouts, die von VLSR und SRA unterstützt werden. Jede VM in den replizierten Volumes besitzt die Daten auf nur einem VLSR Array (SVM) an jedem Standort.
@@ -46,6 +47,7 @@ image:vsrm-ontap9_image10.png["Layout der SnapMirror Beziehung"]
 
 
 
+[[vmfs-support-with-snapmirror-active-sync]]
 == VMFS-Unterstützung mit SnapMirror Active Sync
 
 ONTAP Tools 10.3 und höher unterstützen auch den Schutz Ihrer VMFS-Datenspeicher mit SnapMirror Active Sync (SMas). Dies ermöglicht ein transparentes Failover zur Gewährleistung der Geschäftskontinuität zwischen zwei Rechenzentren (als Fehlerdomänen bezeichnet), die relativ nahe beieinander liegen. Die Notfallwiederherstellung über große Entfernungen kann dann mithilfe von SnapMirror asynchron über die ONTAP -Tools SRA mit VLSR orchestriert werden.
@@ -60,6 +62,7 @@ image:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-104/media/fan-out
 
 
 
+[[supported-array-manager-layouts]]
 == Unterstützte Array Manager-Layouts
 
 Wenn Sie in VLSR Array-basierte Replizierung (ABR) verwenden, werden Schutzgruppen auf ein einzelnes Array-Paar isoliert, wie im folgenden Screenshot dargestellt. In diesem Szenario `SVM1` und `SVM2` werden mit und `SVM4` am Recovery-Standort gesteuert `SVM3`. Sie können jedoch nur eines der beiden Array-Paare auswählen, wenn Sie eine Schutzgruppe erstellen.
@@ -68,6 +71,7 @@ image:vsrm-ontap9_image11.png["Array-Paare"]
 
 
 
+[[unsupported-layouts]]
 == Nicht unterstützte Layouts
 
 Nicht unterstützte Konfigurationen beinhalten Daten (VMDK oder RDM) auf mehreren SVMs, die sich im Besitz einer individuellen VM befinden. In den Beispielen in den folgenden Abbildungen `VM1` kann nicht für den Schutz mit VLSR konfiguriert werden, da `VM1` Daten auf zwei SVMs vorhanden sind.
@@ -82,6 +86,7 @@ image:vsrm-ontap9_image14.png["Nicht unterstützte Konfigurationen"]
 
 
 
+[[snapmirror-cascade]]
 == SnapMirror Kaskadierung
 
 VLSR unterstützt keine Kaskadierung von SnapMirror Beziehungen, bei denen ein Quell-Volume auf einem Ziel-Volume repliziert wird und das Ziel-Volume ebenfalls mit SnapMirror auf einem anderen Ziel-Volume repliziert wird. In dem in der folgenden Abbildung gezeigten Szenario kann VLSR nicht für das Failover zwischen mehreren Standorten verwendet werden.
@@ -90,6 +95,7 @@ image:vsrm-ontap9_image15.png["Kaskadierung von SnapMirror Beziehungen"]
 
 
 
+[[snapmirror-and-snapvault]]
 == SnapMirror und SnapVault
 
 Die NetApp SnapVault Software ermöglicht festplattenbasierte Backups von Unternehmensdaten zwischen NetApp Storage-Systemen. SnapVault und SnapMirror können in derselben Umgebung nebeneinander bestehen. VLSR unterstützt jedoch nur das Failover der SnapMirror Beziehungen.
@@ -127,12 +133,14 @@ Nachdem vsrm ein Failback und eine zweite Umkehr der SnapMirror Beziehungen durc
 
 
 
+[[use-of-qtrees-in-site-recovery-manager-environments]]
 == Verwendung von Qtrees in Site Recovery Manager-Umgebungen
 
 Qtrees sind spezielle Verzeichnisse, die die Anwendung von Filesystem-Kontingenten für NAS ermöglichen. ONTAP 9 ermöglicht die Erstellung von qtrees und qtrees in Volumes, die mit SnapMirror repliziert werden. SnapMirror ermöglicht jedoch nicht die Replizierung einzelner qtrees oder Qtree-Level-Replikationen. Alle SnapMirror Replikation befindet sich nur auf Volume-Ebene. Aus diesem Grund empfiehlt NetApp die Verwendung von qtrees mit VLSR nicht.
 
 
 
+[[mixed-fc-and-iscsi-environments]]
 == Gemischte FC- und iSCSI-Umgebungen
 
 Mit den unterstützten SAN-Protokollen (FC, FCoE und iSCSI) bietet ONTAP 9 LUN-Services an, d. h. die Möglichkeit, LUNs zu erstellen und angebundenen Hosts zuzuweisen. Da das Cluster aus mehreren Controllern besteht, gibt es mehrere logische Pfade, die von Multipath I/O zu einer beliebigen einzelnen LUN gemanagt werden. Auf den Hosts wird mithilfe des Asymmetric Logical Unit Access (ALUA) der optimale Pfad zu einer LUN ausgewählt und für den Datentransfer aktiviert. Wenn sich der optimierte Pfad zu einer LUN ändert (z. B. weil das zugehörige Volume verschoben wird), erkennt ONTAP 9 diese Änderung automatisch und passt sich unterbrechungsfrei an. Wenn der optimierte Pfad nicht mehr verfügbar ist, kann ONTAP ohne Unterbrechungen zu einem anderen verfügbaren Pfad wechseln.

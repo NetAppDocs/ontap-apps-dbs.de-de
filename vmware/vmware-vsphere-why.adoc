@@ -18,6 +18,7 @@ Kunden entscheiden sich vertrauensvoll für ONTAP für vSphere sowohl für SAN- 
 
 
 
+[[the-advantages-of-using-ontap-for-vsphere]]
 == Die Vorteile der Verwendung von ONTAP für vSphere
 
 Zehntausende Kunden haben sich für ONTAP als Storage-Lösung für vSphere entschieden. Dafür gibt es viele Gründe, beispielsweise ein Unified-Storage-System, das sowohl SAN- als auch NAS-Protokolle unterstützt, robuste Datensicherungsfunktionen mittels platzsparender Snapshots und eine Fülle von Tools, die Sie beim Management von Applikationsdaten unterstützen. Wenn Sie ein Storage-System getrennt vom Hypervisor verwenden, können Sie viele Funktionen verlagern und Ihre Investitionen in vSphere Host-Systeme optimal nutzen. Hierdurch wird sichergestellt, dass Ihre Host-Ressourcen schwerpunktmäßig für Applikations-Workloads verwendet werden. Darüber hinaus werden zufällige Auswirkungen auf die Performance von Applikationen aufgrund des Storage-Betriebs vermieden.

@@ -18,12 +18,14 @@ Seit dem Übergang von der älteren virtuellen Appliance bieten ONTAP Tools zahl
 
 
 
+[[latest-versions-of-vsphere-and-site-recovery-manager]]
 == Aktuelle Versionen von vSphere und Site Recovery Manager
 
 NetApp verbindet seit nahezu zwei Jahrzehnten eine enge Partnerschaft mit VMware und ist bestrebt, die neuesten Versionen so schnell wie möglich zu unterstützen. Überprüfen Sie stets die NetApp https://mysupport.netapp.com/matrix/imt.jsp?components=84943;&solution=1777&isHWU&src=IMT["Interoperabilitäts-Matrix-Tool (IMT)"^] auf die neuesten qualifizierten Softwarekombinationen.
 
 
 
+[[support-for-ipv6]]
 == IPv6 wird unterstützt
 
 IPv6 wird jetzt mit folgenden Einschränkungen unterstützt:
@@ -34,6 +36,7 @@ IPv6 wird jetzt mit folgenden Einschränkungen unterstützt:
 
 
 
+[[greater-scale]]
 == Besser skalieren
 
 Die ONTAP-Tools 10.4 SRA unterstützen jetzt die maximale Skalierbarkeit von VLSR/SRM.
@@ -48,12 +51,14 @@ Die ONTAP-Tools 10.4 SRA unterstützen jetzt die maximale Skalierbarkeit von VLS
 
 
 
+[[synchronous-replication]]
 == Synchrone Replizierung
 
 Eine lang erwartete und viel erwartete neue Funktion ist SnapMirror Synchronous (SM-S) mit ONTAP 9.5 und höher, die eine granulare Band RPO Datenreplizierungslösung für Ihre geschäftskritischen Anwendungen liefert. SM-S erfordert ONTAP-Tools 9.8 oder höher.
 
 
 
+[[rest-api-support]]
 == REST-API-Unterstützung
 
 Die SRA Serverkonfiguration kann jetzt durch REST-APIs gemanagt werden. Eine Swagger UI wurde hinzugefügt, um Sie bei der Erstellung Ihrer Automatisierungs-Workflows zu unterstützen. Sie finden sie auf Ihrer ONTAP Tools Appliance unter `https://<appliance>:8443/`.

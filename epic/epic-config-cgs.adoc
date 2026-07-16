@@ -21,6 +21,7 @@ image:epic-cg-layout.png["Epic Consistency Group-Layout"]
 
 
 
+[[consistency-group-snapshots]]
 == Snapshots von Konsistenzgruppen
 
 Ein nächtlicher CG-Snapshot-Zeitplan sollte auf jedem der Child-CGS festgelegt werden, die den Volumes zugeordnet sind, die Speicher für die Produktionsdatenbank bereitstellen. Dies führt zu einer neuen Reihe konsistenter Backups dieser CGS jede Nacht. Diese können dann für das Klonen der Produktionsdatenbank für nichtproduktive Umgebungen wie beispielsweise Entwicklungs- und Testumgebungen verwendet werden. NetApp hat für Epic proprietäre, CG-basierte automatisierte Ansible-Workflows entwickelt, um das Backup von Produktionsdatenbanken sowie die Aktualisierungs- und Testumgebungen zu automatisieren.

@@ -6,6 +6,7 @@ Dazu gehören typische Planungsmaßnahmen wie die Sicherstellung einer ausreiche
 
 
 
+[[zoning]]
 == Zoning
 
 Eine FC-Zone sollte nie mehr als einen Initiator enthalten. Eine solche Anordnung mag zunächst zu funktionieren scheinen, doch Crosstalk zwischen Initiatoren beeinträchtigt letztendlich die Performance und Stabilität.

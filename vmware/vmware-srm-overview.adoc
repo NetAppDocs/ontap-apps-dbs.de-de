@@ -27,6 +27,7 @@ Der Schwerpunkt dieses Dokuments liegt auf den Funktionen der neuesten Versionen
 
 
 
+[[why-use-ontap-with-vlsr-or-srm]]
 == Vorteile von ONTAP mit VLSR oder SRM
 
 NetApp Datenverwaltungsplattformen auf Basis von ONTAP gehören zu den am weitesten verbreiteten Speicherlösungen für VLSR.  Die Gründe dafür sind vielfältig: Eine sichere, leistungsstarke Datenverwaltungsplattform mit einheitlichem Protokoll (NAS und SAN zusammen), die branchenführende Speichereffizienz, Mandantenfähigkeit, Qualitätskontrollen, Datenschutz mit platzsparenden Snapshots und Replikation mit SnapMirror bietet.  Alle nutzen die native Hybrid-Multi-Cloud-Integration zum Schutz von VMware-Workloads und eine Vielzahl von Automatisierungs- und Orchestrierungstools, die Ihnen jederzeit zur Verfügung stehen.
@@ -37,6 +38,7 @@ Unabhängig davon, ob Sie herkömmliche NFS-, iSCSI- oder Fibre Channel-Datenspe
 
 
 
+[[how-vlsr-leverages-ontap-9]]
 == Wie VLSR ONTAP 9 nutzt
 
 VLSR nutzt die erweiterten Datenmanagement-Technologien von ONTAP Systemen. Die Integration mit ONTAP Tools für VMware vSphere, einer virtuellen Appliance mit drei Hauptkomponenten:
@@ -59,6 +61,7 @@ NOTE: Mit ONTAP Systemen können Sie SVMs zwecks SnapMirror Replizierung im selb
 
 
 
+[[vlsr-with-ontap-and-other-use-cases-hybrid-cloud-and-migration]]
 == VLSR mit ONTAP und anderen Anwendungsfällen: Hybrid Cloud und Migration
 
 Durch die Integration Ihrer VLSR-Bereitstellung mit den erweiterten Datenverwaltungsfunktionen von ONTAP können Sie im Vergleich zu lokalen Speicheroptionen eine deutlich verbesserte Skalierbarkeit und Leistung erzielen. Darüber hinaus bietet es die Flexibilität der Hybrid Cloud. Mit der Hybrid Cloud können Sie Geld sparen, indem Sie ungenutzte Datenblöcke von Ihrem Hochleistungs-Array mithilfe von FabricPool auf Ihren bevorzugten Hyperscaler auslagern. Dabei kann es sich um einen lokalen S3-Speicher wie NetApp StorageGRID handeln. Sie können SnapMirror auch für Edge-basierte Systeme mit softwaredefiniertem ONTAP Select oder Cloud-basierter DR verwenden, indem Sie https://www.equinix.com/partners/netapp["NetApp Storage auf Equinix Metal"^]oder andere gehostete ONTAP -Dienste.

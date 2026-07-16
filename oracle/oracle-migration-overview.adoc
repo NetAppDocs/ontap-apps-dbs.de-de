@@ -19,6 +19,7 @@ Im Falle eines neuen Datenbankprojekts ist dies kein Problem, da die Datenbank- 
 
 
 
+[[scripts]]
 == Skripte
 
 In dieser Dokumentation sind Beispielskripte enthalten. Diese Skripte bieten Beispielmethoden zur Automatisierung verschiedener Aspekte der Migration, um das Risiko von Benutzerfehlern zu verringern. Die Skripte können die Gesamtanforderungen an die für eine Migration verantwortlichen IT-Mitarbeiter verringern und den Gesamtprozess beschleunigen. Diese Skripte stammen alle aus Migrationsprojekten, die von NetApp Professional Services und NetApp-Partnern durchgeführt werden. Beispiele für deren Verwendung sind in dieser Dokumentation aufgeführt.

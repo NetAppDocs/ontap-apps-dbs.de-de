@@ -13,6 +13,7 @@ Informationen über das Mounten von LUNs, das Erstellen von Volume-Gruppen und l
 
 
 
+[[file-system-and-mount-options]]
 == Dateisystem- und Mount-Optionen
 
 Nachdem die LUNs erstellt und zugeordnet wurden und das Zoning abgeschlossen ist, gehen Sie wie folgt vor, um dem Server Speicher hinzuzufügen.
@@ -22,6 +23,7 @@ NOTE: In diesem Beispiel haben wir 8 LUNs mit 1024 GB für die DB, 2 LUNs mit 10
 
 
 
+[[asynchronous-io]]
 == Asynchroner I/O
 
 Eine Kopie des Whitepapers „Überlegungen zum Epic SAN“ und des Dokuments „Kurzübersicht zur Storage-Konfiguration“ enthalten Details zur Konfiguration der Hosts und zur Verbindung mit dem Storage. In diesem Abschnitt wird die Einrichtung eines Red hat Enterprise Linux-Hosts erläutert. AIX-Details finden Sie in den referenzierten Dokumenten.

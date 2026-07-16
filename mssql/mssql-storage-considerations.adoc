@@ -20,6 +20,7 @@ Um eine SQL Server auf ONTAP-Lösung zu optimieren, müssen Sie das I/O-Muster u
 
 
 
+[[data-storage-design]]
 == Datenspeicher Design
 
 Für SQL Server-Datenbanken, die keine Backups mit SnapCenter durchführen, empfiehlt Microsoft, die Daten und Log-Dateien auf separaten Laufwerken zu platzieren. Bei Anwendungen, die gleichzeitig Daten aktualisieren und anfordern, ist die Protokolldatei schreibintensiv und die Datendatei (je nach Anwendung) ist Lese-/schreibintensiv. Für den Datenabruf wird die Protokolldatei nicht benötigt. Daher können Datenanfragen aus der Datendatei auf dem eigenen Laufwerk bearbeitet werden.
@@ -28,6 +29,7 @@ Wenn Sie eine neue Datenbank erstellen, empfiehlt Microsoft, getrennte Laufwerke
 
 
 
+[[aff-aggregates]]
 == AFF Aggregate
 
 Aggregate sind die unterste Speicherebene für AFF-Speicherkonfigurationen. Im Internet findet sich vereinzelt ältere Dokumentation, die empfiehlt, die E/A auf verschiedene Gruppen von Laufwerken zu verteilen. Dies wird mit ONTAP nicht empfohlen. NetApp hat verschiedene Tests zur Charakterisierung der I/O-Last mit gemeinsam genutzten und dedizierten Aggregaten durchgeführt, wobei Datendateien und Transaktionsprotokolldateien getrennt waren. Die Tests zeigen, dass ein großes Aggregat mit mehreren RAID-Gruppen und Laufwerken die Speicherleistung optimiert und verbessert und aus zwei Gründen für Administratoren einfacher zu verwalten ist:
@@ -40,12 +42,14 @@ Platzieren Sie für Hochverfügbarkeit (HA) das sekundäre synchrone Replikat de
 
 
 
+[[volumes]]
 == Volumes
 
 Volumes werden erstellt und befinden sich in den Aggregaten. Dieser Begriff verursacht manchmal Verwirrung, weil ein ONTAP Volume keine LUN ist. Ein ONTAP Volume ist ein Management-Container für Daten. Ein Volume kann Dateien, LUNs oder sogar S3 Objekte enthalten. Ein Volume benötigt keinen Speicherplatz, sondern wird nur für das Management der enthaltenen Daten verwendet.
 
 
 
+[[volume-design-considerations]]
 === Überlegungen zum Volume-Design
 
 Bevor Sie ein Datenbank-Volume-Design erstellen, ist es wichtig zu wissen, wie das I/O-Muster und die Merkmale von SQL Server je nach Workload und Backup- und Recovery-Anforderungen variieren. Beachten Sie die folgenden NetApp Empfehlungen für flexible Volumes:
@@ -63,6 +67,7 @@ Bevor Sie ein Datenbank-Volume-Design erstellen, ist es wichtig zu wissen, wie d
 
 
 
+[[luns]]
 == LUNs
 
 * Stellen Sie sicher, dass sich die Benutzerdatenbankdateien und das Protokollverzeichnis für das Protokoll-Backup auf separaten Volumes befinden, damit die Aufbewahrungsrichtlinie Snapshots bei Verwendung der SnapVault-Technologie nicht überschreibt.

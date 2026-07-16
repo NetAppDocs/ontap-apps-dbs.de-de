@@ -25,6 +25,7 @@ Schließlich gibt es Faktoren, die nicht dem Backup- und Recovery-Prozess selbst
 
 
 
+[[is-a-snapshot-a-backup]]
 == Ist ein Snapshot eine Sicherung?
 
 Ein häufig vorgebrachter Einwand gegen die Verwendung von Snapshots als Datensicherungsstrategie ist die Tatsache, dass sich die „echten“ Daten und die Snapshot-Daten auf denselben Laufwerken befinden. Der Verlust dieser Laufwerke würde sowohl zum Verlust der Primärdaten als auch des Backups führen.
@@ -35,6 +36,7 @@ Lokale Snapshots sollten jedoch nie die einzige Backup-Strategie sein. Aus diese
 
 
 
+[[crash-consistent-backups]]
 == Absturzkonsistente Backups
 
 Ein absturzkonsistenter Backup beinhaltet das Erfassen des Zustands eines Datasets (oder mehrerer Datasets) zu einem einzigen atomaren Zeitpunkt. Als Beispiel für eine Datenbank umfasst dies alle Datenbankkomponenten wie Datendateien, Protokolldateien und andere Dateien, die direkt mit der Datenbank verbunden sind. Dies funktioniert mit nahezu allen relationalen Datenbankprodukten, einschließlich Oracle RDBMS, Microsoft SQL Server, SAP HANA, PostgreSQL, MySQL und MariaDB. Der Schutz einer VMware-Konfiguration mit einem Konsistenzgruppen-Backup wäre ähnlich – es werden alle Datastores und gegebenenfalls die ESX-Boot-LUNs zu einem einzigen atomaren Zeitpunkt erfasst.
@@ -51,6 +53,7 @@ Am einfachsten lassen sich alle Dateien oder LUNs in einem einzigen AFF Volume o
 
 
 
+[[replication-and-disaster-recovery-architecture]]
 == Architektur für Replizierung und Disaster Recovery
 
 In diesem Abschnitt geht es um die Remote-Datensicherung, bei der Daten zum sicheren externen Storage und zur Disaster Recovery an einen Remote-Standort repliziert werden. Beachten Sie, dass diese Tabellen keine Datensicherung für die synchrone Spiegelung berücksichtigen. Informationen zu dieser Anforderung finden Sie in der NetApp MetroCluster-Dokumentation einschließlich link:oracle-dr-mcc-failover.html["MetroCluster"] und link:oracle-dr-smas-overview.html["SnapMirror Active Sync"]
@@ -71,12 +74,14 @@ Die Aufbewahrungsdauer wird unter anderem durch das Snapshot-Limit bestimmt. Bei
 
 
 
+[[single-volume-consistency-group-aff]]
 === Konsistenzgruppe für ein einzelnes Volume (AFF)
 
 Die einfachste Methode besteht darin, alle Dateien oder LUNs in einem einzigen Volume zu speichern. Ein Volume ist eine Konsistenzgruppe für sich, was bedeutet, dass SnapMirror und SnapVault Aktualisierungen direkt auf dem Speichersystem geplant werden können. Externe Software ist nicht erforderlich.
 
 
 
+[[single-lunnamespace-consistency-group-asa]]
 === Konsistenzgruppe für einzelne LUNs/Namespaces (ASA)
 
 Auch wenn es ungewöhnlich erscheinen mag, eine komplette Datenbank auf einem einzigen LUN/Namespace zu platzieren, wird dies immer üblicher. Der Grund, warum Volume-Manager ursprünglich entwickelt wurden, war, die Leistungs- und Kapazitätsgrenzen physischer Laufwerke zu überwinden. Bei modernen Arrays wird ein einzelnes Blockgerät, das einem Host präsentiert wird, bereits über mehrere Laufwerke abstrahiert. Die Größe kann dynamisch angepasst werden, und die Leistung ist deutlich höher als bei einem einzelnen Laufwerk.
@@ -85,6 +90,7 @@ Das Ergebnis ist, dass Workloads von einem ESX-Datenspeicher bis hin zu einer Or
 
 
 
+[[multi-volume-consistency-group]]
 === Konsistenzgruppe mit mehreren Volumes
 
 Wenn eine Datenbank sich über AFF-Volumes oder ASA-LUNs/Namespaces erstrecken muss, ist ein Konsistenzgruppen-Snapshot erforderlich. Wie oben erwähnt, kann dies mit dem System Manager oder RESTful-API-Aufrufen konfiguriert werden, außerdem ist SnapCenter in der Lage, einen einfachen Konsistenzgruppen-Snapshot zu erstellen.
@@ -93,16 +99,19 @@ Es gibt auch eine zusätzliche Überlegung bei der Verwendung von AFF Multi-Volu
 
 
 
+[[disaster-recovery-activation]]
 == Disaster Recovery: Aktivierung
 
 
 
+[[nfs]]
 === NFS
 
 Der Prozess zur Aktivierung der Disaster Recovery-Kopie hängt vom Speichertyp ab. Mit NFS können die Dateisysteme auf dem Disaster Recovery-Server vorgemountet werden. Sie befinden sich im schreibgeschützten Zustand und werden Lese- und Schreibzugriff, wenn die Spiegelung beschädigt ist. Dadurch verkürzen sich die RPO-Werte, und der gesamte Disaster Recovery-Prozess ist zuverlässiger, da weniger Teile gemanagt werden müssen.
 
 
 
+[[san]]
 === San
 
 Die Aktivierung von SAN-Konfigurationen im Falle einer Disaster Recovery wird komplizierter. Die einfachste Option besteht im Allgemeinen darin, die Spiegelungen vorübergehend zu unterbrechen und die SAN-Ressourcen zu mounten, einschließlich Schritte wie das Erkennen der LVM-Konfiguration (einschließlich anwendungsspezifischer Funktionen wie Oracle Automatic Storage Management [ASM]) und das Hinzufügen von Einträgen zu /etc/fstab.

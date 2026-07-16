@@ -18,6 +18,7 @@ Strategien für Datenbank-Backups sollten auf den ermittelte geschäftliche Anfo
 
 
 
+[[snapcenter]]
 == SnapCenter
 
 SnapCenter ist die NetApp Datensicherungssoftware für Enterprise-Applikationen. Mit dem SnapCenter Plug-in für SQL Server und den vom SnapCenter Plug-in für Microsoft Windows verwalteten Betriebssystemvorgängen können SQL Server Datenbanken schnell und einfach gesichert werden.
@@ -30,6 +31,7 @@ Weitere Informationen zum SQL Server-Plug-in für SnapCenter finden Sie unter li
 
 
 
+[[protecting-database-using-t-sql-snapshots]]
 == Datenbanken mit T-SQL-Snapshots werden gesichert
 
 In SQL Server 2022 hat Microsoft T-SQL Snapshots eingeführt, die einen Pfad zu Skripting und Automatisierung von Backup-Vorgängen bieten. Anstatt Kopien in voller Größe zu erstellen, können Sie die Datenbank für Snapshots vorbereiten. Sobald die Datenbank für das Backup bereit ist, können Sie Snapshots mithilfe der ONTAP REST-APIs erstellen.

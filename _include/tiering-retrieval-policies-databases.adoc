@@ -4,6 +4,7 @@
 
 
 
+[[default]]
 == Standard
 
 Alle FabricPool-Volumes sind zunächst auf festgelegt `default`, D.h. das Verhalten wird durch die `Cloud-Retrieval-Policy gesteuert. `das genaue Verhalten hängt von der verwendeten Tiering Policy ab.
@@ -16,6 +17,7 @@ Alle FabricPool-Volumes sind zunächst auf festgelegt `default`, D.h. das Verhal
 
 
 
+[[on-read]]
 == Gelesen
 
 Einstellung `cloud-retrieval-policy` Das Lesen überschreibt das Standardverhalten, sodass ein Lesen von Tiered-Daten dazu führt, dass diese Daten an die Performance-Tier zurückgegeben werden.
@@ -26,6 +28,7 @@ Wenn bei einer unerwarteten Änderung des Geschäfts ein Teil der Daten wiederho
 
 
 
+[[promote]]
 == Heraufstufen
 
 Das Verhalten der „heraufstufen“-Richtlinie hängt von der Tiering-Richtlinie ab. Wenn die Tiering-Richtlinie lautet `auto`, Dann Einstellung der `cloud-retrieval-policy `to `promote` Ruft beim nächsten Tiering-Scan alle Blöcke aus der Kapazitäts-Tier zurück.
@@ -36,6 +39,7 @@ Wenn jedoch die Daten auf einem Volume von einem Volume-SnapRestore oder Datei-K
 
 
 
+[[never]]
 == Nie
 
 Nehmen Sie keine Blöcke aus der Kapazitäts-Tier heraus.

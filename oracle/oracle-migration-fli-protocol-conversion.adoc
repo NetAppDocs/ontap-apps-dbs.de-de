@@ -23,6 +23,7 @@ Das folgende Verfahren zeigt die Konvertierung von FC zu iSCSI, jedoch gelten di
 
 
 
+[[install-iscsi-initiator]]
 == Installieren Sie den iSCSI-Initiator
 
 Die meisten Betriebssysteme enthalten standardmäßig einen Software-iSCSI-Initiator, aber wenn dieser nicht enthalten ist, kann er problemlos installiert werden.
@@ -81,6 +82,7 @@ Complete!
 ....
 
 
+[[identify-iscsi-initiator-name]]
 == Identifizieren Sie den iSCSI-Initiatornamen
 
 Während der Installation wird ein eindeutiger iSCSI-Initiatorname generiert. Unter Linux befindet sie sich im `/etc/iscsi/initiatorname.iscsi` Datei: Dieser Name dient zur Identifizierung des Hosts auf dem IP-SAN.
@@ -91,6 +93,7 @@ InitiatorName=iqn.1992-05.com.redhat:497bd66ca0
 ....
 
 
+[[create-new-initiator-group]]
 == Erstellen Sie eine neue Initiatorgruppe
 
 Eine Initiatorgruppe (Initiatorgruppe) ist Teil der ONTAP LUN-Masking-Architektur. Auf eine neu erstellte LUN kann nur dann zugegriffen werden, wenn einem Host der erste Zugriff gewährt wurde. Hierzu wird eine Initiatorgruppe erstellt, die entweder die FC-WWNs oder die iSCSI-Initiatornamen enthält, die Zugriff erfordern.
@@ -102,12 +105,14 @@ Cluster01::*> igroup create -igroup linuxiscsi -protocol iscsi -ostype linux -in
 ....
 
 
+[[shut-down-environment]]
 == Fahren Sie die Umgebung herunter
 
 Vor dem Ändern des LUN-Protokolls müssen die LUNs vollständig stillgelegt werden. Jede Datenbank auf einer der zu konvertierenden LUNs muss heruntergefahren, die File-Systeme deaktiviert und die Volume-Gruppen deaktiviert werden. Wenn ASM verwendet wird, stellen Sie sicher, dass die ASM-Laufwerksgruppe getrennt ist und fahren Sie alle Netzdienste herunter.
 
 
 
+[[unmap-luns-from-fc-network]]
 == LUN-Zuordnungen zum FC-Netzwerk aufheben
 
 Nachdem die LUNs vollständig stillgelegt sind, entfernen Sie die Zuordnungen von der ursprünglichen FC-Initiatorgruppe.
@@ -121,6 +126,7 @@ Cluster01::*> lun unmap -vserver vserver1 -path /vol/new_lvm/LUN9 -igroup linuxh
 ....
 
 
+[[remap-luns-to-ip-network]]
 == LUN-Zuordnung zum IP-Netzwerk neu
 
 Gewähren Sie der neuen iSCSI-basierten Initiatorgruppe Zugriff auf jede LUN.
@@ -135,6 +141,7 @@ Cluster01::*>
 ....
 
 
+[[discover-iscsi-targets]]
 == ISCSI-Ziele erkennen
 
 Die iSCSI-Erkennung besteht aus zwei Phasen. Zum einen werden die Ziele ermittelt. Dies ist nicht dasselbe wie beim Erkennen einer LUN. Der `iscsiadm` Der unten abgebildete Befehl prüft die vom angegebene Portalgruppe `-p argument` Und speichert eine Liste aller IP-Adressen und Ports, die iSCSI-Dienste anbieten. In diesem Fall gibt es vier IP-Adressen, die iSCSI-Dienste auf dem Standardport 3260 haben.
@@ -151,6 +158,7 @@ NOTE: Dieser Befehl kann mehrere Minuten dauern, wenn eine der Ziel-IP-Adressen 
 ....
 
 
+[[discover-iscsi-luns]]
 == ISCSI-LUNs erkennen
 
 Nachdem die iSCSI-Ziele erkannt wurden, starten Sie den iSCSI-Dienst neu, um die verfügbaren iSCSI-LUNs zu ermitteln und zugehörige Geräte wie Multipath- oder ASMlib-Geräte zu erstellen.
@@ -161,6 +169,7 @@ Redirecting to /bin/systemctl restart  iscsi.service
 ....
 
 
+[[restart-environment]]
 == Starten Sie die Umgebung neu
 
 Starten Sie die Umgebung neu, indem Sie Volume-Gruppen erneut aktivieren, Dateisysteme neu mounten, RAC-Dienste neu starten usw. Als Vorsichtsmaßnahme empfiehlt NetApp, den Server nach Abschluss des Konvertierungsprozesses neu zu starten, um sicherzustellen, dass alle Konfigurationsdateien korrekt sind und alle veralteten Geräte entfernt werden.

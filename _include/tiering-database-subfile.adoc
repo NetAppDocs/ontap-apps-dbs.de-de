@@ -11,6 +11,7 @@ CAUTION: Der `auto` Richtlinien sollten mit Vorsicht bei Datenbanken verwendet w
 
 
 
+[[policies]]
 == Richtlinien
 
 Der `tiering-minimum-cooling-days` Die Richtlinie sollte so hoch eingestellt werden, dass Dateien, die auf der Performance-Tier erforderlich sind, aufbewahrt werden. Beispielsweise müsste eine Datenbank, in der die letzten 60 Tage Daten bei einer optimalen Performance benötigt werden, die festlegen `tiering-minimum-cooling-days` Zeitraum bis 60 Tage. Ähnliche Ergebnisse lassen sich auch anhand der Zugriffsmuster von Dateien erzielen. Wenn beispielsweise die Daten der letzten 90 Tage benötigt werden und die Applikation auf diese 90-Tage-Datenspanne zugreift, verbleiben die Daten in der Performance-Tier. Einstellen des `tiering-minimum-cooling-days` Zeitraum bis 2 Tage würde die Daten sofort nach dem Zeitpunkt verschieben, an dem die Daten weniger aktiv sind.

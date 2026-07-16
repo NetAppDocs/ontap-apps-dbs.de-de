@@ -30,6 +30,7 @@ Die SnapMirror Active Sync (SM-AS) basiert auf SnapMirror Synchronous. Mit Metro
 
 
 
+[[sm-as-and-mcc-comparison]]
 == Vergleich von SM-AS und MCC
 
 SM-AS und MetroCluster sind in der Gesamtfunktionalität ähnlich, es gibt jedoch wichtige Unterschiede in der Art und Weise, wie die RPO=0-Replikation implementiert und gemanagt wird. Die asynchronen und synchronen SnapMirror können auch im Rahmen eines DR-Plans eingesetzt werden, sind aber nicht als Technologien für die HA-Replizierung konzipiert.

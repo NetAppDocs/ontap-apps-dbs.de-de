@@ -14,6 +14,7 @@ Konfigurationsthemen für Oracle Database on HP-UX with ONTAP.
 
 
 
+[[hp-ux-nfs-mount-options]]
 == HP-UX NFS Mount-Optionen
 
 In der folgenden Tabelle sind die HP-UX-NFS-Mount-Optionen für eine einzelne Instanz aufgeführt.
@@ -76,6 +77,7 @@ Der Grund `noac` Ist für die gemeinsame Nutzung erforderlich `ORACLE_HOME` Die 
 
 
 
+[[hp-ux-vxfs-mount-options]]
 == HP-UX VxFS-Mount-Optionen
 
 Verwenden Sie die folgenden Mount-Optionen für Dateisysteme, auf denen Oracle-Binärdateien gehostet werden:

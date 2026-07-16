@@ -21,6 +21,7 @@ Das NFS-Protokoll umfasst mehrere Versionen mit unterschiedlichen Anforderungen.
 
 
 
+[[nfs-versions]]
 == NFS-Versionen
 
 Der NFS-Client des Betriebssystems muss von NetApp unterstützt werden.
@@ -37,6 +38,7 @@ NOTE: Der link:https://imt.netapp.com/matrix/#search["NetApp Support-Matrix"] F�
 
 
 
+[[linux-nfsv3-tcp-slot-tables]]
 == Linux NFSv3 TCP-Slot-Tabellen
 
 TCP-Slot-Tabellen sind das NFSv3 Äquivalent zur Warteschlangentiefe des Host Bus Adapters (HBA). Diese Tabellen steuern die Anzahl der NFS-Vorgänge, die zu einem beliebigen Zeitpunkt ausstehen können. Der Standardwert ist normalerweise 16, was für eine optimale Performance viel zu niedrig ist. Das entgegengesetzte Problem tritt auf neueren Linux-Kerneln auf, die automatisch die Begrenzung der TCP-Slot-Tabelle auf ein Niveau erhöhen können, das den NFS-Server mit Anforderungen sättigt.
@@ -57,6 +59,7 @@ CAUTION: Wenn diese Parameter nicht eingestellt werden, kann dies erhebliche Aus
 
 
 
+[[adr-and-nfs]]
 == AdR und NFS
 
 Einige Kunden haben Performance-Probleme gemeldet, die auf übermäßig viele I/O-Vorgänge für Daten im führen `ADR` Standort. Das Problem tritt in der Regel erst auf, wenn sich viele Performance-Daten angesammelt haben. Der Grund für den übermäßigen I/O ist unbekannt, aber dieses Problem scheint darauf zurückzuführen zu sein, dass Oracle-Prozesse das Zielverzeichnis wiederholt auf Änderungen scannen.
@@ -68,6 +71,7 @@ TIP: *NetApp empfiehlt* nicht zu platzieren `ADR` Daten auf einem Filesystem mit
 
 
 
+[[nfs-rootonly-and-mount-rootonly]]
 == Nur nfs-Rootonly und Mount-Rootonly
 
 ONTAP enthält die NFS-Option `nfs-rootonly` Damit wird gesteuert, ob der Server NFS-Datenverkehrsverbindungen von hohen Ports akzeptiert. Als Sicherheitsmaßnahme ist es nur dem Root-Benutzer erlaubt, TCP/IP-Verbindungen über einen Quellport unter 1024 zu öffnen, da solche Ports normalerweise für die Verwendung durch das Betriebssystem und nicht für Benutzerprozesse reserviert sind. Durch diese Einschränkung wird sichergestellt, dass NFS-Datenverkehr von einem tatsächlichen Betriebssystem-NFS-Client stammt und kein schädlicher Prozess, der einen NFS-Client emuliert. Der Oracle dNFS-Client ist ein Benutzerspeichertreiber, aber der Prozess läuft als root, daher ist es in der Regel nicht erforderlich, den Wert von zu ändern `nfs-rootonly`. Die Verbindungen werden von niedrigen Ports hergestellt.
@@ -97,6 +101,7 @@ NOTE: In seltenen Fällen müssen Sie möglicherweise sowohl nfs-rootonly als au
 
 
 
+[[nfs-export-polices-superuser-and-setuid]]
 == NFS-Export-Richtlinien: Superuser und setuid
 
 Wenn sich Oracle-Binärdateien auf einer NFS-Freigabe befinden, muss die Exportrichtlinie Superuser- und setuid-Berechtigungen enthalten.
@@ -113,6 +118,7 @@ vserver1  orabin     1         sys       true
 ....
 
 
+[[nfsv44-1-configuration]]
 == Konfiguration von NFSv4/4.1
 
 Für die meisten Applikationen gibt es kaum einen Unterschied zwischen NFSv3 und NFSv4. Applikations-I/O ist in der Regel sehr einfach I/O und nicht von einigen der erweiterten Funktionen, die in NFSv4 verfügbar sind, erheblich profitieren. Höhere Versionen von NFS sollten nicht aus Sicht des Datenbank-Storage als „Upgrade“ betrachtet werden, sondern als Versionen von NFS, die zusätzliche Features enthalten. Wenn beispielsweise die End-to-End-Sicherheit des kerberos Datenschutzmodus (krb5p) erforderlich ist, ist NFSv4 erforderlich.
@@ -124,6 +130,7 @@ Der Wechsel zu NFSv4 ist komplizierter als einfach die Mount-Optionen von vers=3
 
 
 
+[[nfsv4-domain]]
 === NFSv4-Domäne
 
 Eine vollständige Erklärung der NFSv4/4.1-Konfiguration geht über den Umfang dieses Dokuments hinaus, aber ein häufig aufgetretendes Problem ist eine Diskrepanz bei der Domänenzuordnung. Aus Sicht von sysadmin scheinen sich die NFS-Dateisysteme normal zu verhalten, aber Anwendungen melden Fehler über Berechtigungen und/oder setuid auf bestimmte Dateien. In einigen Fällen haben Administratoren fälschlicherweise festgestellt, dass die Berechtigungen der Anwendungsbinärdateien beschädigt wurden und chown- oder chmod-Befehle ausgeführt haben, wenn das eigentliche Problem der Domänenname war.

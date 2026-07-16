@@ -24,6 +24,7 @@ Verwenden Sie dieses Dokument als Leitfaden für die erfolgreiche Erstellung und
 
 
 
+[[purpose]]
 == Zweck
 
 Dieses Dokument beschreibt Best Practices für die Integration von NetApp Storage in eine Epic-Softwareumgebung. Es enthält die folgenden Abschnitte:
@@ -35,6 +36,7 @@ Dieses Dokument beschreibt Best Practices für die Integration von NetApp Storag
 
 
 
+[[scope]]
 == Umfang
 
 Dieses Dokument behandelt nicht die folgenden Themen:
@@ -44,6 +46,7 @@ Dieses Dokument behandelt nicht die folgenden Themen:
 
 
 
+[[audience]]
 == Zielgruppe
 
 NetApp geht davon aus, dass der Leser über folgende Hintergrundwissen verfügt:

@@ -18,6 +18,7 @@ Erfahren Sie mehr über die Bereitstellung von Microsoft Windows Nano Server.
 
 
 
+[[deployment]]
 == Einsatz
 
 Um einen Nano-Server als Hyper-V-Host bereitzustellen, führen Sie die folgenden Schritte aus:
@@ -91,6 +92,7 @@ Invoke-Command -VMName $nanoserver -Credential $nanosecurecred -ArgumentList @($
 
 
 
+[[connect-to-nano-server]]
 == Verbindung mit Nano Server herstellen
 
 Gehen Sie wie folgt vor, um eine Remote-Verbindung mit dem Nano Server über PowerShell herzustellen:

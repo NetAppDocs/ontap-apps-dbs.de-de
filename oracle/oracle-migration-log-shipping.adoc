@@ -23,18 +23,21 @@ Das unten abgebildete Verfahren ist außerdem im Wesentlichen eine Datenbankklon
 
 
 
+[[log-shipping-file-system-to-file-system]]
 == Protokollversand – Dateisystem an Dateisystem
 
 Dieses Beispiel zeigt die Migration einer Datenbank namens WAFFLE von einem gewöhnlichen Dateisystem zu einem anderen gewöhnlichen Dateisystem auf einem anderen Server. Es veranschaulicht auch die Verwendung von SnapMirror zum Erstellen einer schnellen Kopie der Datendateien, aber dies ist kein integraler Bestandteil des gesamten Verfahrens.
 
 
 
+[[create-database-backup]]
 === Erstellen Sie eine Datenbanksicherung
 
 Der erste Schritt besteht darin, ein Datenbank-Backup zu erstellen. Insbesondere erfordert dieses Verfahren eine Reihe von Datendateien, die für die Wiedergabe des Archivprotokolls verwendet werden können.
 
 
 
+[[environment]]
 === Umgebung
 
 In diesem Beispiel befindet sich die Quelldatenbank auf einem ONTAP-System. Die einfachste Methode, um ein Backup einer Datenbank zu erstellen, ist die Verwendung eines Snapshots. Die Datenbank wird für einige Sekunden in den Hot Backup-Modus versetzt, während ein `snapshot create` Der Vorgang wird auf dem Volume ausgeführt, auf dem die Datendateien gehostet werden.
@@ -55,6 +58,7 @@ Das Ergebnis ist ein Snapshot auf der Festplatte, der aufgerufen wird `hotbackup
 
 
 
+[[restore-to-new-environment]]
 === Wiederherstellung in neuer Umgebung
 
 Das Backup muss nun in der neuen Umgebung wiederhergestellt werden. Dies kann auf verschiedene Arten erfolgen, z. B. Oracle RMAN, Wiederherstellung über eine Backup-Applikation wie NetBackup oder ein einfacher Kopiervorgang von Datendateien, die im Hot-Backup-Modus platziert wurden.
@@ -115,6 +119,7 @@ fas8060-nfs1:/vol_logs            9961472       128    9961344   1% /logs
 
 
 
+[[create-controlfile-creation-template]]
 === Erstellen Sie eine Vorlage für die Erstellung von Steuerdateien
 
 Als nächstes müssen Sie eine controlfile-Vorlage erstellen. Der `backup controlfile to trace` Befehl erstellt Textbefehle, um eine Steuerdatei neu zu erstellen. Diese Funktion kann unter bestimmten Umständen hilfreich sein, um eine Datenbank aus einem Backup wiederherzustellen. Sie wird häufig bei Skripten verwendet, die Aufgaben wie das Klonen von Datenbanken ausführen.
@@ -136,6 +141,7 @@ waffle.ctrl                                              100% 5199     5.1KB/s  
 
 
 
+[[backup-parameter-file]]
 === Parameterdatei sichern
 
 In der neuen Umgebung ist auch eine Parameterdatei erforderlich. Die einfachste Methode ist, aus dem aktuellen spfile oder pfile ein pfile zu erstellen. In diesem Beispiel verwendet die Quelldatenbank eine spfile.
@@ -146,6 +152,7 @@ File created.
 ....
 
 
+[[create-oratab-entry]]
 === Oratab-Eintrag erstellen
 
 Die Erstellung eines Oratab-Eintrags ist für das ordnungsgemäße Funktionieren von Dienstprogrammen wie oraenv erforderlich. Führen Sie den folgenden Schritt aus, um einen Oratab-Eintrag zu erstellen.
@@ -155,6 +162,7 @@ WAFFLE:/orabin/product/12.1.0/dbhome_1:N
 ....
 
 
+[[prepare-directory-structure]]
 === Verzeichnisstruktur vorbereiten
 
 Wenn die benötigten Verzeichnisse noch nicht vorhanden waren, müssen Sie sie erstellen, oder der Datenbankstartvorgang schlägt fehl. Um die Verzeichnisstruktur vorzubereiten, müssen Sie die folgenden Mindestanforderungen erfüllen.
@@ -171,6 +179,7 @@ The Oracle base has been set to /orabin
 ....
 
 
+[[parameter-file-updates]]
 === Aktualisierung der Parameterdatei
 
 . Um die Parameterdatei auf den neuen Server zu kopieren, führen Sie die folgenden Befehle aus. Der Standardspeicherort ist der `$ORACLE_HOME/dbs` Verzeichnis. In diesem Fall kann die pfile überall platziert werden. Sie wird nur als Zwischenschritt im Migrationsprozess genutzt.
@@ -224,6 +233,7 @@ File created.
 
 
 
+[[recreate-controlfiles]]
 === Erstellen Sie Steuerdateien neu
 
 In einem vorherigen Schritt wird die Ausgabe von angezeigt `backup controlfile to trace` Wurde auf den neuen Server kopiert. Der spezifische Teil des erforderlichen Ausgangs ist der `controlfile recreation` Befehl. Diese Informationen finden Sie in der Datei unter dem markierten Abschnitt `Set #1. NORESETLOGS`. Es beginnt mit der Linie `create controlfile reuse database` Und sollte das Wort enthalten `noresetlogs`. Er endet mit dem Semikolon (; ).
@@ -309,6 +319,7 @@ Wenn Dateien falsch platziert oder Parameter falsch konfiguriert sind, werden Fe
 
 
 
+[[initial-log-replication]]
 === Erste Protokollreplizierung
 
 Es ist mindestens ein Protokollantwort erforderlich, um die Datendateien konsistent zu gestalten. Es stehen zahlreiche Optionen zur Wiedergabe von Protokollen zur Verfügung. In einigen Fällen kann der ursprüngliche Speicherort des Archivprotokolls auf dem ursprünglichen Server über NFS freigegeben werden, und die Protokollantwort kann direkt erfolgen. In anderen Fällen müssen die Archivprotokolle kopiert werden.
@@ -330,6 +341,7 @@ oracle@jfsc1's password:
 ....
 
 
+[[initial-log-replay]]
 === Erste Protokollwiedergabe
 
 Nachdem sich die Dateien im Archiv-Log-Speicherort befinden, können sie mit dem Befehl wiedergegeben werden `recover database until cancel` Gefolgt von der Antwort `AUTO` Um alle verfügbaren Protokolle automatisch wiederzugeben.
@@ -363,6 +375,7 @@ Wenn die Quelldatenbank vor dem Kopieren von Archivprotokollen heruntergefahren 
 
 
 
+[[incremental-log-replication-and-replay]]
 === Inkrementelle Protokollreplikation und -Wiedergabe
 
 In den meisten Fällen erfolgt die Migration nicht sofort. Es kann Tage oder sogar Wochen bis zum Abschluss des Migrationsprozesses dauern. Das bedeutet, dass die Protokolle kontinuierlich an die Replikatdatenbank gesendet und erneut eingespielt werden müssen. Bei Ankunft der Umstellung müssen daher nur minimale Daten übertragen und erneut eingespielt werden.
@@ -453,6 +466,7 @@ With the Partitioning, OLAP, Advanced Analytics and Real Application Testing opt
 ....
 
 
+[[cutover]]
 === Umstellung
 
 Wenn Sie bereit sind, in die neue Umgebung zu schneiden, müssen Sie eine abschließende Synchronisierung durchführen, die sowohl Archivprotokolle als auch Redo-Protokolle enthält. Wenn der ursprüngliche Speicherort des Wiederherstellungsprotokolls nicht bereits bekannt ist, kann er wie folgt identifiziert werden:
@@ -506,6 +520,7 @@ Database altered.
 
 
 
+[[log-shipping-asm-to-file-system]]
 == Protokollversand: ASM an Dateisystem
 
 In diesem Beispiel wird die Verwendung von Oracle RMAN zur Migration einer Datenbank demonstriert. Es ähnelt dem vorherigen Beispiel des Dateisystems zum Protokollversand des Dateisystems, aber die Dateien auf ASM sind für den Host nicht sichtbar. Die einzigen Optionen für die Migration von Daten auf ASM-Geräten sind entweder die Verlagerung der ASM-LUN oder die Durchführung der Kopiervorgänge mithilfe von Oracle RMAN.
@@ -516,6 +531,7 @@ Dieses Beispiel zeigt die Verlagerung einer Datenbank namens PANCAKE aus dem ASM
 
 
 
+[[create-database-backup]]
 === Erstellen Sie eine Datenbanksicherung
 
 Im ersten Schritt wird ein Backup der Datenbank erstellt, die auf einen alternativen Server migriert werden soll. Da die Quelle Oracle ASM verwendet, muss RMAN verwendet werden. Ein einfaches RMAN-Backup kann wie folgt durchgeführt werden. Diese Methode erstellt ein getaggtes Backup, das später im Verfahren von RMAN leicht identifiziert werden kann.
@@ -556,6 +572,7 @@ Finished backup at 24-MAY-16
 ....
 
 
+[[backup-controlfile]]
 === Sicherungscontrolfile
 
 Im weiteren Verlauf des Verfahrens wird eine Sicherungscontrolfile benötigt `duplicate database` Betrieb.
@@ -575,6 +592,7 @@ Finished backup at 24-MAY-16
 ....
 
 
+[[backup-parameter-file]]
 === Parameterdatei sichern
 
 In der neuen Umgebung ist auch eine Parameterdatei erforderlich. Die einfachste Methode ist, aus dem aktuellen spfile oder pfile ein pfile zu erstellen. In diesem Beispiel verwendet die Quelldatenbank eine spfile.
@@ -585,6 +603,7 @@ Statement processed
 ....
 
 
+[[asm-file-rename-script]]
 === Skript zum Umbenennen der ASM-Datei
 
 Mehrere aktuell in den Steuerdateien definierte Dateispeicherorte ändern sich, wenn die Datenbank verschoben wird. Mit dem folgenden Skript wird ein RMAN-Skript erstellt, um den Prozess zu vereinfachen. Dieses Beispiel zeigt eine Datenbank mit einer sehr kleinen Anzahl von Datendateien, aber in der Regel enthalten Datenbanken Hunderte oder gar Tausende von Datendateien.
@@ -628,6 +647,7 @@ duplicate target database for standby backup location '/rman/pancake';
 ....
 
 
+[[prepare-directory-structure]]
 === Verzeichnisstruktur vorbereiten
 
 Die Skripte sind fast fertig zur Ausführung, aber zuerst muss die Verzeichnisstruktur vorhanden sein. Wenn die benötigten Verzeichnisse nicht bereits vorhanden sind, müssen sie erstellt werden, oder der Datenbankstartvorgang schlägt fehl. Das folgende Beispiel gibt die Mindestanforderungen wieder.
@@ -642,6 +662,7 @@ Die Skripte sind fast fertig zur Ausführung, aber zuerst muss die Verzeichnisst
 ....
 
 
+[[create-oratab-entry]]
 === Oratab-Eintrag erstellen
 
 Der folgende Befehl ist für Dienstprogramme wie oraenv erforderlich, um ordnungsgemäß zu funktionieren.
@@ -651,6 +672,7 @@ PANCAKE:/orabin/product/12.1.0/dbhome_1:N
 ....
 
 
+[[parameter-updates]]
 === Parameteraktualisierungen
 
 Die gespeicherte pfile muss aktualisiert werden, um alle Pfadänderungen auf dem neuen Server widerzuspiegeln. Die Änderungen des Datendateipfads werden durch das RMAN-Duplizierungsskript geändert, und fast alle Datenbanken erfordern Änderungen am `control_files` Und `log_archive_dest` Parameter. Es können auch Prüfdateipositionen vorhanden sein, die geändert werden müssen, und Parameter wie `db_create_file_dest` Ist außerhalb von ASM möglicherweise nicht relevant. Ein erfahrener DBA sollte die vorgeschlagenen Änderungen sorgfältig prüfen, bevor er fortfahren kann.
@@ -702,6 +724,7 @@ File created.
 ....
 
 
+[[startup-nomount]]
 === Startbezeichnung
 
 Der letzte Schritt vor dem Replizieren der Datenbank ist, die Datenbankprozesse zu laden, aber nicht die Dateien zu mounten. In diesem Schritt können Probleme mit dem spfile offensichtlich werden. Wenn der `startup nomount` Befehl schlägt aufgrund eines Parameterfehlers fehl, es ist einfach herunterzufahren, die pfile-Vorlage zu korrigieren, sie als spfile neu zu laden und es erneut zu versuchen.
@@ -717,6 +740,7 @@ Redo Buffers                5455872 bytes
 ....
 
 
+[[duplicate-the-database]]
 === Duplizieren Sie die Datenbank
 
 Die Wiederherstellung des vorherigen RMAN-Backups am neuen Speicherort nimmt mehr Zeit in Anspruch als andere Schritte in diesem Prozess. Die Datenbank muss ohne Änderung der Datenbank-ID (DBID) oder Zurücksetzen der Protokolle dupliziert werden. Dadurch wird verhindert, dass Protokolle angewendet werden, was ein erforderlicher Schritt zur vollständigen Synchronisierung der Kopien ist.
@@ -819,6 +843,7 @@ Finished Duplicate Db at 24-MAY-16
 ....
 
 
+[[initial-log-replication]]
 === Erste Protokollreplizierung
 
 Sie müssen die Änderungen nun von der Quelldatenbank an einen neuen Speicherort senden. Dies kann eine Kombination von Schritten erfordern. Die einfachste Methode wäre, RMAN auf der Quelldatenbank zu haben, um Archivprotokolle auf eine freigegebene Netzwerkverbindung zu schreiben. Wenn ein freigegebener Speicherort nicht verfügbar ist, verwenden Sie RMAN zum Schreiben auf ein lokales Dateisystem und anschließend rcp oder rsync zum Kopieren der Dateien.
@@ -861,6 +886,7 @@ Finished backup at 24-MAY-16
 ....
 
 
+[[initial-log-replay]]
 === Erste Protokollwiedergabe
 
 Nachdem sich die Dateien im Archiv-Log-Speicherort befinden, können sie mit dem Befehl wiedergegeben werden `recover database until cancel` Gefolgt von der Antwort `AUTO` Um alle verfügbaren Protokolle automatisch wiederzugeben. Die Parameterdatei leitet derzeit Archivprotokolle an `/logs/archive`, Aber dies stimmt nicht mit dem Speicherort überein, an dem RMAN zum Speichern von Protokollen verwendet wurde. Der Speicherort kann vor der Wiederherstellung der Datenbank wie folgt vorübergehend umgeleitet werden.
@@ -896,6 +922,7 @@ Wenn die Quelldatenbank vor dem Kopieren von Archivprotokollen heruntergefahren 
 
 
 
+[[incremental-log-replication-and-replay]]
 === Inkrementelle Protokollreplikation und -Wiedergabe
 
 In den meisten Fällen erfolgt die Migration nicht sofort. Es kann Tage oder sogar Wochen bis zum Abschluss des Migrationsprozesses dauern. Das bedeutet, dass die Protokolle kontinuierlich an die Replikatdatenbank gesendet und wieder eingespielt werden müssen. So ist sichergestellt, dass bei der Umstellung nur minimale Daten übertragen und eingespielt werden müssen.
@@ -987,6 +1014,7 @@ With the Partitioning, OLAP, Advanced Analytics and Real Application Testing opt
 ....
 
 
+[[cutover]]
 === Umstellung
 
 Wenn Sie bereit sind, in die neue Umgebung zu schneiden, müssen Sie eine abschließende Synchronisierung durchführen. Bei der Arbeit mit normalen Dateisystemen ist es leicht sicherzustellen, dass die migrierte Datenbank zu 100 % mit dem Original synchronisiert wird, da die ursprünglichen Wiederherstellungsprotokolle kopiert und wiedergegeben werden. Es gibt keinen guten Weg, dies mit ASM zu tun. Nur die Archivprotokolle können einfach wiederaufgenommen werden. Um sicherzustellen, dass keine Daten verloren gehen, muss das endgültige Herunterfahren der ursprünglichen Datenbank sorgfältig durchgeführt werden.
@@ -1118,6 +1146,7 @@ Table dropped.
 
 
 
+[[nondisruptive-redo-log-migration]]
 == Unterbrechungsfreie Migration von Wiederherstellungsprotokollen
 
 Es gibt Zeiten, in denen eine Datenbank insgesamt korrekt organisiert ist, mit Ausnahme der Wiederherstellungsprotokolle. Dies kann aus vielen Gründen geschehen, von denen die häufigste im Zusammenhang mit Snapshots steht. Produkte wie SnapManager für Oracle, SnapCenter und das Storage Management Framework NetApp Snap Creator ermöglichen eine nahezu sofortige Wiederherstellung einer Datenbank, jedoch nur, wenn Sie den Zustand der Daten-File-Volumes zurücksetzen. Wenn Redo-Logs Speicherplatz mit den Datendateien teilen, kann Reversion nicht sicher ausgeführt werden, da es zur Zerstörung der Redo-Protokolle führen würde, was wahrscheinlich Datenverlust bedeutet. Daher müssen die Redo-Logs verschoben werden.
@@ -1126,6 +1155,7 @@ Dieses Verfahren ist einfach und unterbrechungsfrei.
 
 
 
+[[current-redo-log-configuration]]
 === Aktuelle Konfiguration des Wiederherstellungsprotokolls
 
 . Ermitteln Sie die Anzahl der Redo-Log-Gruppen und deren jeweilige Gruppennummern.
@@ -1156,6 +1186,7 @@ GROUP#||''||BYTES
 
 
 
+[[create-new-logs]]
 === Erstellen Sie neue Protokolle
 
 . Erstellen Sie für jedes Redo-Protokoll eine neue Gruppe mit einer passenden Größe und Anzahl von Mitgliedern.
@@ -1193,6 +1224,7 @@ GROUP#||''||MEMBER
 
 
 
+[[drop-old-logs]]
 === Alte Protokolle ablegen
 
 . Löschen Sie die alten Protokolle (Gruppen 1, 2 und 3).

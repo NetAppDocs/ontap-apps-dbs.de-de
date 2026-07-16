@@ -18,6 +18,7 @@ Die vCenter Server Appliance (VCSA) ist ein leistungsstarkes, zentralisiertes Ma
 
 
 
+[[vsphere-high-availability]]
 == VSphere High Availability
 
 Die Cluster-Technologie von VMware gruppiert ESXi Server zu Pools gemeinsam genutzter Ressourcen für virtuelle Maschinen und bietet vSphere High Availability (HA). VSphere HA bietet benutzerfreundliche Hochverfügbarkeit für Anwendungen, die in virtuellen Maschinen ausgeführt werden. Wenn die HA-Funktion auf dem Cluster aktiviert ist, hält jeder ESXi-Server die Kommunikation mit anderen Hosts aufrecht, sodass ein ESXi-Host nicht mehr reagiert oder isoliert wird. der HA-Cluster kann die Wiederherstellung der Virtual Machines, die auf diesem ESXi-Host ausgeführt wurden, zwischen den noch intakten Hosts im Cluster aushandeln. Im Falle eines Ausfalls eines Gastbetriebssystems kann vSphere HA die betroffene Virtual Machine auf demselben physischen Server neu starten. VSphere HA ermöglicht es, geplante Ausfallzeiten zu reduzieren, ungeplante Ausfallzeiten zu vermeiden und ein schnelles Recovery nach Ausfällen zu ermöglichen.
@@ -30,6 +31,7 @@ Es ist wichtig zu wissen, dass VMware vSphere weder über NetApp MetroCluster no
 
 
 
+[[host-failure-detection]]
 == Erkennung Von Host-Ausfällen
 
 Sobald der HA-Cluster erstellt ist, nehmen alle Hosts im Cluster an der Wahl teil, und einer der Hosts wird zum Master. Jeder Slave sendet einen Netzwerk-Heartbeat an den Master, und der Master sendet seinerseits einen Netzwerk-Heartbeat an alle Slave-Hosts. Der Master-Host eines vSphere HA-Clusters ist für die Erkennung des Ausfalls von Slave-Hosts zuständig.
@@ -52,6 +54,7 @@ NetApp empfiehlt, mindestens zwei zusätzliche Isolationsadressen anzugeben, und
 ====
 
 
+[[host-isolation-response]]
 == Antwort Der Hostisolation
 
 Die Isolationsreaktion ist eine Einstellung in vSphere HA, die festlegt, welche Aktion auf virtuellen Maschinen ausgelöst wird, wenn ein Host in einem vSphere HA-Cluster seine Management-Netzwerkverbindungen verliert, aber weiterhin ausgeführt wird. Für diese Einstellung gibt es drei Optionen: „Deaktiviert“, „VMs herunterfahren und neu starten“ und „VMs ausschalten und neu starten“.
@@ -69,12 +72,14 @@ Ein Split-Brain-Zustand kann auftreten, wenn ein Host vom vSphere HA-Master-Host
 
 
 
+[[vm-component-protection-vmcp]]
 == Schutz von VM-Komponenten (VMCP)
 
 Eine der Funktionsverbesserungen bei vSphere 6, relevant für HA, ist VMCP. VMCP bietet erweiterten Schutz vor All Paths Down (APD) und Permanent Device Loss (PDL) für Block (FC, iSCSI, FCoE) und File Storage (NFS).
 
 
 
+[[permanent-device-loss-pdl]]
 === Permanenter Geräteverlust (PDL)
 
 PDL ist ein Zustand, der eintritt, wenn ein Speichermedium dauerhaft ausfällt oder administrativ entfernt wird und voraussichtlich nicht wiederhergestellt werden kann. Das NetApp -Speicherarray sendet einen SCSI-Sense-Code an ESXi, der signalisiert, dass das Gerät dauerhaft ausgefallen ist. Im Abschnitt „Fehlerbedingungen und VM-Reaktion“ von vSphere HA können Sie konfigurieren, wie die Reaktion nach dem Erkennen einer PDL-Bedingung aussehen soll.
@@ -86,6 +91,7 @@ NetApp empfiehlt, die "Reaktion für Datenspeicher mit PDL" auf "*VMs ausschalte
 ====
 
 
+[[all-paths-down-apd]]
 === Alle Pfade nach unten (APD)
 
 APD ist ein Zustand, der auftritt, wenn ein Speichermedium für den Host nicht mehr zugänglich ist und keine Pfade zum Array mehr verfügbar sind. ESXi betrachtet dies als ein vorübergehendes Problem mit dem Gerät und geht davon aus, dass es bald wieder verfügbar sein wird.
@@ -103,12 +109,14 @@ Wenn eine APD-Bedingung erkannt wird, wird ein Timer gestartet. Nach 140 Sekunde
 ====
 
 
+[[vmware-drs-implementation-for-netapp-snapmirror-active-sync]]
 == VMware DRS Implementierung für NetApp SnapMirror Active Sync
 
 VMware DRS ist eine Funktion, die die Host-Ressourcen in einem Cluster aggregiert und hauptsächlich zum Lastausgleich innerhalb eines Clusters in einer virtuellen Infrastruktur verwendet wird. VMware DRS berechnet in erster Linie die CPU- und Arbeitsspeicherressourcen für den Lastausgleich in einem Cluster. Da vSphere das erweiterte Clustering nicht kennt, werden beim Lastausgleich alle Hosts an beiden Standorten berücksichtigt.
 
 
 
+[[vmware-drs-implementation-for-netapp-metrocluster]]
 == VMware DRS Implementierung für NetApp MetroCluster
 
  To avoid cross-site traffic, NetApp recommends configuring DRS affinity rules to manage a logical separation of VMs. This will ensure that, unless there is a complete site failure, HA and DRS will only use local hosts.
@@ -128,6 +136,7 @@ image::../media/vmsc_2_2.png[VM Host-Gruppen und Affinitätsregeln,528,369]
 
 
 
+[[best-practice]]
 === _Best Practice_
 
 NetApp empfiehlt die Implementierung der „sollte“-Regeln statt der „müssen“-Regeln, da im Falle eines Ausfalls von vSphere HA gegen diese verstoßen wird. Die Verwendung von „Must“-Regeln kann zu Serviceausfällen führen.
@@ -136,6 +145,7 @@ Die Verfügbarkeit von Dienstleistungen sollte stets Vorrang vor der Leistung ha
 
 
 
+[[vmware-storage-drs-implementation-with-netapp-metrocluster]]
 == VMware Storage DRS Implementierung mit NetApp MetroCluster
 
 Die VMware Storage DRS-Funktion ermöglicht die Aggregation von Datastores in eine einzige Einheit und gleicht Festplatten der virtuellen Maschine aus, wenn die SIOC-Schwellenwerte (Storage I/O Control) überschritten werden.

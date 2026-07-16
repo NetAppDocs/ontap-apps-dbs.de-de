@@ -28,10 +28,12 @@ Wenn eine SVM mit dem CIFS-Protokoll erstellt wird, wird ein CIFS-Server auf der
 
 
 
+[[provisioning-smb-shares-on-windows-server]]
 == Bereitstellen von SMB-Freigaben auf Windows Server
 
 
 
+[[prerequisites]]
 === Voraussetzungen
 
 Für die Verwendung von NetApp Storage in NAS-Umgebungen in Windows Server gelten folgende Anforderungen:
@@ -45,6 +47,7 @@ Für die Verwendung von NetApp Storage in NAS-Umgebungen in Windows Server gelte
 
 
 
+[[active-directory-domain-controller]]
 === Active Directory-Domänencontroller
 
 Ein NetApp Storage Controller kann einem Active Directory ähnlich wie einem Windows Server angeschlossen und innerhalb dessen betrieben werden. Während der Erstellung der SVM können Sie den DNS konfigurieren, indem Sie den Domain-Namen und die Details des Name Servers angeben. Die SVM versucht, nach einem Active Directory-Domänencontroller zu suchen, indem sie den DNS nach einem Active Directory-/Lightweight Directory Access Protocol-(LDAP-)Server in einer Weise abfragt, die Windows Server ähnelt.
@@ -57,6 +60,7 @@ cluster::> system services ntp server create -server $domainControllerIP
 ....
 
 
+[[deployment]]
 === Einsatz
 
 . Erstellen Sie eine neue SVM mit aktiviertem NAS-Protokoll CIFS. Eine neue SVM kann mit einer der folgenden Methoden erstellt werden:
@@ -82,6 +86,7 @@ cluster::> system services ntp server create -server $domainControllerIP
 
 
 
+[[host-integration]]
 === Host-Integration
 
 Das NAS-Protokoll CIFS ist nativ in ONTAP integriert. Aus diesem Grund benötigt Windows Server keine zusätzliche Client-Software für den Zugriff auf die Daten auf ONTAP. Ein NetApp Storage Controller wird im Netzwerk als nativer File Server angezeigt und unterstützt die Microsoft Active Directory-Authentifizierung.
@@ -103,6 +108,7 @@ Führen Sie die folgenden Schritte aus, um die zuvor mit Windows Server erstellt
 
 
 
+[[best-practices]]
 === Best Practices in sich vereint
 
 * Um sicherzustellen, dass es keine Ausfallzeiten gibt, wenn ein Volume von einem Node auf einen anderen oder im Fall eines Node-Ausfalls verschoben wird, empfiehlt NetApp, die Option für die kontinuierliche Verfügbarkeit der Dateifreigabe zu aktivieren.
@@ -114,6 +120,7 @@ Führen Sie die folgenden Schritte aus, um die zuvor mit Windows Server erstellt
 
 
 
+[[things-to-remember]]
 === Dinge, die Sie sich merken sollten
 
 * Wenn Sie Volumes für SMB-Umgebungen bereitstellen, müssen die Volumes mit dem NTFS-Sicherheitsstil erstellt werden.
@@ -128,6 +135,7 @@ Führen Sie die folgenden Schritte aus, um die zuvor mit Windows Server erstellt
 
 
 
+[[provisioning-smb-shares-on-nano-server]]
 == Bereitstellung von SMB-Freigaben auf Nano Server
 
 Nano Server benötigt keine zusätzliche Client-Software, um auf Daten auf der CIFS-Freigabe auf einem NetApp-Speicher-Controller zuzugreifen.

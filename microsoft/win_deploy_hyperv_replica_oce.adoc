@@ -18,6 +18,7 @@ In diesem Anhang wird die Bereitstellung von Hyper-V Replica außerhalb einer Cl
 
 
 
+[[prerequisites]]
 == Voraussetzungen
 
 * Sie benötigen eigenständige Hyper-V-Server, die sich an demselben oder einem anderen geografischen Standort befinden und als primäre und Replikatserver dienen.
@@ -27,6 +28,7 @@ In diesem Anhang wird die Bereitstellung von Hyper-V Replica außerhalb einer Cl
 
 
 
+[[deployment]]
 == Einsatz
 
 . Konfigurieren Sie den Replikatserver.
@@ -58,6 +60,7 @@ In diesem Anhang wird die Bereitstellung von Hyper-V Replica außerhalb einer Cl
 
 
 
+[[replication]]
 == Replizierung
 
 . Führen Sie einen Test-Failover aus, um sicherzustellen, dass die Replikat-VM auf dem Replikatserver ordnungsgemäß funktioniert. Der Test erstellt eine temporäre VM auf dem Replikatserver.

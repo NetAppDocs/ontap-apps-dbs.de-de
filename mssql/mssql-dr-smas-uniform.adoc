@@ -20,6 +20,7 @@ Eine wichtige Funktion von SM-AS ist die Möglichkeit, die Speichersysteme so zu
 
 
 
+[[proximity-settings]]
 == Annäherungseinstellungen
 
 Proximity bezieht sich auf eine Clusterkonfiguration, die angibt, dass eine bestimmte Host-WWN- oder iSCSI-Initiator-ID zu einem lokalen Host gehört. Dies ist ein zweiter optionaler Schritt für die Konfiguration des LUN-Zugriffs.
@@ -34,6 +35,7 @@ Ohne Annäherungseinstellungen verwendet der Host beide Speichersysteme gleichm�
 
 
 
+[[aff]]
 == AFF
 
 Bei einem AFF System werden die Pfade nach dem Konfigurieren von Host-Nähe wie unten dargestellt angezeigt.

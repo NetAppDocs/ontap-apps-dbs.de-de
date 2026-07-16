@@ -10,6 +10,7 @@ Das Klonen ist ebenfalls ein Beispiel für Thin Provisioning. Ein großer NetApp
 
 
 
+[[space-management]]
 == Speicherplatzmanagement
 
 Bei Thin Provisioning in einer Applikationsumgebung ist Vorsicht geboten, da sich die Datenänderungsraten unerwartet erhöhen können. Beispielsweise kann der Speicherplatzverbrauch aufgrund von Snapshots schnell ansteigen, wenn Datenbanktabellen neu indiziert werden, oder es werden umfangreiche Patches für VMware Gäste angewendet. Ein falsch platziertes Backup kann in sehr kurzer Zeit große Datenmengen schreiben. Schließlich kann es schwierig sein, einige Anwendungen wiederherzustellen, wenn ein Dateisystem unerwartet über den freien Speicherplatz verfügt.
@@ -20,6 +21,7 @@ Siehe link:https://docs.netapp.com/us-en/ontap/volumes/index.html["Dokumentation
 
 
 
+[[fractional-reservations]]
 == Fraktionale Reservierungen
 
 Die fraktionale Reserve bezieht sich auf das Verhalten einer LUN in einem Volume in Bezug auf die Platzeffizienz. Wenn die Option `fractional-reserve` Ist auf 100 % festgelegt, können alle Daten im Volume mit jedem Datenmuster 100 % Umsatz verzeichnen, ohne Speicherplatz auf dem Volume zu belegen.
@@ -31,6 +33,7 @@ TIP: Die Volumenabstraktion ist nur auf ASA bei SAN nicht vorhanden, und daher v
 
 
 
+[[compression-and-deduplication]]
 == Komprimierung und Deduplizierung
 
 Komprimierung und Deduplizierung sind beide Formen von Thin Provisioning. Beispielsweise kann ein 50 TB Platzbedarf für Daten auf 30 TB komprimiert werden, was zu Einsparungen von 20 TB führt. Um die Komprimierung nutzen zu können, müssen einige dieser 20 TB für andere Daten verwendet werden. Alternativ muss das Storage-System mit weniger als 50 TB erworben werden. Das Ergebnis sind Speicherung von mehr Daten als technisch auf dem Speichersystem verfügbar ist. Aus Sicht der Daten gibt es 50 TB an Daten, obwohl diese auf den Laufwerken nur 30 TB belegen.
@@ -41,6 +44,7 @@ Die Komprimierung und Deduplizierung werden im Abschnitt Link:efficiency.html au
 
 
 
+[[compression-and-fractional-reservations]]
 === Komprimierung und fraktionale Reservierungen
 
 Komprimierung ist eine Form von Thin Provisioning. Fraktionale Reservierungen beeinflussen die Komprimierung. Ein wichtiger Hinweis: Vor der Snapshot-Erstellung wird Speicherplatz reserviert. Normalerweise ist eine fraktionale Reserve nur wichtig, wenn ein Snapshot vorhanden ist. Wenn es keinen Snapshot gibt, ist die fraktionale Reserve nicht wichtig. Dies ist bei der Komprimierung nicht der Fall. Wenn eine LUN auf einem Volume mit Komprimierung erstellt wird, behält ONTAP den Speicherplatz bei, um einen Snapshot aufzunehmen. Dieses Verhalten kann während der Konfiguration verwirrend sein, aber es wird erwartet.

@@ -25,6 +25,7 @@ Es gibt zwei Arten von Quality of Service (QoS) in ONTAP: IOPS und Bandbreite. Q
 
 
 
+[[iops-qos]]
 == IOPS QoS
 
 Eine Steuerung der IOPS-QoS basiert offensichtlich auf dem IOPS-Wert einer bestimmten Ressource. Es gibt jedoch eine Reihe von Aspekten der IOPS-QoS, die möglicherweise nicht intuitiv sind. Einige Kunden waren anfangs verwirrt über den scheinbaren Anstieg der Latenz, wenn ein IOPS-Schwellenwert erreicht wurde. Die steigende Latenz ist das natürliche Ergebnis der IOPS-Begrenzung. Logischerweise funktioniert es ähnlich wie ein Token-System. Wenn beispielsweise ein bestimmtes Volume mit Datendateien über ein Limit von 10.000 IOPS verfügt, muss jede eintreffende I/O zuerst ein Token erhalten, um die Verarbeitung fortzusetzen. Solange in einer bestimmten Sekunde nicht mehr als 10.000 Token verbraucht wurden, sind keine Verzögerungen vorhanden. Wenn I/O-Vorgänge auf den Erhalt ihres Tokens warten müssen, wird diese Wartezeit als zusätzliche Latenz angezeigt. Je schwieriger eine Workload das QoS-Limit erreicht, desto länger muss jede I/O in der Warteschlange warten, bis sie verarbeitet wird. Dies scheint für den Benutzer eine höhere Latenz zu sein.
@@ -34,6 +35,7 @@ NOTE: Gehen Sie vorsichtig vor, wenn Sie QoS-Kontrollen auf Datenbanktransaktion
 
 
 
+[[bandwidth-qos]]
 == Bandbreiten QoS
 
 Nicht alle I/O-Größen sind gleich. Beispielsweise führt eine Datenbank möglicherweise eine große Anzahl kleiner Blocklesevorgänge durch, wodurch der IOPS-Schwellenwert erreicht wird. Datenbanken führen aber möglicherweise auch einen vollständigen Tabellenscan durch, der aus einer sehr kleinen Anzahl an großen Blocklesevorgängen bestehen würde, die eine sehr große Menge an Bandbreite verbrauchen, aber relativ wenig IOPS.
@@ -44,6 +46,7 @@ Manchmal erfordert ein effektives Performance-Management entweder Einschränkung
 
 
 
+[[minimumguaranteed-qos]]
 == Minimum/garantierte QoS
 
 Viele Kunden wünschen sich eine Lösung mit garantierter QoS, was schwieriger zu erreichen ist, als sie möglicherweise verschwenderisch erscheint. Wenn Sie beispielsweise 10 Datenbanken mit einer Garantie von 10.000 IOPS platzieren, müssen Sie ein System für ein Szenario dimensionieren, in dem alle 10 Datenbanken gleichzeitig mit 10.000 IOPS, also insgesamt 100.000, laufen.
@@ -52,6 +55,7 @@ Eine minimale QoS-Steuerung soll am besten zum Schutz kritischer Workloads einge
 
 
 
+[[adaptive-qos]]
 == Anpassungsfähige QoS
 
 Adaptive QoS bezeichnet die ONTAP-Funktion, bei der die QoS-Begrenzung auf der Kapazität des Storage-Objekts basiert. Sie wird selten bei Datenbanken eingesetzt, da zwischen der Größe einer Datenbank und ihren Performance-Anforderungen in der Regel keine Verknüpfung besteht. Große Datenbanken können nahezu inert sein, während kleinere Datenbanken die IOPS-intensivsten sein können.

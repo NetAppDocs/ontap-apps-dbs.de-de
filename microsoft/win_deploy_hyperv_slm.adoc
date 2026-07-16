@@ -18,6 +18,7 @@ Erfahren Sie, wie Sie die Hyper-V-Speicher-Live-Migration konfigurieren
 
 
 
+[[prerequisites]]
 == Voraussetzungen
 
 * Sie müssen über einen Standalone-Hyper-V-Server mit unabhängigem Storage (das oder LUN) oder SMB-Storage (lokal oder von anderen Hyper-V Servern gemeinsam genutzt) verfügen.
@@ -26,6 +27,7 @@ Erfahren Sie, wie Sie die Hyper-V-Speicher-Live-Migration konfigurieren
 
 
 
+[[deployment]]
 == Einsatz
 
 . Öffnen Sie Hyper-V Manager.

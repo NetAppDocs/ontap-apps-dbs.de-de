@@ -23,6 +23,7 @@ Mit der Installation der ONTAP Tools für VMware vSphere werden drei Benutzertyp
 
 
 
+[[1-system-user]]
 == 1. Systembenutzer
 
 System(root) Benutzer wird von ONTAP-Tools-Installation auf dem zugrunde liegenden Betriebssystem (Debian) erstellt.
@@ -32,6 +33,7 @@ System(root) Benutzer wird von ONTAP-Tools-Installation auf dem zugrunde liegend
 
 
 
+[[2-application-user]]
 == 2. Anwendungsbenutzer
 
 Der Anwendungsbenutzer wird in ONTAP-Tools als lokaler Benutzer benannt. Diese Benutzer wurden in der Anwendung ONTAP Tools erstellt. In der folgenden Tabelle sind die Typen von Anwendungsbenutzern aufgeführt:
@@ -51,6 +53,7 @@ Der Anwendungsbenutzer wird in ONTAP-Tools als lokaler Benutzer benannt. Diese B
 |===
 
 
+[[3-support-userdiag-user]]
 == 3. Support user(diag user)
 
 Während der Installation der ONTAP-Tools wird ein Support-Benutzer erstellt. Dieser Benutzer kann für den Zugriff auf ONTAP-Tools bei Problemen oder Ausfällen im Server und zum Sammeln von Protokollen verwendet werden. Standardmäßig ist dieser Benutzer deaktiviert, kann aber per Ad-hoc-Funktion über die „Wartung“-Konsole aktiviert werden. Beachten Sie, dass dieser Benutzer nach einem bestimmten Zeitraum automatisch deaktiviert wird.

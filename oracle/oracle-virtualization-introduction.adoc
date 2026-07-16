@@ -14,6 +14,7 @@ Die Virtualisierung von Datenbanken mit VMware, Oracle OLVM oder KVM wird für N
 
 
 
+[[supportability]]
 == Instandhaltung
 
 Es gibt viele Missverständnisse bezüglich der Oracle Support-Richtlinien für Virtualisierung, insbesondere für VMware-Produkte. Es ist nicht ungewöhnlich, zu hören, dass Oracle die Virtualisierung nicht unterstützt. Diese Vorstellung ist falsch und führt zu verpassten Möglichkeiten, von der Virtualisierung zu profitieren. Oracle Doc ID 249212.1 behandelt die tatsächlichen Anforderungen und wird von Kunden selten als ein Problem betrachtet.
@@ -22,6 +23,7 @@ Wenn ein Problem auf einem virtualisierten Server auftritt und das Problem dem O
 
 
 
+[[storage-presentation]]
 == Storage-Präsentation
 
 Kunden, die eine Virtualisierung ihrer Datenbanken in Erwägung ziehen, sollten ihre Storage-Entscheidungen basierend auf ihren Geschäftsanforderungen treffen. Dies ist zwar für alle IT-Entscheidungen generell eine echte Aussage, ist aber vor allem bei Datenbankprojekten von Bedeutung, da sich Größe und Umfang der Anforderungen erheblich unterscheiden.
@@ -36,12 +38,14 @@ Es gibt drei grundlegende Optionen für die Storage-Präsentation:
 
 
 
+[[performance]]
 === Leistung
 
 Die Methode zur Bereitstellung von Speicher für einen virtualisierten Gast hat in der Regel keine Auswirkungen auf die Leistung. Host-Betriebssysteme, virtualisierte Netzwerktreiber und Hypervisor-Datastore-Implementierungen sind allesamt hochoptimiert und können im Allgemeinen die gesamte verfügbare FC- oder IP-Netzwerkbandbreite zwischen dem Hypervisor und dem Storage-System nutzen, sofern grundlegende Best Practices befolgt werden. In einigen Fällen ist das Erlangen einer optimalen Performance unter Umständen mit einem Ansatz für die Storage-Präsentation im Vergleich zu einem anderen etwas einfacher, das Endergebnis sollte jedoch vergleichbar sein.
 
 
 
+[[manageability]]
 === Managebarkeit
 
 Der wichtigste Faktor bei der Entscheidung, wie Storage einem virtualisierten Gast zur Verfügung gestellt wird, ist die Fähigkeit, zu bestimmen. Es gibt keine richtige oder falsche Methode. Der beste Ansatz hängt von den Anforderungen, Fähigkeiten und Präferenzen der IT-Abteilung ab.
@@ -64,18 +68,21 @@ Bei der Verwendung von Filesystemen, die sich im Besitz von Gästen befinden, is
 
 
 
+[[paravirtualized-drivers]]
 == Paravirtualisierte Treiber
 
 Für eine optimale Leistung ist die Verwendung paravirtualisierter Netzwerktreiber von entscheidender Bedeutung. Wenn ein Datastore verwendet wird, ist ein paravirtualisierter SCSI-Treiber erforderlich. Ein paravirtualisierter Gerätetreiber ermöglicht es einem Gast, sich tiefer in den Hypervisor zu integrieren, im Gegensatz zu einem emulierten Treiber, bei dem der Hypervisor mehr CPU-Zeit damit verbringt, das Verhalten physischer Hardware nachzuahmen.
 
 
 
+[[overcommitting-ram]]
 == RAM überschreiben
 
 Das Überschreiben von RAM bedeutet, mehr virtualisierten RAM auf verschiedenen Hosts zu konfigurieren, als auf der physischen Hardware vorhanden ist. Dies kann zu unerwarteten Leistungsproblemen führen. Bei der Virtualisierung einer Datenbank dürfen die zugrunde liegenden Blöcke des Oracle SGA nicht durch den Hypervisor in den Storage getauscht werden. Dies führt zu äußerst instabilen Performance-Ergebnissen.
 
 
 
+[[datastore-striping]]
 == Datastore-Striping
 
 Bei der Verwendung von Datenbanken mit Datastores muss ein entscheidender Faktor im Hinblick auf die Performance berücksichtigt werden: Striping.

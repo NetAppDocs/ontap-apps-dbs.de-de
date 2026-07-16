@@ -18,6 +18,7 @@ Im folgenden Abschnitt werden die SQL Server-Speichereinstellungen erläutert, d
 
 
 
+[[max-server-memory]]
 == Max. Serverspeicher
 
 Mit der Option „Max. Serverspeicher“ wird die maximale Speichergröße festgelegt, die die SQL Server-Instanz verwenden kann. Sie wird in der Regel verwendet, wenn mehrere Anwendungen auf demselben Server ausgeführt werden, auf dem SQL Server ausgeführt wird, und Sie sicherstellen möchten, dass diese Anwendungen über genügend Arbeitsspeicher verfügen, um ordnungsgemäß zu funktionieren.
@@ -33,6 +34,7 @@ image:mssql-max-server-memory.png["Fehler: Fehlendes Grafikbild"]
 
 
 
+[[adjusting-minimum-and-maximum-server-memory-using-sql-server-management-studio]]
 === Anpassen des minimalen und maximalen Serverspeichers mit SQL Server Management Studio
 
 Die Verwendung von SQL Server Management Studio zur Anpassung des minimalen oder maximalen Serverspeichers erfordert einen Neustart des SQL Server-Dienstes. Sie können den Serverspeicher auch mithilfe von Transact SQL (T-SQL) anpassen, indem Sie diesen Code verwenden:
@@ -48,6 +50,7 @@ RECONFIGURE WITH OVERRIDE
 ....
 
 
+[[nonuniform-memory-access]]
 == Uneinheitlicher Speicherzugriff
 
 NUMA (Ununiform Memory Access) ist eine Technologie zur Optimierung des Speicherzugriffs, die dazu beiträgt, eine zusätzliche Belastung des Prozessorbusses zu vermeiden.
@@ -56,6 +59,7 @@ Wenn NUMA auf einem Server konfiguriert ist, auf dem SQL Server installiert ist,
 
 
 
+[[index-create-memory]]
 == Index Speicher erstellen
 
 Die Option Index create Memory ist eine weitere erweiterte Option, die normalerweise nicht von den Standardwerten geändert werden muss.
@@ -64,6 +68,7 @@ Er steuert die maximale RAM-Größe, die ursprünglich für die Erstellung von I
 
 
 
+[[min-memory-per-query]]
 == Min. Arbeitsspeicher pro Abfrage
 
 Wenn eine Abfrage ausgeführt wird, versucht SQL Server, die optimale Speichergröße für eine effiziente Ausführung zuzuweisen.

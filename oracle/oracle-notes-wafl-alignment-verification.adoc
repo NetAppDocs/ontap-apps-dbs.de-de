@@ -29,6 +29,7 @@ Die folgenden Beispiele sind Linux-spezifisch, aber das Verfahren kann für jede
 
 
 
+[[aligned]]
 == Ausgerichtet
 
 Das folgende Beispiel zeigt eine Ausrichtungsüberprüfung einer einzelnen LUN mit einer einzelnen Partition.
@@ -135,6 +136,7 @@ lun:ed95d953-1560-4f74-9006-85b352f58fcd:read_align_histo.7:0%
 
 
 
+[[misaligned]]
 == Falsch Ausgerichtet
 
 Im folgenden Beispiel wird eine falsch ausgerichtete I/O angezeigt:
@@ -183,6 +185,7 @@ Darüber hinaus der `read_partial_blocks` Die Statistik ist ein Wert ungleich Nu
 
 
 
+[[redo-logging]]
 == Wiederherstellungsprotokollierung
 
 Die hier erläuterten Verfahren gelten für Datendateien. Oracle Redo- und Archivprotokolle weisen unterschiedliche I/O-Muster auf. Beispielsweise ist die Wiederherstellungsprotokollierung ein kreisförmiges Überschreiben einer einzelnen Datei. Wenn die standardmäßige 512-Byte-Blockgröße verwendet wird, sehen die Schreibstatistiken in etwa wie folgt aus:

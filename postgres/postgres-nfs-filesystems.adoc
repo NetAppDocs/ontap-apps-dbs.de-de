@@ -32,6 +32,7 @@ Wenn sequenzielle I/O-Vorgänge mit hohem I/O-Wert zu erwarten sind, kann die NF
 
 
 
+[[nfs-transfer-sizes]]
 == NFS-Übertragungsgrößen
 
 Standardmäßig beschränkt ONTAP die NFS-I/O-Größe auf 64K.
@@ -59,6 +60,7 @@ rw,hard,nointr,bg,vers=[3|4],proto=tcp,rsize=262144,wsize=262144
 ....
 
 
+[[nfsv3-tcp-slot-tables]]
 == NFSv3 TCP-Slot-Tabellen
 
 Wenn NFSv3 mit Linux verwendet wird, ist es wichtig, die TCP-Slot-Tabellen ordnungsgemäß festzulegen.

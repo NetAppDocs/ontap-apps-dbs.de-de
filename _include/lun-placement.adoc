@@ -4,6 +4,7 @@
 
 
 
+[[volumes]]
 == Volumes
 
 Ein verbreiteter Verwechslungspunkt bei Kunden, die neu bei ONTAP sind, ist die Verwendung von FlexVols, die allgemein als „Volumes“ bezeichnet werden.
@@ -12,6 +13,7 @@ Ein Volume ist keine LUN. Diese Begriffe werden synonym mit vielen Produkten and
 
 
 
+[[volumes-and-luns]]
 == Volumes und LUNs
 
 Zugehörige LUNs befinden sich normalerweise in einem einzelnen Volume. Beispiel: Bei einer Datenbank, die 10 LUNs benötigt, sind normalerweise alle 10 LUNs auf demselben Volume platziert.
@@ -26,6 +28,7 @@ Zugehörige LUNs befinden sich normalerweise in einem einzelnen Volume. Beispiel
 ====
 
 
+[[volumes-luns-and-snapshots]]
 == Volumes, LUNs und Snapshots
 
 Snapshot-Richtlinien und Zeitpläne werden auf dem Volume statt auf der LUN platziert. Ein Datensatz, der aus 10 LUNs besteht, würde nur eine einzige Snapshot-Politik erfordern, wenn diese LUNs auf demselben Volume Co-lokalisiert sind.
@@ -36,6 +39,7 @@ In manchen Fällen muss ein verwandter Satz von LUNs aufgrund von Recovery-Anfor
 
 
 
+[[volumes-luns-and-snapmirror]]
 == Volumes, LUNs und SnapMirror
 
 SnapMirror Richtlinien und Operationen werden wie Snapshot-Vorgänge auf dem Volume, nicht auf der LUN durchgeführt.
@@ -44,6 +48,7 @@ Durch die Lokalisierung verwandter LUNs in einem einzelnen Volume können Sie ei
 
 
 
+[[volumes-luns-and-qos]]
 == Volumes, LUNs und QoS
 
 QoS kann selektiv auf einzelne LUNs angewendet werden, doch eine Festlegung auf Volume-Ebene ist in der Regel einfacher. So könnten beispielsweise alle LUNs, die die Gäste in einem bestimmten ESX Server nutzen, auf einem einzelnen Volume platziert werden, und anschließend könnte eine anpassungsfähige QoS-Richtlinie von ONTAP angewendet werden. Das Ergebnis ist ein selbst skalierendes Limit für IOPS pro TB, das für alle LUNs gilt.
@@ -52,6 +57,7 @@ Auch wenn eine Datenbank 100.000 IOPS benötigte und 10 LUNs belegte, wäre es e
 
 
 
+[[multi-volume-layouts]]
 == Multi-Volume-Layouts
 
 In einigen Fällen kann es von Vorteil sein, LUNs über mehrere Volumes zu verteilen. Der primäre Grund ist Controller-Striping. Ein HA-Storage-System kann beispielsweise eine einzige Datenbank hosten, für die das volle Verarbeitungs- und Caching-Potenzial jedes Controllers erforderlich ist. In diesem Fall würde ein typisches Design bedeuten, die Hälfte der LUNs in einem einzelnen Volume auf Controller 1 und die andere Hälfte der LUNs in einem einzelnen Volume auf Controller 2 zu platzieren.

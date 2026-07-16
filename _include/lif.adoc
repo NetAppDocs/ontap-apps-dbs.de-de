@@ -15,6 +15,7 @@ Diese Themen beziehen sich auf die End-to-End-Lösung, vom Host über die Switch
 
 
 
+[[lif-types]]
 == LIF-Typen
 
 Es gibt mehrere LIF-Typen. link:https://docs.netapp.com/us-en/ontap/networking/lif_compatibility_with_port_types.html["ONTAP-Dokumentation zu LIF-Typen"] Stellen Sie umfassendere Informationen zu diesem Thema bereit, LIFs können jedoch aus funktionaler Sicht in die folgenden Gruppen unterteilt werden:
@@ -29,6 +30,7 @@ NOTE: Eine logische Datenschnittstelle für NFS-Datenverkehr kann durch Änderun
 
 
 
+[[san-lif-design]]
 == Design von SAN LIF
 
 Das LIF-Design in einer SAN-Umgebung ist aus einem Grund relativ einfach: Multipathing. Alle modernen SAN-Implementierungen ermöglichen es einem Client, über mehrere unabhängige Netzwerkpfade auf Daten zuzugreifen und den optimalen Pfad oder die besten Pfade für den Zugriff auszuwählen. So lässt sich die Performance in Bezug auf LIF-Design einfacher bewältigen, da SAN-Clients automatisch den I/O-Lastausgleich über die besten verfügbaren Pfade durchführen.
@@ -37,24 +39,28 @@ Wenn ein Pfad nicht mehr verfügbar ist, wählt der Client automatisch einen and
 
 
 
+[[performance]]
 === Leistung
 
 Der wichtigste Aspekt bei der LIF-Performance in einer SAN-Umgebung ist die Bandbreite. In einem ONTAP AFF-Cluster mit zwei Nodes mit zwei 16-GB-FC-Ports pro Node können beispielsweise bis zu 32 GB Bandbreite von jedem Node bereitgestellt werden.
 
 
 
+[[resiliency]]
 === Ausfallsicherheit
 
 SAN LIFs führen keinen Failover auf einem AFF Storage-System durch. Wenn eine SAN-LIF aufgrund eines Controller-Failovers ausfällt, erkennt die Multipathing-Software des Clients den Verlust eines Pfads und leitet den I/O an eine andere LIF um. Bei ASA Storage-Systemen wird für LIFs nach kurzer Verzögerung ein Failover durchgeführt. Die I/O wird jedoch nicht unterbrochen, da auf dem anderen Controller bereits aktive Pfade vorhanden sind. Der Failover-Prozess erfolgt, um den Hostzugriff auf allen definierten Ports wiederherzustellen.
 
 
 
+[[manageability]]
 === Managebarkeit
 
 Die LIF-Migration ist in einer NFS-Umgebung viel üblicher, da die LIF-Migration häufig mit dem Verschieben von Volumes innerhalb des Clusters verknüpft ist. Wenn Volumes innerhalb des HA-Paars verschoben werden, ist keine Migration einer LIF in eine SAN-Umgebung erforderlich. Der Grund dafür ist, dass ONTAP nach Abschluss der Volume-Verschiebung eine Benachrichtigung über eine Pfadänderung an das SAN sendet, die die SAN-Clients automatisch neu optimieren. Die LIF-Migration mit SAN steht in erster Linie in Verbindung mit größeren Änderungen an physischer Hardware. Wenn beispielsweise ein unterbrechungsfreies Upgrade der Controller erforderlich ist, wird eine SAN LIF auf die neue Hardware migriert. Wenn ein FC-Port defekt ist, kann eine LIF zu einem nicht verwendeten Port migriert werden.
 
 
 
+[[design-recommendations]]
 === Designempfehlungen
 
 NetApp gibt die folgenden Empfehlungen:
@@ -69,12 +75,14 @@ NetApp gibt die folgenden Empfehlungen:
 
 
 
+[[nfs-lif-design]]
 == LIF-Design von NFS
 
 Im Gegensatz zu SAN-Protokollen kann bei NFS nur bedingt mehrere Pfade zu Daten definiert werden. Die parallelen NFS-Erweiterungen (pNFS) zu NFSv4 beheben diese Einschränkung. Da die ethernet-Geschwindigkeit jedoch 100 GB erreicht hat, ist das Hinzufügen weiterer Pfade selten ein Nutzen.
 
 
 
+[[performance-and-resiliency]]
 === Performance und Ausfallsicherheit
 
 Obwohl die Messung der LIF-Performance in erster Linie dazu dient, die gesamte Bandbreite von allen primären Pfaden zu berechnen, muss die Bestimmung der Performance von NFS LIF genau die Netzwerkkonfiguration durchgeführt werden. Beispielsweise können zwei 10-Gbit-Ports als physische Rohports konfiguriert oder als LACP-Interface-Gruppe (Link Aggregation Control Protocol) konfiguriert werden. Wenn sie als Schnittstellengruppe konfiguriert sind, stehen mehrere Load-Balancing-Richtlinien zur Verfügung, die je nachdem, ob der Datenverkehr geswitcht oder geroutet wird, unterschiedlich funktionieren. Oracle Direct NFS (dNFS) bietet Load-Balancing-Konfigurationen, die derzeit in keinen NFS-Clients des Betriebssystems vorhanden sind.

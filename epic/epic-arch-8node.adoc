@@ -15,12 +15,14 @@ In diesem Design werden die Testumgebungen in diesem Bericht statt in der Produk
 
 
 
+[[eight-node-architecture]]
 == Architektur mit acht Nodes
 
 image:epic-8node.png["Epic 4-Node-Architektur"]
 
 
 
+[[eight-node-workload-placement]]
 == Workload-Platzierung mit acht Nodes
 
 image:epic-8node-design.png["Epic 8 Node-Platzierung"]

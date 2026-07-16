@@ -18,6 +18,7 @@ In den folgenden Abschnitten werden die erwarteten Ergebnisse verschiedener Ausf
 
 
 
+[[single-storage-path-failure]]
 == Ausfall Eines Einzelnen Storage-Pfads
 
 Wenn in diesem Szenario Komponenten wie der HBA-Port, der Netzwerkport, der Front-End-Datenschalterport oder ein FC- oder Ethernet-Kabel ausfallen, wird dieser bestimmte Pfad zum Speichergerät vom ESXi-Host als „tot“ markiert. Wenn mehrere Pfade durch Ausfallsicherheit am HBA/Netzwerk/Switch Port für das Storage-Gerät konfiguriert sind, führt ESXi idealerweise eine Pfadumschaltung durch. Während dieser Zeit bleiben Virtual Machines ohne Beeinträchtigungen verfügbar, da für die Storage-Verfügbarkeit mehrere Pfade zum Storage-Gerät bereitgestellt werden.
@@ -27,6 +28,7 @@ NOTE: Es gibt keine Änderung im MetroCluster Verhalten in diesem Szenario, und 
 
 
 
+[[best-practice]]
 === _Best Practice_
 
 In Umgebungen mit NFS/iSCSI-Volumes empfiehlt NetApp, mindestens zwei Netzwerk-Uplinks für den NFS-VMkernel-Port im Standard-vSwitch und dieselbe Port-Gruppe zu konfigurieren, bei der die NFS-VMkernel-Schnittstelle für den verteilten vSwitch zugeordnet ist. NIC-Teaming kann entweder aktiv-aktiv oder aktiv-Standby konfiguriert werden.
@@ -35,6 +37,7 @@ Außerdem muss bei iSCSI LUNs Multipathing konfiguriert werden, indem die VMkern
 
 
 
+[[best-practice]]
 === _Best Practice_
 
 In Umgebungen mit Fibre-Channel-LUNs empfiehlt NetApp die Verwendung von mindestens zwei HBAs, wodurch Ausfallsicherheit auf HBA-/Port-Ebene garantiert wird. NetApp empfiehlt für das Zoning von einem einzelnen Initiator außerdem als Best Practice zum Konfigurieren des Zoning.
@@ -43,6 +46,7 @@ Sie sollten mithilfe der Virtual Storage Console (VSC) Multipathing-Richtlinien 
 
 
 
+[[single-esxi-host-failure]]
 == Ausfall eines einzelnen ESXi-Hosts
 
 image::../media/vmsc_5_1.png[Ausfall eines einzelnen Hosts,624,598]
@@ -57,6 +61,7 @@ Es gibt keine Änderung im MetroCluster Verhalten in diesem Szenario und alle Da
 
 
 
+[[esxi-host-isolation]]
 == ESXi-Host-Isolierung
 
 image::../media/vmsc_5_2.png[ESXi-Host-Isolierung,624,301]
@@ -67,6 +72,7 @@ Es gibt keine Änderung im MetroCluster Verhalten in diesem Szenario und alle Da
 
 
 
+[[disk-shelf-failure]]
 == Platten-Shelf-Fehler
 
 In diesem Szenario kommt es zu einem Ausfall von mehr als zwei Festplatten oder eines gesamten Shelf. Daten werden vom verbleibenden Plex ohne Unterbrechung der Datenservices bereitgestellt. Der Festplattenausfall kann sich auf einen lokalen oder einen Remote-Plex auswirken. Die Aggregate werden als degradierter Modus angezeigt, da nur ein Plex aktiv ist. Sobald die ausgefallenen Festplatten ersetzt wurden, werden die betroffenen Aggregate automatisch neu synchronisiert, um die Daten neu aufzubauen. Nach der Neusynchronisierung kehren die Aggregate automatisch in den normalen gespiegelten Modus zurück. Wenn mehr als zwei Laufwerke innerhalb einer einzelnen RAID-Gruppe ausgefallen sind, muss der Plex neu aufgebaut werden.
@@ -80,6 +86,7 @@ image::../media/vmsc_5_3.png[Ausfall eines einzelnen Festplatten-Shelfs:,624,576
 
 
 
+[[single-storage-controller-failure]]
 == Ausfall Eines Einzelnen Storage Controllers
 
 In diesem Szenario fällt einer der beiden Storage Controller an einem Standort aus. Da an jedem Standort ein HA-Paar vorhanden ist, wird bei einem Ausfall eines Node automatisch ein Failover auf den anderen Node ausgelöst. Wenn beispielsweise Node A1 ausfällt, werden dessen Storage und Workloads automatisch auf Node A2 übertragen. Virtuelle Maschinen sind nicht betroffen, da alle Plexe verfügbar bleiben. Die Knoten des zweiten Standorts (B1 und B2) sind davon nicht betroffen. Außerdem führt vSphere HA keine Aktion durch, da der Master-Node im Cluster weiterhin Netzwerk-Heartbeats empfängt.
@@ -90,10 +97,12 @@ Wenn der Failover Teil eines rollierenden Disaster ist (Node A1 führt ein Failo
 
 
 
+[[interswitch-link-failures]]
 == Verbindungsfehler Zwischen Switches
 
 
 
+[[interswitch-link-failure-at-management-network]]
 === Verbindungsfehler zwischen Switches im Managementnetzwerk
 
 image::../media/vmsc_5_5.png[Verbindungsfehler zwischen Switches im Managementnetzwerk,624,184]
@@ -105,6 +114,7 @@ NOTE: Während dieses Zeitraums bleiben die virtuellen Maschinen aktiv, und es g
 
 
 
+[[interswitch-link-failure-at-storage-network]]
 === Verbindungsfehler zwischen Switches im Speichernetzwerk
 
 image::../media/vmsc_5_6.png[Fehler bei der Verbindung zwischen Switches im Speichernetzwerk,624,481]
@@ -119,6 +129,7 @@ image::../media/vmsc_5_7.png[Eine VM, die gegen eine DRS Affinitätsregel verst�
 
 
 
+[[all-interswitch-failure-or-complete-data-center-partition]]
 === Alle Interswitch-Fehler oder komplette Rechenzentrumspartition
 
 In diesem Szenario sind alle ISL-Verbindungen zwischen den Standorten ausgefallen und beide Standorte voneinander isoliert. Wie bereits in früheren Szenarien erläutert, wie z. B. ISL-Fehler im Managementnetzwerk und im Speichernetzwerk, werden die virtuellen Maschinen bei einem vollständigen ISL-Ausfall nicht beeinträchtigt.
@@ -133,6 +144,7 @@ image::../media/vmsc_5_9.png[Eine Datacenter-Partition, bei der VM1 gegen eine D
 
 
 
+[[interswitch-link-failure-on-both-fabrics-in-netapp-metrocluster]]
 === Verbindungsfehler zwischen Switches auf beiden Fabrics in NetApp MetroCluster
 
 In einem Szenario, in dem ein oder mehrere ISLs ausfallen, wird der Datenverkehr über die verbleibenden Links fortgesetzt. Wenn alle ISLs auf beiden Fabrics ausfallen, sodass kein Link zwischen den Standorten für die Storage- und NVRAM-Replizierung vorhanden ist, stellt jeder Controller weiterhin seine lokalen Daten bereit. Bei mindestens einer ISL wird die Neusynchronisierung aller Plexe automatisch durchgeführt.
@@ -143,6 +155,7 @@ image::../media/vmsc_5_10.png[Verbindungsfehler zwischen Switches auf beiden Fab
 
 
 
+[[peered-cluster-link-failure]]
 === Verbindungsfehler Bei Peered Cluster
 
 In einem Peering-Cluster-Link-Ausfallszenario, da die Fabric-ISLs noch aktiv sind, werden die Datenservices (Lese- und Schreibvorgänge) an beiden Standorten auf beiden Plexen fortgesetzt. Jegliche Änderungen an der Cluster-Konfiguration (beispielsweise das Hinzufügen einer neuen SVM, die Bereitstellung eines Volumes oder einer LUN in einer vorhandenen SVM) können nicht an den anderen Standort weitergegeben werden. Diese werden in den lokalen CRS-Metadaten-Volumes aufbewahrt und bei der Wiederherstellung der Peering-Cluster-Verbindung automatisch an das andere Cluster weitergegeben. Wenn eine erzwungene Umschaltung erforderlich ist, bevor der Peered Cluster-Link wiederhergestellt werden kann, werden ausstehende Cluster-Konfigurationsänderungen automatisch von der replizierten Remote-Kopie der Metadaten-Volumes am noch verbleibenden Standort im Rahmen der Umschaltung eingespielt.
@@ -151,6 +164,7 @@ image::../media/vmsc_5_11.png[Ein Verbindungsausfall bei einem Peered Cluster,62
 
 
 
+[[complete-site-failure]]
 === Kompletter Standortausfall
 
 In einem kompletten Standort-A-Fehlerszenario erhalten die ESXi-Hosts an Standort B keinen Netzwerk-Heartbeat von den ESXi-Hosts an Standort A, weil sie ausgefallen sind. Der HA-Master an Standort B überprüft, ob die Datastore-Heartbeats nicht vorhanden sind, deklariert die Hosts an Standort A als fehlgeschlagen und versucht, die virtuellen Maschinen an Standort A an Standort B neu zu starten In diesem Zeitraum führt der Speicheradministrator eine Umschaltung durch, um die Dienste der ausgefallenen Nodes am noch intakten Standort wiederaufzunehmen. Dadurch werden alle Speicherservices von Standort A an Standort B wiederhergestellt Nachdem die Volumes oder LUNs an Standort A an Standort B verfügbar sind, versucht der HA-Master-Agent, die virtuellen Maschinen am Standort A an Standort B neu zu starten

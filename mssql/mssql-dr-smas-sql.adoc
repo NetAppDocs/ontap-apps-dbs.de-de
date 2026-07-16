@@ -18,6 +18,7 @@ SQL Server kann so konfiguriert werden, dass er auf verschiedene Weise mit SnapM
 
 
 
+[[standalone-instance-of-sql-server]]
 == Eigenständige Instanz von SQL Server
 
 Die Best Practices für das Datei-Layout und die Serverkonfiguration sind dieselben, wie in der  Dokumentation empfohlenlink:mssql-storage-considerations.html["SQL Server auf ONTAP"].
@@ -36,6 +37,7 @@ Ein einfacher, automatisierter Failover-Prozess lässt sich mit der Verwendung e
 
 
 
+[[sql-server-failover-cluster-instance]]
 == SQL Server Failover-Cluster-Instanz
 
 SQL Server Failover-Instanzen können auch auf einem Windows Failover Cluster gehostet werden, der auf einem physischen Server oder einem virtuellen Server als Gastbetriebssystem läuft. Diese Architektur mit mehreren Hosts bietet SQL Server Instanzen und Storage Resiliency. Diese Implementierung ist besonders in anspruchsvollen Umgebungen hilfreich, die robuste Failover-Prozesse suchen und gleichzeitig eine verbesserte Performance beibehalten. Wenn bei einem Failover-Cluster-Setup ein Host oder primärer Speicher betroffen ist, erfolgt ein Failover von SQL Services auf den sekundären Host, und gleichzeitig steht der sekundäre Speicher zur Verfügung, um IO bereitzustellen. Es sind kein Automatisierungsskript und keine Eingriffe durch den Administrator erforderlich.

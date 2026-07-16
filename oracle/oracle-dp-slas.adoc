@@ -23,12 +23,14 @@ Kleine Änderungen an Richtlinien zur Datensicherung und Wiederherstellung könn
 
 
 
+[[recovery-time-objective]]
 == Recovery-Zeitvorgabe
 
 Die Recovery-Zeitvorgabe (Recovery Time Objective, RTO) definiert die maximal zulässige Zeit für die Recovery eines Services. Eine Personaldatenbank könnte beispielsweise eine RTO von 24 Stunden haben, da, obwohl es sehr unpraktisch wäre, den Zugriff auf diese Daten während der Arbeitszeit zu verlieren, das Unternehmen dennoch arbeiten kann. Im Gegensatz dazu würde bei einer Datenbank, die das Hauptbuch einer Bank unterstützt, eine RTO in Minuten oder sogar Sekunden gemessen werden. Ein RTO von null ist nicht möglich, da es eine Möglichkeit geben muss, zwischen einem tatsächlichen Serviceausfall und einem Routineereignis wie einem verlorenen Netzwerkpaket zu unterscheiden. Typische Anforderungen sind jedoch ein RTO von nahezu null.
 
 
 
+[[recovery-point-objective]]
 == Recovery-Zeitpunkt
 
 Der Recovery Point Objective (RPO) definiert den maximal tolerierbaren Datenverlust. In vielen Fällen wird der RPO lediglich durch die Häufigkeit von Snapshots oder snapmirror Updates bestimmt.
@@ -39,6 +41,7 @@ In ungewöhnlichen Szenarien können Protokolldaten verloren gehen. Zum Beispiel
 
 
 
+[[disaster-recovery]]
 == Disaster Recovery
 
 Disaster Recovery umfasst die IT-Architektur, Richtlinien und Verfahren, die zur Wiederherstellung eines Services bei einem physischen Ausfall erforderlich sind. Dies kann Überschwemmungen, Brände oder Personen sein, die mit böswilliger oder fahrlässiger Absicht handeln.
@@ -53,6 +56,7 @@ Disaster Recovery-RTO- und RPO-Anforderungen variieren stärker, je nach Wahrsch
 
 
 
+[[logical-disasters]]
 === Logische Ausfälle
 
 Zu logischen Katastrophen gehören Datenbeschädigungen durch Benutzer, Applikations- oder Betriebssystemfehler und Fehlfunktionen. Zu logischen Katastrophen können auch böswillige Angriffe durch externe Parteien mit Viren oder Würmern gehören oder die Ausnutzung von Schwachstellen von Applikationen. In diesen Fällen wird die physische Infrastruktur unbeschädigt, die zugrunde liegenden Daten sind jedoch nicht mehr gültig.
@@ -61,6 +65,7 @@ Eine immer häufiger vorauftretende logische Katastrophe wird als Ransomware bez
 
 
 
+[[physical-disasters]]
 === Physische Ausfälle
 
 Zu physischen Ausfällen gehört der Ausfall von Komponenten einer Infrastruktur, die die Redundanzmerkmale übertreffen und zu einem Datenverlust oder erweitertem Service-Verlust führen. Der RAID-Schutz bietet beispielsweise Redundanz für Laufwerke, und die Verwendung von HBAs bietet Redundanz für FC-Port und FC-Kabel. Hardwareausfälle solcher Komponenten sind vorhersehbar und beeinträchtigen nicht die Verfügbarkeit.
@@ -69,6 +74,7 @@ In einer Unternehmensumgebung ist es in der Regel möglich, die Infrastruktur ei
 
 
 
+[[synchronous-and-asynchronous-data-protection]]
 === Synchrone und asynchrone Datensicherung
 
 Im Idealfall würden alle Daten zwischen geografisch verteilten Standorten synchron repliziert werden. Eine solche Replikation ist nicht immer möglich oder sogar aus mehreren Gründen möglich:
@@ -84,6 +90,7 @@ NetApp bietet Lösungen, die sowohl synchrone Replikation für höchste Anforder
 
 
 
+[[retention-time]]
 == Aufbewahrungszeit
 
 Der letzte Aspekt einer Datensicherungsstrategie ist die Zeit für die Datenaufbewahrung, die sehr unterschiedlich sein kann.

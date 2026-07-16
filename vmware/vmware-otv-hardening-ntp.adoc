@@ -18,6 +18,7 @@ Manchmal können Sicherheitsprobleme aufgrund von Diskrepanzen bei der Konfigura
 
 
 
+[[virtual-appliance]]
 == *Virtuelles Gerät*
 
 Sie können den/die NTP-Server über die Wartungskonsole in der virtuellen Appliance konfigurieren.  Benutzer können die NTP-Server-Details unter der Option _System Configuration_ => _Add New NTP Server_ hinzufügen
@@ -26,6 +27,7 @@ Standardmäßig lautet der Service für NTP ntpd. Es handelt sich hierbei um ein
 
 
 
+[[debian]]
 == *Debian*
 
 Auf Debian kann der Benutzer auf die Datei /etc/ntp.conf zugreifen, um ntp-Serverdetails zu erhalten.

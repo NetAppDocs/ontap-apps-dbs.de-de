@@ -21,6 +21,7 @@ In manchen Fällen erfüllt eine einfache Konfiguration dieser Kernfunktionen di
 
 
 
+[[snapcenter]]
 == SnapCenter
 
 SnapCenter ist das Vorzeigeprodukt für die Datensicherung von NetApp. Sie ähnelt im Hinblick auf die Durchführung von Datenbank-Backups den SnapManager Produkten. Sie wurde jedoch von Grund auf entwickelt, um bei NetApp Storage-Systemen eine zentrale Konsole für das Management der Daten zu bieten.
@@ -29,6 +30,7 @@ SnapCenter umfasst Grundfunktionen wie Snapshot-basierte Backups und Restores, S
 
 
 
+[[rest]]
 == RUHE
 
 ONTAP enthält außerdem einen umfangreichen RESTful API-Satz. Drittanbieter sind so in der Lage, Datensicherungs- und Management-Applikationen mit enger Integration in ONTAP zu erstellen. Darüber hinaus kann die RESTful API von Kunden genutzt werden, die ihre eigenen Automatisierungs-Workflows und Dienstprogramme erstellen möchten.

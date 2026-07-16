@@ -17,6 +17,7 @@ NOTE: Die Informationen im link:#misscount["Fehlzählung"] Der Abschnitt enthäl
 
 
 
+[[disktimeout]]
 == Festplatten-Timeout
 
 Der primäre speicherbezogene RAC-Parameter lautet `disktimeout`. Dieser Parameter steuert den Schwellenwert, innerhalb dessen die Abstimmungsdatei E/A abgeschlossen werden muss. Wenn der `disktimeout` Parameter überschritten wird, dann wird der RAC-Knoten aus dem Cluster entfernt. Der Standardwert für diesen Parameter ist 200. Dieser Wert sollte für standardmäßige Storage-Takeover- und Giveback-Verfahren ausreichen.
@@ -36,6 +37,7 @@ Wenn ein tatsächlicher Storage Takeover oder Giveback nicht möglich ist, kann 
 ====
 
 
+[[misscount]]
 == Fehlzählung
 
 Der `misscount` Der Parameter wirkt sich normalerweise nur auf den Netzwerk-Heartbeat zwischen RAC-Knoten aus. Die Standardeinstellung ist 30 Sekunden. Wenn sich die Grid-Binärdateien auf einem Storage Array befinden oder das Boot-Laufwerk des Betriebssystems nicht lokal ist, kann dieser Parameter wichtig werden. Dazu gehören Hosts mit Boot-Laufwerken in einem FC-SAN, über NFS gestartete Betriebssysteme und Boot-Laufwerke in Virtualisierungs-Datastores, beispielsweise eine VMDK-Datei.

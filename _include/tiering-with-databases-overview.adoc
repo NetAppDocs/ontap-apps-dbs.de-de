@@ -4,6 +4,7 @@
 
 
 
+[[architecture]]
 == Der Netapp Architektur Sind
 
 FabricPool ist eine Tiering-Technologie, mit der Blöcke als „heiß“ oder „kalt“ klassifiziert werden und in dem Storage Tier platziert werden, der am besten geeignet ist. Die Performance-Tier befindet sich am häufigsten auf SSD-Storage und hostet die wichtigen Datenblöcke. Die Kapazitäts-Tier befindet sich in einem Objektspeicher und hostet die kühlen Datenblöcke. Unterstützung für Objekt-Storage: NetApp StorageGRID, ONTAP S3, Microsoft Azure Blob Storage, Alibaba Cloud Object Storage-Service, IBM Cloud Object Storage, Google Cloud Storage und Amazon AWS S3
@@ -14,6 +15,7 @@ image:../media/oracle-fp_image1.png["FabricPool Tiering"]
 
 
 
+[[object-store-providers]]
 == Objektspeicher-Anbieter
 
 Bei Objekt-Storage-Protokollen werden einfache HTTP- oder HTTPS-Anfragen zum Speichern einer großen Anzahl von Datenobjekten verwendet. Der Zugriff auf den Objektspeicher muss zuverlässig sein, da der Datenzugriff von ONTAP von der umgehende Erfüllung von Anfragen abhängt. Zu den Optionen gehören Amazon S3 Standard und infrequent Access sowie Microsoft Azure Hot and Cool Blob Storage, IBM Cloud und Google Cloud. Archivierungsoptionen wie Amazon Glacier und Amazon Archive werden nicht unterstützt, da die zum Abrufen von Daten erforderliche Zeit die Toleranzen der Host-Betriebssysteme und -Applikationen überschreiten kann.
@@ -24,12 +26,14 @@ StorageGRID kann zudem die Kosten senken, indem es die Egress-Gebühren vermeide
 
 
 
+[[data-and-metadata]]
 == Daten und Metadaten
 
 Beachten Sie, dass der Begriff „Daten“ hier für die tatsächlichen Datenblöcke gilt, nicht für die Metadaten. Es werden nur Datenblöcke als Tiering übertragen, wobei die Metadaten in der Performance-Tier verbleiben. Darüber hinaus wird der Status eines Blocks als „heiß“ oder „kalt“ nur beeinflusst, wenn der eigentliche Datenblock gelesen wird. Das einfache Lesen des Namens, des Zeitstempels oder der Eigentümermetadaten einer Datei hat keine Auswirkung auf den Speicherort der zugrunde liegenden Datenblöcke.
 
 
 
+[[backups]]
 == Backups
 
 Obwohl FabricPool den Storage-Platzbedarf deutlich reduzieren kann, ist es nicht für sich genommen eine Backup-Lösung. NetApp WAFL Metadaten bleiben immer auf der Performance-Tier. Falls ein schwerwiegender Ausfall die Performance-Tier zerstört, kann keine neue Umgebung aus den Daten auf der Kapazitäts-Tier erstellt werden, da sie keine WAFL-Metadaten enthält.

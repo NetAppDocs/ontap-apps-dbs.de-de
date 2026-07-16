@@ -19,6 +19,7 @@ Die erste Version von FabricPool war auf den Backup-Anwendungsfall ausgerichtet.
 
 
 
+[[policies-local-snapshots]]
 == Richtlinien: Lokale Snapshots
 
 Es gibt zwei Optionen für das Tiering inaktiver Snapshot-Blöcke auf die Kapazitäts-Tier. Zunächst einmal die `snapshot-only` Die Richtlinie zielt nur auf die Snapshot-Blöcke ab. Obwohl der `auto` Die Richtlinie umfasst die `snapshot-only` Blöcke, sondern auch Tiering Blöcke aus dem aktiven File-System. Dies ist möglicherweise nicht wünschenswert.
@@ -27,6 +28,7 @@ Der `tiering-minimum-cooling-days` Der Wert sollte auf einen Zeitraum festgelegt
 
 
 
+[[policies-replicated-snapshots]]
 == Richtlinien – replizierte Snapshots
 
 Ein Snapshot, der mit SnapMirror oder SnapVault repliziert wird, der nur für die Wiederherstellung verwendet wird, sollte im Allgemeinen die FabricPool verwenden `all` Richtlinie: Bei dieser Richtlinie werden Metadaten repliziert. Alle Datenblöcke werden jedoch sofort an die Kapazitäts-Tier gesendet, was maximale Performance liefert. Die meisten Recovery-Prozesse arbeiten mit sequenziellem I/O, was von vornherein effizient ist. Die Recovery-Zeit vom Zielort des Objektspeichers ist zu bewerten, in einer gut durchdachten Architektur muss dieser Recovery-Prozess jedoch nicht wesentlich langsamer sein als die Wiederherstellung von lokalen Daten.

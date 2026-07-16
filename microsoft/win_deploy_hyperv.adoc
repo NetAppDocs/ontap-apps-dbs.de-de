@@ -18,6 +18,7 @@ In diesem Anhang wird das Bereitstellen eines Hyper-V-Clusters beschrieben.
 
 
 
+[[prerequisites]]
 == Voraussetzungen
 
 * Mindestens zwei Hyper-V-Server sind miteinander verbunden.
@@ -30,6 +31,7 @@ In diesem Anhang wird das Bereitstellen eines Hyper-V-Clusters beschrieben.
 
 
 
+[[deployment]]
 == Einsatz
 
 . Melden Sie sich bei einem der Windows Hyper-V-Server als Mitglied der Administratorgruppe an.

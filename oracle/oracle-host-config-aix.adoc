@@ -14,6 +14,7 @@ Konfigurationsthemen für Oracle Database auf IBM AIX mit ONTAP.
 
 
 
+[[concurrent-io]]
 == Gleichzeitige I/O-Vorgänge
 
 Um eine optimale Leistung auf IBM AIX zu erzielen, muss gleichzeitig I/O verwendet werden Ohne gleichzeitige I/O-Vorgänge sind Performance-Einschränkungen wahrscheinlich, weil AIX serialisierte, atomare I/O-Vorgänge durchführt, was einen beträchtlichen Overhead nach sich zieht.
@@ -35,6 +36,7 @@ Wird Verwendet `cio` Als Mount-Option erzwingt die Verwendung von gleichzeitigen
 ====
 
 
+[[aix-nfs-mount-options]]
 == Mount-Optionen für AIX NFS
 
 In der folgenden Tabelle sind die AIX NFS-Mount-Optionen für Oracle Single-Instance-Datenbanken aufgeführt.
@@ -93,6 +95,7 @@ Obwohl Sie den verwenden `cio` Mount-Option und der `init.ora` Parameter `filesy
 
 
 
+[[aix-jfsjfs2-mount-options]]
 == Mount-Optionen für AIX jfs/jfs2
 
 In der folgenden Tabelle sind die AIX jfs/jfs2-Mount-Optionen aufgeführt.

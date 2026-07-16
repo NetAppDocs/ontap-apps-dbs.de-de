@@ -18,6 +18,7 @@ In diesem Abschnitt wird die Bereitstellung der Hyper-V Live-Migration außerhal
 
 
 
+[[prerequisites]]
 == Voraussetzungen
 
 * Standalone Hyper-V Server mit unabhängigem Storage oder Shared SMB Storage.
@@ -27,6 +28,7 @@ In diesem Abschnitt wird die Bereitstellung der Hyper-V Live-Migration außerhal
 
 
 
+[[deployment]]
 == Einsatz
 
 Um eine Live-Migration in einer Umgebung ohne Cluster durchzuführen, konfigurieren Sie Hyper-V Quell- und Zielserver so, dass sie Live-Migrationsvorgänge senden und empfangen können. Führen Sie auf beiden Hyper-V-Servern die folgenden Schritte aus:

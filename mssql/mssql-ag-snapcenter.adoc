@@ -19,6 +19,7 @@ SnapCenter erkennt alle Datenbanken, Instanzen und Verfügbarkeitsgruppen in Win
 
 
 
+[[protecting-databases-in-always-on-availability-group]]
 == Sicherung von Datenbanken in der Always-on-Verfügbarkeitsgruppe
 
 Datenbanken in Verfügbarkeitsgruppen können auf verschiedene Weise gesichert werden.
@@ -35,6 +36,7 @@ TIP: *NetApp empfiehlt*, das Backup auf Verfügbarkeitsebene für alle Replikate
 
 
 
+[[configuring-log-backup-in-snapcenter]]
 == Konfigurieren von Protokollsicherungen in SnapCenter
 
 Wenn die Verfügbarkeitsgruppe auf einem eigenständigen SQL Server-Setup eingerichtet wird, muss auf jedem Knoten eines Windows Server Failover-Clusters eine dedizierte Festplatte gemountet werden. Zur Konfiguration des Protokollverzeichnisses zum Speichern von Transaktionsprotokollsicherungen sollte ein dedizierter Datenträger verwendet werden.
@@ -43,6 +45,7 @@ Wenn die Verfügbarkeitsgruppe auf dem SQL Server Failover Cluster eingerichtet 
 
 
 
+[[restoring-database-in-availability-group-setup-with-snapcenter]]
 == Wiederherstellen der Datenbank in der Verfügbarkeitsgruppen-Einrichtung mit SnapCenter
 
 * SnapCenter bietet die Option für erneutes Seeding, um die Datenbank automatisch von dem letzten Snapshot wiederherzustellen, der auf dem sekundären Replikat verfügbar ist. Der Vorgang für erneutes Seeding wird automatisch wiederhergestellt und wird dem Datenbank-Backup in die Verfügbarkeitsgruppe hinzugefügt.

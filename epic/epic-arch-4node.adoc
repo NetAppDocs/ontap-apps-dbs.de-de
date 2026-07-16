@@ -17,12 +17,14 @@ Umgebungen mit vollständigen Testkopien (z. B. SUP, REL und PJX) werden entwede
 
 
 
+[[four-node-architecture]]
 == Architektur mit vier Nodes
 
 image:epic-4node.png["Epic 4-Node-Architektur"]
 
 
 
+[[four-node-workload-placement]]
 == Workload-Platzierung mit vier Nodes
 
 image:epic-4node-design.png["Epic 4 Node-Platzierung"]

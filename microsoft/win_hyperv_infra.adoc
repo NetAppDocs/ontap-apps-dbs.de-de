@@ -20,6 +20,7 @@ image:win_image5.png["Hyper-V Storage-Infrastruktur auf NetApp,width=624,height=
 
 
 
+[[hyper-v-storage-on-netapp-luns]]
 == Hyper-V-Speicher auf NetApp-LUNs
 
 * Stellen Sie eine NetApp-LUN auf dem Hyper-V-Servercomputer bereit. Weitere Informationen finden Sie im Abschnitt „link:win_san.html["Bereitstellung in SAN-Umgebungen"].“
@@ -30,6 +31,7 @@ image:win_image5.png["Hyper-V Storage-Infrastruktur auf NetApp,width=624,height=
 
 
 
+[[hyper-v-storage-on-netapp-cifs]]
 == Hyper-V-Speicher auf NetApp CIFS
 
 Bevor Sie mit den in diesem Abschnitt aufgeführten Schritten beginnen, lesen Sie den Abschnitt „link:win_smb.html["Bereitstellung in SMB-Umgebungen"].“ Gehen Sie wie folgt vor, um Hyper-V-Speicher auf der NetApp-CIFS-Freigabe zu konfigurieren:
@@ -49,6 +51,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 
 
+[[best-practices]]
 === Best Practices in sich vereint
 
 * Wenn eine VM und die zugehörigen Daten im NetApp Storage gespeichert sind, empfiehlt NetApp, die NetApp Deduplizierung regelmäßig auf Volume-Ebene durchzuführen. Wenn identische VMs auf einer CSV- oder SMB-Freigabe gehostet werden, lassen sich erhebliche Platzeinsparungen erzielen. Die Deduplizierung wird auf dem Storage-Controller ausgeführt und das Host-System und die VM-Performance werden nicht beeinträchtigt.
@@ -58,6 +61,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 
 
+[[things-to-remember]]
 === Dinge, die Sie sich merken sollten
 
 * Für die Bereitstellung einer VM mithilfe von virtuellem Fibre Channel ist ein für die N_Port-ID-Virtualisierung aktivierter FC-HBA erforderlich. Es werden maximal vier FC-Ports unterstützt.
@@ -68,6 +72,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 
 
+[[further-reading]]
 === Weitere Informationen
 
 * Informationen zu FC-HBAs finden Sie im http://mysupport.netapp.com/matrix/["Interoperabilitäts-Matrix-Tool (IMT)"].
@@ -76,6 +81,7 @@ Jede VM in Hyper-V kann wiederum mit den NetApp LUNs und CIFS-Freigaben bereitge
 
 
 
+[[offloaded-data-transfer]]
 == Verlagerte Datenübertragung
 
 Microsoft ODX, auch als Copy Offload bezeichnet, ermöglicht direkte Datentransfers innerhalb eines Speichergeräts oder zwischen kompatiblen Speichergeräten, ohne die Daten über den Hostcomputer zu übertragen. ONTAP unterstützt die ODX Funktion für CIFS- und SAN-Protokolle. ODX kann potenziell die Performance verbessern, wenn Kopien sich innerhalb desselben Volumes befinden, senkt die Auslastung von CPU und Arbeitsspeicher im Client und reduziert die Auslastung der Netzwerk-I/O-Bandbreite.
@@ -116,6 +122,7 @@ cluster::> set privilege admin
 
 
 
+[[things-to-remember]]
 === Dinge, die Sie sich merken sollten
 
 * Für CIFS ist ODX nur verfügbar, wenn sowohl der Client als auch der Speicherserver SMB 3.0 und die ODX-Funktion unterstützen.
@@ -124,12 +131,14 @@ cluster::> set privilege admin
 
 
 
+[[further-reading]]
 === Weitere Informationen
 
 Informationen zu ODX finden Sie unter https://docs.netapp.com/us-en/ontap/smb-admin/improve-microsoft-remote-copy-performance-concept.html["Verbesserung Der Microsoft Remote Copy Performance"] Und https://docs.netapp.com/us-en/ontap/san-admin/microsoft-offloaded-data-transfer-odx-concept.html["Microsoft Offloaded Data Transfers"] .
 
 
 
+[[hyper-v-clustering-high-availability-and-scalability-for-virtual-machines]]
 == Hyper-V Clustering: Hohe Verfügbarkeit und Skalierbarkeit für virtuelle Maschinen
 
 Failover-Cluster bieten Hochverfügbarkeit und Skalierbarkeit für Hyper-V Server. Ein Failover-Cluster ist eine Gruppe unabhängiger Hyper-V Server, die gemeinsam die Verfügbarkeit und Skalierbarkeit der VMs erhöhen.
@@ -138,6 +147,7 @@ Hyper-V Cluster-Server (sogenannte Nodes) werden über das physische Netzwerk un
 
 
 
+[[cluster-shared-volumes]]
 === Cluster Shared Volumes
 
 CSVs ermöglichen mehreren Knoten in einem Failover-Cluster gleichzeitig Lese-/Schreibzugriff auf dieselbe NetApp-LUN, die als NTFS- oder ReFS-Volume bereitgestellt wird. Mit CSVs können geclusterte Rollen schnell ein Failover von einem Node auf einen anderen durchführen, ohne dass eine Änderung des Festplatteneigentums erforderlich ist oder ein Volume aus- und wieder gemountet werden muss. CSVs vereinfachen außerdem das Management einer potenziell großen Anzahl von LUNs in einem Failover-Cluster. CSVs stellen ein universell einsetzbare Cluster-Dateisystem bereit, das über NTFS oder ReFS geschichtet ist.
@@ -146,6 +156,7 @@ image:win_image6.png["Hyper-V Failover Cluster und NetApp,width=624,height=271"]
 
 
 
+[[best-practices]]
 === Best Practices in sich vereint
 
 * NetApp empfiehlt, die Cluster-Kommunikation im iSCSI-Netzwerk zu deaktivieren, um zu verhindern, dass interne Cluster-Kommunikation und CSV-Datenverkehr über dasselbe Netzwerk übertragen werden.
@@ -154,6 +165,7 @@ image:win_image6.png["Hyper-V Failover Cluster und NetApp,width=624,height=271"]
 
 
 
+[[things-to-remember]]
 === Dinge, die Sie sich merken sollten
 
 * Für CSV verwendete Laufwerke müssen mit NTFS oder ReFS partitioniert werden. Mit FAT oder FAT32 formatierte Festplatten können nicht für CSV verwendet werden.
@@ -162,18 +174,21 @@ image:win_image6.png["Hyper-V Failover Cluster und NetApp,width=624,height=271"]
 
 
 
+[[further-reading]]
 === Weitere Informationen
 
 Informationen zum Bereitstellen eines Hyper-V-Clusters finden Sie in Anhang B: link:win_deploy_hyperv.html["Implementieren Sie Hyper-V Cluster"].
 
 
 
+[[hyper-v-live-migration-migration-of-vms]]
 == Hyper-V Live Migration: Migration von VMs
 
 Manchmal ist es während der Lebensdauer der VMs erforderlich, sie auf einen anderen Host auf dem Windows-Cluster zu verschieben. Dies kann erforderlich sein, wenn dem Host die Systemressourcen ausgehen oder der Host aus Wartungsgründen neu gestartet werden muss. Gleichermaßen kann es erforderlich sein, eine VM auf eine andere LUN- oder SMB-Freigabe zu verschieben. Dies kann erforderlich sein, wenn die aktuelle LUN oder Share über zu viel Speicherplatz verfügt oder eine niedrigere Performance erzielt als erwartet. Live-Migration mit Hyper-V verschiebt laufende VMs von einem physischen Hyper-V Server auf einen anderen, ohne dass die VM-Verfügbarkeit für Benutzer darunter ist. Sie können VMs zwischen Hyper-V-Servern, die Teil eines Failover-Clusters sind, oder zwischen unabhängigen Hyper-V-Servern, die nicht Teil eines Clusters sind, live migrieren.
 
 
 
+[[live-migration-in-a-clustered-environment]]
 === Live-Migration in einer Cluster-Umgebung
 
 VMs können nahtlos zwischen den Nodes eines Clusters verschoben werden. Die VM-Migration erfolgt unmittelbar, da alle Nodes im Cluster denselben Storage teilen und Zugriff auf die VM und die Festplatte haben. Die folgende Abbildung zeigt die Live-Migration in einer Cluster-Umgebung.
@@ -182,6 +197,7 @@ image:win_image7.png["Live-Migration in einer Cluster-Umgebung,width=580,height=
 
 
 
+[[best-practice]]
 === Best Practices in sich
 
 * Verfügen über einen dedizierten Port für den Datenverkehr von Live-Migrationen.
@@ -190,12 +206,14 @@ image:win_image7.png["Live-Migration in einer Cluster-Umgebung,width=580,height=
 
 
 
+[[further-reading]]
 === Weitere Informationen
 
 Informationen zur Bereitstellung von Live-Migration in einer Cluster-Umgebung finden Sie unter link:win_deploy_hyperv_lmce.html["Anhang C: Bereitstellung von Hyper-V Live-Migration in einer Cluster-Umgebung"].
 
 
 
+[[live-migration-outside-a-clustered-environment]]
 === Live-Migration außerhalb einer Cluster-Umgebung
 
 Sie können eine VM zwischen zwei nicht geclusterten, unabhängigen Hyper-V Servern migrieren. Bei diesem Prozess kann entweder eine Live-Migration ohne gemeinsame Nutzung oder ohne gemeinsame Nutzung verwendet werden.
@@ -214,12 +232,14 @@ image:win_image10.png["Shared-Nothing-Live-Migration in einer nicht geclusterten
 
 
 
+[[further-reading]]
 === Weitere Informationen
 
 Informationen zur Bereitstellung von Live-Migration außerhalb einer Cluster-Umgebung finden Sie unter link:win_deploy_hyperv_lmoce.html["Anhang D: Implementierung von Hyper-V Live-Migration außerhalb einer Cluster-Umgebung"].
 
 
 
+[[hyper-v-storage-live-migration]]
 === Hyper-V Storage Live-Migration
 
 Während der Nutzungsdauer einer VM müssen Sie möglicherweise den VM Storage (VHD/VHDX) auf eine andere LUN oder SMB-Freigabe verschieben. Dies kann erforderlich sein, wenn die aktuelle LUN oder Share über zu viel Speicherplatz verfügt oder eine niedrigere Performance erzielt als erwartet.
@@ -257,12 +277,14 @@ image:win_image11.png["Live-Migration von Hyper-V-Speicher,width=339,height=352"
 
 
 
+[[further-reading]]
 === Weitere Informationen
 
 Informationen zur Bereitstellung der Live-Migration von Speicher finden Sie unter link:win_deploy_hyperv_slm.html["Anhang E: Implementieren von Hyper-V Storage Live-Migration"].
 
 
 
+[[hyper-v-replica-disaster-recovery-for-virtual-machines]]
 == Hyper-V Replica: Disaster Recovery für virtuelle Maschinen
 
 Hyper-V Replica repliziert die Hyper-V VMs von einem primären Standort auf die VMs an einem sekundären Standort und stellt so das Disaster Recovery für die VMs asynchron zur Verfügung. Der Hyper-V-Server am primären Standort, der die VMs hostet, wird als primärer Server bezeichnet; der Hyper-V-Server am sekundären Standort, der replizierte VMs empfängt, wird als Replikatserver bezeichnet. Ein Beispielszenario für Hyper-V-Replika wird in der folgenden Abbildung dargestellt. Sie können Hyper-V Replica für VMs zwischen Hyper-V-Servern verwenden, die Teil eines Failover-Clusters sind, oder zwischen unabhängigen Hyper-V-Servern, die nicht Teil eines Clusters sind.
@@ -271,18 +293,21 @@ image:win_image12.png["Hyper-V Replica, Breite=624, Höhe=201"]
 
 
 
+[[replication]]
 === Replizierung
 
 Nachdem das Hyper-V-Replikat für eine VM auf dem primären Server aktiviert wurde, erstellt die erste Replikation eine identische VM auf dem Replikatserver. Nach der ersten Replikation verwaltet Hyper-V Replica eine Protokolldatei für die VHDs der VM. Die Protokolldatei wird in umgekehrter Reihenfolge auf die Replikat-VHD in Übereinstimmung mit der Replikationsfrequenz wiedergegeben. Dieses Protokoll und die Verwendung der umgekehrten Reihenfolge stellen sicher, dass die neuesten Änderungen gespeichert und asynchron repliziert werden. Wenn die Replikation nicht der erwarteten Häufigkeit entspricht, wird eine Warnmeldung ausgegeben.
 
 
 
+[[extended-replication]]
 === Erweiterte Replizierung
 
 Hyper-V Replica unterstützt erweiterte Replikation, bei der ein sekundärer Replikatserver für die Disaster Recovery konfiguriert werden kann. Ein sekundärer Replikatserver kann so konfiguriert werden, dass der Replikatserver die Änderungen an den Replikat-VMs empfängt. In einem erweiterten Replikationsszenario werden die Änderungen an den primären VMs auf dem primären Server auf den Replikatserver repliziert. Anschließend werden die Änderungen auf den erweiterten Replikatserver repliziert. Die VMs können nur dann ein Failover auf den erweiterten Replikatserver durchgeführt werden, wenn sowohl der primäre als auch der Replikatserver ausfallen.
 
 
 
+[[failover]]
 === Failover
 
 Failover ist nicht automatisch; der Prozess muss manuell ausgelöst werden. Es gibt drei Arten von Failover:
@@ -294,12 +319,14 @@ Failover ist nicht automatisch; der Prozess muss manuell ausgelöst werden. Es g
 
 
 
+[[recovery]]
 === Recovery
 
 Wenn Sie die Replikation für eine VM konfigurieren, können Sie die Anzahl der Wiederherstellungspunkte angeben. Wiederherstellungspunkte stellen Zeitpunkte dar, aus denen Daten von einem replizierten Rechner wiederhergestellt werden können.
 
 
 
+[[further-reading]]
 === Weitere Informationen
 
 * Informationen zur Bereitstellung von Hyper-V Replica außerhalb einer Cluster-Umgebung finden Sie im Abschnitt „link:win_deploy_hyperv_replica_oce.html["Bereitstellung von Hyper-V Replica außerhalb einer Cluster-Umgebung"].“

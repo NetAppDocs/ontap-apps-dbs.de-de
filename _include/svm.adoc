@@ -10,6 +10,7 @@ Wie bei anderen Aspekten der Storage-Architektur hängen die besten Optionen fü
 
 
 
+[[svms]]
 == SVMs
 
 Es gibt keine offizielle Best Practice für die Bereitstellung von SVMs für ONTAP. Der richtige Ansatz hängt von Management- und Sicherheitsanforderungen ab.

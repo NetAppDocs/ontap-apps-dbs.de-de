@@ -27,6 +27,7 @@ Siehe auch die Diskussion über die Ausrichtung der Kompressionsblöcke im Absch
 
 
 
+[[misalignment-warnings]]
 == Warnungen wegen Falschausrichtung
 
 Die Datenbank-Wiederherstellungs-/Transaktionsprotokollierung erzeugt normalerweise nicht ausgerichtete I/O-Vorgänge, die irreführende Warnungen zu falsch ausgerichteten LUNs auf ONTAP verursachen können.

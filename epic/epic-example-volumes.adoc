@@ -16,6 +16,7 @@ NOTE: Ab ONTAP 9.7 ist die Aggregat- und Volume-Verschlüsselung bei einer NVE-L
 
 
 
+[[autodelete-snapshots]]
 == Automatisches Löschen von Snapshots
 
 So löschen Sie Snapshots automatisch: https://docs.netapp.com/us-en/ontap-cli-9141//volume-snapshot-autodelete-modify.html[]

@@ -1,0 +1,94 @@
+---
+sidebar: sidebar 
+permalink: oracle/oracle-dp-automatic-recovery.html 
+keywords: oracle, data protection, crash-consistent 
+summary: Automatische Oracle-Wiederherstellung ohne Backup-Modus. 
+searchtitle: Automatische Oracle-Wiederherstellung ohne Backup-Modus. 
+---
+= Automatische Oracle-Wiederherstellung ohne Backup-Modus
+:allow-uri-read: 
+
+
+[role="lead"]
+Snapshot-basierte Backup und Recovery wurden mit der Veröffentlichung von Oracle 12c nochmals vereinfacht, da es nicht mehr erforderlich ist, eine Datenbank in den Hot-Backup-Modus zu versetzen. Das Ergebnis ist die Möglichkeit, Snapshot-basierte Backups direkt auf einem Speichersystem zu planen.
+
+Obwohl DBAs mit der Hot-Backup-Wiederherstellung vertrauter sind, ist es seit langem möglich, Snapshots zu verwenden, die nicht erstellt wurden, während sich die Datenbank im Hot-Backup-Modus befand. Für Oracle 10g und 11g waren während der Recovery zusätzliche manuelle Schritte erforderlich, um die Datenbankkonsistenz zu gewährleisten. Mit Oracle 12c, `sqlplus` Und `rman` Enthalten die zusätzliche Logik zur Wiedergabe von Archivprotokollen für Datendatei-Backups, die sich nicht im Hot-Backup-Modus befanden.
+
+Wie bereits erwähnt, erfordert die Wiederherstellung eines Snapshot-basierten Hot-Backups zwei Datensätze:
+
+* Ein Snapshot der Datendateien, der im Backup-Modus erstellt wurde
+* Die Archivprotokolle, die generiert wurden, während sich die Datendateien im Hot-Backup-Modus befanden
+
+
+Während der Recovery liest die Datenbank Metadaten aus den Datendateien, um die erforderlichen Archivprotokolle für die Recovery auszuwählen.
+
+Die automatische Wiederherstellung ohne Backup-Modus erfordert leicht unterschiedliche Datensätze, um die gleichen Ergebnisse zu erzielen:
+
+* Eine Momentaufnahme der Datendateien.
+* Ein synchronisierter Satz von Archivprotokollen, Kontrolldateien und Wiederherstellungsprotokollen. Die Archivprotokolle müssen alle Datensätze ab dem Zeitpunkt enthalten, zu dem der Datendatei-Snapshot erstellt wurde, daher ist bei aggressivem Protokoll-Pruning Vorsicht geboten.
+
+
+Während der Wiederherstellung liest die Datenbank Metadaten aus den Datendateien, um die benötigten Protokolleinträge zu identifizieren und alle protokollierten Transaktionen erneut abzuspielen.
+
+
+
+= HINWEIS:
+
+Mit diesem Ansatz lässt sich eine zeitpunktgenaue Wiederherstellung annähern, allerdings mit begrenzter Granularität. Beispielsweise kann die Datenbank, wenn mit Datendateien im Backup-Modus begonnen wird, auf eine beliebige Transaktion vorwärtsgesetzt werden.
+
+Bei Verwendung der automatischen Wiederherstellung ohne Backup-Modus muss die Datenbank bis zum Zeitpunkt des Log-Snapshots wiederhergestellt werden. Unter normalen Umständen beträgt der RPO weiterhin null, da die ursprünglichen Archivlogs, Wiederherstellungsprotokolle und Kontrolldateien im aktiven Dateisystem weiterhin verfügbar sind. Wenn eine Wiederherstellung vollständig anhand von Snapshots erfolgen muss, weil alle Daten im aktiven Dateisystem verloren gegangen sind, beträgt der RPO eine Stunde.
+
+[]
+====
+== Datenlayout Das einfachste Layout besteht darin, Datendateien in dedizierten Volumes, LUNs oder NVMe-Namespaces zu isolieren. Die Speicherressourcen dürfen keine anderen Dateitypen enthalten. Dies stellt sicher, dass die Datendateien durch einen SnapRestore Vorgang schnell wiederhergestellt werden können, ohne ein wichtiges Wiederherstellungsprotokoll, eine Kontrolldatei oder ein Archiv-Log zu zerstören.
+
+SAN stellt ähnliche Anforderungen an die Isolation von Datendateien innerhalb dedizierter Ressourcen. Bei einem Betriebssystem wie Microsoft Windows mit AFF Storage kann ein einzelnes Volume mehrere Datendatei-LUNs enthalten, die jeweils ein NTFS-Dateisystem verwenden. Bei anderen Betriebssystemen gibt es in der Regel einen logischen Volume-Manager. Beispielsweise wäre bei Oracle ASM die einfachste Option, die LUNs einer ASM Festplattengruppe auf ein einzelnes Volume zu beschränken, das als Einheit gesichert und wiederhergestellt werden kann. Wenn zusätzliche Volumes aus Performance- oder Kapazitätsmanagement-Gründen erforderlich sind, vereinfacht die Erstellung einer zusätzlichen Festplattengruppe auf dem neuen Volume die Verwaltung.
+
+ASA bietet keine Abstraktion auf Volume-Ebene. Stattdessen verwendet es Konsistenzgruppen. In vielen Fällen genügt eine einzelne LUN oder ein NVMe-Namespace für die Verwaltungs- und Leistungsanforderungen einer Datenbank. Wenn mehrere LUNs oder Namespaces benötigt werden, können zusätzliche Ressourcen hinzugefügt und zu einer Konsistenzgruppe zusammengefasst werden, die den Datenfile-Container bildet.
+
+Wenn diese Richtlinien befolgt werden, können Snapshots direkt auf dem Speichersystem geplant werden.
+
+*Achtung:* Überprüfen Sie, dass der ASM `spfile` Und `passwd` Die Dateien befinden sich nicht in der Festplattengruppe, in der die Datendateien gehostet werden. Dies beeinträchtigt die Fähigkeit, Datendateien und nur Datendateien selektiv wiederherzustellen.
+
+== Lokales Wiederherstellungsverfahren, NFS Das grundlegende Verfahren ist wie folgt:
+
+. Fahren Sie die Datenbank herunter.
+. Stellen Sie die Datendateivolumes, LUNs oder Namespaces auf den Snapshot unmittelbar vor dem gewünschten Wiederherstellungspunkt wieder her.
+. Ausführen `alter database automatic;`
+
+
+Bei diesem Verfahren wird davon ausgegangen, dass die gewünschten Archivprotokolle noch im aktiven Dateisystem vorhanden sind. Wenn dies nicht der Fall ist, müssen die Archivprotokolle wiederhergestellt werden, oder `rman` Oder `sqlplus` Kann auf die Daten im weitergeleitet werden `.snapshot` Verzeichnis.
+
+Außerdem können Datendateien bei kleineren Datenbanken von einem Endbenutzer direkt aus wiederhergestellt werden `.snapshot` Directory ohne Unterstützung durch Automatisierungs-Tools oder einen Storage-Administrator, um einen SnapRestore-Befehl auszuführen.
+
+== Lokales Wiederherstellungsverfahren, SAN Das grundlegende Verfahren ist wie folgt:
+
+. Fahren Sie die Datenbank herunter.
+. Legen Sie die Festplattengruppe(n), die die Datendateien hosten, still. Die Vorgehensweise hängt vom gewählten Logical Volume Manager ab. Bei ASM muss die Datenträgergruppe demontieren. Bei Linux müssen die Dateisysteme getrennt und die logischen Volumes und Volume-Gruppen deaktiviert werden. Ziel ist es, alle Aktualisierungen auf der Zieldatentengruppe zu stoppen, die wiederhergestellt werden sollen.
+. Stellen Sie die Datendatei-Datenträgergruppen auf dem Snapshot unmittelbar vor dem gewünschten Wiederherstellungspunkt wieder her.
+. Reaktivieren Sie die neu wiederhergestellten Datenträgergruppen.
+. Ausführen `alter database automatic;`
+
+
+Dieses Verfahren setzt voraus, dass die gewünschten Archivprotokolle im aktiven Dateisystem noch vorhanden sind. Wenn dies nicht der Fall ist, müssen die Archivprotokolle wiederhergestellt werden, indem die Archivprotokoll-LUNs offline genommen und eine Wiederherstellung durchgeführt wird. Dies ist auch ein Beispiel dafür, wie sinnvoll es ist, die Archivprotokolle auf dedizierte Volumes, LUNs oder Namensräume zu verteilen. Wenn die Archivprotokolle eine Volume-Gruppe mit den Wiederherstellungsprotokollen teilen, müssen die Wiederherstellungsprotokolle vor der Wiederherstellung des gesamten LUN-Satzes an einen anderen Ort kopiert werden, um den Verlust der zuletzt aufgezeichneten Transaktionen zu vermeiden.
+
+== Beispiel für eine vollständige Wiederherstellung Angenommen, die Datendateien sind beschädigt oder zerstört und eine vollständige Wiederherstellung ist erforderlich. Die Vorgehensweise hierfür ist wie folgt:
+
+....
+[oracle@host1 ~]$ sqlplus / as sysdba
+Connected to an idle instance.
+SQL> startup mount;
+ORACLE instance started.
+Total System Global Area 1610612736 bytes
+Fixed Size                  2924928 bytes
+Variable Size            1040191104 bytes
+Database Buffers          553648128 bytes
+Redo Buffers               13848576 bytes
+Database mounted.
+SQL> recover automatic;
+Media recovery complete.
+SQL> alter database open;
+Database altered.
+SQL>
+....
+====

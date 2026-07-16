@@ -14,6 +14,7 @@ Wie bereits erwähnt, trägt das Vorhandensein eines MetroCluster-Systems nicht 
 
 
 
+[[failover-with-a-preconfigured-os]]
 == Failover mit einem vorkonfigurierten Betriebssystem
 
 SyncMirror liefert eine synchrone Kopie der Daten am Disaster Recovery-Standort. Um diese Daten verfügbar zu machen, sind jedoch ein Betriebssystem und die zugehörigen Applikationen erforderlich. Eine grundlegende Automatisierung kann die Failover-Zeit der gesamten Umgebung deutlich verbessern. Clusterware Produkte wie Veritas Cluster Server (VCS) werden oft verwendet, um einen Cluster standortübergreifend zu erstellen, in vielen Fällen kann der Failover-Prozess mit einfachen Skripten angetrieben werden.
@@ -32,6 +33,7 @@ Die eigentliche Aktivierung ist einfach. Befehle wie die LUN-Erkennung erfordern
 
 
 
+[[failover-with-a-virtualized-os]]
 == Failover mit einem virtualisierten Betriebssystem
 
 Der Failover von Datenbankumgebungen kann auf das Betriebssystem selbst erweitert werden. In der Theorie kann dieses Failover mit Boot-LUNs durchgeführt werden, meistens erfolgt es jedoch mit einem virtualisierten Betriebssystem. Das Verfahren ähnelt den folgenden Schritten:

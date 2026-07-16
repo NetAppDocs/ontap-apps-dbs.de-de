@@ -24,6 +24,7 @@ image:vmware-vsphere-datastores-fp-1.png["alt=Hypervisor-Speicher-Stack mit Fabr
 
 
 
+[[compute-and-virtual-disk-layers]]
 == Rechen- und virtuelle Festplattenschichten
 
 Das Gastbetriebssystem läuft auf virtuellen Festplattenformaten wie VMDK, QCOW2 oder VHDX, die die Rechen- und Blockgeräteschichten erzeugen, die für Anwendungen und Benutzer zugänglich sind.
@@ -35,6 +36,7 @@ TIP: Nach dem link:https://www.netapp.com/pdf.html?item=/media/17239-tr-4598.pdf
 
 
 
+[[hypervisor-role]]
 == Hypervisor-Rolle
 
 Der Hypervisor vermittelt zwischen den laufenden virtuellen Maschinen und physischen Ressourcen wie CPU, Arbeitsspeicher und Speicher. Im NAS-Anwendungsfall bindet der Hypervisor die NAS-Freigabe ein und stellt die virtuellen Festplattendateien den virtuellen Maschinen als Blockgeräte zur Verfügung.
@@ -47,6 +49,7 @@ Beide Pfade laufen auf der WAFL-Schicht von ONTAP zusammen und ermöglichen kons
 
 
 
+[[fabricpool-tiering-integration]]
 == FabricPool Tiering-Integration
 
 FabricPool verwaltet intelligent die Datenplatzierung zwischen leistungsstarkem lokalem Speicher und kostengünstigeren Cloud-Objekt-Tiers.
@@ -57,6 +60,7 @@ Die FabricPool-Integration von ONTAP ermöglicht eine effiziente Datenplatzierun
 
 
 
+[[storage-efficiency-and-management]]
 == Speichereffizienz und Management
 
 Es ist wichtig, die Funktionsweise von FabricPool zu verstehen, bevor Sie sie aktivieren. Eine korrekte Konfiguration hilft Ihnen, die Leistung zu verbessern, das Risiko zu reduzieren und den TCO zu optimieren, indem Sie die richtigen Daten in der richtigen Ebene speichern.

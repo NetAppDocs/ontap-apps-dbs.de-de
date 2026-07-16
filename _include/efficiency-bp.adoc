@@ -4,18 +4,21 @@
 
 
 
+[[efficiency-best-practices]]
 == Best Practices für Effizienz
 
 *NetApp empfiehlt* Folgendes:
 
 
 
+[[aff-and-asa-defaults]]
 === AFF und ASA Standardeinstellungen
 
 Volumes, die auf ONTAP auf AFF Systemen erstellt wurden, sowie LUNs/Namespaces auf ASA Systemen sind Thin Provisioned mit allen aktivierten Inline-Effizienzfunktionen. Obwohl Datenbanken im Allgemeinen nicht von Deduplizierung profitieren und nicht komprimierbare Daten enthalten können, sind die Standardeinstellungen dennoch für nahezu alle Workloads geeignet. ONTAP ist darauf ausgelegt, alle Datentypen und I/O-Muster effizient zu verarbeiten, unabhängig davon, ob sie Einsparungen bewirken. Standardeinstellungen sollten nur geändert werden, wenn die Gründe vollständig verstanden werden und eine Abweichung einen Vorteil bringt.
 
 
 
+[[general-recommendations]]
 === Allgemeine Empfehlungen
 
 * Wenn AFF-Volumes, LUNs oder Namespaces nicht Thin Provisioning verwenden, müssen Sie alle Effizienzeinstellungen deaktivieren, da die Verwendung dieser Funktionen keine Einsparungen bringt und die Kombination von Thick Provisioning mit aktivierter Speicherplatzeffizienz zu unerwartetem Verhalten, einschließlich Speicherplatzfehlern, führen kann.

@@ -27,6 +27,7 @@ Zur Maximierung der Performance für einen Workload, z. B. Epic ODB oder Clarity
 
 
 
+[[scaling-options]]
 == Skalierungsoptionen
 
 Wenn der Server mehr Storage benötigt, empfiehlt es sich, die LUNs mit Volumes am einfachsten zu vergrößern. Die zweite Option besteht darin, den Volume-Gruppen jeweils ein Vielfaches von zwei LUNs hinzuzufügen (eine pro Volume und Node).
@@ -35,6 +36,7 @@ Beispiel:
 
 
 
+[[volume-and-8-lun-layout]]
 == Volume- und 8-LUN-Layout
 
 image:epic-8lun.png["Epic 8-LUN-Layout"]
@@ -44,6 +46,7 @@ NOTE: Wenn in einer großen Umgebung mehr als 4 Nodes oder 8 LUNs benötigt werd
 
 
 
+[[best-practices]]
 == Best Practices in sich vereint
 
 * Verwenden Sie 8 LUNs in 8 Volumes, um zu starten und gleichzeitig 2 LUNs über alle Nodes des Clusters hinweg hinzuzufügen.

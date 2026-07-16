@@ -21,6 +21,7 @@ NOTE: Diese Dokumentation ersetzt den zuvor veröffentlichten technischen Berich
 
 
 
+[[planning]]
 == Planung
 
 Die richtige Datensicherungsarchitektur hängt von den geschäftlichen Anforderungen für die Datenaufbewahrung, Recovery-Fähigkeit und Ausfalltoleranz bei verschiedenen Ereignissen ab.

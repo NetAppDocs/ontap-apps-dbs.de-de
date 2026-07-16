@@ -29,6 +29,7 @@ Zudem bieten NetApp Storage-Effizienzfunktionen wie Deduplizierung, NetApp FlexC
 
 
 
+[[ontap-data-management]]
 == ONTAP Datenmanagement
 
 ONTAP ist eine Management-Software, die auf einem NetApp Storage Controller ausgeführt wird. Ein als Node bezeichnet NetApp Storage Controller ist ein Hardwaregerät mit Prozessor, RAM und NVRAM. Der Node kann mit SATA-, SAS- oder SSD-Festplattenlaufwerken oder einer Kombination dieser Laufwerke verbunden werden.
@@ -41,6 +42,7 @@ image:win_image1.png["Bereitstellung von NetApp Storage in einer Windows Server-
 
 
 
+[[storage-virtual-machines]]
 == Storage Virtual Machines
 
 Eine ONTAP SVM ist ein logischer Storage-Server, der den Datenzugriff auf LUNs und/oder einen NAS-Namespace über eine oder mehrere logische Schnittstellen (LIFs) ermöglicht. Damit ist die SVM die grundlegende Einheit der Storage-Segmentierung, die eine sichere Mandantenfähigkeit in ONTAP ermöglicht. Jede SVM ist so konfiguriert, eigene Storage Volumes zu besitzen, die über ein physisches Aggregat bereitgestellt werden, und logische Schnittstellen (LIFs), die einem physischen Ethernet-Netzwerk oder FC-Zielports zugewiesen sind.
@@ -51,6 +53,7 @@ image:win_image2.png["ONTAP Storage Virtual Machine, Breite=572, Höhe=443"]
 
 
 
+[[provisioning-netapp-storage-for-windows-server]]
 == Bereitstellung von NetApp Storage für Windows Server
 
 In SAN- und NAS-Umgebungen kann Windows Server Storage bereitstellen. In einer SAN-Umgebung wird der Storage als Disks von LUNs auf einem NetApp-Volume als Block-Storage zur Verfügung gestellt. In einer NAS-Umgebung wird der Storage als CIFS/SMB-Freigaben auf NetApp Volumes als File-Storage bereitgestellt. Diese Laufwerke und Freigaben können in Windows Server wie folgt angewendet werden:
@@ -64,6 +67,7 @@ In SAN- und NAS-Umgebungen kann Windows Server Storage bereitstellen. In einer S
 
 
 
+[[managing-netapp-storage]]
 == Managen von NetApp Storage
 
 Verwenden Sie eine der folgenden Methoden, um NetApp-Speicher von Windows Server 2016 aus zu verbinden, zu konfigurieren und zu verwalten:
@@ -75,12 +79,14 @@ Verwenden Sie eine der folgenden Methoden, um NetApp-Speicher von Windows Server
 
 
 
+[[netapp-powershell-toolkit]]
 == NetApp PowerShell Toolkit
 
 Das NetApp PowerShell Toolkit (PSTK) ist ein PowerShell Modul, das eine End-to-End-Automatisierung bietet und die Storage-Administration von ONTAP ermöglicht. Das ONTAP Modul enthält über 2,000 Cmdlets und unterstützt Sie bei der Administration von NetApp AFF, FAS, Standard-Hardware und Cloud-Ressourcen.
 
 
 
+[[things-to-remember]]
 === Dinge, die Sie sich merken sollten
 
 * NetApp unterstützt keine Storage Spaces im Windows Server. Storage Spaces werden nur für JBOD verwendet (nur ein paar Disks) und funktionieren nicht mit irgendeiner Art von RAID (Direct-Attached Storage [das] oder SAN).
@@ -91,6 +97,7 @@ Das NetApp PowerShell Toolkit (PSTK) ist ein PowerShell Modul, das eine End-to-E
 
 
 
+[[further-reading]]
 === Weitere Informationen
 
 * Weitere Informationen zum NetApp PowerShell Toolkit finden Sie im https://mysupport.netapp.com/site/tools/tool-eula/ontap-powershell-toolkit["NetApp Support Website"].
@@ -99,6 +106,7 @@ Das NetApp PowerShell Toolkit (PSTK) ist ein PowerShell Modul, das eine End-to-E
 
 
 
+[[networking-best-practices]]
 == Best Practices für die Netzwerkumgebung
 
 Ethernet-Netzwerke können in die folgenden Gruppen unterteilt werden:
@@ -113,6 +121,7 @@ Ethernet-Netzwerke können in die folgenden Gruppen unterteilt werden:
 
 
 
+[[best-practices]]
 === Best Practices in sich vereint
 
 * NetApp empfiehlt für jede der oben genannten Funktionen dedizierte physische Ports zur Netzwerkisolierung und zur Performance.

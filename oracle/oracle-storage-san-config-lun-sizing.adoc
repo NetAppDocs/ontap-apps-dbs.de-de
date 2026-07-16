@@ -30,6 +30,7 @@ Die Praxis, eine universelle Standard-LUN-Größe zu etablieren, wird davon abge
 
 
 
+[[lun-count]]
 == LUN-Anzahl
 
 Anders als die LUN-Größe wirkt sich die Anzahl der LUNs auf die Performance aus. Die Applikations-Performance hängt häufig von der Fähigkeit ab, parallelen I/O über die SCSI-Schicht auszuführen. Dadurch bieten zwei LUNs eine bessere Performance als eine einzelne LUN. Die Verwendung einer LVM wie Veritas VxVM, Linux LVM2 oder Oracle ASM ist die einfachste Methode, um die Parallelität zu erhöhen.

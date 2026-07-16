@@ -32,6 +32,7 @@ Eine vollständige Liste der PostgreSQL-Konfigurationsparameter finden Sie in de
 
 
 
+[[toast]]
 == TOAST
 
 TOAST steht für die Oversized-Attribute Storage-Technik. PostgreSQL verwendet eine feste Seitengröße (üblicherweise 8 KB) und erlaubt nicht, dass Tupel mehrere Seiten umfassen. Daher ist es nicht möglich, große Feldwerte direkt zu speichern. Wenn Sie versuchen, eine Zeile zu speichern, die diese Größe überschreitet, bricht TOAST die Daten großer Spalten in kleinere „Stücke“ und speichert sie in einem TOAST Tisch.
@@ -40,6 +41,7 @@ Die großen Werte der getoasteten Attribute werden nur dann herausgezogen (wenn 
 
 
 
+[[vacuum]]
 == VAKUUM
 
 Im normalen PostgreSQL-Betrieb werden Tupel, die durch eine Aktualisierung gelöscht oder veraltet gemacht werden, nicht physisch aus ihrer Tabelle entfernt; sie bleiben vorhanden, bis VAKUUM ausgeführt wird. Daher müssen Sie regelmäßig VAKUUM betreiben, insbesondere auf häufig aktualisierten Tabellen. Der belegte Speicherplatz muss dann zur Wiederverwendung durch neue Zeilen zurückgewonnen werden, um einen Ausfall von Festplattenspeicher zu vermeiden. Er gibt jedoch nicht den Speicherplatz an das Betriebssystem zurück.

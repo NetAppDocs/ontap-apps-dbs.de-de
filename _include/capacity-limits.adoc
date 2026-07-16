@@ -8,6 +8,7 @@ NetApp Empfehlungen für Storage-Systeme, die für Enterprise-Applikationen verw
 
 
 
+[[aff-ssd-aggregates-and-asa-storage-availability-zones]]
 == AFF SSD-Aggregate und ASA Storage Availability Zones
 
 
@@ -17,6 +18,7 @@ Die Empfehlung von 10 % freiem Platz ist sehr konservativ. SSD-Aggregate können
 
 
 
+[[hdd-aggregates-including-flash-pool-aggregates]]
 == HDD-Aggregate, einschließlich Flash Pool Aggregaten
 
 
