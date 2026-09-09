@@ -36,7 +36,7 @@ Die Protokollierung führt einen sequenziellen Schreibvorgang der Protokolldatei
 
 Überprüfen Sie die Ausrichtung mithilfe von Dienstprogrammen wie  `sio` oder  `dd`, die E/A bei einer definierten Blockgröße erzeugen können. Die E/A-Ausrichtungsstatistiken auf dem Speichersystem können mit dem  `stats` Befehl angezeigt werden. Siehe link:../oracle/oracle-notes-wafl-alignment-verification.html["Überprüfung der WAFL-Ausrichtung"] für weitere Informationen.
 
-Die Ausrichtung in Solaris-Umgebungen ist komplizierter. Siehe http://support.netapp.com/documentation/productlibrary/index.html?productID=61343["ONTAP SAN-Host-Konfiguration"^] Finden Sie weitere Informationen.
+Die Ausrichtung in Solaris-Umgebungen ist komplexer. Weitere Informationen finden Sie unter  https://kb.netapp.com/on-prem/ontap/da/SAN/SAN-KBs/How_to_identify_unaligned_IO_on_LUNs["So lässt sich nicht ausgerichtete E/A auf LUNs identifizieren"].
 
 |===
 | Achtung 

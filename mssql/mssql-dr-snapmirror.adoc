@@ -22,5 +22,3 @@ Nachfolgend finden Sie Empfehlungen für SnapMirror für SQL Server:
 * Verteilen Sie Volumes, die SQL Server-Daten enthalten, auf verschiedene Nodes im Cluster, damit alle Clusterknoten SnapMirror-Replikationsaktivitäten gemeinsam nutzen können. Diese Verteilung optimiert die Nutzung von Knotenressourcen.
 * Synchrone Replizierung, bei der eine schnelle Datenwiederherstellung erforderlich ist, und asynchrone Lösungen bieten Flexibilität bei RPO.
 
-
-Weitere Informationen zu SnapMirror finden Sie unter link:https://www.netapp.com/us/media/tr-4015.pdf["TR-4015: SnapMirror Konfigurations- und Best Practices-Leitfaden für ONTAP 9"^].
