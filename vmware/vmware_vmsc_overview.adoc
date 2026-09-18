@@ -34,7 +34,7 @@ NetApp SnapMirror Active Sync ist auf Systemen anderer Anbieter als MetroCluster
 
 Um einen VMware HA/DRS Cluster über zwei Standorte zu erstellen, werden ESXi-Hosts von einer vCenter Server Appliance (VCSA) verwendet und gemanagt. Die vSphere-Management-, vMotion®- und Virtual Machine-Netzwerke sind über ein redundantes Netzwerk zwischen den beiden Standorten verbunden. Der vCenter Server, der den HA/DRS Cluster verwaltet, kann eine Verbindung zu den ESXi-Hosts an beiden Standorten herstellen und sollte über vCenter HA konfiguriert werden.
 
-Siehe https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vcenter-esxi-management/GUID-F7818000-26E3-4E2A-93D2-FCDCE7114508.html["Wie erstellen und konfigurieren Sie Cluster im vSphere Client"] Um vCenter HA zu konfigurieren.
+Siehe  https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-availability/creating-and-using-vsphere-ha-clusters/creating-a-vsphere-ha-cluster/create-vsphere-ha-cluster.html["Einen vSphere HA Cluster im vSphere Client erstellen"] zur Konfiguration von vCenter HA.
 
 Sie sollten sich auch auf https://www.vmware.com/docs/vmw-vmware-vsphere-metro-storage-cluster-recommended-practices["Empfohlene Practices für VMware vSphere Metro Storage-Cluster"].
 
@@ -45,10 +45,11 @@ Sie sollten sich auch auf https://www.vmware.com/docs/vmw-vmware-vsphere-metro-s
 
 vSphere Metro Storage Cluster (vMSC) ist eine zertifizierte Konfiguration, die virtuelle Maschinen (VMs) und Container vor Ausfällen schützt. Dies wird durch die Verwendung von Stretched-Storage-Konzepten zusammen mit Clustern von ESXi-Hosts erreicht, die über verschiedene Fehlerdomänen wie Racks, Gebäude, Campusse oder sogar Städte verteilt sind. Die Active-Sync-Speichertechnologien NetApp MetroCluster und SnapMirror werden verwendet, um den Host-Clustern einen Schutz mit Null-Recovery-Point-Objective (RPO=0) zu bieten. Die vMSC-Konfiguration soll sicherstellen, dass die Daten auch dann immer verfügbar sind, wenn ein kompletter physischer oder logischer „Standort“ ausfällt. Ein Speichergerät, das Teil der vMSC-Konfiguration ist, muss nach erfolgreichem Durchlaufen eines vMSC-Zertifizierungsprozesses zertifiziert werden. Alle unterstützten Speichergeräte finden Sie im https://compatibilityguide.broadcom.com/["VMware Storage Compatibility Guide"].
 
-Weitere Informationen zu den Designrichtlinien für vSphere Metro Storage Cluster finden Sie in der folgenden Dokumentation:
+Weitere Informationen zu den Designrichtlinien für vSphere Metro Storage Cluster sind in den folgenden Lösungsleitfäden zu finden:
 
-* https://kb.vmware.com/s/article/2031038["Unterstützung von VMware vSphere für NetApp MetroCluster"]
-* https://kb.vmware.com/s/article/83370["Unterstützung von VMware vSphere mit NetApp SnapMirror Business Continuity"] (Jetzt bekannt als SnapMirror Active Sync)
+* https://docs.netapp.com/us-en/netapp-solutions-virtualization/vmware/vmw-vmsc-with-smas.html["VMware vSphere Metro Storage Cluster mit SnapMirror active sync"]
+* https://docs.netapp.com/us-en/netapp-solutions-virtualization/vmware/vmw-vcf-vmsc-mgmt-mcc.html["Konfiguration eines Stretch-Clusters für eine VCF-Verwaltungsdomäne mit MetroCluster"]
+* https://docs.netapp.com/us-en/netapp-solutions-virtualization/vmware/vmw-vcf-vmsc-viwld-mcc.html["Eine Stretch-Cluster-Konfiguration für eine VCF Workload-Domäne mit MetroCluster"]
 
 
 NetApp MetroCluster kann für vSphere in zwei unterschiedlichen Konfigurationen implementiert werden:
