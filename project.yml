@@ -12,7 +12,6 @@ sidebar:
   entries:
   - title: Enterprise-Applikationen
     url: "/index.html"
-  - section: epic
   - section: Hyper-V
   - section: mssql
   - section: mysql
