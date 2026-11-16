@@ -6,7 +6,12 @@ summary: Automatische Oracle-Wiederherstellung ohne Backup-Modus.
 searchtitle: Automatische Oracle-Wiederherstellung ohne Backup-Modus. 
 ---
 = Automatische Oracle-Wiederherstellung ohne Backup-Modus
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
 
 
 [role="lead"]
@@ -36,7 +41,7 @@ Während der Wiederherstellung liest die Datenbank Metadaten aus den Datendateie
 
 Mit diesem Ansatz lässt sich eine zeitpunktgenaue Wiederherstellung annähern, allerdings mit begrenzter Granularität. Beispielsweise kann die Datenbank, wenn mit Datendateien im Backup-Modus begonnen wird, auf eine beliebige Transaktion vorwärtsgesetzt werden.
 
-Bei Verwendung der automatischen Wiederherstellung ohne Backup-Modus muss die Datenbank bis zum Zeitpunkt des Log-Snapshots wiederhergestellt werden. Unter normalen Umständen beträgt der RPO weiterhin null, da die ursprünglichen Archivlogs, Wiederherstellungsprotokolle und Kontrolldateien im aktiven Dateisystem weiterhin verfügbar sind. Wenn eine Wiederherstellung vollständig anhand von Snapshots erfolgen muss, weil alle Daten im aktiven Dateisystem verloren gegangen sind, beträgt der RPO eine Stunde.
++ Bei Verwendung der automatischen Wiederherstellung ohne Backup-Modus muss die Datenbank bis zum Zeitpunkt des Log-Snapshots wiederhergestellt werden. Unter normalen Umständen wäre der RPO weiterhin null, da die ursprünglichen Archiv-Logs, Redo-Logs und Kontrolldateien im aktiven Dateisystem noch verfügbar wären. Wenn aufgrund des Verlusts aller Daten in den aktiven Dateisystemen eine Wiederherstellung vollständig aus Snapshots durchgeführt werden müsste, wäre der RPO eine Stunde.
 
 []
 ====
